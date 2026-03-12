@@ -10,5 +10,5 @@ print("opcion 3: " + opcion3)
 print("opcion 4: " + opcion4) 
 print("por favor seleccione su cafe")  
 seleccion_de_bebida = input("Ingrese su opcion:")
-print("la opcion del usuario fue:")
+print("la opcion del usuario fue"
 print("fin del programa")  
