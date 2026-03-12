@@ -1,1 +1,1 @@
-Hola, soy Matias, tengo 22, soy bombero, me gusta jugar a la pelota
+Hola, soy matias soy bombero y me gusta el futbol 
