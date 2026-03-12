@@ -14,6 +14,6 @@ print("Por Favor seleccione su cafe")
 
 seleccion_de_bebida - input("ingrese su opcion: ")
 
-print("La ocpion del usuario fue: " + seleccion de bebida)
+print("La ocpion del usuario fue: " + seleccion_de_bebida)
 
 print("***FIN DEL PROGRAMA***")
