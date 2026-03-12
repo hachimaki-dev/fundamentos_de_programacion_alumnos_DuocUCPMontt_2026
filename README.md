@@ -1,1 +1,2 @@
-Hola soy gabriela me gusta jugar
+ola soy gabi m gusta jugar
+y esto lo agregue en una modificacion
