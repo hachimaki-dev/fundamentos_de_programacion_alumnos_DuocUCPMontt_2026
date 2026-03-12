@@ -13,4 +13,4 @@ bebida_seleccionada = input("Ingrese número de bebida: ")
 print("Vamos a verificar la opción del cliente")
 print(bebida_seleccionada)
 
-print("Ha seleccionado Café")
+print("Ha seleccionado cafe")
