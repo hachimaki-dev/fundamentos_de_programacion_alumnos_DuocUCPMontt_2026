@@ -1,1 +1,3 @@
-Hola!! Soy Sebastian, puedes llamarme Seva, me gusta ir al gym y flojear todo el resto del dia
+Hola!! Soy Sebastian, me gusta ir al gym y flojear todo el resto del dia
+
+ñ
