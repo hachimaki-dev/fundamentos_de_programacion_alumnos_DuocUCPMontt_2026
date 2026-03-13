@@ -95,3 +95,5 @@ git checkout nombre-de-la-rama
 > [!TIP]
 > **¿No sabes qué pasó?** Usa siempre `git status`. Es tu mejor amigo para saber en qué rama estás y si tienes archivos sin guardar.
 > **¿Mensaje de error?** Lee las últimas líneas. Git suele decirte exactamente qué comando te falta ejecutar.
+
+Hola soy Sider, estudiante de Duoc UC.
