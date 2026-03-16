@@ -1,0 +1,4 @@
+print("bienvenido al recorrido alerce puerto montt")
+
+donde_vas = input("a donde vas")
+print(f"el usuario quiere ir a {donde_vas}")
