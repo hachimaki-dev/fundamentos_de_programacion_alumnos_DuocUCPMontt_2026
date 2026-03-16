@@ -1,0 +1,9 @@
+numero1 = input("Ingrese su primer numero")
+
+numero2 = input("Ingrese su segundo numero")
+
+operacion = input("Ingrese su operación +, -, *, / (shift + 7)")
+
+resultado = int(numero1) operacion int(numero2)
+
+print(f"el resultado es {resultado}")
