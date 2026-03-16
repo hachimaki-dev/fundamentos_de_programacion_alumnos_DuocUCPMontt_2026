@@ -1,16 +1,16 @@
 print("Productos disponibles:")
-Cafe = "Cafe, té y milo."
+Cafe = "Cafe, Té y Milo."
 Producto1 = "Café"
 Producto2 = "Té"
 Prodcuto3 = "Milo"
 print(Cafe)
 
-print("Eliga su bebida")
 
-
-bebida_seleccionada = input("Ingrese número de bebida: ")
+bebida_seleccionada = input("Seleccione su bebida: ")
 
 print("Vamos a verificar la opción del cliente")
+print("Ha seleccionado: ")
 print(bebida_seleccionada)
 
-print("Ha seleccionado cafe")
+print("Está seguro?: ")
+
