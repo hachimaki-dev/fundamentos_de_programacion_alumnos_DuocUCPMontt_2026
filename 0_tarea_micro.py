@@ -1,0 +1,5 @@
+print("bienvenido al recorrido purto montt alerce")
+input("indique su destino")
+destinodelpasajero = input("indiqueme su destino")
+print("el destino escogido es:")
+print(destinodelpasajero)
