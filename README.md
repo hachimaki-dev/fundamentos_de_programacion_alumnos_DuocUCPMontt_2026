@@ -1,1 +1,1 @@
-hola me llamo benjamin vasquez y me gusta mucho escuchar musica de los 80's, 90's y tambien el soft-rock, tambien veo anime, algunos como full metal alchemist, frieren, jojo's etc
+hola me llamo benjamin vasquez y me gusta mucho escuchar musica de los 80's, 90's y tambien el soft-rock, tambien veo anime, algunos como full metal alchemist, frieren, jojo's etc y juegos favoritos son uncharted, god of war y mario galaxy
