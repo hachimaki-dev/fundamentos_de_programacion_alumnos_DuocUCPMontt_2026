@@ -1,0 +1,3 @@
+nombre_del_usuario = input("por favor diga su nombre")
+
+print(f"El nombre del ususrio es {nombre_del_usuario}")
