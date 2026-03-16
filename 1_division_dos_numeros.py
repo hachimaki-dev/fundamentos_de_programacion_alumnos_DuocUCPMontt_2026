@@ -1,4 +1,4 @@
-#Vamos a reacrear el diagrama de flujo que DIVISION dos numeros
+#Vamos a reacrear el diagrama de flujo que division dos numeros
 
 print("Bienvenido a la calculadora para DIVIDIR dos números")
 numero1 = int(input("Ingrese el primer número: "))
