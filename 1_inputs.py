@@ -1,9 +1,8 @@
-# Boton de los 300 millones de dolares usuario
-"""
-nombre = input("Por favor, ingrese su nombre de usuario: ")
-print(nombre)
-"""
+#Los inputs son todas aquellas acciones que recibe el sistema por parte del usuario 
+nombre_del_usuario = input("por favor ingrese su nombre de usuario")
 
-print("Bienvenido al recorrido Alerce Puerto Montt")
-direccion = input("¿Hacia dónde quiere ir?\n")
-print(f"El usuario quiere ir a {direccion}.")
+
+print (f"el nombre del usuario es {nombre_del_usuario} ")
+#elaborar recorrido alerce puerto montt, y que el programa te pueda leer a donde vas 
+
+input 
