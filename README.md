@@ -1,6 +1,6 @@
-# Fundamentos de programcion 002D
+# Fundamentos de programación 002D
 
 ## Me presento, mi nombre es Jairo
 
 ---
-Bienvenidos a mi reposito :D
+Bienvenidos a mi repositorio :D
