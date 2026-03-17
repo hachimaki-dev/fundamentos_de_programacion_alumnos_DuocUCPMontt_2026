@@ -56,4 +56,6 @@ else:
 print(f"El resultado de la operación es: {resultado}")
 
 print("Fin de operación.")
-print("Apagando calculadora....") # quiero intentar crear una calculadora con interfaz visual.
+print("Apagando calculadora....")
+
+# esto es una copia de respaldo.
