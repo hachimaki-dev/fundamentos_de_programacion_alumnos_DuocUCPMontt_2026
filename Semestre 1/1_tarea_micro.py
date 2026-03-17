@@ -1,4 +1,4 @@
-#hacer un programar bienvendio a puerto montt a alerce
+#Hacer un programar bienvenido a puerto montt a alerce
 
 print("Bienvenido a puerto montt a alerce")
 destino = input("Puerto Montt o Alerce: " )
