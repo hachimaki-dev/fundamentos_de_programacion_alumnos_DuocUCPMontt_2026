@@ -1,3 +1,4 @@
+#Output
 # Esta es la salida mas simple
 print("Hello Word")
 
