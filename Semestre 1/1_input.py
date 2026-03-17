@@ -1,3 +1,4 @@
+#Input
 #La funcion que permite entradas
 #Experiencia de usuarios generar experiencias de usuario
 
