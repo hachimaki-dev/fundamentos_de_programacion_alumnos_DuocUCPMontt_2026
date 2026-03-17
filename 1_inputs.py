@@ -7,3 +7,4 @@ print(nombre)
 print("Bienvenido al recorrido Alerce Puerto Montt")
 direccion = input("¿Hacia dónde quiere ir?\n")
 print(f"El usuario quiere ir a {direccion}.")
+
