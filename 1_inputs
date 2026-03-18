@@ -6,5 +6,5 @@
 
 Nombre_del_usuario = input("Porfavor ingrese su nombre de usuario")
 
-print(f"El nombre del usuario es {Nombre_del_usuario}")
+print(f"El nombre del usuario es {Nombre_del_usuario}") # con print(f)se le llama interpolacion
 #elaborar un programa que diga bienvenido al recorrido alerce puerto montt y pedirle a donde quiere ir
