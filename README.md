@@ -1,4 +1,5 @@
-Hola me llamo Zobeiba, me dicen Zobe
-Tengo 27 años y soy profesora de educación básica
-Me gusta ver anime, mis favoritos son One piece y Fullmetal Alquemist
-Tamnbién me gusta dibujar y jugar lol xd
+#Cheela
+
+Hola me llamo Gonzalo, me gustan los videojuegos y la musica.
+Actualmente lo que mas juego es Balatro, y estoy tratando de competarlo al 100 por ciento.
+
