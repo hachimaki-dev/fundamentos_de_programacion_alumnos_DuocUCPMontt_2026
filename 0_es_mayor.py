@@ -5,4 +5,4 @@ if edad_de_persona >= 18:
 else:
     print("Por favor retirese de mi licoreria")
 
-#la identacion es el espacio entre una linea y otra, se activa rapidamente con tab
+#la identacion es el espacio entre una linea y otra, se activa rapidamente con tab.
