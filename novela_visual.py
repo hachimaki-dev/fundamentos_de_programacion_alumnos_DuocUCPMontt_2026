@@ -81,7 +81,7 @@ else:
     print("No has elegido ninguna decisión")
 
 #FIN de la novela visual 1:03 am 19/03/2026
-#El elif es una "abreviatura del else, if lo use para ahorrarme hardcodear el "if".
+#El elif es una "abreviatura del (else, if) lo use para ahorrarme hardcodear el "if".
 #Use print(input(" ")) para que al momento de que el usuario presione enter(input) se despliegue el str o string de texto dentro del print.
 
 
