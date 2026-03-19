@@ -3,5 +3,5 @@ print ("Bienvenido , seleccione su recorrido ")
 print ("1.Alerce")
 print ("2.Puerto Montt")
 nombre_recorrido = input ("Ingrese su recorrido")
-print(f"Recorrido seleccionado:" {nombre_recorrido})
+#print(f"Recorrido seleccionado:" {nombre_recorrido})
 
