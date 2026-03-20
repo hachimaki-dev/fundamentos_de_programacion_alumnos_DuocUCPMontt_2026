@@ -1,0 +1,582 @@
+/* ============================================================
+   🌸 Fundamentos de Programación 2026 — Estilos Globales
+   ============================================================ */
+
+/* ─── Google Fonts (cargadas en HTML) ─── */
+/* Quicksand: UI principal  |  Fira Code: bloques de código */
+
+/* ─── Reset & Base ─── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #fce4ec 0%, #e1bee7 30%, #b3e5fc 60%, #c8e6c9 100%);
+  min-height: 100vh;
+  color: #4a4a4a;
+}
+
+/* ─── Kawaii Color Palette (CSS vars) ─── */
+:root {
+  --kw-pink:    #fce4ec;
+  --kw-rose:    #f8bbd0;
+  --kw-lilac:   #e1bee7;
+  --kw-mint:    #c8e6c9;
+  --kw-sky:     #b3e5fc;
+  --kw-peach:   #ffe0b2;
+  --kw-cream:   #fffde7;
+  --kw-deep:    #ad1457;
+  --kw-purple:  #7b1fa2;
+  --kw-text:    #4a4a4a;
+  --kw-correct: #66bb6a;
+  --kw-wrong:   #ef5350;
+  --kw-glass:   rgba(255,255,255,0.82);
+  --kw-glass-border: rgba(255,255,255,0.5);
+  --kw-shadow:  rgba(173,20,87,0.08);
+  --kw-radius:  1.2rem;
+}
+
+/* ─── Floating Background Shapes ─── */
+.bg-shape {
+  position: fixed;
+  border-radius: 50%;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  animation: floaty 8s ease-in-out infinite alternate;
+}
+@keyframes floaty {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); }
+  100% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
+}
+.bg-shape:nth-child(2) { animation-delay: -2s; animation-duration: 10s; }
+.bg-shape:nth-child(3) { animation-delay: -4s; animation-duration: 12s; }
+.bg-shape:nth-child(4) { animation-delay: -1s; animation-duration: 9s; }
+
+/* ─── Glass Card ─── */
+.card {
+  background: var(--kw-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--kw-glass-border);
+  border-radius: var(--kw-radius);
+  box-shadow: 0 8px 32px var(--kw-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(173,20,87,0.12);
+}
+
+/* ─── Code Block Overrides (Prism) ─── */
+pre[class*="language-"] {
+  border-radius: 0.8rem !important;
+  font-family: 'Fira Code', monospace !important;
+  font-size: 0.92rem !important;
+  margin: 0 !important;
+}
+code[class*="language-"] {
+  font-family: 'Fira Code', monospace !important;
+}
+
+/* ─── Quiz Option Buttons ─── */
+.option-btn {
+  background: rgba(255,255,255,0.7);
+  border: 2px solid var(--kw-lilac);
+  border-radius: 0.8rem;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  width: 100%;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.95rem;
+  color: var(--kw-text);
+}
+.option-btn:hover:not(.selected):not(.disabled) {
+  background: var(--kw-rose);
+  border-color: #f48fb1;
+  transform: scale(1.015);
+}
+.option-btn.correct {
+  background: var(--kw-mint);
+  border-color: var(--kw-correct);
+  color: #2e7d32;
+  font-weight: 600;
+}
+.option-btn.wrong {
+  background: #ffcdd2;
+  border-color: var(--kw-wrong);
+  color: #c62828;
+}
+.option-btn.disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.option-btn.reveal-correct {
+  background: var(--kw-mint);
+  border-color: var(--kw-correct);
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* ─── Tab Buttons ─── */
+.tab-btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 1rem 1rem 0 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+  border-bottom: none;
+  background: rgba(255,255,255,0.4);
+  color: var(--kw-text);
+  font-family: 'Quicksand', sans-serif;
+}
+.tab-btn.active {
+  background: rgba(255,255,255,0.85);
+  border-color: var(--kw-rose);
+  color: var(--kw-deep);
+}
+.tab-btn:hover:not(.active) {
+  background: rgba(255,255,255,0.6);
+}
+
+/* ─── Progress Bar ─── */
+.progress-fill {
+  transition: width 0.5s ease;
+}
+
+/* ─── Mermaid Overrides ─── */
+.mermaid svg { max-width: 100%; }
+
+/* ─── Animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes bounce-emoji {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.3); }
+}
+.bounce {
+  display: inline-block;
+  animation: bounce-emoji 0.5s ease;
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(40px) rotate(360deg); opacity: 0; }
+}
+.confetti-piece {
+  animation: confetti-fall 1s ease-out forwards;
+}
+
+/* ─── Documentation Section ─── */
+.doc-section {
+  background: var(--kw-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--kw-glass-border);
+  border-radius: var(--kw-radius);
+  box-shadow: 0 8px 32px var(--kw-shadow);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.doc-section h2 {
+  color: var(--kw-deep);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.doc-section h3 {
+  color: var(--kw-purple);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.doc-section p, .doc-section li {
+  color: var(--kw-text);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.doc-section ul {
+  padding-left: 1.2rem;
+  list-style: none;
+}
+.doc-section ul li::before {
+  content: '🌸 ';
+}
+.doc-section code {
+  background: var(--kw-pink);
+  color: var(--kw-deep);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.88rem;
+}
+.doc-section .code-example {
+  background: #2d2d2d;
+  color: #ccc;
+  border-radius: 0.8rem;
+  padding: 1rem 1.2rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.88rem;
+  margin: 0.8rem 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+.doc-section .tip-box {
+  background: linear-gradient(135deg, #fffde7, #fff9c4);
+  border: 2px solid #ffe082;
+  border-radius: 0.8rem;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.doc-section .deep-box {
+  background: linear-gradient(135deg, #e1bee7, #f3e5f5);
+  border: 2px solid #ce93d8;
+  border-radius: 0.8rem;
+  padding: 1rem 1.2rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+.doc-section a {
+  color: var(--kw-purple);
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.doc-section a:hover {
+  color: var(--kw-deep);
+}
+
+/* ─── Doc Tables ─── */
+.doc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0.8rem 0;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+.doc-table th {
+  background: var(--kw-rose);
+  color: var(--kw-deep);
+  font-weight: 700;
+  padding: 0.6rem 1rem;
+  text-align: left;
+}
+.doc-table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--kw-pink);
+}
+.doc-table tr:nth-child(even) td {
+  background: rgba(248,187,208,0.1);
+}
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ============================================================
+   🗓️ DIARY / JOURNAL STYLES
+   ============================================================ */
+
+/* ─── Diary Header ─── */
+.diary-header {
+  text-align: center;
+  padding: 3rem 1rem 1.5rem;
+}
+.diary-header h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--kw-deep);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+.diary-header .subtitle {
+  font-size: 1.1rem;
+  color: rgba(74,74,74,0.6);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ─── Search & Filter Bar ─── */
+.search-bar {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+.search-input-wrap {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.search-input-wrap .icon {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  padding: 0.9rem 1.2rem 0.9rem 3rem;
+  border: 2px solid var(--kw-glass-border);
+  border-radius: 1rem;
+  background: var(--kw-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  color: var(--kw-text);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.search-input:focus {
+  border-color: var(--kw-rose);
+  box-shadow: 0 0 0 4px rgba(248,187,208,0.3);
+}
+.search-input::placeholder {
+  color: rgba(74,74,74,0.4);
+}
+
+/* ─── Tag Filter Pills ─── */
+.tag-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.tag-pill {
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  border: 2px solid var(--kw-glass-border);
+  background: rgba(255,255,255,0.5);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--kw-text);
+}
+.tag-pill:hover {
+  background: rgba(255,255,255,0.8);
+  border-color: var(--kw-rose);
+}
+.tag-pill.active {
+  background: var(--kw-rose);
+  border-color: #f48fb1;
+  color: var(--kw-deep);
+}
+
+/* ─── Timeline ─── */
+.timeline {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 2rem;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--kw-rose), var(--kw-lilac), var(--kw-sky));
+  border-radius: 3px;
+}
+
+/* ─── Diary Entry Card ─── */
+.diary-entry {
+  position: relative;
+  margin-left: 4rem;
+  margin-bottom: 1.5rem;
+  background: var(--kw-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--kw-glass-border);
+  border-radius: var(--kw-radius);
+  box-shadow: 0 8px 32px var(--kw-shadow);
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.diary-entry:hover {
+  transform: translateY(-3px) translateX(4px);
+  box-shadow: 0 12px 40px rgba(173,20,87,0.14);
+  border-color: var(--kw-rose);
+}
+
+/* Timeline dot */
+.diary-entry::before {
+  content: '';
+  position: absolute;
+  left: -2.75rem;
+  top: 1.6rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--kw-rose);
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(173,20,87,0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+.diary-entry:hover::before {
+  transform: scale(1.3);
+  background: var(--kw-deep);
+}
+
+.diary-entry .entry-date {
+  font-size: 0.78rem;
+  color: rgba(74,74,74,0.45);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+.diary-entry .entry-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--kw-deep);
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.diary-entry .entry-emoji {
+  font-size: 1.5rem;
+}
+.diary-entry .entry-desc {
+  font-size: 0.92rem;
+  color: rgba(74,74,74,0.7);
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+.diary-entry .entry-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.entry-tag {
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.entry-tag.python {
+  background: #fff9c4;
+  color: #f57f17;
+  border: 1px solid #ffe082;
+}
+.entry-tag.flow {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+.entry-tag.docs {
+  background: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ce93d8;
+}
+.entry-tag.nuevo {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+/* ─── Empty State ─── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.empty-state .emoji {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+.empty-state p {
+  color: rgba(74,74,74,0.5);
+  font-size: 1rem;
+}
+
+/* ─── Back Button ─── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  background: var(--kw-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--kw-glass-border);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--kw-deep);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.back-btn:hover {
+  background: var(--kw-rose);
+  border-color: #f48fb1;
+  transform: translateX(-3px);
+}
+
+/* ─── Page Container ─── */
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+.page-header {
+  padding: 1.5rem 0 1rem;
+}
+
+/* ─── Footer ─── */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.85rem;
+  color: rgba(74,74,74,0.35);
+}
+
+/* ─── Utility ─── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .diary-header h1 { font-size: 2rem; }
+  .diary-entry { margin-left: 3rem; padding: 1.2rem; }
+  .timeline::before { left: 1.2rem; }
+  .diary-entry::before { left: -2.3rem; }
+  .diary-entry .entry-title { font-size: 1.1rem; }
+}

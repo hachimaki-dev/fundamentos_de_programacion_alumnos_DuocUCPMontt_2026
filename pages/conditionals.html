@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔀 Taller: Condicionales if/elif/else — Semana 2</title>
+  <meta name="description" content="Taller práctico de condicionales en Python: documentación, ejercicios de selección múltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de código." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+              correct: '#66bb6a',
+              wrong:   '#ef5350',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Prism.js -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Mermaid.js -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <style>
+    /* ─── Workshop-specific styles ─── */
+
+    /* Section navigation pills */
+    .section-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .section-pill {
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      border: 2px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.5);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #4a4a4a;
+    }
+    .section-pill:hover { background: rgba(255,255,255,0.8); }
+    .section-pill.active {
+      background: #f8bbd0;
+      border-color: #f48fb1;
+      color: #ad1457;
+    }
+    .section-pill .pill-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(173,20,87,0.1);
+      color: #ad1457;
+      font-size: 0.7rem;
+      font-weight: 700;
+      width: 1.3rem;
+      height: 1.3rem;
+      border-radius: 50%;
+      margin-left: 0.3rem;
+    }
+    .section-pill.active .pill-count {
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* True/False buttons */
+    .tf-btn {
+      padding: 0.8rem 2rem;
+      border-radius: 0.8rem;
+      border: 2px solid #e1bee7;
+      background: rgba(255,255,255,0.7);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-width: 140px;
+    }
+    .tf-btn:hover:not(.disabled) {
+      transform: scale(1.03);
+    }
+    .tf-btn.true-btn:hover:not(.disabled) {
+      background: #c8e6c9;
+      border-color: #66bb6a;
+    }
+    .tf-btn.false-btn:hover:not(.disabled) {
+      background: #ffcdd2;
+      border-color: #ef5350;
+    }
+    .tf-btn.selected-correct {
+      background: #c8e6c9;
+      border-color: #66bb6a;
+      color: #2e7d32;
+    }
+    .tf-btn.selected-wrong {
+      background: #ffcdd2;
+      border-color: #ef5350;
+      color: #c62828;
+    }
+    .tf-btn.reveal-correct {
+      background: #c8e6c9;
+      border-color: #66bb6a;
+      color: #2e7d32;
+    }
+    .tf-btn.disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+
+    /* Match exercise */
+    .match-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.6rem;
+      align-items: stretch;
+    }
+    .match-left, .match-right {
+      padding: 0.7rem 1rem;
+      border-radius: 0.6rem;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+    .match-left {
+      background: #f3e5f5;
+      border: 2px solid #ce93d8;
+      font-weight: 600;
+      justify-content: center;
+      text-align: center;
+    }
+    .match-right {
+      background: rgba(255,255,255,0.7);
+      border: 2px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .match-right:hover:not(.matched) {
+      border-color: #f48fb1;
+      background: #fce4ec;
+    }
+    .match-right.selected {
+      border-color: #7b1fa2;
+      background: #ede7f6;
+      box-shadow: 0 0 0 2px rgba(123,31,162,0.2);
+    }
+    .match-right.matched {
+      border-color: #66bb6a;
+      background: #e8f5e9;
+      cursor: default;
+    }
+    .match-right.wrong {
+      border-color: #ef5350;
+      background: #ffebee;
+      animation: shake 0.4s ease;
+    }
+    .match-arrow {
+      display: flex;
+      align-items: center;
+      color: #ce93d8;
+      font-size: 1.2rem;
+    }
+    .match-arrow.matched { color: #66bb6a; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25%      { transform: translateX(-5px); }
+      75%      { transform: translateX(5px); }
+    }
+    @media (max-width: 640px) {
+      .match-container {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+      }
+      .match-arrow { justify-content: center; font-size: 1rem; transform: rotate(90deg); }
+    }
+
+    /* Score summary card */
+    .score-summary {
+      background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+      border: 2px solid #f8bbd0;
+      border-radius: 1.2rem;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .score-big {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #ad1457;
+      line-height: 1;
+    }
+
+    /* Reference section toggle */
+    .ref-toggle {
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .ref-toggle:hover {
+      transform: translateY(-1px);
+    }
+    .ref-content {
+      overflow: hidden;
+      transition: max-height 0.5s ease, opacity 0.3s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+
+  <!-- Vue App -->
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">← Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">
+          🔀 Condicionales: if / elif / else
+        </h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          ¡Bienvenid@ al taller de la <strong>Semana 2</strong>! 🎉 Aquí aprenderás a tomar decisiones con Python.
+          Primero revisa la <strong>referencia rápida</strong> 📖, luego resuelve los ejercicios a tu ritmo.
+          <br><span class="text-xs mt-1 inline-block">Tienes todo lo que necesitas aquí — ¡tú puedes hacerlo! 💪🌸</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-3xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">
+          📖 Referencia
+        </button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">
+          🎯 Selección Múltiple <span class="pill-count">{{ choiceExercises.length }}</span>
+        </button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">
+          ✅ V o F <span class="pill-count">{{ tfExercises.length }}</span>
+        </button>
+        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">
+          🔗 Unir <span class="pill-count">{{ matchData.length }}</span>
+        </button>
+        <button class="section-pill" :class="{ active: currentSection === 'flow' }" @click="goToSection('flow')">
+          🔷 Diagramas <span class="pill-count">{{ flowData.length }}</span>
+        </button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">
+          🐍 Trazar Código <span class="pill-count">{{ traceData.length }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: REFERENCIA RÁPIDA                           -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+
+      <div class="doc-section">
+        <h2>📖 ¿Qué es un condicional?</h2>
+        <p>Un <strong>condicional</strong> permite que tu programa tome <strong>decisiones</strong>. Dependiendo de si una condición es verdadera o falsa, se ejecuta un bloque de código u otro.</p>
+        <div class="tip-box">💡 <strong>Piénsalo así:</strong> Es como un semáforo 🚦 — si está en verde, avanzas; si está en rojo, te detienes.</div>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 Estructura: if</h2>
+        <p>La forma más simple. Se ejecuta el bloque <strong>solo si la condición es True</strong>:</p>
+        <div class="code-example">if condición:<br>    # Este código se ejecuta si la condición es True<br>    print("¡La condición se cumplió!")</div>
+        <p><strong>Ejemplo concreto:</strong></p>
+        <div class="code-example">edad = 20<br><br>if edad >= 18:<br>    print("Eres mayor de edad")<br><br># Resultado: Eres mayor de edad</div>
+        <div class="tip-box">⚠️ <strong>¡No olvides los dos puntos <code>:</code></strong> al final de la línea del if! Y el bloque debe estar <strong>indentado</strong> (con 4 espacios).</div>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 Estructura: if / else</h2>
+        <p>Cuando necesitas un <strong>"si no"</strong> — un camino alternativo cuando la condición es False:</p>
+        <div class="code-example">edad = 15<br><br>if edad >= 18:<br>    print("Eres mayor de edad")<br>else:<br>    print("Eres menor de edad")<br><br># Resultado: Eres menor de edad</div>
+        <table class="doc-table">
+          <tr><th>¿La condición es True?</th><th>¿Qué se ejecuta?</th></tr>
+          <tr><td>Sí (True)</td><td>El bloque del <code>if</code></td></tr>
+          <tr><td>No (False)</td><td>El bloque del <code>else</code></td></tr>
+        </table>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 Estructura: if / elif / else</h2>
+        <p>Cuando hay <strong>múltiples opciones</strong>. <code>elif</code> es la abreviación de "else if" (si no, pero si...):</p>
+        <div class="code-example">nota = 5.5<br><br>if nota >= 6.0:<br>    print("Excelente")<br>elif nota >= 5.0:<br>    print("Bien")<br>elif nota >= 4.0:<br>    print("Suficiente")<br>else:<br>    print("Reprobado")<br><br># Resultado: Bien</div>
+        <div class="deep-box">🧠 <strong>Regla clave:</strong> Python evalúa las condiciones <strong>de arriba hacia abajo</strong>. Ejecuta el <strong>primer bloque True</strong> que encuentre y salta todo lo demás. ¡Solo uno se ejecuta!</div>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 Condicionales Anidados</h2>
+        <p>Puedes poner un if dentro de otro if para tomar decisiones más complejas:</p>
+        <div class="code-example">edad = 25<br>tiene_carnet = True<br><br>if edad >= 18:<br>    if tiene_carnet:<br>        print("Puede conducir")<br>    else:<br>        print("Necesita sacar el carnet")<br>else:<br>    print("Es menor de edad")<br><br># Resultado: Puede conducir</div>
+        <div class="tip-box">💡 <strong>Tip:</strong> Cada nivel de indentación marca un nuevo nivel de decisión. Usa lápiz y papel para seguirlos.</div>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 Operadores útiles en condiciones</h2>
+        <table class="doc-table">
+          <tr><th>Operador</th><th>Significado</th><th>Ejemplo</th><th>Resultado</th></tr>
+          <tr><td><code>==</code></td><td>Igual a</td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code>!=</code></td><td>Diferente de</td><td><code>5 != 3</code></td><td><code>True</code></td></tr>
+          <tr><td><code>></code></td><td>Mayor que</td><td><code>10 > 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code><</code></td><td>Menor que</td><td><code>3 < 2</code></td><td><code>False</code></td></tr>
+          <tr><td><code>>=</code></td><td>Mayor o igual</td><td><code>5 >= 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code><=</code></td><td>Menor o igual</td><td><code>3 <= 4</code></td><td><code>True</code></td></tr>
+          <tr><td><code>and</code></td><td>Ambas deben ser True</td><td><code>True and False</code></td><td><code>False</code></td></tr>
+          <tr><td><code>or</code></td><td>Al menos una True</td><td><code>True or False</code></td><td><code>True</code></td></tr>
+          <tr><td><code>not</code></td><td>Invierte el valor</td><td><code>not True</code></td><td><code>False</code></td></tr>
+        </table>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔹 En Diagramas de Flujo</h2>
+        <p>Las decisiones se representan con un <strong>rombo ◇</strong>. Del rombo salen dos caminos: <strong>Sí</strong> (True) y <strong>No</strong> (False).</p>
+        <div class="tip-box">🗝️ <strong>Clave para el taller:</strong> En los ejercicios de diagramas, sigue siempre el camino que corresponda según el valor de la condición. Si hay múltiples rombos, evalúa cada uno en orden.</div>
+      </div>
+
+      <div class="doc-section" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-color: #a5d6a7;">
+        <h2>🎯 ¡Estás list@! ¡A practicar!</h2>
+        <p>Ahora que revisaste la teoría, es momento de poner todo en práctica. Usa los botones de arriba para navegar entre las secciones de ejercicios. <strong>¡Recuerda que puedes volver a esta referencia en cualquier momento!</strong> 🌟</p>
+        <p class="mt-2"><strong>Consejo:</strong> Te recomendamos hacer los ejercicios en orden: primero selección múltiple, luego V o F, después unir, diagramas, y finalmente trazar código. ¡Así irás de lo más sencillo a lo más desafiante! 🚀</p>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: SELECCIÓN MÚLTIPLE                           -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+
+      <!-- Section header -->
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🎯</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple — Conceptos</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. ¡Lee bien cada opción!</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #f48fb1, #ce93d8)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in choiceExercises" :key="'choice-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-lilac flex items-center justify-center text-kawaii-deep font-bold text-lg">{{ idx+1 }}</span>
+          <div>
+            <h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3>
+            <p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p>
+          </div>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn"
+            :class="{
+              'correct': ex.answered && oi === ex.correct,
+              'wrong': ex.answered && ex.selected === oi && oi !== ex.correct,
+              'reveal-correct': ex.answered && oi === ex.correct && ex.selected !== oi,
+              'disabled': ex.answered
+            }"
+            @click="answerChoice(idx, oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span>
+            <span v-html="opt"></span>
+            <span v-if="ex.answered && oi === ex.correct" class="float-right bounce">✅</span>
+            <span v-if="ex.answered && ex.selected === oi && oi !== ex.correct" class="float-right bounce">❌</span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
+             :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span>
+          <span v-else class="font-bold text-red-700">😿 No es esa. </span>
+          <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: VERDADERO O FALSO                            -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✅❌</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmación y decide: ¿es verdadera o falsa?</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #66bb6a, #26a69a)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in tfExercises" :key="'tf-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-sky flex items-center justify-center text-blue-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div>
+            <h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3>
+          </div>
+        </div>
+        <p class="text-kawaii-text mb-4 leading-relaxed" v-html="ex.statement"></p>
+        <div class="flex gap-3 justify-center">
+          <button class="tf-btn true-btn"
+            :class="{
+              'selected-correct': ex.answered && ex.selected === true && ex.correct === true,
+              'selected-wrong':   ex.answered && ex.selected === true && ex.correct !== true,
+              'reveal-correct':   ex.answered && ex.selected !== true && ex.correct === true,
+              'disabled':         ex.answered
+            }"
+            @click="answerTF(idx, true)" :disabled="ex.answered">
+            ✅ Verdadero
+          </button>
+          <button class="tf-btn false-btn"
+            :class="{
+              'selected-correct': ex.answered && ex.selected === false && ex.correct === false,
+              'selected-wrong':   ex.answered && ex.selected === false && ex.correct !== false,
+              'reveal-correct':   ex.answered && ex.selected !== false && ex.correct === false,
+              'disabled':         ex.answered
+            }"
+            @click="answerTF(idx, false)" :disabled="ex.answered">
+            ❌ Falso
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
+             :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span>
+          <span v-else class="font-bold text-red-700">😿 ¡Ojo! </span>
+          <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: UNIR CONCEPTOS                               -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🔗</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Unir Conceptos</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Haz clic en un elemento de la izquierda y luego en su pareja correcta de la derecha.</p>
+      </div>
+
+      <div v-for="(ex, exIdx) in matchData" :key="'match-'+exIdx" class="card p-6 fade-in-up" :style="{ animationDelay: (exIdx*0.1)+'s' }">
+        <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
+
+        <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
+          <!-- Left -->
+          <div class="match-left"
+               :class="{ 'cursor-pointer': !pair.matched, 'opacity-60': pair.matched }"
+               :style="pair.matched ? 'border-color:#66bb6a;background:#e8f5e9' : (selectedLeft && selectedLeft.exIdx === exIdx && selectedLeft.pIdx === pIdx ? 'border-color:#7b1fa2;background:#ede7f6;box-shadow:0 0 0 2px rgba(123,31,162,0.2)' : '')"
+               @click="selectMatchLeft(exIdx, pIdx)"
+               v-html="pair.left">
+          </div>
+
+          <!-- Arrow -->
+          <div class="match-arrow" :class="{ matched: pair.matched }">
+            <span v-if="pair.matched">✓</span>
+            <span v-else>→</span>
+          </div>
+
+          <!-- Right (shuffled) -->
+          <div class="match-right"
+               :class="{ matched: ex.shuffledRights[pIdx].matched, wrong: ex.shuffledRights[pIdx].wrong, selected: selectedRight && selectedRight.exIdx === exIdx && selectedRight.pIdx === pIdx }"
+               @click="selectMatchRight(exIdx, pIdx)"
+               v-html="ex.shuffledRights[pIdx].text">
+          </div>
+        </div>
+
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center">
+          <span class="font-bold text-green-700">🎉 ¡Perfecto! ¡Todos los pares correctos!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: DIAGRAMAS DE FLUJO                           -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'flow'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🔷</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Leer e Interpretar Diagramas de Flujo</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el flujo del diagrama con la entrada dada y determina la salida.</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ flowScore }} / {{ flowData.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: flowProgress + '%', background: 'linear-gradient(90deg, #42a5f5, #7e57c2)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in flowData" :key="'flow-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-sky flex items-center justify-center text-blue-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div>
+            <h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3>
+            <p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p>
+          </div>
+        </div>
+        <div class="mb-5 bg-white rounded-xl p-4 shadow-sm flex justify-center">
+          <div :id="'mermaid-flow-'+idx" class="mermaid">{{ ex.diagram }}</div>
+        </div>
+        <div v-if="ex.inputHint" class="mb-4 bg-kawaii-cream rounded-lg px-4 py-2 text-sm border border-yellow-200">
+          📥 <strong>Entrada:</strong> {{ ex.inputHint }}
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn"
+            :class="{
+              'correct': ex.answered && oi === ex.correct,
+              'wrong': ex.answered && ex.selected === oi && oi !== ex.correct,
+              'reveal-correct': ex.answered && oi === ex.correct && ex.selected !== oi,
+              'disabled': ex.answered
+            }"
+            @click="answerFlow(idx, oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span>
+            <span v-html="opt"></span>
+            <span v-if="ex.answered && oi === ex.correct" class="float-right bounce">✅</span>
+            <span v-if="ex.answered && ex.selected === oi && oi !== ex.correct" class="float-right bounce">❌</span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
+             :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span>
+          <span v-else class="font-bold text-red-700">😿 Incorrecto. </span>
+          <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  SECCIÓN: TRAZAR CÓDIGO                                -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🐍</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Leer e Interpretar Código Python</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee el código, trázalo paso a paso (usa lápiz y papel si quieres) y elige la salida correcta.</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #ffa726, #ef5350)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in traceData" :key="'trace-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div>
+            <h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3>
+            <p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p>
+          </div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2">
+            <span>🐍</span><span>Python</span>
+          </div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <div v-if="ex.inputHint" class="mb-4 bg-kawaii-cream rounded-lg px-4 py-2 text-sm border border-yellow-200">
+          📥 <strong>Entrada del usuario:</strong> {{ ex.inputHint }}
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn"
+            :class="{
+              'correct': ex.answered && oi === ex.correct,
+              'wrong': ex.answered && ex.selected === oi && oi !== ex.correct,
+              'reveal-correct': ex.answered && oi === ex.correct && ex.selected !== oi,
+              'disabled': ex.answered
+            }"
+            @click="answerTrace(idx, oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span>
+            <span v-html="opt"></span>
+            <span v-if="ex.answered && oi === ex.correct" class="float-right bounce">✅</span>
+            <span v-if="ex.answered && ex.selected === oi && oi !== ex.correct" class="float-right bounce">❌</span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
+             :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span>
+          <span v-else class="font-bold text-red-700">😿 Incorrecto. </span>
+          <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  RESUMEN FINAL (siempre visible al final)              -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div v-if="currentSection !== 'ref' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
+      <div class="score-summary fade-in-up">
+        <p class="text-4xl mb-2">🌟</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
+        <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      Hecho con 💖 para Fundamentos de Programación 2026
+    </footer>
+
+  </div>
+
+  <!-- Data -->
+  <script src="../data/conditionals-exercises.js"></script>
+
+  <!-- Shared engine -->
+  <script src="../js/app.js"></script>
+
+  <!-- Page logic -->
+  <script>
+    const { createApp } = Vue;
+
+    const app = createApp({
+      data() {
+        return {
+          currentSection: 'ref',
+
+          // Choice exercises
+          choiceExercises: choiceExercises.map(e => ({ ...e, answered: false, selected: null })),
+
+          // True/False exercises
+          tfExercises: tfExercises.map(e => ({ ...e, answered: false, selected: null })),
+
+          // Match exercises
+          matchData: matchExercises.map(ex => {
+            const shuffled = [...ex.pairs].map(p => ({ text: p.right, id: p.id, matched: false, wrong: false }));
+            // Shuffle the right side
+            for (let i = shuffled.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return {
+              ...ex,
+              pairs: ex.pairs.map(p => ({ ...p, matched: false })),
+              shuffledRights: shuffled,
+              allMatched: false,
+            };
+          }),
+          selectedLeft: null,
+          selectedRight: null,
+
+          // Flow exercises
+          flowData: flowConditionalExercises.map(e => ({ ...e, answered: false, selected: null })),
+
+          // Trace exercises
+          traceData: traceExercises.map(e => ({ ...e, answered: false, selected: null })),
+        };
+      },
+      computed: {
+        // Choice
+        choiceScore() { return this.choiceExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        choiceProgress() { 
+          const ans = this.choiceExercises.filter(e => e.answered).length;
+          return this.choiceExercises.length ? Math.round(ans / this.choiceExercises.length * 100) : 0;
+        },
+        // TF
+        tfScore() { return this.tfExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        tfProgress() {
+          const ans = this.tfExercises.filter(e => e.answered).length;
+          return this.tfExercises.length ? Math.round(ans / this.tfExercises.length * 100) : 0;
+        },
+        // Flow
+        flowScore() { return this.flowData.filter(e => e.answered && e.selected === e.correct).length; },
+        flowProgress() {
+          const ans = this.flowData.filter(e => e.answered).length;
+          return this.flowData.length ? Math.round(ans / this.flowData.length * 100) : 0;
+        },
+        // Trace
+        traceScore() { return this.traceData.filter(e => e.answered && e.selected === e.correct).length; },
+        traceProgress() {
+          const ans = this.traceData.filter(e => e.answered).length;
+          return this.traceData.length ? Math.round(ans / this.traceData.length * 100) : 0;
+        },
+        // Section summary
+        sectionScore() {
+          if (this.currentSection === 'choice') return this.choiceScore;
+          if (this.currentSection === 'tf') return this.tfScore;
+          if (this.currentSection === 'flow') return this.flowScore;
+          if (this.currentSection === 'trace') return this.traceScore;
+          return 0;
+        },
+        sectionTotal() {
+          if (this.currentSection === 'choice') return this.choiceExercises.length;
+          if (this.currentSection === 'tf') return this.tfExercises.length;
+          if (this.currentSection === 'flow') return this.flowData.length;
+          if (this.currentSection === 'trace') return this.traceData.length;
+          return 0;
+        },
+        allAnswered() {
+          if (this.currentSection === 'choice') return this.choiceExercises.every(e => e.answered);
+          if (this.currentSection === 'tf') return this.tfExercises.every(e => e.answered);
+          if (this.currentSection === 'flow') return this.flowData.every(e => e.answered);
+          if (this.currentSection === 'trace') return this.traceData.every(e => e.answered);
+          return false;
+        },
+        scoreMessage() {
+          const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
+          if (pct === 1) return '🌟 ¡Perfecto! ¡Eres un crack! 🌟';
+          if (pct >= 0.8) return '¡Excelente! ¡Casi perfecto! 🎉';
+          if (pct >= 0.6) return '¡Bien! Sigue practicando para mejorar 💪';
+          if (pct >= 0.4) return 'Vas por buen camino. ¡Revisa la referencia y vuelve a intentar! 📖';
+          return 'No te preocupes, ¡la práctica hace al maestro! Revisa la referencia 📖';
+        },
+      },
+      methods: {
+        highlightCode(code) {
+          return highlightPython(code);
+        },
+        goToSection(section) {
+          this.currentSection = section;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (section === 'flow') {
+            this.$nextTick(() => {
+              setTimeout(() => renderMermaidDiagrams(), 100);
+            });
+          }
+        },
+        // Choice
+        answerChoice(idx, oi) {
+          const ex = this.choiceExercises[idx];
+          if (ex.answered) return;
+          ex.selected = oi;
+          ex.answered = true;
+        },
+        // TF
+        answerTF(idx, value) {
+          const ex = this.tfExercises[idx];
+          if (ex.answered) return;
+          ex.selected = value;
+          ex.answered = true;
+        },
+        // Match
+        selectMatchLeft(exIdx, pIdx) {
+          const pair = this.matchData[exIdx].pairs[pIdx];
+          if (pair.matched) return;
+          this.selectedLeft = { exIdx, pIdx };
+          this.tryMatch();
+        },
+        selectMatchRight(exIdx, pIdx) {
+          const item = this.matchData[exIdx].shuffledRights[pIdx];
+          if (item.matched) return;
+          this.selectedRight = { exIdx, pIdx };
+          this.tryMatch();
+        },
+        tryMatch() {
+          if (!this.selectedLeft || !this.selectedRight) return;
+          if (this.selectedLeft.exIdx !== this.selectedRight.exIdx) {
+            this.selectedLeft = null;
+            this.selectedRight = null;
+            return;
+          }
+          const exIdx = this.selectedLeft.exIdx;
+          const leftPair = this.matchData[exIdx].pairs[this.selectedLeft.pIdx];
+          const rightItem = this.matchData[exIdx].shuffledRights[this.selectedRight.pIdx];
+
+          if (leftPair.id === rightItem.id) {
+            // Correct match
+            leftPair.matched = true;
+            rightItem.matched = true;
+            // Check if all matched
+            if (this.matchData[exIdx].pairs.every(p => p.matched)) {
+              this.matchData[exIdx].allMatched = true;
+            }
+          } else {
+            // Wrong match
+            rightItem.wrong = true;
+            setTimeout(() => { rightItem.wrong = false; }, 600);
+          }
+          this.selectedLeft = null;
+          this.selectedRight = null;
+        },
+        // Flow
+        answerFlow(idx, oi) {
+          const ex = this.flowData[idx];
+          if (ex.answered) return;
+          ex.selected = oi;
+          ex.answered = true;
+        },
+        // Trace
+        answerTrace(idx, oi) {
+          const ex = this.traceData[idx];
+          if (ex.answered) return;
+          ex.selected = oi;
+          ex.answered = true;
+        },
+      },
+      mounted() {
+        setupMermaid();
+      },
+    });
+
+    app.mount('#app');
+  </script>
+
+</body>
+</html>

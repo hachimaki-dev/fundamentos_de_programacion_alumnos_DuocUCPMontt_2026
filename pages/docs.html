@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📚 Documentación de Referencia — Fundamentos 2026</title>
+  <meta name="description" content="Guía rápida de Python y diagramas de flujo para Fundamentos de Programación 2026." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+
+  <div class="relative z-10">
+
+    <!-- Back button + Header -->
+    <div class="page-container">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">
+          ← Volver al diario
+        </a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">
+          📚 Documentación de Referencia
+        </h1>
+        <p class="text-kawaii-text/70 max-w-xl text-sm">
+          Tu guía rápida de consulta para resolver los ejercicios. ¡Consúltala siempre que la necesites! 🌟
+        </p>
+      </div>
+    </div>
+
+    <!-- Documentation content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 mt-2 space-y-6 fade-in-up">
+
+      <!-- Intro -->
+      <div class="doc-section">
+        <h2>📖 ¿Qué necesitas saber para estos ejercicios?</h2>
+        <p>Aquí tienes un resumen de los conceptos fundamentales que necesitas dominar para resolver los ejercicios de Python y Diagramas de Flujo. ¡Es tu guía rápida de consulta! 🌟</p>
+      </div>
+
+      <!-- ===== PYTHON SECTION ===== -->
+      <div class="doc-section">
+        <h2>🐍 Fundamentos de Python</h2>
+
+        <h3>1. Variables y Asignación</h3>
+        <p>Una <strong>variable</strong> es un espacio en memoria donde guardamos datos. En Python, se crean simplemente con <code>=</code>:</p>
+        <div class="code-example">nombre = "Ana"<br>edad = 20<br>precio = 9.99<br>aprobado = True</div>
+        <div class="tip-box">💡 <strong>Tip:</strong> No necesitas declarar el tipo de dato. Python lo detecta automáticamente según el valor que asignes.</div>
+
+        <h3>2. Tipos de Datos Básicos</h3>
+        <table class="doc-table">
+          <tr><th>Tipo</th><th>Nombre en Python</th><th>Ejemplo</th><th>Descripción</th></tr>
+          <tr><td>Entero</td><td><code>int</code></td><td><code>42</code></td><td>Números sin decimales</td></tr>
+          <tr><td>Decimal</td><td><code>float</code></td><td><code>3.14</code></td><td>Números con decimales</td></tr>
+          <tr><td>Texto</td><td><code>str</code></td><td><code>"hola"</code></td><td>Cadenas de caracteres (entre comillas)</td></tr>
+          <tr><td>Booleano</td><td><code>bool</code></td><td><code>True</code> / <code>False</code></td><td>Verdadero o Falso</td></tr>
+        </table>
+
+        <h3>3. Entrada de Datos: <code>input()</code></h3>
+        <p>La función <code>input()</code> lee texto desde el teclado. <strong>Siempre devuelve un string</strong>, incluso si el usuario escribe un número:</p>
+        <div class="code-example">nombre = input("¿Cómo te llamas? ")  # devuelve str<br>edad = input("¿Cuántos años tienes? ")  # también devuelve str (¡ojo!)</div>
+        <div class="tip-box">⚠️ <strong>Cuidado:</strong> Si quieres hacer operaciones matemáticas con lo que ingresa el usuario, debes convertirlo a número con <code>int()</code> o <code>float()</code>.</div>
+
+        <h3>4. Conversión de Tipos (Parseo)</h3>
+        <p>Para convertir entre tipos de datos usamos funciones especiales:</p>
+        <div class="code-example">edad_texto = input("Edad: ")   # "25" (es un string)<br>edad_numero = int(edad_texto)  # 25 (ahora es int)<br><br># También se puede hacer en una línea:<br>edad = int(input("Edad: "))</div>
+        <table class="doc-table">
+          <tr><th>Función</th><th>Convierte a</th><th>Ejemplo</th></tr>
+          <tr><td><code>int()</code></td><td>Entero</td><td><code>int("42")</code> → <code>42</code></td></tr>
+          <tr><td><code>float()</code></td><td>Decimal</td><td><code>float("3.14")</code> → <code>3.14</code></td></tr>
+          <tr><td><code>str()</code></td><td>Texto</td><td><code>str(42)</code> → <code>"42"</code></td></tr>
+        </table>
+
+        <h3>5. Salida de Datos: <code>print()</code></h3>
+        <p><code>print()</code> muestra información en la consola. Puede recibir varios argumentos separados por coma (los separa con un espacio automáticamente):</p>
+        <div class="code-example">print("Hola")                    # Hola<br>print("Edad:", 25)               # Edad: 25<br>print("Hola", "mundo", "!")      # Hola mundo !</div>
+
+        <h3>6. Operadores Aritméticos</h3>
+        <table class="doc-table">
+          <tr><th>Operador</th><th>Operación</th><th>Ejemplo</th><th>Resultado</th></tr>
+          <tr><td><code>+</code></td><td>Suma</td><td><code>5 + 3</code></td><td><code>8</code></td></tr>
+          <tr><td><code>-</code></td><td>Resta</td><td><code>10 - 4</code></td><td><code>6</code></td></tr>
+          <tr><td><code>*</code></td><td>Multiplicación</td><td><code>3 * 4</code></td><td><code>12</code></td></tr>
+          <tr><td><code>/</code></td><td>División</td><td><code>10 / 3</code></td><td><code>3.333...</code></td></tr>
+          <tr><td><code>//</code></td><td>División entera</td><td><code>10 // 3</code></td><td><code>3</code></td></tr>
+          <tr><td><code>%</code></td><td>Módulo (resto)</td><td><code>10 % 3</code></td><td><code>1</code></td></tr>
+          <tr><td><code>**</code></td><td>Potencia</td><td><code>2 ** 3</code></td><td><code>8</code></td></tr>
+        </table>
+        <div class="tip-box">💡 <strong>Tip:</strong> El operador <code>+</code> con strings los <strong>concatena</strong> (pega), no los suma: <code>"10" + "20"</code> → <code>"1020"</code></div>
+
+        <h3>7. Operadores de Comparación</h3>
+        <p>Devuelven <code>True</code> o <code>False</code>:</p>
+        <table class="doc-table">
+          <tr><th>Operador</th><th>Significado</th><th>Ejemplo</th><th>Resultado</th></tr>
+          <tr><td><code>==</code></td><td>Igual a</td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code>!=</code></td><td>Distinto de</td><td><code>5 != 3</code></td><td><code>True</code></td></tr>
+          <tr><td><code>&gt;</code></td><td>Mayor que</td><td><code>10 &gt; 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code>&lt;</code></td><td>Menor que</td><td><code>3 &lt; 2</code></td><td><code>False</code></td></tr>
+          <tr><td><code>&gt;=</code></td><td>Mayor o igual</td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr>
+          <tr><td><code>&lt;=</code></td><td>Menor o igual</td><td><code>3 &lt;= 4</code></td><td><code>True</code></td></tr>
+        </table>
+
+        <h3>8. Operadores Lógicos</h3>
+        <p>Combinan expresiones booleanas:</p>
+        <table class="doc-table">
+          <tr><th>Operador</th><th>Significado</th><th>Ejemplo</th><th>Resultado</th></tr>
+          <tr><td><code>and</code></td><td>Y (ambas deben ser True)</td><td><code>True and False</code></td><td><code>False</code></td></tr>
+          <tr><td><code>or</code></td><td>O (al menos una True)</td><td><code>True or False</code></td><td><code>True</code></td></tr>
+          <tr><td><code>not</code></td><td>Negación (invierte)</td><td><code>not True</code></td><td><code>False</code></td></tr>
+        </table>
+        <div class="code-example">a = 10<br>b = 5<br>print(a &gt; b and b &gt; 0)   # True (ambas son verdaderas)<br>print(a &lt; b or b == 5)   # True (la segunda es verdadera)<br>print(not(a &gt; b))        # False (niega True)</div>
+      </div>
+
+      <!-- ===== FLOWCHART SECTION ===== -->
+      <div class="doc-section">
+        <h2>🔷 Diagramas de Flujo</h2>
+        <p>Un diagrama de flujo es una representación visual de un algoritmo. Usa figuras estándar para representar cada tipo de operación:</p>
+
+        <h3>Figuras que usamos</h3>
+        <table class="doc-table">
+          <tr><th>Figura</th><th>Nombre</th><th>Se usa para</th></tr>
+          <tr><td>⬭ Óvalo</td><td>Inicio / Fin</td><td>Marcar el inicio y el final del algoritmo</td></tr>
+          <tr><td>▭ Rectángulo</td><td>Proceso</td><td>Operaciones, cálculos, asignaciones de variables</td></tr>
+          <tr><td>▱ Paralelogramo</td><td>Entrada / Salida</td><td>Leer datos del usuario (<code>input</code>) o mostrar resultados (<code>print</code>)</td></tr>
+          <tr><td>◇ Rombo</td><td>Decisión</td><td>Preguntas que se responden con Sí o No (compuertas lógicas)</td></tr>
+        </table>
+
+        <h3>¿Cómo leer un diagrama de flujo?</h3>
+        <ul>
+          <li>Empieza siempre por el <strong>óvalo de Inicio</strong></li>
+          <li>Sigue las flechas en orden descendente</li>
+          <li>En un <strong>paralelogramo de entrada</strong>, simula que el usuario escribe el valor dado</li>
+          <li>En un <strong>rectángulo</strong>, realiza la operación indicada</li>
+          <li>En un <strong>rombo</strong>, evalúa la condición: si es verdadera sigue por "Sí", si es falsa sigue por "No"</li>
+          <li>El <strong>paralelogramo de salida</strong> muestra el resultado en pantalla</li>
+          <li>Termina en el <strong>óvalo de Fin</strong></li>
+        </ul>
+
+        <div class="tip-box">💡 <strong>Consejo práctico:</strong> Usa lápiz y papel. Escribe una tabla con las variables y ve actualizando sus valores línea a línea mientras sigues el flujo. ¡Es la técnica más efectiva!</div>
+      </div>
+
+      <!-- ===== STRATEGY SECTION ===== -->
+      <div class="doc-section">
+        <h2>🧠 ¿Cómo resolver estos ejercicios?</h2>
+        <p>Sigue estos pasos para trazar cualquier código o diagrama de flujo:</p>
+        <ul>
+          <li><strong>Paso 1:</strong> Identifica todas las variables del programa</li>
+          <li><strong>Paso 2:</strong> Crea una tabla en tu cuaderno con una columna por variable</li>
+          <li><strong>Paso 3:</strong> Ejecuta línea por línea, actualizando los valores de las variables</li>
+          <li><strong>Paso 4:</strong> Cuando encuentres un <code>print()</code> o una salida, anota lo que se mostraría</li>
+          <li><strong>Paso 5:</strong> Compara tu resultado con las alternativas</li>
+        </ul>
+        <div class="code-example"><strong>Ejemplo de tabla de trazado:</strong><br>───────────────────────────────<br>Línea │  a  │  b  │ resultado<br>───────────────────────────────<br>  1   │  5  │  -  │     -<br>  2   │  5  │  3  │     -<br>  3   │  5  │  3  │     8<br>  4   │ → Imprime: "El resultado es: 8"</div>
+      </div>
+
+      <!-- ===== GO DEEPER SECTION ===== -->
+      <div class="doc-section">
+        <h2>🚀 ¿Quieres profundizar más?</h2>
+        <p>¡Excelente! Aquí van algunos temas y recursos para seguir aprendiendo:</p>
+
+        <h3>📌 Temas para explorar después</h3>
+        <ul>
+          <li><strong>Condicionales</strong> (<code>if</code>, <code>elif</code>, <code>else</code>): Toma decisiones en tu código según condiciones</li>
+          <li><strong>Ciclos</strong> (<code>for</code>, <code>while</code>): Repite bloques de código automáticamente</li>
+          <li><strong>Funciones</strong> (<code>def</code>): Crea bloques de código reutilizables</li>
+          <li><strong>Listas</strong>: Almacena múltiples valores en una sola variable</li>
+          <li><strong>F-strings</strong>: Formato de texto moderno con <code>f"Hola {nombre}"</code></li>
+        </ul>
+
+        <h3>🔗 Recursos recomendados</h3>
+        <ul>
+          <li><a href="https://docs.python.org/es/3/tutorial/" target="_blank">📘 Tutorial oficial de Python (en español)</a></li>
+          <li><a href="https://www.w3schools.com/python/" target="_blank">🌐 W3Schools Python Tutorial</a> — Ideal para practicar poco a poco</li>
+          <li><a href="https://pythontutor.com/" target="_blank">🔍 Python Tutor</a> — Visualiza cómo se ejecuta tu código paso a paso</li>
+          <li><a href="https://replit.com/" target="_blank">💻 Replit</a> — Escribe y ejecuta Python directamente en el navegador</li>
+        </ul>
+
+        <div class="deep-box">🌟 <strong>¡Recuerda!</strong> La programación se aprende <strong>practicando</strong>. No te frustres si algo no sale a la primera. Cada error es una oportunidad de aprender algo nuevo. ¡Tú puedes! 💪✨</div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <div class="flex items-center gap-3 bg-white/40 p-3 rounded-2xl border border-white/50 shadow-sm backdrop-blur-sm">
+          <a href="https://github.com/hachimaki-dev" target="_blank" rel="noopener noreferrer">
+            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 border-kawaii-rose shadow-md transition-transform hover:scale-110" />
+          </a>
+          <div class="text-left leading-tight">
+            <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
+            <p class="text-xs font-semibold text-kawaii-text/80">Puerto Montt DuocUc 2026</p>
+          </div>
+        </div>
+        <p class="text-sm text-kawaii-text/60">Hecho con 💖 para Fundamentos de Programación 2026</p>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

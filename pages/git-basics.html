@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🐙 Entrada 0: Lo básico de Git — Fundamentos 2026</title>
+  <meta name="description" content="Guía básica de Git: init, commit, status, ramas y Gitflow." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+
+  <div class="relative z-10">
+
+    <!-- Back button + Header -->
+    <div class="page-container">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">
+          ← Volver al diario
+        </a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">
+          🐙 Entrada 0: Lo básico de Git
+        </h1>
+        <p class="text-kawaii-text/70 max-w-xl text-sm">
+          Antes de empezar a programar, es vital conocer cómo guardar nuestro código. ¡Aprende los comandos esenciales de Git! 🚀
+        </p>
+      </div>
+    </div>
+
+    <!-- Documentation content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 mt-2 space-y-6 fade-in-up">
+
+      <!-- Intro & Repo -->
+      <div class="doc-section">
+        <h2>📂 Repositorio del Curso</h2>
+        <p>Todo el material, ejercicios y ejemplos del curso de Fundamentos de Programación estarán disponibles en nuestro repositorio oficial de GitHub.</p>
+        <div class="code-example text-center">
+          <a href="https://github.com/hachimaki-dev/fundamentos_de_programacion_alumnos_DuocUCPMontt_2026.git" target="_blank" class="text-kawaii-deep font-bold hover:underline" style="word-break: break-all;">
+            🔗 fundamentos_de_programacion_alumnos_DuocUCPMontt_2026.git
+          </a>
+        </div>
+        <div class="tip-box mt-4">💡 <strong>Pro tip:</strong> Puedes clonar este repositorio en tu computadora usando <code>git clone [url]</code> para tener todos los archivos localmente.</div>
+      </div>
+
+      <!-- Git Basics -->
+      <div class="doc-section">
+        <h2>⚙️ Comandos Esenciales de Git</h2>
+        <p>Git es un sistema de control de versiones. Imagina que es como un "viaje en el tiempo" o un sistema de autoguardado súper avanzado para tus proyectos de código.</p>
+
+        <h3>1. Iniciar un proyecto: <code>git init</code></h3>
+        <p>Convierte una carpeta normal de tu computadora en un repositorio de Git local.</p>
+        <div class="code-example">git init</div>
+
+        <h3>2. Ver el estado: <code>git status</code></h3>
+        <p>Es el comando que más usarás. Te dice en qué rama estás, qué archivos has modificado, qué archivos nuevos hay, y cuáles están listos para guardarse.</p>
+        <div class="code-example">git status</div>
+
+        <h3>3. Guardar cambios: <code>git commit</code></h3>
+        <p>Guardar en Git requiere dos pasos: primero "preparas" los archivos (add) y luego creas el "punto de guardado" (commit) con un mensaje descriptivo.</p>
+        <div class="code-example"># 1. Preparar todos los cambios<br>git add .<br><br># 2. Crear el commit<br>git commit -m "Mi primer mensaje de guardado"</div>
+
+        <h3>4. Cambio de rama: <code>git branch</code> y <code>git checkout</code></h3>
+        <p>Las ramas (branches) te permiten experimentar sin romper el código principal. Puedes crear una rama nueva o cambiar a una existente.</p>
+        <div class="code-example"># Ver todas las ramas<br>git branch<br><br># Crear y cambiar a una rama nueva<br>git checkout -b mi-nueva-funcion<br># (o en versiones nuevas de Git: git switch -c mi-nueva-funcion)<br><br># Cambiar de vuelta a la rama principal (main)<br>git checkout main<br># (o git switch main)</div>
+      </div>
+
+      <!-- Gitflow -->
+      <div class="doc-section">
+        <h2>🌊 Entendiendo Gitflow</h2>
+        <p><strong>Gitflow</strong> es un modelo de trabajo (una forma de organizarse) para usar las ramas de Git en proyectos más grandes. Define un conjunto estricto de ramas principales y de soporte:</p>
+        <ul>
+          <li><code>main</code> (o master): El código perfecto y en producción.</li>
+          <li><code>develop</code>: Donde integramos todas las nuevas funciones antes de lanzarlas.</li>
+          <li><code>feature/...</code>: Ramas temporales donde programamos cada nueva funcionalidad.</li>
+        </ul>
+
+        <h3>🤔 Recomendaciones de Flujos de Trabajo</h3>
+        
+        <table class="doc-table mt-4 w-full">
+          <tr><th>Escenario</th><th>¿Qué flujo usar?</th><th>Descripción</th></tr>
+          <tr>
+            <td><strong>Para aprender o proyectos personales pequeños</strong></td>
+            <td><strong>Trunk-based básico (Solo Main)</strong></td>
+            <td>Trabaja directamente en <code>main</code>. Haz <code>add</code> y <code>commit</code> frecuentemente. Es perfecto para empezar y no complicarse con ramas hasta que domines lo básico.</td>
+          </tr>
+          <tr>
+            <td><strong>Trabajar solo (nivel intermedio)</strong></td>
+            <td><strong>GitHub Flow (Main + Feature branches)</strong></td>
+            <td>La rama <code>main</code> siempre está limpia. Si vas a agregar algo nuevo, creas una rama <code>feature/mi-idea</code>, haces tus cambios, y luego la unes (merge) a <code>main</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Trabajar en equipo completo</strong></td>
+            <td><strong>GitHub Flow con Pull Requests (Recomendado hoy) o Gitflow Clásico</strong></td>
+            <td>En equipos modernos, GitHub Flow es más ágil. Cada developer crea una rama, sube su código y abre un "Pull Request" para que el equipo revise el código antes de unirlo a <code>main</code>. Gitflow Clásico se usa en proyectos corporativos con ciclos de lanzamiento estáticos y complejos.</td>
+          </tr>
+        </table>
+        
+        <div class="deep-box mt-6">🌟 <strong>En este curso:</strong> Te recomendamos empezar usando solo <code>main</code> para tus primeros ejercicios si trabajas solo. ¡Concéntrate en entender cómo funcionan <code>status</code>, <code>add</code> y <code>commit</code> primero!</div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <div class="flex items-center gap-3 bg-white/40 p-3 rounded-2xl border border-white/50 shadow-sm backdrop-blur-sm">
+          <a href="https://github.com/hachimaki-dev" target="_blank" rel="noopener noreferrer">
+            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 border-kawaii-rose shadow-md transition-transform hover:scale-110" />
+          </a>
+          <div class="text-left leading-tight">
+            <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
+            <p class="text-xs font-semibold text-kawaii-text/80">Puerto Montt DuocUc 2026</p>
+          </div>
+        </div>
+        <p class="text-sm text-kawaii-text/60">Hecho con 💖 para Fundamentos de Programación 2026</p>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
