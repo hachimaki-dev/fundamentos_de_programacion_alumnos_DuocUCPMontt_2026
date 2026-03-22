@@ -1,5 +1,8 @@
+#la variable opcion siempre empieza desde el numero 0
+#el comando while sirve repetir un bloque de codigo mientras la condicion sea True
+#Repite todo lo que está aquí adentro mientras el usuario NO elija la opción 5 que en este no hay nada pero se podria colocar para reiniciar el programa pero ya de por si lo hace de forma automatica
 opcion = 0
-while opcion != 4:
+while opcion != 5:
     print("-----Calculadora-----")
     print("Presione 1 para SUMAR")
     print("Presione 2 para RESTAR")
@@ -33,6 +36,6 @@ while opcion != 4:
         dividir1 = float(input("Ingrese el primer valor : "))
         dividir2 = float(input("Ingrese el segundo valor :"))
         resultado4 = dividir1 / dividir2 
-        print(f"El resultado de esta operacion es {resultado4}")
+        print(f"Resultado obtenido : {resultado4}")
 
 #Float por que por una extraña razon cuando coloco int se transforma en numeros negativos , en una calculadora tambien se calcula como decimales ciertas operaciones
