@@ -111,5 +111,32 @@ limpiar_term()
 
 print ("Te despiertas en Pueblo paleta y te diriges al laboratorio del Profesor Oak")
 
+print (f"\nProfesor Oak: Oh! {Nombre}, por fin estas aqui tengo un grupo de Pokémon recien capturados que quiero entregarles a ti y a {NombreRival} para que que entrenen y se conviertan en Maestros Pokémon")
+time.sleep (1)
+print (f"\n{NombreRival}: Vamos Abuelo, ¿realmente le tienes que dar un Pokémon a {Nombre}?, ¿porque no solo a mi me das los tres ya que yo soy el mejor entrenador despues de todo?")
+time.sleep (1)
+print (f"\nProfesor Oak: JAJAJAJA, tan arrogante como siempre {NombreRival}, por tu impaciencia y arrogancia ya he decidido que le voy a dar a {Nombre} a elegir primero")
+time.sleep (1)
+print (f"\nProfesor Oak: ¡Vamos {Nombre}!, Elije entre estas 3 opciones")
 
+PokemonInicial = int(input("""Escoje entre las siguientes opciones:
+1) Bulbasaur
+2) Squirtle
+3) Charmander
 
+Introduce un numero: """))
+
+if PokemonInicial == 1:
+    print("Has escogido a Bulbasaur")
+    Pokemon1= "Bulbasaur"
+elif PokemonInicial == 2:
+    print  ("Has escogido a Squirtle")
+    Pokemon1= "Squirtle"
+elif PokemonInicial == 3:
+    print ("Has escogido a Charmander")
+    Pokemon1= "Charmander"
+elif PokemonInicial == 25:
+    print ("HAS DESCUBIERTO UN EASTER EGG \n Has escogido a Pikachu")
+    Pokemon1= "Pikachu"
+else :
+    print ("Opcion Invalida")
