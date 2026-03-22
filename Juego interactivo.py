@@ -14,12 +14,22 @@ def limpiar_term():
         subprocess.run("clear", shell=True, check=True)
 
 
+def delay_print(s):
+    for c in s:
+        sys.stdout.write(c)
+        sys.stdout.flush()
+        time.sleep(0.25)
+
+
+
+
 limpiar_term()
+
 print("""
 █▀█ █▀█ █▄▀ █▀▀ █▀▄▀█ █▀█ █▄░█   █▀▀ █░░ █   █▀▀ █▀▄ █ ▀█▀ █ █▀█ █▄░█
 █▀▀ █▄█ █░█ ██▄ █░▀░█ █▄█ █░▀█   █▄▄ █▄▄ █   ██▄ █▄▀ █ ░█░ █ █▄█ █░▀█
 """)
-print("Pokémon Edición CLI abridged")
+print("Pokémon Edición CLI abridged\n by Cheela")
 
 time.sleep(2)
 
@@ -108,7 +118,11 @@ while Rival ==False:
 limpiar_term()
 print(f'Okay {Nombre} Tu aventura en el Mundo Pokémon esta por comenzar, te espero en mi laboratorio')
 time.sleep (2)
+print ("\nCargando:")
+delay_print("████████████")
+
 limpiar_term()
+
 
 print ("Te despiertas en Pueblo paleta y te diriges al laboratorio del Profesor Oak")
 
@@ -141,3 +155,34 @@ elif PokemonInicial == 25:
     Pokemon1= "Pikachu"
 else :
     print ("Opcion Invalida")
+
+
+#La eleccion del rival tambien depende del jugador, escogiendo el pokemon con ventaja de tipo
+PokemonRival =""
+if Pokemon1 == "Bulbasaur":
+    PokemonRival = "Charmander"
+if Pokemon1 == "Squirtle":
+    PokemonRival = "Bulbasaur"
+if Pokemon1 == "Charmander":
+    PokemonRival = "Squirtle"
+if Pokemon1 == "Pikachu":
+    PokemonRival = "Eevee"
+
+if PokemonInicial != 25:
+    print (f"\n {NombreRival}: Bien entonces yo escojo a {PokemonRival}") 
+elif PokemonInicial == 25:
+    print (f"\nSabes que {Nombre}, en vez de los Pokémon que tiene mi Abuelo voy a usar mi {PokemonRival} que tengo desde pequeño")
+    
+print ("\nCargando:")
+delay_print("████████████")
+limpiar_term()
+print (f"Intentas irte con tu {Pokemon1} pero {NombreRival} te detiene")
+print (f"\n{NombreRival}: ¡Espera {Nombre}! ¿Por qué no probamos nuestros Pokemon en una batalla Pokémon?")
+print ("\nCargando:")
+delay_print("████████████")
+
+limpiar_term()
+
+print (f"El {PokemonRival} de {NombreRival} quiere atacar. ¿Que quieres hacer?")
+
+print (f"\nTu pokémon es {Pokemon1}: \n")
