@@ -72,7 +72,7 @@ while Creacion==False:
 
     while Confirmacion== False:
         Correcion = input("es esto correcto? (Opciones Y/N) ")
-        if Correcion == "Y":
+        if Correcion == "Y" or Correcion == "y":
             Creacion=True
             Confirmacion=True
     
