@@ -46,7 +46,7 @@ print("""
 """)
 time.sleep(3)
 limpiar_term()
-
+#Pantalla de seleccion, en loop hasta que todas las opciones del jugador sean confirmadas
 Creacion= False
 while Creacion==False:
     print("\nAhora cuentame un poco sobre ti")
@@ -76,7 +76,8 @@ while Creacion==False:
             print("Opcion Invalida")
             Confirmacion = False
 
-limpiar_term()    
+limpiar_term() 
+#Pantalla de nombrar al rival, misma logica que la creacion de personaje   
 Rival = False
 
 while Rival ==False: 
@@ -118,14 +119,14 @@ time.sleep (1)
 print (f"\nProfesor Oak: JAJAJAJA, tan arrogante como siempre {NombreRival}, por tu impaciencia y arrogancia ya he decidido que le voy a dar a {Nombre} a elegir primero")
 time.sleep (1)
 print (f"\nProfesor Oak: ¡Vamos {Nombre}!, Elije entre estas 3 opciones")
-
+#En este caso he decidido crear 2 Variables PokemonInicial solo se usa para simplificar la eleccion a numeros y asi no tener que escribir el nombre completo del pokemon, posteriormente Pokemon1 es donde el programa va almacenar el pokemon elegido por el jugador en Nombre, para poder usado mas adelante en lineas de texto.
 PokemonInicial = int(input("""Escoje entre las siguientes opciones:
 1) Bulbasaur
 2) Squirtle
 3) Charmander
 
 Introduce un numero: """))
-
+Pokemon1 = ""
 if PokemonInicial == 1:
     print("Has escogido a Bulbasaur")
     Pokemon1= "Bulbasaur"
