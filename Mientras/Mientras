@@ -1,0 +1,45 @@
+#Texto
+print(input("Estas tranquilo en tu casa disfrutando del tiempo libre que te has ganado merecidamente cuando te interrumpen para darte un recado de esos que dependiendo de tu decision podrian arruinar la poca confianza que te tienen."))
+print(input("¡Te han enviado a comprar cilantro!"))
+print(input("Sin ninguna opción de elegir si ir o no te diriges a la verdureria de confianza."))
+print(input("al llegar a la verdureria te diriges al sector donde deberia estar el cilantro pero te das cuenta cuenta de algo curioso."))
+print(input("¡Existen dos plantas exactamente iguales, el cilantro y el perejil!"))
+print(input("Ahora es momento de elegir y sudando decides"))    
+
+#Decisión 1
+print(input("1: Jugartela y elegir una de las dos"))
+print(input("2: Ser inteligente y preguntar por ayuda"))
+
+decision1 = input("¿Que decides?")
+
+if decision1 == "1":
+    print(input("Decides que estas bastante grande para pedir ayuda y que eres lo suficientemente inteligente para saber diferenciar simples plantas"))
+    print(input("Ahora el momento de la verdad, ves que una de las plantas tiene hojas puntiagudas y la otra hojas mas redondeadas, no sabes la diferencia y es un 50/50 asi que eliges:"))
+#Decisión 1.1   
+    print(input("1: Hojas puntiagudas"))
+    print(input("2: Hojas redondeadas"))
+    
+    decision2 = input("Eliges") 
+    
+    if decision2 == "1":
+        print(input("Decides elegir la planta con hojas puntiagudas y con confianza llegas a la caja y pagas, al regresar a tu casa con confianza y miedo le enseñas a tu madre tu compra y te das cuenta al instante de tu error al ver volando hacia ti una chancla"))
+        print(input("FIN :)"))
+    elif decision2 == "2":
+        print(input("Decides elegir la planta con hojas redondeadas y con confianza llegas a la caja y pagas, al regresar a tu casa con confianza y miedo le enseñas a tu madre tu compra y al ver su cara de felicidad te das cuenta que hiciste un buen trabajo"))
+        print(input("¡¡¡¡¡ FELICIDADES !!!!!"))
+    else:
+        print(input("Nada? pues si no eliges nada vas a tener problemas en casa, enserio? ok"))
+        print(input("En este caso tal vez podria hacer algo mas elaborado como volver a la eleccion de respuestas o algo asi peeeero llevo programando dos semanas asi que en este caso"))
+        print(input("Como no decidiste nada ¡EXPLOTAS!"))
+        print(input("FIN :("))
+        
+
+elif decision1 == "2":
+    print(input("Has decidido pedir ayuda? Pues esa seria una buena idea"))
+    print(input("¡SI NO FUERAS INTROVERTIDO!"))
+    print(input("FIN"))
+else:
+    print(input("Es en serio? no eliges nada? bueno abajo te dire que pasara a continuacion"))
+    print(input("Que pasara a continuacion"))
+    print(input("JAJA FIN"))
+    
