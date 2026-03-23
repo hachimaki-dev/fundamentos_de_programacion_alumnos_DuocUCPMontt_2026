@@ -13,7 +13,6 @@ grayC = "\033[90m"
 
 name_player = ""
 inventary = []
-Energy = False
 tool = False
 opcion_ventilacion = ""
 
