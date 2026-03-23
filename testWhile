@@ -18,6 +18,10 @@ while estoy_haciendo_el_pedido:
         escogiendo_ingredientes = True
 
         while escogiendo_ingredientes:
+            escogio_extra_queso = False
+            escogio_pepperoni = False
+            escogio_pollo = False
+            
             print("1) Extra queso.")
             print("2) Pepperoni.")
             print("3) Pollo.")
