@@ -1,0 +1,81 @@
+estoy_haciendo_el_pedido = True
+escogiendo_ingredientes = False
+
+while estoy_haciendo_el_pedido:
+    print("¿Qué desea pedir?")
+
+    print("1) Pizza")
+    print("2) Hamburguesa")
+    print("3) Roll de sushi")
+    print("0) Terminar pedido")
+
+    opcion_comida = int(input(""))
+
+    
+
+    if opcion_comida == 1:
+        print("\nEscoja los ingredientes:")
+        escogiendo_ingredientes = True
+
+        while escogiendo_ingredientes:
+            print("1) Extra queso.")
+            print("2) Pepperoni.")
+            print("3) Pollo.")
+            print("0) Terminar ingredientes.")
+
+            opcion_ingrediente = int(input(""))
+
+            print("")
+
+            match opcion_ingrediente:
+                case 1:
+                    print("Se ha añadido -=- Extra queso -=- a la Pizza.\n")
+                case 2:
+                    print("Se ha añadido -=- Pepperoni -=- a la Pizza.\n")
+                case 3:
+                    print("Se ha añadido -=- Pollo -=- a la Pizza.\n")
+            if opcion_ingrediente == 0:
+                escogiendo_ingredientes = False
+    if opcion_comida == 2:
+        print("\nEscoja los ingredientes:")
+        escogiendo_ingredientes = True
+
+        while escogiendo_ingredientes:
+            print("1) Queso.")
+            print("2) Lechuga.")
+            print("3) Tomate.")
+            print("4) Palta.")
+            print("5) Papas fritas.")
+            print("0) Terminar ingredientes.")
+
+            opcion_ingrediente = int(input(""))
+
+            print("")
+
+            if opcion_ingrediente == 0:
+                escogiendo_ingredientes = False
+    if opcion_comida == 3:
+        print("\nEscoja los ingredientes:")
+        escogiendo_ingredientes = True
+
+        while escogiendo_ingredientes:
+            print("1) Queso crema.")
+            print("2) Salmón.")
+            print("3) Cebollín.")
+            print("4) Pulpo.")
+            print("5) Pollo.")
+            print("6) Camarón.")
+            print("0) Terminar ingredientes")
+
+            opcion_ingrediente = int(input(""))
+
+            print("")
+
+            if opcion_ingrediente == 0:
+                escogiendo_ingredientes = False
+    if opcion_comida == 0:
+        estoy_haciendo_el_pedido = False
+
+print("************************")
+print("*** PEDIDO TERMINADO ***")
+print("************************")
