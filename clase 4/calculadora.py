@@ -36,6 +36,5 @@ while opcion != 5:
         dividir1 = float(input("Ingrese el primer valor : "))
         dividir2 = float(input("Ingrese el segundo valor :"))
         resultado4 = dividir1 / dividir2 
-        print(f"Resultado obtenido : {resultado4}")
-
+        print(f"Resultado obtenido : {resultado4}")        
 #Float por que por una extraña razon cuando coloco int se transforma en numeros negativos , en una calculadora tambien se calcula como decimales ciertas operaciones
