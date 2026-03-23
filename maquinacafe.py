@@ -11,4 +11,3 @@ bebida = input("que bebida desea:")
 
 print("verificacion del cliente")
 print(bebida)
-
