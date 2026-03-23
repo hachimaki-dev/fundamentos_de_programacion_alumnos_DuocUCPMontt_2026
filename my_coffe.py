@@ -11,10 +11,13 @@ print (producto2)
 print (producto3)
 print (producto4)
 
-print ("=========que cafe deseas tomar===========")
+print ("========= que cafe deseas tomar ===========")
 
-input ("que cafe quieres?")
+eleccion = input ("que cafe desea?:")
+print(f"Perfecto enseguida te damos tu {eleccion}")
 
-bebida = input ("que cafe quieres?")
+print("Un par de minutos despues...")
 
+print("Ten tu pedido")
 
+print("GRACIAS QUE DISFRUTE SU PEDIDO")
