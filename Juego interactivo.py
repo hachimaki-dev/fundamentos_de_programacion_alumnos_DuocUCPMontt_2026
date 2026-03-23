@@ -76,7 +76,7 @@ while Creacion==False:
             Creacion=True
             Confirmacion=True
     
-        elif Correcion == "N":
+        elif Correcion == "N" or Correcion == "n":
             limpiar_term()
             print("Dejame preguntarte de nuevo entonces")
             Creacion=False
@@ -101,11 +101,11 @@ while Rival ==False:
 
     while Confirmacion2== False:
         Correcion = input("es esto correcto? (Opciones Y/N) ")
-        if Correcion == "Y":
+        if Correcion == "Y" or Correcion == "y":
             Rival=True
             Confirmacion2=True
     
-        elif Correcion == "N":
+        elif Correcion == "N" or Correcion == "n":
             limpiar_term()
             print("Dejame preguntarte de nuevo entonces")
             Rival=False
@@ -186,3 +186,25 @@ limpiar_term()
 print (f"El {PokemonRival} de {NombreRival} quiere atacar. ¿Que quieres hacer?")
 
 print (f"\nTu pokémon es {Pokemon1}: \n")
+
+
+
+Combate = True
+while Combate == True:
+    Accion = input(f"""¿Que deberia hacer {Pokemon1}? Opciones: 
+               Atacar
+               Debuff
+               Pokémon
+               Huir\n""" )
+    if Accion == "Atacar" or Accion == "atacar":
+        print(f"\n{Pokemon1} atacó a {PokemonRival}")
+    elif Accion == "Debuff" or Accion == "debuff":
+        print(f"\n{Pokemon1} debuffeo a {PokemonRival}")
+    elif Accion == "Pokemon" or Accion == "Pokémon" or Accion == "pokemon":
+        print(f"\nSolo tienes 1 Pokémon")
+    elif Accion == "Huir" or Accion == "huir":
+        print(f"\nNO PUEDES HUIR")
+    else:
+        print("\nOpción invalida")
+
+    
