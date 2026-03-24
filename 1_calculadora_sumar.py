@@ -5,9 +5,18 @@ resultado = num1 + num2
 
 print(f"El resultado es: {resultado}")
 '''
+#suma de numeros:
+print("primer resultado de sumas ingrese los numeros aca")
+
 
 num1 = input("Ingrese el primer número: ")
 num2 = input("Ingrese el segundo número: ")
-resultado = int(num1) + int(num2)
+print(f"Suma: {a + b} | Resta: {a - b} | Multiplicación: {a * b} | División: {a / b}")
 
-print(f"El resultado es: {resultado}")
+
+
+
+
+
+
+
