@@ -7,7 +7,7 @@ Combate = True
 while Combate == True:
     
 
-    print (f"{Pokemon1} tiene {VidaPokemon1} puntos de vida \n {PokemonRival} tiene {VidaPokemonRival}")
+    print (f"{Pokemon1} tiene {VidaPokemon1} puntos de vida \n {PokemonRival} tiene {VidaPokemonRival} puntos de vida")
     Accion = input(f"""¿Que deberia hacer {Pokemon1}? Opciones: 
                Atacar
                Curar
