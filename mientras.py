@@ -5,6 +5,5 @@ while True:
     if Saldo <= 1:
         break
 
-if Saldo <=500:
+if Saldo <= 500:
     print("Saldo bajo")
-    
