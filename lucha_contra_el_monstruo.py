@@ -19,23 +19,23 @@ while vida_monstruo > 0 and vida_personaje > 0:
         vida_monstruo = vida_monstruo - 25
         vida_personaje = vida_personaje - 50
     if opcion == 2:
-        print("Acatas a la bestia con una bola de fuego en la boca")
+        print("Acatas a la bestia con una bola de fuego en la boca, el monstruo te ataca con la cola")
         vida_monstruo = vida_monstruo - 50
         vida_personaje = vida_personaje - 25
     if opcion == 3:
-        print("lanzasas agua a presion a la bestia en el pecho")
+        print("lanzas agua a presion a la bestia en el pecho, pero tu enemigo te lanza una piedra impactandote levemente")
         vida_monstruo = vida_monstruo - 40
         vida_personaje -= 20
     if opcion ==4:
-        print("te fuerzas a lanzar punzantes lanzas de hielo al pecho de la bestia")
+        print("te fuerzas a lanzar punzantes lanzas de hielo al pecho de la bestia, el monstruo aturdido lanza un golpe flojo a ti")
         vida_monstruo = vida_monstruo - 75
         vida_personaje -= 10
     if opcion == 5:
-        print("haces temblar el piso para desestabilizar al monstruo")
+        print("haces temblar el piso para desestabilizar al monstruo, la bestia enojada te aplasta con sus patas")
         vida_monstruo = vida_monstruo -25
         vida_personaje -= 100
     if opcion == 6:
-        print("lanzas una fuerte rafaga de aire afilado a la bestia")
+        print("lanzas una fuerte rafaga de aire afilado a la bestia, el monstruo te ataca con una leve zarpada")
         vida_monstruo= vida_monstruo-15
         vida_personaje -= 15
     if opcion == 7:
