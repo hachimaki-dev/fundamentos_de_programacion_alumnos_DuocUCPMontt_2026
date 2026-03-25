@@ -3,7 +3,7 @@
 
 #Adivinar un numero determinado entre numero 1 y 10. Si el usuario se equivoca, volver a preguntar. Si el usuario acierta, entonces felicitarlos
 NumeroAlmacenado =  6
-NumeroSecreto = 0
+NumeroIngresado = 0
 
 while True:
 
