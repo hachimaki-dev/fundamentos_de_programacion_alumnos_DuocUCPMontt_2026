@@ -21,7 +21,7 @@
 #     print("1. Contar chiste")
 #     print("2. Contar adivinanza")
 #     print("3. Salir")
-#     opcion_escogida = int(input("Elejir opcion"))
+#     opcion_escogida = int(input("Elegir opcion"))
 #     if opcion_escogida == 1 :
 #         print("chiste")
 #     if opcion_escogida == 2 :
@@ -40,3 +40,7 @@ while bandera == True :
         print(f"Estamos a punto de salir la bandera es: {bandera}")
         bandera = False
 print(f"Estamos fuera y la bandera vale: {bandera}")
+
+# construir un programa con input, if, while
+# diagrama de flujo -> codigo
+# TAREA investigar uso de control for y diferencias/similitudes con while, diagrama de for
