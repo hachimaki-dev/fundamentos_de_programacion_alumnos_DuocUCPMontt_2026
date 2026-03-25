@@ -1,5 +1,9 @@
+#Asignamos las variables del codigo
+
 estoy_haciendo_un_pedido = True
 escogiendo_ingredientes = False
+
+#Ponemos un while para que se cree un bucle y le agregamos una interfaz
 
 while estoy_haciendo_un_pedido :
     print("Que desea pedir")
@@ -9,8 +13,11 @@ while estoy_haciendo_un_pedido :
     print(".3 Papitas")
     print(".0 Terminar el pedido")
 
+#Agregamos una nueva variable para guardar la eleccion como número entero
+
     opcion_comida = int(input(""))
     
+#Mostramos diferentes opciones dependiendo de la eleccion
     if opcion_comida == 1 :
         print("Escoja los ingredientes")
         escogiendo_ingredientes = True

@@ -1,4 +1,3 @@
-Hola me llamo Zobeiba, me dicen Zobe
-Tengo 27 años y soy profesora de educación básica
-Me gusta ver anime, mis favoritos son One piece y Fullmetal Alquemist
-Tamnbién me gusta dibujar y jugar lol xd
+Hola me llamo gustavo y me gusta jugar a la play
+esta es mi primera interaccion con github 
+y voy a aprender a subir mis codigos
