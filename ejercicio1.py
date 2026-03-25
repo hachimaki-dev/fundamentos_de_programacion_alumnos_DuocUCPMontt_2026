@@ -10,8 +10,8 @@ acierto = True
 
 while acierto == True:
     numero_ingresado = int(input("Ingrese un numero entre el 1 y el 10: "))
-    if numero_ingresado != numero_secreto:
-        print("nuh uh bro")
     if numero_secreto == numero_ingresado:
         print("Has encontrado el numero, Yiiipie.")
         acierto = False
+    else:
+        print("nuh uh bro")
