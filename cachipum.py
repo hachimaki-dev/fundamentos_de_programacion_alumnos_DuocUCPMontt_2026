@@ -4,23 +4,26 @@ TURNO_SEGUNDO_JUGADOR = True
 CONTADOR_PRIMER_JUGADOR = 0
 CONTADOR_SEGUNDO_JUGADOR = 0
 EJECUTANDO_JUEGO = True
+
+def mostrar_opciones(numero_del_jugador):
+    if numero_del_jugador == 1:
+        print("Turno del primer jugador")
+    elif numero_del_jugador == 2:
+        print("Turno del segundo jugador")
+
+    print("1.piedra")
+    print("2.papel")
+    print("3.tijera")
+
 input("Bienvenido al multiplayer de piedra papel y tijera PRESIONA ENTER")
 
 while EJECUTANDO_JUEGO :
     
-    print("Turno del primer jugador")
-
-    print("1.piedra")
-    print("2.papel")
-    print("3.tijera")
+    mostrar_opciones(1)
 
     ELECCION_PRIMER_JUGADOR = int(input(""))     
 
-    print("Turno del segundo jugador")
-
-    print("1.piedra")
-    print("2.papel")
-    print("3.tijera")
+    mostrar_opciones(2)
 
     ELECCION_SEGUNDO_JUGADOR = int(input(""))
 
