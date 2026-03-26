@@ -1,10 +1,8 @@
-
 import random
-
 
 errores = 0
 maximo_de_errores = 5
-combinacion = random.randint (1, 20)
+combinacion = random.randint (1, 10)
 menu = True
 esta_jugando = True
 
@@ -35,4 +33,17 @@ while menu :
                 esta_jugando = False
 
                 print("BOOOOOOMMMMMMMMM")
-                
+    if eleccion == 2 :
+
+        menu = False
+
+        print("El juego consiste en adivinar un número del 1 al 10 el cual se encarga de detener una bomba que hara explotar toda una ciudad tienes solo 5 intentos de ti depende la vida de millones de personas")    
+    
+
+        menu = True
+
+    if eleccion == 0 :
+    
+        print("TERMINO EL JUEGO")
+
+        menu = False
