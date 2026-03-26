@@ -10,7 +10,7 @@ print(numero_secreto)
 
 while numero_secreto != numero_adivinado:
     numero_adivinado = int(input("Ingrese un numero para adivinar (Entre el 1-10): "))
-    if numero_adivinado != 4:
+    if numero_adivinado != numero_secreto:
         print("Fallaste! Intente denuevo!")
 
 
