@@ -1,22 +1,22 @@
 print("Bienvenido a la calculadora")
 
-Numero1= int(input("Ingrese el primer número "))
+Numero1= float(input("Ingrese el primer número "))
 
-Numero2= int(input("Ingrese el segundo número "))
+Numero2= float(input("Ingrese el segundo número "))
 
 operacion= input("Ingrese una operacion (+,-,*./) ")
 
 if operacion== "+":
-    resultado= int(Numero1 + Numero2)
+    resultado= (Numero1 + Numero2)
 
 elif operacion== "-":
-    resultado= int(Numero1 - Numero2)
+    resultado= (Numero1 - Numero2)
 
 elif operacion== "*":
-    resultado= int(Numero1 * Numero2)
+    resultado= (Numero1 * Numero2)
 
 elif operacion== "/":
-    resultado= int(Numero1 / Numero1)
+    resultado= (Numero1 / Numero2)
 
 else:
     print("Operacion no valida")
