@@ -135,11 +135,11 @@ while True :
         break
     
     if opcion_jugador_1 == 0 :
-        print("Uno de los jugadores salio del programa")
+        print("**Uno de los jugadores salio del programa**")
         break
 
     if opcion_jugador_2 == 0 :
-        print("Uno de los jugadores salio del programa")
+        print("**Uno de los jugadores salio del programa**")
         break
         
        
