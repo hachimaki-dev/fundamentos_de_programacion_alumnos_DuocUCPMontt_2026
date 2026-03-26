@@ -17,6 +17,6 @@ while numero_secreto != numero_adivinado :
 
 print("ganaste")
 
-teraea
+#teraea
 
-crear un diagrama de flujos y programarlo sobre un cachipun de juego local, el juego se termina cuando uno de los dos jugadores llega a 3 victorias
+#crear un diagrama de flujos y programarlo sobre un cachipun de juego local, el juego se termina cuando uno de los dos jugadores llega a 3 victorias
