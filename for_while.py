@@ -18,3 +18,4 @@ for objeto in objeto_registrado :
     if objeto == objeto_registrado :
         print(f"{objeto_registrado}fue encontrado {objeto}")
         break
+#apuntes : en resume es como un buscador dentro de la variable , termina hasta que lo haya encontrado    
