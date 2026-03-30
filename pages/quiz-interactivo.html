@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎮 Quiz Interactivo: Repaso Python</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+              correct: '#4CAF50',
+              wrong:   '#F44336'
+            }
+          },
+          animation: {
+            'bounce-slow': 'bounce 3s infinite',
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <!-- Confetti JS for the end screen -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <style>
+    body {
+      background-color: #fffde7;
+      font-family: 'Quicksand', sans-serif;
+      color: #4a4a4a;
+      overflow-x: hidden;
+    }
+    
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.5s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+      opacity: 0;
+    }
+
+    .slide-enter-active, .slide-leave-active {
+      transition: all 0.5s ease;
+    }
+    .slide-enter-from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    .slide-leave-to {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    
+    .option-card {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .option-card:hover:not(.disabled) {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .option-card:active:not(.disabled) {
+      transform: translateY(2px) scale(0.98);
+    }
+    .option-card.disabled {
+      cursor: default;
+    }
+    
+    .pulse-btn {
+      box-shadow: 0 0 0 0 rgba(173, 20, 87, 0.4);
+      animation: pulse-ring 2s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(173, 20, 87, 0.4); }
+      70% { box-shadow: 0 0 0 20px rgba(173, 20, 87, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(173, 20, 87, 0); }
+    }
+
+    /* Override Prism background for kawaii feel */
+    pre[class*="language-"] {
+      background: #2d2dd9 !important; /* Dark blue background for contrast */
+      background: #1e1e3f !important;
+      border-radius: 1rem;
+      border: 4px solid #b3e5fc;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      font-size: 1.5rem !important;
+      padding: 1.5rem !important;
+    }
+    code[class*="language-"] {
+      font-family: 'Fira Code', monospace !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-kawaii-text">
+
+  <!-- Background decorations -->
+  <div class="bg-shape" style="width:50vw;height:50vw;background:#fce4ec;top:-10%;left:-10%;"></div>
+  <div class="bg-shape" style="width:40vw;height:40vw;background:#e1bee7;bottom:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:#c8e6c9;top:40%;left:30%;"></div>
+
+  <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Top Navigation / Header -->
+    <header class="flex justify-between items-center mb-8 bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/60 shadow-sm relative z-20">
+      <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
+        <span>⬅️</span> Volver al Diario
+      </a>
+      <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
+        <span>🎮</span>
+        <span>Python Repaso Supremo</span>
+      </div>
+      <div v-if="state !== 'start' && state !== 'results'" class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep">
+        Pregunta {{ currentQuestionIndex + 1 }} / {{ questions.length }}
+      </div>
+      <div v-else class="w-[120px]"></div> <!-- Spacer -->
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex items-center justify-center relative">
+      
+      <!-- SCORE INDICATOR (Floating) -->
+      <div v-if="state === 'question' || state === 'feedback'" class="absolute -top-6 right-0 bg-yellow-300 text-yellow-900 px-6 py-3 rounded-2xl shadow-lg font-bold text-2xl font-cute transform rotate-2 z-30 border-4 border-white">
+        ⭐ {{ score }} pts
+      </div>
+
+      <!-- VIEW: START -->
+      <transition name="fade" mode="out-in">
+        <div v-if="state === 'start'" class="text-center bg-white/60 backdrop-blur-lg p-12 rounded-[3rem] shadow-xl border-4 border-white w-full max-w-4xl">
+          <div class="text-8xl mb-6 animate-bounce-[slow]">🔥</div>
+          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Validación de Conocimientos</h1>
+          <p class="text-2xl text-kawaii-text/80 mb-12 max-w-2xl mx-auto">
+            ¡Demuestra lo que has aprendido!<br>
+            Repasaremos variables, input/output, tipos de datos (str, int, bool), if y ciclos while.
+          </p>
+          <button @click="startGame" class="pulse-btn bg-kawaii-deep text-white text-4xl font-bold py-6 px-16 rounded-full hover:bg-pink-700 transition-colors shadow-xl">
+            ¡Empezar a Jugar! 🚀
+          </button>
+        </div>
+
+        <!-- VIEW: QUESTION -->
+        <div v-else-if="state === 'question' || state === 'feedback'" :key="currentQuestion.id" class="w-full flex flex-col items-center">
+          
+          <!-- Question Header -->
+          <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-lg border-2 border-kawaii-rose w-full text-center mb-8 relative">
+            
+            <h2 class="text-4xl md:text-5xl font-bold text-kawaii-deep mb-4" v-html="currentQuestion.text"></h2>
+            
+            <!-- Code Snippet -->
+            <div v-if="currentQuestion.code" class="mt-6 flex justify-center">
+              <pre><code class="language-python">{{ currentQuestion.code }}</code></pre>
+            </div>
+            
+          </div>
+
+          <!-- Options Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
+            <div 
+              v-for="(option, index) in currentQuestion.options" 
+              :key="index"
+              @click="state === 'question' ? selectOption(index) : null"
+              class="option-card p-6 rounded-3xl shadow-md border-4 text-center min-h-[120px] flex items-center justify-center text-3xl font-bold font-cute"
+              :class="getOptionClasses(index)"
+            >
+              <div class="flex items-center gap-4">
+                <span class="w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-inner" :class="getShapeClass(index)">
+                   {{ ['△','◯','◻','♢'][index % 4] }}
+                </span>
+                <span v-html="option.text"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback Overlay -->
+          <transition name="slide">
+            <div v-if="state === 'feedback'" class="absolute bottom-4 left-0 right-0 max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border-4 text-center z-20 flex flex-col md:flex-row items-center justify-between gap-6" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
+              <div class="flex items-center gap-4 text-left">
+                <div class="text-6xl">{{ isCorrect ? '🎉' : '❌' }}</div>
+                <div>
+                  <h3 class="text-3xl font-bold" :class="isCorrect ? 'text-green-600' : 'text-red-600'">
+                    {{ isCorrect ? '¡Correcto!' : '¡Incorrecto!' }}
+                  </h3>
+                  <p class="text-xl text-gray-600 mt-1" v-html="currentQuestion.explanation"></p>
+                </div>
+              </div>
+              <button @click="nextQuestion" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-10 rounded-full hover:bg-pink-700 transition-colors shadow-lg whitespace-nowrap">
+                {{ isLastQuestion ? 'Ver Resultados 🏆' : 'Siguiente ➡️' }}
+              </button>
+            </div>
+          </transition>
+
+        </div>
+
+        <!-- VIEW: RESULTS -->
+        <div v-else-if="state === 'results'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
+           <div class="text-8xl mb-6">🏆</div>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Completado!</h1>
+           <p class="text-3xl text-kawaii-text/80 mb-8">Has terminado el repaso interactivo.</p>
+           
+           <div class="bg-blue-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-blue-200 shadow-inner">
+             <p class="text-2xl font-bold text-blue-800 mb-2">Puntuación Final</p>
+             <p class="text-7xl font-bold text-kawaii-deep drop-shadow-sm">{{ score }} <span class="text-3xl">/ {{ questions.length * 100 }}</span></p>
+             <p class="text-xl mt-4 text-blue-600">Acertaste {{ correctCount }} de {{ questions.length }} preguntas.</p>
+           </div>
+           
+           <div class="flex justify-center gap-6">
+             <button @click="startGame" class="bg-white border-4 border-kawaii-deep text-kawaii-deep text-2xl font-bold py-4 px-8 rounded-full hover:bg-kawaii-pink transition-colors">
+               🔄 Jugar de Nuevo
+             </button>
+             <a href="../index.html" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-8 rounded-full hover:bg-pink-700 transition-colors shadow-lg">
+               🏠 Volver al Inicio
+             </a>
+           </div>
+        </div>
+
+      </transition>
+
+    </main>
+
+  </div>
+
+  <script>
+    // Quiz questions covering variables, input, output, str, int, bool, if, while
+    const quizQuestions = [
+      {
+        id: 1,
+        topic: 'output',
+        text: '¿Cómo mostramos un mensaje por pantalla en Python?',
+        options: [
+          { text: '<code>echo "Hola"</code>', correct: false },
+          { text: '<code>console.log("Hola")</code>', correct: false },
+          { text: '<code>print("Hola")</code>', correct: true },
+          { text: '<code>mostrar("Hola")</code>', correct: false }
+        ],
+        explanation: 'En Python, usamos la función <strong>print()</strong> para mostrar información en la consola/pantalla.'
+      },
+      {
+        id: 2,
+        topic: 'variables',
+        text: '¿Cuál será el valor de "z" al final?',
+        code: 'z = 10\nz = z + 5\nz = z * 2',
+        options: [
+          { text: '15', correct: false },
+          { text: '20', correct: false },
+          { text: '30', correct: true },
+          { text: 'Error', correct: false }
+        ],
+        explanation: 'Primero <code>z</code> vale 10. Luego le sumamos 5 (queda en 15). Finalmente se multiplica por 2 (30).'
+      },
+      {
+        id: 3,
+        topic: 'input',
+        text: '¿Qué tipo de dato devuelve la función <code>input()</code> por defecto?',
+        options: [
+          { text: '<strong>int</strong> (entero)', correct: false },
+          { text: '<strong>bool</strong> (booleano)', correct: false },
+          { text: '<strong>str</strong> (texto)', correct: true },
+          { text: 'Depende de qué escribas', correct: false }
+        ],
+        explanation: '<strong>input()</strong> SIEMPRE devuelve un string (texto). ¡Por eso necesitamos int() para convertirlo si queremos sumar números!'
+      },
+      {
+        id: 4,
+        topic: 'str',
+        text: '¿Qué imprimirá el siguiente código?',
+        code: 'a = "Aba"\nb = "caba"\nprint(a + b)',
+        options: [
+          { text: '"Aba caba"', correct: false },
+          { text: '"Abacaba"', correct: true },
+          { text: 'Error', correct: false },
+          { text: '"Aba+caba"', correct: false }
+        ],
+        explanation: 'El operador <code>+</code> une (concatena) los textos sin espacios adicionales.'
+      },
+      {
+        id: 5,
+        topic: 'bool',
+        text: '¿Cuál de las siguientes es una expresión booleana válida en Python?',
+        options: [
+          { text: '<code>verdadero</code>', correct: false },
+          { text: '<code>True</code>', correct: true },
+          { text: '<code>TRUE</code>', correct: false },
+          { text: '<code>true</code>', correct: false }
+        ],
+        explanation: 'En Python los booleanos siempre van con mayúscula inicial: <strong>True</strong> o <strong>False</strong>.'
+      },
+      {
+        id: 6,
+        topic: 'if',
+        text: '¿Qué mostrará esto en pantalla?',
+        code: 'x = 8\nif x < 5:\n    print("Gato")\nelse:\n    print("Perro")',
+        options: [
+          { text: 'Gato', correct: false },
+          { text: 'Perro', correct: true },
+          { text: 'Gato y Perro', correct: false },
+          { text: 'Nada', correct: false }
+        ],
+        explanation: 'Como 8 NO es menor que 5, la condición es False, así que entra en bloque <strong>else</strong> e imprime "Perro".'
+      },
+      {
+        id: 7,
+        topic: 'while',
+        text: '¿Cuántas veces se imprimirá la palabra "Hola"?',
+        code: 'contador = 0\nwhile contador < 3:\n    print("Hola")\n    contador += 1',
+        options: [
+          { text: '2 veces', correct: false },
+          { text: '3 veces', correct: true },
+          { text: '4 veces', correct: false },
+          { text: 'Infinitas veces', correct: false }
+        ],
+        explanation: 'Se ejecuta cuando contador vale 0, 1 y 2. Cuando llega a 3, la condición 3 < 3 es falsa y se detiene. Son 3 veces.'
+      },
+      {
+        id: 8,
+        topic: 'if-else',
+        text: '¿Cuál es la palabra reservada en Python equivalente a "Sino si"?',
+        options: [
+          { text: '<code>else if</code>', correct: false },
+          { text: '<code>elseif</code>', correct: false },
+          { text: '<code>elif</code>', correct: true },
+          { text: '<code>then</code>', correct: false }
+        ],
+        explanation: 'En Python se usa <strong>elif</strong> para encadenar múltiples condiciones.'
+      }
+    ];
+
+    // Colors mapping for the Kahoot style shapes
+    // Triangle (Red), Circle (Blue), Square (Yellow/Orange), Diamond (Green)
+    const shapeColors = [
+      { bg: 'bg-red-500', hover: 'hover:bg-red-600', text: 'text-white', border: 'border-red-600', badge: 'bg-red-700 text-white' },
+      { bg: 'bg-blue-500', hover: 'hover:bg-blue-600', text: 'text-white', border: 'border-blue-600', badge: 'bg-blue-700 text-white' },
+      { bg: 'bg-yellow-400', hover: 'hover:bg-yellow-500', text: 'text-yellow-900', border: 'border-yellow-500', badge: 'bg-yellow-600 text-white' },
+      { bg: 'bg-green-500', hover: 'hover:bg-green-600', text: 'text-white', border: 'border-green-600', badge: 'bg-green-700 text-white' }
+    ];
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          questions: quizQuestions,
+          currentQuestionIndex: 0,
+          state: 'start', // 'start', 'question', 'feedback', 'results'
+          score: 0,
+          correctCount: 0,
+          selectedOptionIndex: null,
+        }
+      },
+      computed: {
+        currentQuestion() {
+          return this.questions[this.currentQuestionIndex];
+        },
+        isCorrect() {
+          if (this.selectedOptionIndex === null) return false;
+          return this.currentQuestion.options[this.selectedOptionIndex].correct;
+        },
+        isLastQuestion() {
+          return this.currentQuestionIndex === this.questions.length - 1;
+        }
+      },
+      methods: {
+        startGame() {
+          this.score = 0;
+          this.correctCount = 0;
+          this.currentQuestionIndex = 0;
+          this.state = 'question';
+          this.selectedOptionIndex = null;
+          this.$nextTick(() => { this.highlightCode(); });
+        },
+        selectOption(index) {
+          if (this.state !== 'question') return;
+          
+          this.selectedOptionIndex = index;
+          const selected = this.currentQuestion.options[index];
+          
+          if (selected.correct) {
+            this.score += 100;
+            this.correctCount++;
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#4CAF50', '#8BC34A', '#CDDC39']
+            });
+          } else {
+            // Shake effect could be added here
+          }
+          
+          this.state = 'feedback';
+        },
+        nextQuestion() {
+          if (this.isLastQuestion) {
+            this.state = 'results';
+            setTimeout(() => {
+              this.fireEndConfetti();
+            }, 500);
+          } else {
+            this.currentQuestionIndex++;
+            this.selectedOptionIndex = null;
+            this.state = 'question';
+            this.$nextTick(() => { this.highlightCode(); });
+          }
+        },
+        getOptionClasses(index) {
+          const sColors = shapeColors[index % 4];
+          
+          // Question mode (Normal view)
+          if (this.state === 'question') {
+            return `${sColors.bg} ${sColors.text} ${sColors.border} ${sColors.hover}`;
+          }
+          
+          // Feedback mode
+          if (this.state === 'feedback') {
+            const isThisCorrect = this.currentQuestion.options[index].correct;
+            const isThisSelected = this.selectedOptionIndex === index;
+            
+            if (isThisCorrect) {
+              return `bg-green-500 border-green-700 text-white transform scale-105 z-10 ring-4 ring-green-300 disabled`;
+            } else if (isThisSelected && !isThisCorrect) {
+              return `bg-red-500 border-red-700 text-white opacity-90 disabled`;
+            } else {
+              return `bg-gray-200 border-gray-300 text-gray-500 opacity-40 disabled grayscale`;
+            }
+          }
+          return '';
+        },
+        getShapeClass(index) {
+           const sColors = shapeColors[index % 4];
+           if (this.state === 'feedback') {
+              const isThisCorrect = this.currentQuestion.options[index].correct;
+              if(isThisCorrect) return 'bg-green-700 text-white';
+              return 'bg-gray-400 text-gray-600';
+           }
+           return sColors.badge;
+        },
+        highlightCode() {
+          if (window.Prism && this.currentQuestion.code) {
+            Prism.highlightAll();
+          }
+        },
+        fireEndConfetti() {
+          var duration = 3 * 1000;
+          var animationEnd = Date.now() + duration;
+          var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+          function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+          }
+
+          var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+              return clearInterval(interval);
+            }
+
+            var particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount,
+              origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+            }));
+            confetti(Object.assign({}, defaults, { particleCount,
+              origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+            }));
+          }, 250);
+        }
+      },
+      mounted() {
+        // Not starting immediately, waiting for start screen
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
