@@ -23,3 +23,5 @@ for i in range(1, 1288):
 
 # a diferencia del while, en el for si es necesario determinar
 # la cantidad de vueltas de alguna forma.
+
+print(f"Los panchitos informaticos son: {panchitos}")
