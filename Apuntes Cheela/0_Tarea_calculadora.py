@@ -1,0 +1,18 @@
+print ("Bip bup soy una calculadora")
+
+numero1 = input("Ingrese un numero: ")
+numero2 = input("Ingrese otro numero: ")
+
+resultadoSuma = int (numero1) + int (numero2)
+resultadoResta = int (numero1) - int (numero2)
+resultadoMult = int (numero1) * int (numero2)
+resultadoDiv = int (numero1) / int (numero2)
+print ("Su resultado es")
+print ("Suma:")
+print (resultadoSuma)
+print ("Resta:")
+print (resultadoResta)
+print ("Multiplicación:")
+print (resultadoMult)
+print ("División:")
+print (resultadoDiv)
