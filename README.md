@@ -1,5 +1,5 @@
-# 🐍 Fundamentos de Programación - DuocUC 2026 🎓
-### Sede Puerto Montt | Profe Carlitos (@HachiMaki-dev)
+# 🐎 Fundamentos de Programación - DuocUC 2026 🎓
+### Sede Puerto Montt | Alumno en su primer año
 
 ¡Hola! Soy el alumno benjamin miranda de **Fundamentos de Programación**.
 
