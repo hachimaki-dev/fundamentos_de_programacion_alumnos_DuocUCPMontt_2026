@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔥 Modo Desafío: Evaluación 1</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+              correct: '#4CAF50',
+              wrong:   '#F44336'
+            }
+          },
+          animation: {
+            'bounce-slow': 'bounce 3s infinite',
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <!-- Confetti JS for the end screen -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <style>
+    body {
+      background-color: #fffde7;
+      font-family: 'Quicksand', sans-serif;
+      color: #4a4a4a;
+      overflow-x: hidden;
+      background-image: radial-gradient(#f8bbd0 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.5s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+      opacity: 0;
+    }
+
+    .slide-enter-active, .slide-leave-active {
+      transition: all 0.5s ease;
+    }
+    .slide-enter-from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    .slide-leave-to {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    
+    .challenge-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+    }
+    .challenge-card:hover:not(.locked) {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 30px -5px rgba(173, 20, 87, 0.2);
+    }
+    .challenge-card.locked {
+      cursor: not-allowed;
+      filter: grayscale(100%);
+      opacity: 0.6;
+    }
+    
+    .pulse-btn {
+      box-shadow: 0 0 0 0 rgba(173, 20, 87, 0.4);
+      animation: pulse-ring 2s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(173, 20, 87, 0.4); }
+      70% { box-shadow: 0 0 0 20px rgba(173, 20, 87, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(173, 20, 87, 0); }
+    }
+
+    /* Draggable items for Reorder */
+    .draggable-item {
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .draggable-item:active {
+      cursor: grabbing;
+      transform: scale(1.02);
+    }
+
+    /* Override Prism background for kawaii feel */
+    pre[class*="language-"] {
+      background: #1e1e3f !important;
+      border-radius: 1rem;
+      border: 4px solid #b3e5fc;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      font-size: 1.1rem !important;
+      padding: 1.5rem !important;
+    }
+    code[class*="language-"] {
+      font-family: 'Fira Code', monospace !important;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(173, 20, 87, 0.1);
+    }
+
+    /* Map connection lines */
+    .map-connection {
+      position: absolute;
+      background: #f8bbd0;
+      z-index: 1;
+      border: 2px dashed #ad1457;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-kawaii-text">
+
+  <!-- Background decorations -->
+  <div class="bg-shape" style="width:50vw;height:50vw;background:#fce4ec;top:-10%;left:-10%;"></div>
+  <div class="bg-shape" style="width:40vw;height:40vw;background:#e1bee7;bottom:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:#c8e6c9;top:40%;left:30%;"></div>
+
+  <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Top Navigation / Header -->
+    <header class="flex justify-between items-center mb-8 glass-panel p-4 z-20 sticky top-4">
+       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
+        <span>⬅️</span> Volver al Diario
+       </a>
+       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
+        <span>🔥</span>
+        <span>Modo Desafío</span>
+       </div>
+       <div class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep flex gap-2">
+         <span v-for="i in 6" :key="i">
+            {{ completedChallenges.includes(i) ? '⭐' : '⬛' }}
+         </span>
+       </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center relative w-full">
+      
+      <!-- VIEW: MAP (Start / Level Select) -->
+      <transition name="fade" mode="out-in">
+        <div v-if="state === 'map'" class="w-full flex flex-col items-center px-4 max-w-5xl">
+          <div class="text-center mb-10 mt-4">
+             <div class="text-6xl mb-4 animate-bounce-[slow]">🗺️</div>
+             <h1 class="text-5xl font-bold text-kawaii-deep mb-4 drop-shadow-sm">Mapa de Misiones</h1>
+             <p class="text-xl text-kawaii-text/80 max-w-2xl mx-auto glass-panel p-4">
+               Aquí no hay respuestas correctas dadas en bandeja. 
+               Debes intentar, equivocarte y leer las pistas para avanzar. 
+               ¡Gana las 6 estrellas para estar listo para la evaluación!
+             </p>
+          </div>
+
+          <!-- Mission Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full relative z-10">
+             <div 
+               v-for="(challenge, idx) in challenges" 
+               :key="challenge.id"
+               class="challenge-card p-6 rounded-3xl shadow-xl border-4 text-center min-h-[220px] flex flex-col items-center justify-between"
+               :class="[
+                  isUnlocked(challenge.id) ? 'bg-white border-kawaii-deep' : 'locked bg-gray-100 border-gray-300',
+                  completedChallenges.includes(challenge.id) ? 'ring-4 ring-green-400 bg-green-50/50' : ''
+               ]"
+               @click="isUnlocked(challenge.id) ? startChallenge(challenge) : null"
+             >
+                <div class="text-5xl mb-3 relative">
+                   {{ challenge.emoji }}
+                   <div v-if="completedChallenges.includes(challenge.id)" class="absolute -top-3 -right-3 text-3xl">⭐</div>
+                   <div v-if="!isUnlocked(challenge.id)" class="absolute inset-0 flex items-center justify-center bg-white/50 rounded-full text-4xl">🔒</div>
+                </div>
+                <h3 class="text-2xl font-bold" :class="isUnlocked(challenge.id) ? 'text-kawaii-deep' : 'text-gray-500'">
+                  {{ challenge.title }}
+                </h3>
+                <p class="text-sm mt-2 font-medium bg-gray-100 rounded-lg px-3 py-1 text-gray-700">
+                  {{ challenge.skill }}
+                </p>
+                <button 
+                  v-if="isUnlocked(challenge.id) && !completedChallenges.includes(challenge.id)" 
+                  class="mt-4 bg-kawaii-deep text-white font-bold py-2 px-6 rounded-full hover:bg-pink-700 transition"
+                >
+                  Jugar 🚀
+                </button>
+             </div>
+          </div>
+        </div>
+
+        <!-- VIEW: ACTIVE CHALLENGE -->
+        <div v-else-if="state === 'playing'" class="w-full flex flex-col items-center max-w-4xl">
+           
+           <div class="glass-panel w-full p-8 mb-6 text-center border-t-8 border-t-kawaii-deep relative">
+              <button @click="backToMap" class="absolute top-4 left-4 bg-gray-200 hover:bg-gray-300 rounded-full w-10 h-10 flex flex-col items-center justify-center font-bold text-gray-700">X</button>
+              <div class="text-5xl mb-2">{{ currentChallenge.emoji }}</div>
+              <h2 class="text-3xl font-bold text-kawaii-deep">{{ currentChallenge.title }}</h2>
+              <p class="text-lg text-gray-600 mt-2">{{ currentChallenge.description }}</p>
+              
+              <!-- Attempts indicator -->
+              <div class="mt-4 flex justify-center gap-2">
+                 <span class="text-sm font-bold text-gray-500 mr-2">Vidas:</span>
+                 <span v-for="i in 3" :key="i" class="text-xl transition-all" :class="i <= (3 - attempts) ? 'opacity-100 scale-100 text-red-500' : 'opacity-30 scale-75 grayscale'">❤️</span>
+              </div>
+           </div>
+
+           <!-- DYNAMIC EXERCISE COMPONENT -->
+           <div class="w-full bg-white p-6 rounded-3xl shadow-lg border-2 border-kawaii-rose mb-6">
+              <p class="text-xl font-bold mb-6 text-center text-kawaii-purple">{{ activeExercise.prompt }}</p>
+
+              <!-- Type 1: Reorder (Drag/drop replacement using Vue sortable pattern or simple buttons) -->
+              <div v-if="currentChallenge.type === 'reorder'" class="flex flex-col gap-3">
+                 <p class="text-sm text-center text-gray-500 mb-2">Haz clic para mover la línea hacia arriba o abajo</p>
+                 <div v-for="(line, idx) in userWorkspace" :key="idx" class="flex items-center gap-2 bg-gray-800 text-green-400 p-3 rounded-lg font-code shadow-sm">
+                    <span class="text-gray-500 w-6 font-mono">{{ idx + 1 }}</span>
+                    <pre class="m-0 p-0 bg-transparent border-0 text-[1rem] flex-grow leading-none" style="box-shadow:none;"><code class="language-python !text-[1rem]">{{ line }}</code></pre>
+                    <button @click="moveLine(idx, -1)" :disabled="idx === 0" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">⬆️</button>
+                    <button @click="moveLine(idx, 1)" :disabled="idx === userWorkspace.length - 1" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">⬇️</button>
+                 </div>
+              </div>
+
+              <!-- Type 2: Fill Gaps -->
+              <div v-if="currentChallenge.type === 'fillgaps'" class="text-center font-code text-2xl bg-gray-800 text-white p-8 rounded-xl leading-[3rem]">
+                 <span v-for="(part, idx) in parseTemplate(activeExercise.template)" :key="idx">
+                    <span v-if="part.isGap" class="inline-block mx-2">
+                       <input 
+                         type="text" 
+                         v-model="userAnswers[part.id]" 
+                         class="bg-gray-700 text-green-400 border-b-4 border-kawaii-rose outline-none font-code text-center w-32 px-2 py-1 focus:bg-gray-600 transition-colors rounded-t-lg"
+                         placeholder="?"
+                         autocomplete="off" spellcheck="false"
+                       />
+                    </span>
+                    <span v-else class="text-pink-300">{{ part.text }}</span>
+                 </span>
+              </div>
+
+              <!-- Type 3: True / False -->
+              <div v-if="currentChallenge.type === 'truefalse'" class="flex justify-center gap-8 items-center bg-gray-800 p-8 rounded-xl">
+                 <div class="text-3xl font-code text-green-400 border-2 border-gray-600 p-4 rounded-xl bg-gray-900">{{ activeExercise.expr }}</div>
+                 <div class="flex flex-col gap-4">
+                    <button @click="submitAnswer(true)" class="bg-green-600 hover:bg-green-500 text-white font-bold text-2xl py-3 px-8 rounded-xl ring-2 ring-green-900 font-code">True</button>
+                    <button @click="submitAnswer(false)" class="bg-red-600 hover:bg-red-500 text-white font-bold text-2xl py-3 px-8 rounded-xl ring-2 ring-red-900 font-code">False</button>
+                 </div>
+              </div>
+
+              <!-- Type 4: Trace Code -->
+              <div v-if="currentChallenge.type === 'tracecode'" class="flex flex-col md:flex-row gap-6">
+                 <div class="w-full md:w-1/2 flex justify-center">
+                    <pre><code class="language-python">{{ activeExercise.code }}</code></pre>
+                 </div>
+                 <div class="w-full md:w-1/2 flex flex-col gap-3 justify-center">
+                    <button 
+                      v-for="(opt, idx) in activeExercise.options" :key="idx"
+                      @click="submitAnswer(opt)"
+                      class="bg-gray-100 hover:bg-gray-200 border-2 border-kawaii-lilac text-kawaii-deep font-bold text-xl py-4 px-6 rounded-xl transition font-code text-left"
+                    >
+                       > {{ opt.replace('\\n', '\n> ') }}
+                    </button>
+                 </div>
+              </div>
+
+              <!-- Type 5: Trace Table -->
+              <div v-if="currentChallenge.type === 'tracetable'" class="flex flex-col gap-6">
+                 <div class="flex justify-center">
+                    <pre><code class="language-python">{{ activeExercise.code }}</code></pre>
+                 </div>
+                 <div class="overflow-x-auto">
+                    <table class="w-full text-center border-collapse">
+                       <thead>
+                          <tr class="bg-kawaii-rose text-kawaii-deep">
+                             <th class="p-3 border-2 border-white">Paso</th>
+                             <th v-for="v in activeExercise.vars" :key="v" class="p-3 border-2 border-white font-code">{{ v }}</th>
+                          </tr>
+                       </thead>
+                       <tbody>
+                          <tr v-for="(row, rIdx) in activeExercise.table" :key="rIdx" class="bg-gray-50">
+                             <td class="p-3 border-2 border-gray-200 font-bold bg-gray-100">{{ row.row }}</td>
+                             <td v-for="(val, cIdx) in row.values" :key="cIdx" class="p-3 border-2 border-gray-200">
+                                <input 
+                                  v-model="userAnswers[`${rIdx}-${cIdx}`]" 
+                                  class="w-20 text-center font-code border-b-2 border-gray-300 focus:border-kawaii-deep outline-none bg-transparent"
+                                  placeholder="?" autocomplete="off"
+                                />
+                             </td>
+                          </tr>
+                       </tbody>
+                    </table>
+                 </div>
+              </div>
+
+              <!-- Type 6: Write Code -->
+              <div v-if="currentChallenge.type === 'writecode'" class="flex flex-col gap-4">
+                 <textarea 
+                   v-model="userCodeInput" 
+                   rows="8" 
+                   class="w-full bg-gray-900 text-green-400 font-code p-4 rounded-xl outline-none focus:ring-4 ring-kawaii-rose resize-none"
+                   placeholder="# Escribe tu código aquí..."
+                   spellcheck="false"
+                 ></textarea>
+              </div>
+
+           </div>
+
+           <!-- ACTION BAR & HINTS -->
+           <div class="w-full">
+              <!-- Non-click submit button (for text inputs) -->
+              <div v-if="['reorder', 'fillgaps', 'tracetable', 'writecode'].includes(currentChallenge.type)" class="flex justify-center mb-6">
+                 <button @click="verifyAnswer" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-12 rounded-full hover:bg-pink-700 transition shadow-xl pulse-btn">
+                    Verificar ✅
+                 </button>
+              </div>
+
+              <!-- Feedback / Hint Box -->
+              <transition name="slide">
+                 <div v-if="feedbackMsg" class="p-6 rounded-2xl shadow-md border-l-8 text-lg font-medium flex items-center justify-between"
+                      :class="isFeedbackCorrect ? 'bg-green-50 border-green-500 text-green-800' : 'bg-red-50 border-red-500 text-red-800'">
+                    <div class="flex items-center gap-4">
+                       <span class="text-4xl">{{ isFeedbackCorrect ? '🎉' : '❌' }}</span>
+                       <span v-html="feedbackMsg"></span>
+                    </div>
+                    <button v-if="isFeedbackCorrect" @click="nextExercise" class="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 shadow flex-shrink-0 ml-4">
+                       Continuar ➡️
+                    </button>
+                 </div>
+              </transition>
+           </div>
+        </div>
+
+        <!-- VIEW: RESULTS -->
+        <div v-else-if="state === 'results'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
+           <div class="text-8xl mb-6">🏆</div>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Felicitaciones!</h1>
+           <p class="text-3xl text-kawaii-text/80 mb-8">Has completado todos los desafíos.</p>
+           
+           <div class="bg-green-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-green-200 shadow-inner">
+             <p class="text-2xl font-bold text-green-800 mb-4">Estás lista/o para la evaluación. ¡Confía en lo que aprendiste!</p>
+             <div class="flex justify-center gap-2 text-5xl">
+                ⭐⭐⭐⭐⭐⭐
+             </div>
+           </div>
+           
+           <div class="flex justify-center gap-6">
+             <button @click="resetProgress" class="bg-white border-4 border-kawaii-deep text-kawaii-deep text-2xl font-bold py-4 px-8 rounded-full hover:bg-kawaii-pink transition-colors">
+               🔄 Reiniciar Todo
+             </button>
+             <a href="../index.html" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-8 rounded-full hover:bg-pink-700 transition-colors shadow-lg">
+               🏠 Volver al Inicio
+             </a>
+           </div>
+        </div>
+
+      </transition>
+
+    </main>
+
+  </div>
+
+  <script src="../data/desafio-data.js"></script>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          challenges: CHALLENGES,
+          state: 'map', // 'map', 'playing', 'results'
+          completedChallenges: JSON.parse(localStorage.getItem('mmt_desafio_progress') || '[]'),
+          currentChallenge: null,
+          currentExerciseIndex: 0,
+          
+          attempts: 0,
+          feedbackMsg: '',
+          isFeedbackCorrect: false,
+
+          // Challenge state
+          userWorkspace: [], // for reorder
+          userAnswers: {},   // for fillgaps & tracetable
+          userCodeInput: '', // for writecode
+        }
+      },
+      computed: {
+        activeExercise() {
+          if (!this.currentChallenge) return null;
+          return this.currentChallenge.exercises[this.currentExerciseIndex];
+        }
+      },
+      methods: {
+        isUnlocked(id) {
+          // Desbloquea secuencial: el id 1 siempre disponible, los demás si el id-1 está completado.
+          if (id === 1) return true;
+          return this.completedChallenges.includes(id - 1);
+        },
+        startChallenge(challenge) {
+          this.currentChallenge = challenge;
+          this.currentExerciseIndex = 0;
+          this.resetExerciseState();
+          this.state = 'playing';
+          this.$nextTick(() => { this.highlightCode(); });
+        },
+        backToMap() {
+          this.state = 'map';
+          this.currentChallenge = null;
+        },
+        resetExerciseState() {
+          this.attempts = 0;
+          this.feedbackMsg = '';
+          this.isFeedbackCorrect = false;
+          this.userAnswers = {};
+          this.userCodeInput = '';
+          
+          if (this.currentChallenge.type === 'reorder') {
+             // Deep clone the shuffled array so we can mutate it
+             this.userWorkspace = [...this.activeExercise.shuffled];
+          }
+        },
+        // Helpers for type 1
+        moveLine(idx, direction) {
+           const newIdx = idx + direction;
+           if (newIdx < 0 || newIdx >= this.userWorkspace.length) return;
+           const temp = this.userWorkspace[idx];
+           this.userWorkspace[idx] = this.userWorkspace[newIdx];
+           this.userWorkspace[newIdx] = temp;
+           this.$nextTick(() => { this.highlightCode(); });
+        },
+        // Helpers for type 2
+        parseTemplate(template) {
+           const parts = template.split('___');
+           const result = [];
+           parts.forEach((p, i) => {
+              if (p) result.push({ isGap: false, text: p });
+              if (i < parts.length - 1) {
+                 result.push({ isGap: true, id: `g${i+1}` });
+              }
+           });
+           return result;
+        },
+
+        // Submit for click buttons (type 3 and 4)
+        submitAnswer(val) {
+           this.verifyStandard(val, this.activeExercise.answer);
+        },
+
+        // Verify function (type 1, 2, 5, 6)
+        verifyAnswer() {
+           this.feedbackMsg = '';
+           
+           if (this.currentChallenge.type === 'reorder') {
+              const isCorrect = JSON.stringify(this.userWorkspace) === JSON.stringify(this.activeExercise.correct);
+              this.verifyStandard(isCorrect, true);
+           } 
+           
+           else if (this.currentChallenge.type === 'fillgaps') {
+              let allCorrect = true;
+              this.activeExercise.gaps.forEach(g => {
+                 let v = (this.userAnswers[g.id] || '').trim();
+                 // Reemplazar comillas inteligentes por estándar
+                 v = v.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+
+                 let correct = false;
+                 if (v === g.answer) correct = true;
+                 if (g.acceptAlso && g.acceptAlso.includes(v)) correct = true;
+                 
+                 // Explicitly rejected (e.g., student put quotes on int)
+                 if (g.reject && g.reject.includes(v)) {
+                    allCorrect = false;
+                 } else if (!correct) {
+                    allCorrect = false;
+                 }
+              });
+              this.verifyStandard(allCorrect, true);
+           }
+
+           else if (this.currentChallenge.type === 'tracetable') {
+              let allCorrect = true;
+              this.activeExercise.table.forEach((row, rIdx) => {
+                 row.values.forEach((val, cIdx) => {
+                    const u = (this.userAnswers[`r${rIdx}-c${cIdx}`] || this.userAnswers[`${rIdx}-${cIdx}`] || '').trim().toLowerCase();
+                    if (u !== String(val).toLowerCase()) {
+                       allCorrect = false;
+                    }
+                 });
+              });
+              this.verifyStandard(allCorrect, true);
+           }
+
+           else if (this.currentChallenge.type === 'writecode') {
+              let code = this.userCodeInput.toLowerCase();
+              code = code.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+              let isCorrect = true;
+              this.activeExercise.mustContain.forEach(w => {
+                 if (!code.includes(w)) isCorrect = false;
+              });
+              // Basic checking. Real python validation needs server, we do basic keyword checking.
+              this.verifyStandard(isCorrect, true);
+           }
+        },
+
+        verifyStandard(userInput, expected) {
+           this.attempts++;
+           if (userInput === expected) {
+              this.isFeedbackCorrect = true;
+              this.feedbackMsg = '¡Correcto! Excelente deducción.';
+              confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 }, colors: ['#4CAF50'] });
+           } else {
+              this.isFeedbackCorrect = false;
+              const hintIdx = Math.min(this.attempts - 1, (this.activeExercise.hints || this.currentChallenge.hints || []).length - 1);
+              const hintList = this.activeExercise.hints || this.currentChallenge.hints;
+              
+              if (this.attempts >= 3) {
+                 this.feedbackMsg = `Ups, no es correcto. Intenta analizar esto: ${hintList[hintList.length - 1] || 'Sigue intentándolo'}`;
+              } else {
+                 this.feedbackMsg = hintList[hintIdx] || 'No es correcto, intenta nuevamente.';
+              }
+              
+              // Shake effect logic here if needed
+           }
+        },
+
+        nextExercise() {
+           if (this.currentExerciseIndex < this.currentChallenge.exercises.length - 1) {
+              this.currentExerciseIndex++;
+              this.resetExerciseState();
+              this.$nextTick(() => { this.highlightCode(); });
+           } else {
+              // Finish challenge
+              if (!this.completedChallenges.includes(this.currentChallenge.id)) {
+                 this.completedChallenges.push(this.currentChallenge.id);
+                 localStorage.setItem('mmt_desafio_progress', JSON.stringify(this.completedChallenges));
+                 confetti({ particleCount: 150, zIndex: 100 });
+              }
+              
+              if (this.completedChallenges.length >= this.challenges.length) {
+                 this.state = 'results';
+                 setTimeout(() => this.fireEndConfetti(), 500);
+              } else {
+                 this.state = 'map';
+              }
+           }
+        },
+
+        resetProgress() {
+           this.completedChallenges = [];
+           localStorage.removeItem('mmt_desafio_progress');
+           this.state = 'map';
+        },
+
+        highlightCode() {
+          if (window.Prism) {
+            document.querySelectorAll('pre code').forEach((block) => {
+              Prism.highlightElement(block);
+            });
+          }
+        },
+
+        fireEndConfetti() {
+          var duration = 3 * 1000;
+          var animationEnd = Date.now() + duration;
+          var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+          function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+          var interval = setInterval(function() {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            var particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+          }, 250);
+        }
+      },
+      mounted() {
+        this.highlightCode();
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>

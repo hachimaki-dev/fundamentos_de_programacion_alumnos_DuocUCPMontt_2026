@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🛒 Banco de Ejercicios — Modo Selección</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cute: ['Quicksand', 'sans-serif'],
+            code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <style>
+    body {
+      background-color: #fffde7;
+      font-family: 'Quicksand', sans-serif;
+      color: #4a4a4a;
+      overflow-x: hidden;
+      background-image: radial-gradient(#f8bbd0 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(173, 20, 87, 0.1);
+    }
+
+    .fade-enter-active, .fade-leave-active { transition: opacity 0.5s ease; }
+    .fade-enter-from, .fade-leave-to { opacity: 0; }
+
+    .slide-enter-active, .slide-leave-active { transition: all 0.5s ease; }
+    .slide-enter-from, .slide-leave-to { opacity: 0; transform: translateY(20px); }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -5px rgba(173, 20, 87, 0.15);
+    }
+    
+    .selected-card {
+      border: 4px solid #ad1457 !important;
+      background: #fce4ec !important;
+      transform: scale(1.02);
+    }
+    
+    /* Tag Colors */
+    .diff-Fácil { background: #e8f5e9; color: #2e7d32; }
+    .diff-Medio { background: #fff3e0; color: #ef6c00; }
+    .diff-Intermedio { background: #fff3e0; color: #ef6c00; }
+    .diff-Avanzado { background: #ffebee; color: #c62828; }
+    
+    .cart-float {
+      animation: float 3s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+    
+    .print-mode {
+      font-size: 1.1rem;
+    }
+    .print-mode code {
+      background-color: #f1f5f9;
+      color: #7b1fa2;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-kawaii-text pb-20">
+
+  <!-- Background decorations -->
+  <div class="bg-shape" style="width:40vw;height:40vw;background:#b3e5fc;top:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:#e1bee7;bottom:10%;left:20%;"></div>
+
+  <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Top Navigation / Header -->
+    <header class="flex justify-between items-center mb-8 glass-panel p-4 z-20 sticky top-4">
+       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
+        <span>⬅️</span> Volver al Diario
+       </a>
+       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
+        <span>🛒</span>
+        <span>Mochila de Misiones</span>
+       </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center relative w-full">
+      
+      <!-- VIEW: CATALOG (Select mode) -->
+      <transition name="fade" mode="out-in">
+        <div v-if="state === 'select'" class="w-full flex flex-col items-center">
+          <div class="text-center mb-10 mt-4 glass-panel p-8 w-full max-w-4xl">
+             <div class="text-6xl mb-4">📚</div>
+             <h1 class="text-5xl font-bold text-kawaii-deep mb-4 drop-shadow-sm">Banco de Ejercicios</h1>
+             <p class="text-xl text-kawaii-text/80 max-w-2xl mx-auto mb-2">
+               Tú eres el dueño de tu aprendizaje. Revisa estos 15 desafíos temáticos.
+             </p>
+             <p class="text-2xl font-bold text-kawaii-purple bg-kawaii-pink inline-block px-6 py-2 rounded-full shadow-inner border border-kawaii-rose">
+               Escoge de 3 a 5 misiones para tu clase de hoy.
+             </p>
+          </div>
+
+          <!-- Catalog Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full relative z-10 pb-20">
+             <div 
+               v-for="ej in bank" 
+               :key="ej.id"
+               @click="toggleSelection(ej)"
+               class="glass-panel p-6 card-hover cursor-pointer border-4 border-transparent flex flex-col relative"
+               :class="{'selected-card': isSelected(ej)}"
+             >
+                <!-- Check badge if selected -->
+                <div v-if="isSelected(ej)" class="absolute -top-4 -right-4 bg-kawaii-deep text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">
+                  ✓
+                </div>
+
+                <div class="flex justify-between items-start mb-3">
+                   <span class="text-4xl">{{ ej.emoji }}</span>
+                   <span class="text-xs font-bold px-3 py-1 rounded-full border" :class="'diff-' + ej.difficulty">
+                     {{ ej.difficulty }}
+                   </span>
+                </div>
+                
+                <h3 class="text-xl font-bold text-kawaii-deep leading-tight mb-2">{{ ej.title }}</h3>
+                <span class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-3">{{ ej.theme }}</span>
+                <p class="text-sm text-gray-600 flex-grow">{{ ej.shortDesc }}</p>
+                
+                <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                  <span v-if="!isSelected(ej)" class="text-sm font-bold text-gray-400">Click para seleccionar</span>
+                  <span v-else class="text-sm font-bold text-kawaii-deep">¡Seleccionada!</span>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- VIEW: DOJO (Work mode) -->
+        <div v-else-if="state === 'dojo'" class="w-full max-w-5xl flex flex-col">
+           <div class="glass-panel w-full p-8 mb-8 text-center border-t-8 border-t-kawaii-deep flex justify-between items-center">
+              <div class="text-left">
+                 <h2 class="text-3xl font-bold text-kawaii-deep">Tu Mochila de Misiones</h2>
+                 <p class="text-lg text-gray-600 mt-1">Abre tu IDE (Thonny, VS Code) y resuelve estas misiones.</p>
+              </div>
+              <button @click="backToSelect" class="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-full font-bold text-gray-700 shadow-sm border border-gray-300">
+                ✏️ Editar mochila
+              </button>
+           </div>
+
+           <!-- Selected statements -->
+           <div class="flex flex-col gap-6">
+              <div v-for="(ej, index) in selected" :key="ej.id" class="bg-white p-8 rounded-3xl shadow-lg border-2 border-kawaii-rose relative overflow-hidden">
+                 <!-- Aesthetic block -->
+                 <div class="absolute top-0 left-0 w-2 h-full bg-kawaii-deep"></div>
+                 
+                 <div class="flex gap-4 items-center border-b-2 border-gray-100 pb-4 mb-4">
+                    <span class="text-5xl">{{ ej.emoji }}</span>
+                    <div>
+                       <span class="text-sm font-bold text-gray-500 uppercase">Misión #{{ index + 1 }} | {{ ej.theme }}</span>
+                       <h3 class="text-3xl font-bold text-kawaii-deep">{{ ej.title }}</h3>
+                    </div>
+                 </div>
+                 
+                 <!-- Detailed requirements render -->
+                 <div class="print-mode text-gray-700 leading-relaxed" v-html="formatHTML(ej.fullDesc)"></div>
+                 
+                 <!-- Status Check (Cosmetic) -->
+                 <div class="mt-8 pt-4 border-t border-dashed border-gray-300 flex items-center gap-3">
+                   <input type="checkbox" :id="'chk-'+ej.id" class="w-6 h-6 accent-kawaii-deep cursor-pointer" />
+                   <label :for="'chk-'+ej.id" class="font-bold text-gray-500 cursor-pointer text-lg">Marcar como terminada</label>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </transition>
+    </main>
+
+    <!-- FLOATING CART / MOCHILA WIDGET -->
+    <transition name="slide">
+		<!-- Mostrar widget sólo en modo select, siempre que se escoja algo o haya cargado -->
+       <div v-if="state === 'select'" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-lg">
+          <div class="bg-white rounded-full shadow-2xl border-4 border-kawaii-deep p-3 flex justify-between items-center px-6 cart-float card-hover">
+             <div class="flex items-center gap-3">
+                <span class="text-3xl">🎒</span>
+                <div>
+                   <p class="font-bold text-kawaii-deep text-lg leading-tight">Mochila</p>
+                   <p class="text-sm font-semibold" :class="canStart ? 'text-green-600' : 'text-orange-500'">
+                     {{ selected.length }} / 5 seleccionadas
+                   </p>
+                </div>
+             </div>
+             
+             <!-- Action Button -->
+             <div>
+                <button 
+                  @click="goToDojo"
+                  class="bg-kawaii-deep text-white font-bold py-3 px-8 rounded-full shadow-md text-lg transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                  :disabled="!canStart"
+                >
+                  {{ canStart ? '¡Empezar a programar!' : 'Elige al menos 3' }}
+                </button>
+             </div>
+          </div>
+       </div>
+    </transition>
+
+  </div>
+
+  <script src="../data/banco-ejercicios.js"></script>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          bank: BANCO_EJERCICIOS,
+          selected: [],
+          state: 'select', // 'select', 'dojo'
+        }
+      },
+      computed: {
+        canStart() {
+           return this.selected.length >= 3 && this.selected.length <= 5;
+        }
+      },
+      methods: {
+        isSelected(ej) {
+           return this.selected.find(item => item.id === ej.id) !== undefined;
+        },
+        toggleSelection(ej) {
+           const index = this.selected.findIndex(item => item.id === ej.id);
+           if (index !== -1) {
+              // Remove if already selected
+              this.selected.splice(index, 1);
+           } else {
+              // Add if not selected, subject to limit 5
+              if (this.selected.length < 5) {
+                 this.selected.push(ej);
+              } else {
+                 // Flash limit reached effect? (CSS shake)
+                 alert("¡Mochila llena! Máximo 5 misiones. Si quieres esta, deselecciona otra.");
+              }
+           }
+        },
+        goToDojo() {
+           if (this.canStart) {
+              window.scrollTo(0,0);
+              this.state = 'dojo';
+           }
+        },
+        backToSelect() {
+           window.scrollTo(0,0);
+           this.state = 'select';
+        },
+        formatHTML(text) {
+           // Basic formatting conversion using newline chunks to list/pars if needed
+           // Currently 'fullDesc' in data file is pre-formatted html text, we just replace new lines visually if needed
+           return text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+</body>
+</html>
