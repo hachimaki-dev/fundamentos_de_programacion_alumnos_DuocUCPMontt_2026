@@ -1,0 +1,12 @@
+jefe = 1000 
+
+
+while jefe > 0 :
+    daño = int(input("Daño de ataque: "))
+    if daño < 0 :
+        print("El ataque fallo")
+    elif daño >= 0 :
+        jefe = jefe - daño 
+        print(f"El ataque acerto le has restado {daño} y ahora le queda {jefe} de vida al jefe")
+        
+print("Jefe derrotado")
