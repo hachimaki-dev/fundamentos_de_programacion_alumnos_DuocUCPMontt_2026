@@ -1,12 +1,13 @@
-jefe = 1000 
+Num_usuario = 1
+Num_secreto = 39
+intentos = 0
 
-
-while jefe > 0 :
-    daño = int(input("Daño de ataque: "))
-    if daño < 0 :
-        print("El ataque fallo")
-    elif daño >= 0 :
-        jefe = jefe - daño 
-        print(f"El ataque acerto le has restado {daño} y ahora le queda {jefe} de vida al jefe")
+while Num_usuario != Num_secreto :
+    Num_usuario = int(input("ingrese un numero: "))
+    intentos = intentos + 1
+    if Num_usuario < Num_secreto :
+        print("El numero secreto es mas alto")
+    elif Num_usuario > Num_secreto :
+        print("El numero secreto es mas bajo")    
         
-print("Jefe derrotado")
+print(f"Felicidades lo lograste en {intentos} intentos")
