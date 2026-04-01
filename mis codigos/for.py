@@ -1,5 +1,8 @@
-# continue: salta los pares
-for i in range(300):
-    if i %3 == 0:
-        continue
-    print(f"Hola : {i}") 
+for i in "Buenos días profesor" :
+    print(i)
+for i in "Muchas gracias por su tiempo" :
+    print(i)
+for i in "Por su paciencia" :
+    print(i)
+for i in "Y por sus classes" :
+    print(i)
