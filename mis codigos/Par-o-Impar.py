@@ -1,0 +1,5 @@
+numero = int(input("escriba un numero"))
+if numero % 2 == 0:
+    print("PAR")
+else:
+    print("IMPAR")
