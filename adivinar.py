@@ -8,5 +8,6 @@ while n_secreto != o_elegida :
    if o_elegida != n_secreto:
     print("te equivocaste")
    #entonces colocamos un break para que termine el programa si no , entrara en el bucle infinitamente , consumiendo recursos innecesariamente 
-   print("Es correcto") 
+   else:
+    print("Es correcto") 
    break
