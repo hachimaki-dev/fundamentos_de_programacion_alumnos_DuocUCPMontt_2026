@@ -11,3 +11,28 @@ Objetivo: Procesar los resultados de una pequeña encuesta del curso.
 - Si C > A, imprime "Ganó En Contra".
 - Si A == C, imprime "Empate".
 """
+
+Contador_A = 0
+Contador_C = 0
+
+Encuestados = int(input("Numero de encuestados? "))
+while Encuestados > 0:
+    voto = input("Votas por A o C? ")
+    if voto == "A":
+        print("Voto a favor")
+        Contador_A = Contador_A + 1
+        Encuestados = Encuestados - 1
+    elif voto == "C":
+        print("Voto en contra")
+        Contador_C = Contador_C + 1
+        Encuestados = Encuestados - 1
+    else:
+        print("Voto nulo no contabilizado")
+        Encuestados = Encuestados - 1
+
+if Contador_A > Contador_C:
+    print("Ganó A favor")
+elif Contador_A < Contador_C:
+    print("Ganó En Contra")
+else:
+    print("Empate")
