@@ -15,10 +15,12 @@ numero_usuario = 0
 intentos = 0
 
 while numero_usuario != numero_secreto:
-    numero_usuario = int(input("Adivine el numero secreto: "))
+    numero_usuario = int(input("\nAdivine el numero secreto: "))
+    intentos = intentos + 1
     if numero_usuario < numero_secreto:
-        print("El número secreto es más ALTO")
-        intentos = intentos + 1
+        print("El número secreto es más ALTO") 
     if numero_usuario > numero_secreto:
         print("El número secreto es más BAJO")
-        intentos = intentos + 1
+
+print(f"\n¡Felicidades, era el numero: {numero_secreto}!")
+print(f"¡Ganaste en {intentos} intentos!")
