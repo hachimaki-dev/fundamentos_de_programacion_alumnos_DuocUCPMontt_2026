@@ -33,4 +33,4 @@ else:
     
     else:
         saldo -= retiro
-        print(f"Retiro exitoso. Su nuevo saldo es: ${saldo}")
+        print(f"Retiro exitoso. Su nuevo saldo es: ${saldo}") 
