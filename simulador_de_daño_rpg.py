@@ -1,10 +1,18 @@
 # Objetivo: Crear un pequeño simulador de un combate de rol (RPG).
 
 import random
-import os
+import subprocess
+import sys
 from colorama import init as colorama_init
 from colorama import Fore
 from colorama import Style
+
+if sys.platform == "win32":
+    def clear_console():
+        subprocess.run("CLS", shell=True)
+if sys.platform == "linux":
+    def clear_console():
+        subprocess.run("clear", shell=True)
 
 puntos_de_vida_del_jefe = 1000
 contador = -1
@@ -26,30 +34,30 @@ while puntos_de_vida_del_jefe > 0:
     try:
         if ataque == 1:
             chance = random.randint(1, 10)
-            if chance > 3:
+            if chance >= 3:
                 puntos_de_vida_del_jefe -= 100
                 resultado = Fore.YELLOW + "Ataque Exitoso!" + Style.RESET_ALL
-                os.system('clear')
+                clear_console()
             elif chance < 3:
                 resultado = Fore.BLUE + "Ataque Fallado!" + Style.RESET_ALL
-                os.system('clear')
+                clear_console()
         if ataque == 2:
             chance = random.randint(1, 10)
-            if chance > 6:
+            if chance >= 6:
                 puntos_de_vida_del_jefe -= 200
                 resultado = Fore.YELLOW + "Ataque Exitoso!" + Style.RESET_ALL
-                os.system('clear')
+                clear_console()
             elif chance < 6:
                 resultado = Fore.BLUE + "Ataque Fallado!" + Style.RESET_ALL
-                os.system('clear')
+                clear_console()
         if ataque == 3 and contador >= 3:
             puntos_de_vida_del_jefe -= 300
             resultado = Fore.YELLOW + "Ataque Critico!" + Style.RESET_ALL
             contador = 0
-            os.system('clear')
+            clear_console()
         elif ataque == 3 and contador <= 3:
-            print("Cargas insuficientes")
-            os.system('clear')
+            resultado = "Cargas insuficientes"
+            clear_console()
     except:
         print("Ataque no valido!")
 
