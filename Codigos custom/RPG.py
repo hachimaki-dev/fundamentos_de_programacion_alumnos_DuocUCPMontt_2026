@@ -20,5 +20,9 @@ while Boss > 0:
         print("El ataque fallo")
     elif Daño >= 0:
         Boss = Boss - Daño
-        print(f"Vida del jefe es {Boss}")
+        if Boss < 0:
+            Boss = 0
+            print(f"Vida del jefe es {Boss}")
+        else:
+            print(f"Vida del jefe es {Boss}")
 print("¡Jefe derrotado!")
