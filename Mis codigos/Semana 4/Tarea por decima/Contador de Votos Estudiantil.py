@@ -14,6 +14,7 @@ votos_a = 0
 votos_c = 0
 votos_procesados = 0
 
+print("*****Bienvenidos al Contador de Votos Estudiantil*****")
 num_estudiantes = int(input("¿Cuántos estudiantes van a votar? (Ingrese el número): "))
 while num_estudiantes > votos_procesados:
     voto = input("Escribe 'A' (A favor) o 'C' (En contra): ")
@@ -34,3 +35,5 @@ elif votos_c > votos_a:
     print("Ganó En Contra")
 else:
     print("Empate")
+
+print("Fin del programa")
