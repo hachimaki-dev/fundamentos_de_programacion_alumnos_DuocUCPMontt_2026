@@ -12,4 +12,5 @@ while Jefe_final > 0:
         print("¡El ataque falló!")
     else:
         Jefe_final = Jefe_final - Ataque
+        print ("Vida restante:",Jefe_final)
 print("¡Jefe derrotado!")
