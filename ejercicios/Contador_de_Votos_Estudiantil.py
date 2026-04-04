@@ -4,7 +4,7 @@ contador_c = 0
 i= 0 
 while i < n_encuestados :
     i += 1 
-    voto = input(f"estudiante {i} ingrese se voto (A para a favor / C para encontra)")
+    voto = input(f"estudiante {i} ingrese su voto (A para a favor / C para encontra)")
     if voto == "A" or voto == "a":
         contador_a += 1 
     elif voto == "C" or voto == "c":
