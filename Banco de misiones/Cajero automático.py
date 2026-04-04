@@ -33,7 +33,6 @@ if acceso_concedido:
         dinero_por_retirar = int(input("¿Cuánto deseas retirar?"))
         if dinero_por_retirar > saldo:
             print ("Fondos insuficientes")
-            break
         elif dinero_por_retirar == 0:
             print("Monto inválido")
         else:
