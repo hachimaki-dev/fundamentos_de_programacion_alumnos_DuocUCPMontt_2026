@@ -41,8 +41,4 @@ if acceso_concedido:
             print(f"Retiro exitoso. Su nuevo saldo es: ${saldo}")
             retiro = True
             break
-
-
-
-
-
+#ya voy entendiendo creo (:
