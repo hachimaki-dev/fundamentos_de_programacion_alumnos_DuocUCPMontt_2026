@@ -11,12 +11,14 @@
 jefe_final = 1000
 daño_del_ataque = 0
 
-print("¨****Bienvenidos al similador de daño de RPG****")
+print("¨****Bienvenidos al simulador de daño de RPG****")
 
 while jefe_final > 0:
     daño_del_ataque = int(input("Ingrese el daño del ataque: "))
     if daño_del_ataque <= 0:  
       print("El ataque falló")
+    elif daño_del_ataque > jefe_final:
+       print("El jefe final esquivo el ataque")
     elif daño_del_ataque >= 0:
       jefe_final = jefe_final - daño_del_ataque
       print(f"La vida restante del jefe final es de {jefe_final} puntos")
