@@ -1,10 +1,10 @@
 n_encuestados = int(input("¿cuantos estudiantes van a votar?"))
 contador_a = 0 
 contador_c = 0 
-i= 0 
-while i < n_encuestados :
-    i += 1 
-    voto = input(f"estudiante {i} ingrese su voto (A para a favor / C para encontra)")
+contador_encuestado = 0 
+while contador_encuestado < n_encuestados :
+    contador_encuestado += 1 
+    voto = input(f"estudiante {contador_encuestado} ingrese su voto (A para a favor / C para encontra)")
     if voto == "A" or voto == "a":
         contador_a += 1 
     elif voto == "C" or voto == "c":
