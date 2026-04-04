@@ -1,3 +1,5 @@
+print("=== Derrota al Jefe ===")
+
 vida_jefe = 1000
 
 print("=== COMBATE RPG ===")
