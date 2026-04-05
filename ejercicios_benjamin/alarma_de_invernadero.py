@@ -1,7 +1,7 @@
 alertas_consecutivas = 0 
 
 while True: 
-    temp = float(input("ingrese temperatura actual (o para salir): "))
+    temp = int(input("ingrese temperatura actual (o para salir): "))
 
     if temp == 0: 
         print("sistema detenido manualmente")
