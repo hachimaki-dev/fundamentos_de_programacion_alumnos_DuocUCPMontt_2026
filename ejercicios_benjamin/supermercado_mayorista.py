@@ -1,6 +1,6 @@
 #registro del producto 
 producto = input("Ingrese el nombre del producto: ")
-precio = float(input("Ingrese el precio del producto: "))
+precio = int(input("Ingrese el precio del producto: "))
 cantidad = int(input("Ingrese la cantidad que desea comprar: "))
 
 #calculo del total a pagar
