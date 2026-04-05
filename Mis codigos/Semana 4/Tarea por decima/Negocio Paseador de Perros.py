@@ -10,11 +10,13 @@
 # 4. Suma lo ganado en un acumulador total.
 # 5. Al finalizar el ciclo, imprime "Resumen del día: Has paseado X perros ganando en total $Y".
 
+print("****Paseador de Perros****")
+
 cantidad_perros = int(input("¿Cuántos perros paseó en total el día del hoy?: "))
 contador = 0
 ganancia = 0
 while cantidad_perros > contador:
-    peso_del_perro_kg = int(input("ingresa su peso del perro en kg: "))
+    peso_del_perro_kg = float(input("Ingrese su peso del perro en kg: "))
     if peso_del_perro_kg < 10 :
         ganancia += 2000
     elif peso_del_perro_kg >= 10 and peso_del_perro_kg < 25 :
