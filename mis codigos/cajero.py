@@ -12,7 +12,7 @@ while intentos < max_intentos:
 
     if intento == PIN:
         print("Has ingresado correctamente")
-        print("/////////////////////////////Bienvenido al menu de retiro/////////////////////////////")
+        print("/////////////////////////////BIENVENIDO AL MEU DE RETIRO/////////////////////////////")
         acceso_concedido = True
         break
 
