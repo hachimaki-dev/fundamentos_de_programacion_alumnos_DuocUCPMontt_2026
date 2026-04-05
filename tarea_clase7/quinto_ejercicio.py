@@ -25,7 +25,6 @@ while True:
         if intentos_pin == 0:
             print("Has fallado todos los intentos")
             print("Tu tarjeta ha sido bloqueada.")
-
 while intentos_pin > 0:
     try:
         eleccion = int(input("Que desea realizar?\n1. Retirar dinero\n2. Depositar dinero\n3. Salir\nIngrese su elección: "))
