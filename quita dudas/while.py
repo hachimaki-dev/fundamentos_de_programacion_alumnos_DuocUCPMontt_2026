@@ -1,32 +1,36 @@
-import time
-import sys
+valor_normal = 800
+valor_estudiantes = 250
+dinero_acumulado = 0
+contador_normal = 0
+contador_estudiantes = 0
+contador_final = 0
 
-Numero_de_escuestados = 0
-contador_de_votos_a_favor = 0
-contador_de_votos_en_contra = 0
-contador_de_votos_no_validos = 0
-
-
-while Numero_de_escuestados <= 30:
-    voto_de_estudainte = str(input("Ingrese su voto : ")).lower()
-
-    if voto_de_estudainte == "a":
-        print ("Bien, hecho tu voto.")
-        contador_de_votos_a_favor += 1
-        Numero_de_escuestados -= 1
-        print (f"Estudiantes faltantes {Numero_de_escuestados}")
-
-    elif voto_de_estudainte == "c":
-        print ("Bien, has hecho tu voto")
-        contador_de_votos_en_contra += 1
-        Numero_de_escuestados -= 0
-        print (f"Estudiantes faltantes {Numero_de_escuestados}")
+print ("1.(N) Pasaje Normal" + f"${valor_normal}" )
+print ("2.(E) Pasaje Estudinates"   + f"${valor_estudiantes}")
+print ("3.(C) corte \n")
 
 
-    else: 
-        print ("Voto incontabilizado, por favor ingrese 'A' o 'C' ")
-        contador_de_votos_no_validos += 1
-        print (f"Van {contador_de_votos_no_validos} votos invalidos")
+Numero_de_pasajero = int(input("¿Cuántos pasajero son : "))
+
+while True :
+    eleccion_de_pasajero = str(input("Ingrese (N) y (E) para confirmar su pasaje : ")).lower()
+    
+    if eleccion_de_pasajero == "n" :
+        print (f"Usted ha seleccionado el pasaja de {eleccion_de_pasajero} por lo tanto se le cobra un total de {valor_normal}")
+        dinero_acumulado = dinero_acumulado + valor_normal
+        contador_normal += 1
+        print (f"el dinero acumulado es {dinero_acumulado}\n")
+
+    elif eleccion_de_pasajero == "e" :
+        print (f"Usted ha seleccionado el pasaja de {eleccion_de_pasajero} por lo tanto se le cobra un total de {valor_estudiantes}")
+        contador_estudiantes += 1
+        dinero_acumulado = dinero_acumulado + valor_estudiantes
+        print (f"el dinero acumulado es {dinero_acumulado}\n")
+
+    else :
+        print (" ' ERROR ' , Ingrese solo (N) o (E)")
+
+print ("Se ingreso corte")
         
 
 
