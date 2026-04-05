@@ -1,46 +1,15 @@
-valor_normal = 800
-valor_estudiantes = 250
-dinero_acumulado = 0
-contador_normal = 0
-contador_estudiantes = 0
-contador_final = 0
+print (f"1. Trio Box Sriracha Chicken (3-Sandwich Regular Sriracha Chicken, 3- Filetillos, 3-Papas Regulares y 6- Empanadas de queso snack) " + "$" {precio_trio})
+print (f"2. Dupla Box Sriracha Chicken (2-Sandwich Regular Sriracha Chicken, 2- Filetillos, 2-Papas Regulares y 4- Empanadas de queso snack) " + " $ 12.290 \n")
+print (f"3. Box Sriracha Chicken (1-Sandwich Big Sriracha Chicken, 2- Filetillos, 1-Papas Regulares, 3- Empanadas de queso snack y 1 bebida en lata)" + " $ 10.490 \n")
+print (f"4. Combo Big Sriracha Chicken (1-Sandwich Big Sriracha Chicken, 1- Papa Mediana, 1- Bebida en lata)" + "$ 8.590 \n")
+print (f"5. Crispy Bites (Crispy Bites con papas fritas y salsa a elección)" + "$ 3.190 \n")
+print (f"6. Trio Box Sandwich (3-Chicken Fillet Clasicos Regulares, 3-Filetillos, 3- Papas Regulares y 6- Empanadas de queso snack)" + "$ 25.690\n")
+print (f"7. Fillet Bowl (8- Filetillos de Pollo Crispy y 2-Papas regulares)" + "$ 13.390 \n")
+print (f"8. Promo fajita -Coca Cola- (1-Fajita Clásica de Pollo Crispy, 1-Papa Regular, 1-Coca cola Zero de 220ml)" + "$ 8.490 \n")
+print (f"9. Promo Sandwich -Coca cola- (1-Chicken Sandwich Regular de Pollo Crispy, 1- Papa Regular, 1-Coca cola Zero de 220ml)" + "$ 8.490 \n")
+print (f"10. Dupla Box Fajitas (2-Fajitas Clásicas, 2-Filetillos, 2-Papas Regulares y 4-Empanadas de queso snack)" + "$ 12.190 \n")
+        
 
-print ("1.(N) Pasaje Normal" + f"${valor_normal}" )
-print ("2.(E) Pasaje Estudinates"   + f"${valor_estudiantes}")
-print ("3.(C) corte \n")
 
-
-Numero_de_pasajero = int(input("¿Cuántos pasajero son : "))
-
-while True :
-    eleccion_de_pasajero = str(input("Ingrese (N) y (E) para confirmar su pasaje : ")).lower()
     
-    if eleccion_de_pasajero == "n" :
-        print (f"Usted ha seleccionado el pasaja de {eleccion_de_pasajero} por lo tanto se le cobra un total de {valor_normal}")
-        dinero_acumulado = dinero_acumulado + valor_normal
-        contador_normal += 1
-        print (f"el dinero acumulado es {dinero_acumulado}\n")
-
-    elif eleccion_de_pasajero == "e" :
-        print (f"Usted ha seleccionado el pasaja de {eleccion_de_pasajero} por lo tanto se le cobra un total de {valor_estudiantes}")
-        contador_estudiantes += 1
-        dinero_acumulado = dinero_acumulado + valor_estudiantes
-        print (f"el dinero acumulado es {dinero_acumulado}\n")
-
-    else :
-        print (" ' ERROR ' , Ingrese solo (N) o (E)")
-
-print ("Se ingreso corte")
-        
-
-
-        
-
-
-
-
-print ("Todos los estudiantes han hecho sus vots.")
-print ("Por favor esperen que estamos valinado cada uno de ellos")
-time.sleep(5)
-
 

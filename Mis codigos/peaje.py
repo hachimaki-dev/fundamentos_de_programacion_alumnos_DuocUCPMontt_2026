@@ -97,11 +97,11 @@ if total_vehiculos > 0:
 
 #Determinar el ganador
     if cantidad_de_autos > cantidad_de_camiones and cantidad_de_autos > cantidad_de_motos:
-        print("El vehículo ganador del día fue: AUTOS 🚗")
+        print("El vehículo ganador del día fue: AUTOS ")
     elif cantidad_de_camiones > cantidad_de_autos and cantidad_de_camiones > cantidad_de_motos:
-        print("El vehículo ganador del día fue: CAMIONES 🚚")
+        print("El vehículo ganador del día fue: CAMIONES ")
     elif cantidad_de_motos > cantidad_de_autos and cantidad_de_motos > cantidad_de_camiones:
-        print("El vehículo ganador del día fue: MOTOS 🏍️")
+        print("El vehículo ganador del día fue: MOTOS ")
     else:
         print("Hubo un empate entre tipos de vehículos.")
 else:
