@@ -5,7 +5,7 @@ total = 0
 
 #ciclo para cada perro 
 while contador < cantidad: 
-    peso = float(input(f"ingrese el peso del perro {contador + 1} en kg: " ))
+    peso = int(input(f"ingrese el peso del perro {contador + 1} en kg: " ))
 
     if peso < 10: 
         precio = 2000
