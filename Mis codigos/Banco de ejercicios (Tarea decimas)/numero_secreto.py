@@ -9,6 +9,7 @@
 # 4. Usa un contador para registrar en cuántos turnos logró adivinar.
 # 5. Imprime al final "¡Ganaste en X intentos!".
 
+print(" EL NUMERO SECRETO ".center(40, "-"))
 
 numero_secreto = 3
 numero_usuario = 0
@@ -22,5 +23,5 @@ while numero_usuario != numero_secreto:
     if numero_usuario > numero_secreto:
         print("El número secreto es más BAJO")
 
-print(f"\n¡Felicidades, era el numero: {numero_secreto}!")
+print(f"\n¡Felicidades, era el numero {numero_secreto}!")
 print(f"¡Ganaste en {intentos} intentos!")

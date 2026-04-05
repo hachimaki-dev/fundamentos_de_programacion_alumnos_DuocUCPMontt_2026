@@ -8,6 +8,8 @@
 # 5. Si el daño es mayor o igual a 0, réstalo de la vida del jefe y muestra la vida restante.
 # 6. Si la vida es 0 o menos, rompe el ciclo o deja que termine naturalmente, y muestra "¡Jefe derrotado!".
 
+print(" SIMULADOR RPG ".center(40, "-"))
+
 vida_jefe_final = 1000
 
 while vida_jefe_final > 0:

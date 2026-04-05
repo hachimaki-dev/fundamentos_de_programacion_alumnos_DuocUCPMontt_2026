@@ -11,6 +11,8 @@
 # - Si el monto es igual a 0: "Monto inválido".
 # - Si es válido, resta el dinero, y muestra "Retiro exitoso. Su nuevo saldo es: $X".
 
+print(" BIENVENIDO A SU BANCO FAVORITO ".center(50, "-"))
+
 saldo = 10000
 pin_secreto = 5678
 intentos = 3
@@ -34,4 +36,4 @@ while protege_cuenta and intentos > 0:
             print(f"Retiro exitoso. Su nuevo saldo es: ${saldo}")
 
 if intentos == 0 and protege_cuenta:
-    print("Tarjeta bloqueada por seguridad")
+    print(" TARJETA BLOQUEADA POR SEGURIDAD ".center(50, "*"))

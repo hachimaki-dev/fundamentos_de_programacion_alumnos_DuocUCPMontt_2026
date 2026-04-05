@@ -8,6 +8,8 @@
 # - Si el subtotal es mayor a $15.000, aplica un 10% de descuento y muestra el detalle: "Subtotal: $X, Descuento: $Y, Total pagar: $Z".
 # - Si no supera los $15.000, cobra un costo de envío fijo de $2.000 y muestra: "Subtotal: $X, Envío: $2000, Total a pagar: $Z".
 
+print(" BIENVENIDO A DELIVERY KAWAII ".center(40, "-"))
+
 total = 0
 subtotal = 0
 descuento = 0

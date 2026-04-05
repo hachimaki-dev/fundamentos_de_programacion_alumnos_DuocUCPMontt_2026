@@ -8,6 +8,8 @@
 # 5. Si ingresas una temp < 35, el contador de alertas ESTRICTAMENTE vuelve a 0 (porque ya no es consecutiva).
 # 6. Si en cualquier momento el contador llega a 3, imprime un texto inmenso "¡¡¡ACTIVANDO ASPERSORES DE EMERGENCIA!!!" y finaliza el ciclo usando break.
 
+print(" ALARMA DE INVERNADERO ".center(40, "-"))
+
 alertas_consecutivas = 0
 
 while True:
@@ -15,9 +17,9 @@ while True:
     if temperatura == 0:
         break
     if temperatura >= 35:
-        alertas_consecutivas = alertas_consecutivas + 1
+        alertas_consecutivas += 1
     if temperatura < 35:
         alertas_consecutivas = 0
     if alertas_consecutivas == 3:
-        print("¡¡¡ACTIVANDO ASPERSORES DE EMERGENCIA!!!")
+        print(" ¡¡¡ACTIVANDO ASPERSORES DE EMERGENCIA!!! ".center(60, "*"))
         break
