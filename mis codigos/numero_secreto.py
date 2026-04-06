@@ -1,4 +1,4 @@
-
+# TERMINADO
 print("===== NUMERO SECRETO =====")
 
 numero_secreto = 7
@@ -21,8 +21,6 @@ if jugar_o_no_jugar == "si" or jugar_o_no_jugar == "SI" or jugar_o_no_jugar == "
             print("Numero incorrecto, intente de nuevo >:C")
             
             
-            
-
 elif jugar_o_no_jugar == "no" or jugar_o_no_jugar == "No" or jugar_o_no_jugar == "NO":
     print("No hay problema, cuidate mucho >:3")
     

@@ -1,4 +1,4 @@
-# TAREA AUN INCOMPLETA
+# TERMINADO
 
 vida_jefe_final = 1000
 
@@ -37,5 +37,5 @@ while vida_jefe_final > 0:
 
 print("================================")
 print("¡EL JEFE HA SIDO DERROTADO! ")
-print("===== ¡GANASTE EL JUEGO! =====")
+print("===== ¡GANASTE EL JUEGO! >:3 =====")
 print("================================")
