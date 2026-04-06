@@ -18,19 +18,16 @@ while intentos != 0:
             break
             
 while intentos != 0:
-    
-
     monto = int(input("introdusca monto a retirar"))
     if monto > saldo:
        print("saldo insuficiente")
     elif monto <= 0:
      print("monto invalido")
-
     else:
      saldo = saldo - monto
      print(f"retiraste exitosamente {monto}")
      print(f"saldo actual es de {saldo}")
-     
+     break
     if saldo == 0:
         print("saldo insuficiente para hacer mas retiros")
         break
