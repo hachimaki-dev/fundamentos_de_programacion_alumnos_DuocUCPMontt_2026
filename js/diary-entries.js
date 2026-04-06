@@ -114,6 +114,16 @@ const diaryEntries = [
     description: '15 misiones de programación con temáticas muy diversas (juegos, salud, delivery). Arma tu propia guía eligiendo de 3 a 5 misiones.',
     tags: ['python'],
     page: 'pages/banco-ejercicios.html',
-    isNew: true,
+    isNew: false,
   },
+  {
+    id: 'evaluacion-formativa-1',
+    date: '2026-04-06',
+    emoji: '📝',
+    title: 'Simulador de Evaluación 1',
+    description: 'Prueba formativa integral (Tipo Universidad). Incluye alternativas, V/F, términos pareados y 3 ejercicios de desarrollo con control de flujo.',
+    tags: ['python', 'docs', 'flow'],
+    page: 'pages/evaluacion-1.html',
+    isNew: true,
+  }
 ];

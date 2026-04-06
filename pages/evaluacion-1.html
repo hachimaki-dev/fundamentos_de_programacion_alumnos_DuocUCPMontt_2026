@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📝 Simulador de Evaluación Universitaria</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+             cute: ['Quicksand', 'sans-serif'],
+             code: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            kawaii: {
+              pink:    '#fce4ec',
+              rose:    '#f8bbd0',
+              lilac:   '#e1bee7',
+              mint:    '#c8e6c9',
+              sky:     '#b3e5fc',
+              peach:   '#ffe0b2',
+              cream:   '#fffde7',
+              deep:    '#ad1457',
+              text:    '#4a4a4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <style>
+    body {
+      background-color: #fffde7;
+      font-family: 'Quicksand', sans-serif;
+      color: #4a4a4a;
+      overflow-x: hidden;
+      background-image: radial-gradient(#f8bbd0 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    
+    .bg-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(173, 20, 87, 0.1);
+    }
+    
+    .paper-panel {
+      background: white;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+      border-radius: 0.5rem;
+      background-image: linear-gradient(transparent 95%, #fce4ec 5%);
+      background-size: 100% 2.5rem;
+      line-height: 2.5rem;
+    }
+
+    .bounce-in-active {
+      animation: bounce 0.5s;
+    }
+    @keyframes bounce {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.02); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    
+    select, input, .combo-box {
+       line-height: normal;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-kawaii-text pb-20">
+
+  <!-- Background decorations -->
+  <div class="bg-shape" style="width:40vw;height:40vw;background:#b3e5fc;top:-5%;left:-5%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:#e1bee7;bottom:10%;right:10%;"></div>
+
+  <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-6xl mx-auto px-4 py-8">
+    
+    <!-- Top Navigation / Header -->
+    <header class="flex justify-between items-center mb-6 glass-panel p-4 z-20 sticky top-4">
+       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
+        <span>⬅️</span> Volver al Diario
+       </a>
+       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
+        <span>📝</span>
+        <span>Modo Evaluación</span>
+       </div>
+       <div class="text-sm font-bold bg-kawaii-pink text-kawaii-deep px-4 py-2 rounded-full hidden sm:block">
+         ⏳ 3 horas estimadas
+       </div>
+    </header>
+
+    <main class="flex-grow flex flex-col w-full">
+       <!-- Portada -->
+       <div class="glass-panel p-10 mb-8 text-center bg-white border-t-8 border-t-kawaii-deep">
+           <h1 class="text-4xl md:text-5xl font-bold text-kawaii-deep mb-4">{{ eva.header.title }}</h1>
+           <p class="text-lg md:text-xl text-gray-500 mb-6 font-medium">{{ eva.header.subtitle }}</p>
+           <p class="text-gray-700 max-w-3xl mx-auto bg-yellow-50 p-6 rounded-xl border border-yellow-200 shadow-sm leading-relaxed text-left">
+              <strong>Instrucciones:</strong> {{ eva.header.instructions }}<br><br>
+              Tómate tu tiempo. Aunque hay puntaje, el objetivo principal es que experimentes un ambiente de certamen real. Trata de resolver los ejercicios de desarrollo en Thonny o VS Code antes de ver posibles "respuestas".
+           </p>
+       </div>
+
+       <!-- Pestañas de la prueba -->
+       <div class="flex flex-wrap gap-2 mb-6 justify-center sticky top-24 z-20">
+          <button @click="section = 'alt'" :class="tabClass('alt')">I. Alternativas</button>
+          <button @click="section = 'vf'" :class="tabClass('vf')">II. Verdadero/Falso</button>
+          <button @click="section = 'pareados'" :class="tabClass('pareados')">III. Términos</button>
+          <button @click="section = 'flujo'" :class="tabClass('flujo')">IV. Trazado / Flujo</button>
+          <button @click="section = 'desarrollo'" :class="tabClass('desarrollo')">V. Desarrollo</button>
+       </div>
+
+       <div class="paper-panel p-8 md:p-12 min-h-[60vh] relative">
+          
+          <!-- SECCIÓN: ALTERNATIVAS -->
+          <transition name="fade" mode="out-in">
+             <div v-if="section === 'alt'" key="alt">
+                <h2 class="text-3xl font-bold text-kawaii-deep mb-8 flex items-center gap-3">
+                   <span class="bg-kawaii-deep text-white w-10 h-10 rounded-full flex justify-center items-center text-xl">I</span> 
+                   Selección Múltiple (20 pts)
+                </h2>
+                
+                <div v-for="(q, index) in eva.alternativas" :key="q.id" class="mb-10 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 combo-box">
+                   <p class="font-bold text-xl text-gray-800 mb-4">{{ index + 1 }}. {{ q.question }}</p>
+                   <div class="flex flex-col gap-3 pl-2 md:pl-6">
+                      <label v-for="(opt, optIdx) in q.options" :key="optIdx" 
+                             class="flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors"
+                             :class="{
+                               'border-kawaii-deep bg-pink-50': userAnswers.alt[index] === optIdx,
+                               'hover:bg-gray-50 border-gray-200': userAnswers.alt[index] !== optIdx
+                             }">
+                         <input type="radio" :name="'alt-'+index" :value="optIdx" v-model="userAnswers.alt[index]" class="mt-1 w-5 h-5 accent-kawaii-deep" />
+                         <span class="text-lg leading-snug">{{ opt }}</span>
+                      </label>
+                   </div>
+                   
+                   <!-- Feedback button -->
+                   <div class="mt-4 text-right">
+                      <button v-if="userAnswers.alt[index] !== undefined && !showCorrection.alt[index]" @click="showCorrection.alt[index] = true" class="text-sm text-kawaii-deep font-bold hover:underline">Verificar respuesta</button>
+                   </div>
+                   <div v-if="showCorrection.alt[index]" class="mt-4 p-4 rounded-xl text-sm" :class="userAnswers.alt[index] === q.answer ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                      <p class="font-bold mb-1">{{ userAnswers.alt[index] === q.answer ? '¡Correcto!' : 'Incorrecto.' }}</p>
+                      <p>{{ q.explanation }}</p>
+                   </div>
+                </div>
+             </div>
+
+             <!-- SECCIÓN: V / F -->
+             <div v-else-if="section === 'vf'" key="vf">
+                <h2 class="text-3xl font-bold text-kawaii-deep mb-8 flex items-center gap-3">
+                   <span class="bg-kawaii-deep text-white w-10 h-10 rounded-full flex justify-center items-center text-xl">II</span> 
+                   Verdadero o Falso (15 pts)
+                </h2>
+                
+                <div v-for="(q, index) in eva.verdaderoFalso" :key="q.id" class="mb-8 p-6 bg-white rounded-2xl shadow-sm border border-gray-100 combo-box">
+                   <p class="font-bold text-xl text-gray-800 mb-4">{{ index + 1 }}. {{ q.statement }}</p>
+                   <div class="flex gap-4 mb-4">
+                      <button @click="userAnswers.vf[index] = true" class="px-6 py-2 rounded-xl font-bold border-2 transition-colors" :class="userAnswers.vf[index] === true ? 'bg-green-100 border-green-500 text-green-700' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'">Verdadero</button>
+                      <button @click="userAnswers.vf[index] = false" class="px-6 py-2 rounded-xl font-bold border-2 transition-colors" :class="userAnswers.vf[index] === false ? 'bg-red-100 border-red-500 text-red-700' : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'">Falso</button>
+                   </div>
+                   
+                   <div class="text-right">
+                      <button v-if="userAnswers.vf[index] !== undefined && !showCorrection.vf[index]" @click="showCorrection.vf[index] = true" class="text-sm text-kawaii-deep font-bold hover:underline">Verificar respuesta</button>
+                   </div>
+                   <div v-if="showCorrection.vf[index]" class="mt-3 p-4 rounded-xl text-sm" :class="userAnswers.vf[index] === q.answer ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                      <p class="font-bold mb-1">{{ userAnswers.vf[index] === q.answer ? '¡Correcto!' : 'Incorrecto.' }}</p>
+                      <p>{{ q.explanation }}</p>
+                   </div>
+                </div>
+             </div>
+
+             <!-- SECCIÓN: TÉRMINOS PAREADOS -->
+             <div v-else-if="section === 'pareados'" key="pareados">
+                <h2 class="text-3xl font-bold text-kawaii-deep mb-8 flex items-center gap-3">
+                   <span class="bg-kawaii-deep text-white w-10 h-10 rounded-full flex justify-center items-center text-xl">III</span> 
+                   Términos Pareados (10 pts)
+                </h2>
+                <p class="mb-6 text-gray-600 bg-white p-4 rounded-xl border">Asigna el número correspondiente de la columna derecha a los conceptos de la columna izquierda.</p>
+                
+                <div class="flex flex-col lg:flex-row gap-8 bg-white p-6 rounded-2xl border combo-box">
+                   <div class="w-full lg:w-1/2 flex flex-col gap-4">
+                      <h3 class="font-bold text-lg text-kawaii-deep">Columna A (Concepto)</h3>
+                      <div v-for="item in eva.terminosPareados.itemsIzquierda" :key="item.id" class="flex gap-3 items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
+                         <div class="w-8 font-bold text-gray-400">{{ item.id }})</div>
+                         <select v-model="userAnswers.pareados[item.id]" class="w-16 p-2 border border-gray-300 rounded font-bold text-center bg-white outline-none focus:border-kawaii-deep">
+                            <option value=""></option>
+                            <option v-for="n in 5" :key="n" :value="String(n)">{{ n }}</option>
+                         </select>
+                         <div class="font-code text-pink-600 font-bold ml-2">{{ item.text }}</div>
+                      </div>
+                   </div>
+                   
+                   <div class="w-full lg:w-1/2 flex flex-col gap-4">
+                      <h3 class="font-bold text-lg text-kawaii-deep">Columna B (Definición)</h3>
+                      <div v-for="item in eva.terminosPareados.itemsDerecha" :key="item.id" class="flex gap-3 items-start bg-blue-50 p-3 rounded-lg border border-blue-100">
+                         <div class="font-bold text-blue-800 bg-white w-8 h-8 flex items-center justify-center rounded-full shadow-sm shrink-0">{{ item.id }}</div>
+                         <div class="text-sm text-blue-900 leading-snug pt-1">{{ item.text }}</div>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="mt-8 flex flex-col items-center gap-4">
+                   <button @click="checkPareados" class="bg-kawaii-deep hover:bg-pink-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition-colors">Revisar Términos</button>
+                   <div v-if="showCorrection.pareados" class="p-6 rounded-xl w-full text-center text-lg" :class="pareadosCorrectos ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'">
+                      <p v-if="pareadosCorrectos"><strong>¡Excelente!</strong> Todos los términos están emparejados correctamente.</p>
+                      <p v-else><strong>Hay errores.</strong> Revisa bien los conceptos con sus definiciones e intenta nuevamente.</p>
+                   </div>
+                </div>
+             </div>
+
+             <!-- SECCIÓN: DIAGRAMA DE FLUJO / TRAZADO -->
+             <div v-else-if="section === 'flujo'" key="flujo">
+                <h2 class="text-3xl font-bold text-kawaii-deep mb-8 flex items-center gap-3">
+                   <span class="bg-kawaii-deep text-white w-10 h-10 rounded-full flex justify-center items-center text-xl">IV</span> 
+                   Trazado y Lógica (15 pts)
+                </h2>
+                
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-200 combo-box">
+                   <p class="text-lg text-gray-700 mb-6 font-medium leading-relaxed">{{ eva.diagramaFlujo.description }}</p>
+                   
+                   <pre class="rounded-xl shadow-inner mb-6 !p-6"><code class="language-python">{{ eva.diagramaFlujo.code }}</code></pre>
+                   
+                   <p class="font-bold text-xl mb-4">{{ eva.diagramaFlujo.question }}</p>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <button v-for="(opt, idx) in eva.diagramaFlujo.options" :key="idx"
+                              @click="userAnswers.flujo = idx; showCorrection.flujo = true"
+                              class="text-left p-4 rounded-xl border-2 transition-all hover:border-kawaii-deep"
+                              :class="{
+                               'bg-green-100 border-green-500': showCorrection.flujo && idx === eva.diagramaFlujo.answer,
+                               'bg-red-100 border-red-500': showCorrection.flujo && userAnswers.flujo === idx && idx !== eva.diagramaFlujo.answer,
+                               'bg-gray-50 border-gray-200': !(showCorrection.flujo && (idx === eva.diagramaFlujo.answer || userAnswers.flujo === idx))
+                              }">
+                         {{ opt }}
+                      </button>
+                   </div>
+                   
+                   <div v-if="showCorrection.flujo" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                      <p class="font-bold text-blue-800">Corte evaluativo:</p>
+                      <p class="text-blue-900 mt-1">{{ eva.diagramaFlujo.explanation }}</p>
+                   </div>
+                </div>
+             </div>
+
+             <!-- SECCIÓN: DESARROLLO PESA' -->
+             <div v-else-if="section === 'desarrollo'" key="desarrollo">
+                <h2 class="text-3xl font-bold text-kawaii-deep mb-6 flex items-center gap-3">
+                   <span class="bg-kawaii-deep text-white w-10 h-10 rounded-full flex justify-center items-center text-xl">V</span> 
+                   Ejercicios de Desarrollo Práctico
+                </h2>
+                <div class="bg-yellow-100 text-yellow-800 p-4 rounded-xl mb-8 border border-yellow-300 font-medium">
+                   ⚠️ En una prueba real, tendrías que enviar tu código .py al profesor. Aquí, te sugerimos abrir Thonny, crear 6 archivos (ej1.py al ej6.py), resolverlos, y cuando terminar compares verificando la lógica.
+                </div>
+                
+                <div v-for="(ej, idx) in eva.ejerciciosPricipales" :key="ej.id" class="mb-10 bg-white border border-gray-200 rounded-2xl overflow-hidden combo-box shadow-sm">
+                   <div class="bg-gray-50 border-b border-gray-200 p-4 md:p-6 flex justify-between items-center">
+                      <div>
+                         <span class="text-xs font-bold px-3 py-1 rounded-full border mb-2 inline-block shadow-sm" 
+                               :class="{
+                                 'bg-green-100 text-green-700': ej.dificultad==='Leve', 
+                                 'bg-orange-100 text-orange-700': ej.dificultad==='Intermedio', 
+                                 'bg-red-100 text-red-700': ej.dificultad==='Complejo',
+                                 'bg-purple-100 text-purple-700': ej.dificultad==='Experto',
+                                 'bg-black text-white': ej.dificultad==='Leyenda'
+                               }">
+                            {{ ej.dificultad }} • {{ ej.puntos }} pts
+                         </span>
+                         <h3 class="text-2xl font-bold text-kawaii-deep">{{ idx + 1 }}. {{ ej.titulo }}</h3>
+                      </div>
+                   </div>
+                   
+                   <div class="p-6 md:p-8">
+                      <div class="prose max-w-none text-gray-700 leading-relaxed" v-html="formatEnunciado(ej.enunciado)"></div>
+                      
+                      <div class="mt-8 border-t border-dashed border-gray-300 pt-6 text-center">
+                         <button @click="toggleHint(ej.id)" class="text-kawaii-deep font-bold border-2 border-kawaii-deep px-6 py-2 rounded-full hover:bg-kawaii-deep hover:text-white transition-colors">
+                            {{ hintsOpen[ej.id] ? 'Ocultar tips de lógica' : 'Ver tips de lógica' }}
+                         </button>
+                         
+                         <div v-if="hintsOpen[ej.id]" class="mt-6 text-left p-6 bg-pink-50 rounded-xl border border-pink-100 bounce-in-active">
+                             <h4 class="font-bold text-pink-800 mb-2">Desglose de Lógica:</h4>
+                             <ul class="list-disc pl-5 text-gray-700 space-y-2 text-sm">
+                                <li v-if="ej.id === 'ej1'">Necesitas un input convertido a int para dinero, y otro para impresiones. Multiplica impresiones por 50 y suma el gasto de colación. Todo eso multiplícalo por 5. Guarda en variable, y aplica el condicional simple.</li>
+                                <li v-if="ej.id === 'ej2'">Declara 'total = 0' y 'contador = 0'. En tu while, mientras el precio ingresado sea > 0, agrégalo al total y suma 1 al contador. Al salir del ciclo (desindentado), haz el if para el descuento (total = total * 0.9).</li>
+                                <li v-if="ej.id === 'ej3'">Define saldo = 50000. Haz 'opcion = 0'. El 'while opcion != 4:'. Dentro, usa if opcion == 1..., elif opcion == 2, etc. En el caso del giro, pon un if que valide que monto <= saldo y monto % 5000 == 0.</li>
+                                <li v-if="ej.id === 'ej4'">Usa 'while v_jugador > 0 and v_jefe > 0:'. Dentro, pide la acción. Si es magia, resta maná y vida al jefe. Tras las acciones del jugador, pon un IF: si el jefe sigue vivo (v_jefe > 0), el jefe ataca al jugador.</li>
+                                <li v-if="ej.id === 'ej5'">Controla 4 variables (oro, hierbas, frascos, pociones). En el menú de compra, valida 'if oro >= 50:'. En el de fabricar, usa un IF con 'and' para chequear ambos materiales: 'if hierbas >= 2 and frascos >= 1:'.</li>
+                                <li v-if="ej.id === 'ej6'">Un 'for' de 1 a 3 para las habitaciones. Dentro, un 'intentos = 0' y un 'while intentos < 3 and not abierta:'. Pide la acción y usa IFs anidados para comparar la acción con la clase del personaje elegida al inicio.</li>
+                             </ul>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </transition>
+       </div>
+    </main>
+  </div>
+
+  <script src="../data/evaluacion-1-data.js"></script>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          eva: EVALUACION_DATA,
+          section: 'alt',
+          userAnswers: {
+             alt: {},
+             vf: {},
+             pareados: { 'A': '', 'B': '', 'C': '', 'D': '', 'E': '' },
+             flujo: null
+          },
+          showCorrection: {
+             alt: {},
+             vf: {},
+             pareados: false,
+             flujo: false
+          },
+          pareadosCorrectos: false,
+          hintsOpen: { 'ej1': false, 'ej2': false, 'ej3': false, 'ej4': false, 'ej5': false, 'ej6': false }
+        }
+      },
+      methods: {
+         tabClass(name) {
+            const base = "px-6 py-3 rounded-full font-bold transition-all shadow-sm ";
+            if (this.section === name) {
+               return base + "bg-kawaii-deep text-white scale-105";
+            }
+            return base + "bg-white text-gray-500 border border-gray-200 hover:bg-gray-50";
+         },
+         formatEnunciado(text) {
+            return text.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+         },
+         checkPareados() {
+            this.showCorrection.pareados = true;
+            const correctKey = this.eva.terminosPareados.paresCorrectos;
+            let ok = true;
+            for (let k in correctKey) {
+               if (this.userAnswers.pareados[k] !== correctKey[k]) {
+                  ok = false;
+               }
+            }
+            this.pareadosCorrectos = ok;
+         },
+         toggleHint(id) {
+            this.hintsOpen[id] = !this.hintsOpen[id];
+         }
+      },
+      mounted() {
+        if (window.Prism) {
+           setTimeout(() => Prism.highlightAll(), 500);
+        }
+      },
+      watch: {
+        section() {
+           if (window.Prism) {
+              setTimeout(() => Prism.highlightAll(), 100);
+           }
+        }
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
