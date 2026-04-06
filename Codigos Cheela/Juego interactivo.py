@@ -188,23 +188,51 @@ print (f"El {PokemonRival} de {NombreRival} quiere atacar. ¿Que quieres hacer?"
 print (f"\nTu pokémon es {Pokemon1}: \n")
 
 
+VidaPokemon1 = 20
+VidaPokemonRival = 20
 
 Combate = True
 while Combate == True:
+    
+
+    print (f"{Pokemon1} tiene {VidaPokemon1} puntos de vida \n {PokemonRival} tiene {VidaPokemonRival} puntos de vida")
     Accion = input(f"""¿Que deberia hacer {Pokemon1}? Opciones: 
                Atacar
-               Debuff
-               Pokémon
+               Curar
                Huir\n""" )
     if Accion == "Atacar" or Accion == "atacar":
         print(f"\n{Pokemon1} atacó a {PokemonRival}")
-    elif Accion == "Debuff" or Accion == "debuff":
-        print(f"\n{Pokemon1} debuffeo a {PokemonRival}")
-    elif Accion == "Pokemon" or Accion == "Pokémon" or Accion == "pokemon":
-        print(f"\nSolo tienes 1 Pokémon")
+        VidaPokemonRival = VidaPokemonRival-5
+    elif Accion == "Curar" or Accion == "curar":
+        print(f"\n{Pokemon1} se curo")
+        
+        VidaPokemon1 = VidaPokemon1 + 2
+        
+        if VidaPokemon1 >= 20:
+                VidaPokemon1 = 20
+        
+
     elif Accion == "Huir" or Accion == "huir":
         print(f"\nNO PUEDES HUIR")
     else:
         print("\nOpción invalida")
+    print(f"{PokemonRival} ataco a {Pokemon1}")
+    VidaPokemon1 = VidaPokemon1-3
+
+    if VidaPokemon1 <= 0 or VidaPokemonRival <= 0:
+        Combate = False
+
+
+
+print(f"\nCombate terminado")  
+
+if VidaPokemon1 == 0:
+    print (f'\n{NombreRival} ha ganado el combate')
+elif VidaPokemonRival == 0:
+    print (f'\n{Nombre} ha ganado el combate')
+
+
+print ("\nFin de la demo gracias por jugar c:")
+
 
     
