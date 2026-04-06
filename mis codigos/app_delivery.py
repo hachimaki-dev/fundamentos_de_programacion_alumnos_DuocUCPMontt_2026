@@ -1,0 +1,1 @@
+cantidad_platos = input("cuantos platos desea pedir:")
