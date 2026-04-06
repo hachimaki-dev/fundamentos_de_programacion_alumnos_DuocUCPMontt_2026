@@ -18,14 +18,17 @@ while True :
         break
 saldo = 50000
 
-print(f"tu saldo actual ${saldo}")
-print("dinero a retirar: ")
-monto = int(input())
-if saldo < monto :
-    print("fondos insuficientes")
-elif monto <= 0 :
-    print("monto inválido")
-print("retiro exitoso")
-saldo -= monto
-print("tu saldo actual: $")
-print(f"${saldo}")
+while True :
+    print(f"tu saldo actual ${saldo}")
+    print("dinero a retirar: ")
+    monto = int(input())
+    if saldo < monto :
+        print("fondos insuficientes")
+    elif monto <= 0 :
+        print("monto inválido")
+    elif monto < saldo :
+        print("retiro exitoso")
+        saldo -= monto
+        print("tu saldo actual: $")
+        print(f"${saldo}")
+        break
