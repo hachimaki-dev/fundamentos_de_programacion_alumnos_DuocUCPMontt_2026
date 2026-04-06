@@ -80,8 +80,4 @@ while True:
         print("Cajero apagado")
         print("")
         break
-    
-    else:
-        print("")
-        print("Opción no vailda")
 
