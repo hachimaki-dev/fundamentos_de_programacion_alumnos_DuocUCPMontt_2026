@@ -3,7 +3,7 @@ precio = int(input("Ingrese el precio unitario: "))
 while True:
     if precio == 0:
         print("El precio no puede ser cero, por favor ingrese un valor válido.")
-        break;
+        break
     elif cantidad >=3:
         print("Tiene un descuento del 10%")
         descuento = 0.1
