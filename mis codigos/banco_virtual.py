@@ -1,4 +1,4 @@
-saldo_inicial = 50000;
+saldo_inicial = 50000
 menu = input("1) Ver saldo 2) Girar Dinero 3) Inversión 4) Salir: ")
 while True:
     if menu == "1":
@@ -13,7 +13,7 @@ while True:
     elif menu == "3":
         inversion = int(input("Ingrese el monto a invertir: "))
         if inversion <= saldo_inicial:
-            inversion = inversion * 2;
+            inversion = inversion * 2
             print("Su nuevo saldo después de la inversión es: ", saldo_inicial + inversion)
         else:
             print("Saldo insuficiente.")

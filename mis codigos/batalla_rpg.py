@@ -1,6 +1,6 @@
-vida_jugador = 100;
-mana = 20;
-vida_jefe = 150;
+vida_jugador = 100
+mana = 20
+vida_jefe = 150
 while vida_jugador > 0 and vida_jefe > 0:
     menu = input("Elige tu acción: 1) Atacar 2) Magia 3) Poción de vida: ")
     if menu == "1":
@@ -12,11 +12,10 @@ while vida_jugador > 0 and vida_jefe > 0:
         print("Has usado magia. Vida del jefe: ", vida_jefe, "Mana restante: ", mana)
     elif menu == "3" and mana >= 5:
         vida_jugador += 30 
-        mana -= mana;
+        mana -= mana
         print("Has usado una poción de vida. Vida del jefe: ", vida_jefe, "No queda mana.")
     else:
         print("Acción no válida o mana insuficiente.")
-    
     if vida_jefe > 0:
         vida_jugador -= 15
         print("El jefe te ha atacado. Vida del jugador: ", vida_jugador)
