@@ -14,6 +14,8 @@ while True:
         
         if continuar_programa == 2:
             break
+        
+    bandera = True
     print("--- Porfavor indique su destino: ---")
 
     print("1. Frutillar $5000")
