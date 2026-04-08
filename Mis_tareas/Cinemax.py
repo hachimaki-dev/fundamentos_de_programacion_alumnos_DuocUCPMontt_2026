@@ -4,6 +4,7 @@ precio_entrada=0
 cantidad_entradas=0
 valor_total = 0
 respuesta = ""
+
 while capacidad < 25:
     edad=int(input("Por favor ingrese su edad "))
     if edad < 12:
