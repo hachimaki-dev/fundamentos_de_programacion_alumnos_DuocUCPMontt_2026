@@ -13,9 +13,29 @@
 
 print(" GASTOS SIMPLES ".center(30, "-"))
 
-dinero_almuerzo = int(input("Gasto diario en almuerzo: "))
-cantidad_impresiones = int(input("Cantidad diaria de impresiones: "))
-gasto_semanal = dinero_almuerzo*5 + (cantidad_impresiones*50)*5
+# SIN FOR
+# dinero_almuerzo = int(input("Gasto diario en almuerzo: "))
+# cantidad_impresiones = int(input("Cantidad diaria de impresiones: "))
+# gasto_semanal = dinero_almuerzo*5 + (cantidad_impresiones*50)*5
+
+# print("------------------------------------")
+# print(f"Gasto semanal presupuestado: ${gasto_semanal}")
+
+# if gasto_semanal > 20000:
+#     print("Alerta: Presupuesto Alto")
+# else:
+#     print("Presupuesto moderado")
+
+
+# CON FOR
+dinero_almuerzo = 0
+cantidad_impresiones = 0
+gasto_semanal = 0
+
+for dia_semana in range (1,6):
+    dinero_almuerzo = int(input(f"Gasto almuerzo dia {dia_semana}: "))
+    cantidad_impresiones = int(input(f"Cantidad impresiones dia {dia_semana}: "))
+    gasto_semanal = gasto_semanal + dinero_almuerzo + (cantidad_impresiones * 50)
 
 print("------------------------------------")
 print(f"Gasto semanal presupuestado: ${gasto_semanal}")

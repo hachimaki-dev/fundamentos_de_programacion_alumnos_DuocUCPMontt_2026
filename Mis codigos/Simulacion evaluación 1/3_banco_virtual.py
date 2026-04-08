@@ -40,14 +40,12 @@ while True:
             else:
                 print("Saldo insuficiente")     
         else:
-            print("Monto a retirar debe ser multiplo de 5")
+            print("Monto a retirar debe ser multiplo de 5000")
     elif opcion_elegida == 3:
-        # Si esa cantidad es menor que o igual a tu saldo,
-        # te la duplica y la añade al saldo final de retorno
         print("Invierte tu dinero")
         monto_inversion = int(input("Monto a invertir: "))
         if monto_inversion <= saldo:
-            saldo = saldo + monto_inversion*2 #??
+            saldo += monto_inversion # saldo = saldo - monto_inversion + (monto_inversion * 2)
             print(f"Nuevo saldo: ${saldo}")
         else:
             print("Saldo Insuficiente")

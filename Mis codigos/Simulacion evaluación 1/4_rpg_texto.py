@@ -38,7 +38,12 @@ while vida_jugador > 0 and vida_jefe_final > 0:
     elif opcion_elegida == "TERMINAR":
         print("Juego finalizado. No hay ganador")
         break
+    else:
+        print("Opcion invalida, pierdes tu turno")
     
+    if vida_jefe_final < 0:
+        vida_jefe_final = 0
+
     print(f"\nVida jugador: {vida_jugador} | Vida jefe: {vida_jefe_final}\nMana: {mana_jugador}")
 
     if vida_jefe_final > 0:
@@ -47,11 +52,15 @@ while vida_jugador > 0 and vida_jefe_final > 0:
         print("---------------")
         vida_jugador -= 15
     
+    if vida_jugador < 0:
+        vida_jugador = 0
+    
+    print(f"\nVida jugador: {vida_jugador} | Vida jefe: {vida_jefe_final}\nMana: {mana_jugador}")
 
-if vida_jugador <= 0:
-    print("El jefe te ha derrotado")
-elif vida_jefe_final <= 0:
-    print("Has derrotado al jefe")
+if vida_jugador == 0:
+    print("\nEl jefe te ha derrotado")
+elif vida_jefe_final == 0:
+    print("\nHas derrotado al jefe")
 
     
 
