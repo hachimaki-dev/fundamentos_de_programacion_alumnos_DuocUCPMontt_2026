@@ -20,7 +20,7 @@ while opcion_elegida != 4:
 
         if monto_girado <= saldo_inicial and monto_girado % 5000 == 0:
             saldo_inicial = saldo_inicial - monto_girado
-        elif monto_girado > saldo_inicial or monto_girado % 5000 != 1:
+        elif monto_girado > saldo_inicial or monto_girado % 5000 != 0:
             print("Monto no aceptado.")
             
 
