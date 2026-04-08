@@ -1,2 +1,6 @@
+frutas= ["manzana","pera", "platano","uvas"]
 
-print("hOLA caRLA")
+print("lista de futas")
+
+for frutas in lista de frutas:
+    print(f"frutas")
