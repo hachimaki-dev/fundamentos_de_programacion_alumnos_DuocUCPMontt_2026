@@ -1,4 +1,4 @@
-print("Bienvenido a la calculadora de gastos")
+print("Bienvenido a la calculadora de gastos\n")
 
 almuerzo= 0
 contadorfotocopias = 0
