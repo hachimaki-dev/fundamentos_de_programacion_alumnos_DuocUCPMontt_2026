@@ -264,18 +264,18 @@ const rupturaTraceExercises = [
   },
   {
     type: 'trace',
-    title: 'Generación de Menú Engañoso',
-    instruction: 'Mira bien las condiciones.',
+    title: 'Menú Engañoso con continue',
+    instruction: 'Analiza el flujo lógico, prestando especial atención a la sentencia continue y al código inalcanzable.',
     code: `opcion = ""\nwhile opcion != "Salir":\n    opcion = input("A, B o Salir: ")\n    if opcion == "A":\n        print("Atacar")\n        break\n    if opcion == "B":\n        continue\n        print("Defender")`,
-    inputHint: 'Si el usuario ingresa B, luego A',
-    question: '¿Qué sucederá?',
+    inputHint: 'Si el usuario ingresa "B", y en la siguiente iteración ingresa "A"',
+    question: '¿Cuál será el comportamiento exacto del programa?',
     options: [
-      'Aparecerá "Defender", luego "Atacar"',
-      'No se imprime nada, luego "Atacar", luego sale del bucle',
-      'Aparece "Defender" pero el ciclo no se detiene',
-      'Sale inmediatamente en B'
+      'Aparecerá "Defender" y luego "Atacar".',
+      'Al ingresar "B" no imprime nada porque retrocede. Al ingresar "A", imprime "Atacar" y finaliza el ciclo.',
+      'Aparecerá "Defender", pero el ciclo continuará porque no hay break tras la B.',
+      'El ciclo se detendrá forzosamente de inmediato tras ingresar la letra "B".'
     ],
     correct: 1,
-    explanation: 'Al ingresar "B", hace continue. La instrucción print("Defender") está debajo de continue, es código inalcanzable. Vuelve al menú y al ingresar "A" imprime "Atacar" y hace break.',
+    explanation: 'Al ingresar "B", se ejecuta continue. La instrucción print("Defender") está debajo de continue, por lo que actúa como código inalcanzable y se omite. El bucle vuelve al inicio y, al ingresar "A", imprime "Atacar" terminando el ciclo a causa del break.',
   }
 ];

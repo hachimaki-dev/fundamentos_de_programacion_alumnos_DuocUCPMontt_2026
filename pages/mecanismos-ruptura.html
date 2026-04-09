@@ -324,16 +324,17 @@
       <div class="reto-card">
         <h3 class="text-xl font-bold text-kawaii-deep mb-2">💎 Reto 1: Minecraft - Menú de Crafteo</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Crea un programa que ofrezca un menú infinito con 3 opciones:
+          Desarrolla un programa que simule una mesa de crafteo mediante un menú interactivo. El sistema debe solicitar continuamente una opción numérica al jugador entre las siguientes:
           <br>1. Craftear Espada de Diamante
           <br>2. Craftear Pico
           <br>3. Salir de la Mesa de Crafteo
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Usa un <code>while True:</code> y rompe el ciclo con <code>break</code> SOLO si el usuario elige la opción 3.</li>
-          <li>Si elige 1, imprime "¡Espada crafteada!". Si elige 2, imprime "¡Pico listo!".</li>
-          <li>Si elige una opción inválida (ej. 4), imprime "Receta desconocida" y el menú debe volver a mostrarse.</li>
+          <li>Implementa un ciclo <code>while True:</code> que mantenga el menú constantemente activo, esperando la entrada del jugador.</li>
+          <li>Si el jugador selecciona la opción 1, el programa debe imprimir "¡Espada crafteada!". Si selecciona la opción 2, "¡Pico listo!".</li>
+          <li>Agrega una validación para controlar entradas inválidas: si ingresa un número distinto a 1, 2 o 3, imprime "Receta desconocida. Intenta nuevamente." y permite que el menú vuelva a solicitar una entrada válida en la siguiente iteración.</li>
+          <li>Utiliza la sentencia <code>break</code> para finalizar la ejecución del bucle <strong>única y estrictamente</strong> cuando el usuario seleccione la opción 3 ('Salir de la Mesa de Crafteo').</li>
         </ul>
       </div>
 
@@ -341,13 +342,14 @@
       <div class="reto-card">
         <h3 class="text-xl font-bold text-[#ad1457] mb-2">🎤 Reto 2: Bias K-Pop Validator</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Crea un programa que te pregunte a qué grupo quieres unirte. Solo te dejará pasar si ingresas nombres de grupos válidos.
+          Desarrolla un sistema de validación de acceso que solicite mediante texto a qué grupo de K-Pop pertenece el usuario. El programa actuará como un guardia de seguridad y solo permitirá el paso a miembros de grupos autorizados.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>El usuario debe ingresar el nombre de su grupo favorito.</li>
-          <li>Mientras el grupo <strong>no sea</strong> "BTS" <strong>y no sea</strong> "BLACKPINK" <strong>y no sea</strong> "Stray Kids", el programa seguirá pidiendo un grupo válido. (Ojo: usa combinación de <code>and</code> u <code>or</code> con <code>!=</code>).</li>
-          <li>Cuando acierte a uno de los tres, imprime "¡Bienvenido al Fandom!" y el programa terminará.</li>
+          <li>Crea un bucle de validación donde el usuario deba ingresar el nombre de su grupo favorito usando un <code>input()</code>.</li>
+          <li>Utiliza la estructura <code>while</code> combinando lógicas múltiples (con <code>and</code> y el comparador <code>!=</code>) para evaluar si el ingreso resulta no ser autorizado. Es decir, que el ciclo siga solicitando datos <strong>mientras no sea</strong> "BTS", <strong>tampoco sea</strong> "BLACKPINK", <strong>ni sea</strong> "Stray Kids".</li>
+          <li>Si el usuario ingresa cualquier otro valor erróneo, deberá quedar atrapado pidiéndoselo nuevamente en la misma consola de ingreso general dentro de la limitante cíclica temporal sin excepción permitiendo salida lógica a las restantes ejecuciones programadas fuera de las llaves del bucle.</li>
+          <li>Una vez que se ingrese exitosamente una de las tres opciones válidas y finalice el ciclo general, procede a imprimir un "¡Acceso Concedido! Bienvenido al Fandom." de manera exitosa para informar que validó el programa.</li>
         </ul>
       </div>
 
@@ -355,14 +357,14 @@
       <div class="reto-card">
         <h3 class="text-xl font-bold text-red-600 mb-2">🎯 Reto 3: Armería de Valorant - Omitiendo objetos</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Tienes una tienda con 5 armas numeradas del 1 al 5. Vas a iterar sobre ellas, pero el arma 4 está "Agotada", así que debes saltarla.
+          Simula la visualización de una tienda de armas numeradas secuencialmente del 1 al 5. El programa debe iterar a través de cada número, pero debido a que el 'Arma 4' está actualmente agotada, se requiere omitir lógicamente su proceso de compra usando una instrucción de salto.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Usa un <code>while</code> que cuente de 1 a 5 con una variable <code>arma = 0</code> y vayas sumando.</li>
-          <li>Dentro del ciclo, si <code>arma == 4</code>, imprime "Arma 4: Agotada" y usa un <code>continue</code> para saltar la compra y evaluar la siguiente.</li>
-          <li>Para las demás armas, imprime "Comprando arma número X".</li>
-          <li><strong>Cuidado:</strong> Si usas <code>continue</code>, ¡asegúrate de haber incrementado tu variable antes, o tendrás ciclo infinito!</li>
+          <li>Inicializa una variable contador en cero (ejemplo: <code>arma = 0</code>) y utiliza un ciclo <code>while</code> configurado para iterar hasta procesar las 5 armas.</li>
+          <li>Asegúrate de realizar obligatoriamente el incremento de la variable de control de iteración (<code>arma += 1</code>) en la <strong>primera línea dentro del bucle</strong> antes de evaluarlo. Modificar esto mal causaría un loop sin avance infinito en las etapas donde logres hacer bypass temporal por medio excepcional con su evaluadas líneas interrumpiendo bloque de evaluación en ejecución.</li>
+          <li>Verifica con condicionales el número actual del objeto: si el valor iterado es exactamente igual a 4, el programa deberá únicamente imprimir en pantalla "Arma 4: Notificación - Agotada" y utilizar la sentencia <code>continue</code> al final de ese pequeño if para interrumpir el flujo inferior provocando que ignore y obvie directamente procesar simulaciones de compra inferiores brincando al punto pre evaluación y logrando comenzar ciclo del siguiente armamento iterado.</li>
+          <li>En cualquier caso del código restante y ajeno a ese filtro inferior que proceda a visualizar el resto de numeración habilitada deberás simplemente ejecutar el imprimir del mensaje indicativo exitoso iterando valor: "Comprando exitosamente el arma número [X]".</li>
         </ul>
       </div>
     </div>
