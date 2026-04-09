@@ -125,5 +125,15 @@ const diaryEntries = [
     tags: ['python', 'docs', 'flow'],
     page: 'pages/evaluacion-1.html',
     isNew: true,
+  },
+  {
+    id: 'mecanismos-ruptura-menus',
+    date: '2026-04-09',
+    emoji: '🚀',
+    title: 'Mecanismos de Ruptura y Menús',
+    description: 'Taller completo de break, continue, lógicas complejas y menús interactivos. ¡Con temáticas de Minecraft, K-Pop, LoL y retos propuestos!',
+    tags: ['python', 'docs'],
+    page: 'pages/mecanismos-ruptura.html',
+    isNew: true,
   }
 ];
