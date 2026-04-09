@@ -7,3 +7,14 @@
 # Dentro del ciclo, si arma == 4, imprime "Arma 4: Agotada" y usa un continue para saltar la compra y evaluar la siguiente.
 # Para las demás armas, imprime "Comprando arma número X".
 # Cuidado: Si usas continue, ¡asegúrate de haber incrementado tu variable antes, o tendrás ciclo infinito!
+
+arma = 0
+
+
+while 5 > arma:
+    arma += 1
+    if arma == 4:
+        print("Arma 4: agotada")
+        continue
+    else:
+        print(f"Comprando arma número {arma} ")
