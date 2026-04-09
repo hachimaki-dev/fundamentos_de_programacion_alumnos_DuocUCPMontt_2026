@@ -24,4 +24,5 @@ for key, obj in paradas.items():
     for info in paradas[key]:
         print(info, ":", paradas[key][info])
 
-destino_seleccionado = input("[]: ")
+destino_seleccionado = input("[]: ").lower()
+
