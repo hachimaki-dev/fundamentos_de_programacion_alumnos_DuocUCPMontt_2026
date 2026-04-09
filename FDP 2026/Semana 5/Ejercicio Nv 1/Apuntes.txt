@@ -1,0 +1,14 @@
+Datos:
+- total_dia = 0
+- Destinos:
+    - Puerto Varas ($3000)
+    - Osorno ($7000)
+    - Frutillar ($5000)
+- Tipos de viaje
+    - Solo ida es $ base, ida y vuelta $*2
+    - Cantidad de pasajes
+    - Cálculo subtotal (Si es ida o ida y vuelta, cantidad y destino)
+- Descuento
+    - Subtotal > 10000 se aplica 10% de descuento al subtotal
+- Repeticion
+    - Desear atender otro cliente
