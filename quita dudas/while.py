@@ -27,19 +27,19 @@ while Monedas > 0:
     print ("CAMINO AL CAJERO...")
     time.sleep(3)
 
-    Monedas -= total_de_compras  # 🔥 aquí se descuenta el dinero
+    Monedas -= total_de_compras 
 
-    print("\n🛒 Resumen de compra:")
+    print("\n Resumen de compra:")
     print(f"Frascos: {compras_de_frascos} -> ${compras_de_frascos}")
     print(f"Hierbas: {compras_de_hierbas} -> ${compras_de_hierbas}")
     print(f"Total: ${total_de_compras}")
-    print(f"💵 Dinero restante: ${Monedas}")
+    print(f" Dinero restante: ${Monedas}")
 
     print("\nCAMINO AL CAJERO...")
     time.sleep(2)
 
     if Monedas == 0:
-        print("\n💀 Te quedaste sin dinero")
+        print("\n Te quedaste sin dinero")
         break
 
 
