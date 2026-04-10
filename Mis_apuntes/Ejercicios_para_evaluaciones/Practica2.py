@@ -20,4 +20,4 @@ while True:
         print("Escoja una receta que conozca.")
         continue
 
-print(f"Has crafteado {crafteos} cosas.")
+print(f"Has crafteado {crafteos} cosasssss")
