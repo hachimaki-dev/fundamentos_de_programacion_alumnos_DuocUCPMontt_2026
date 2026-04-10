@@ -14,7 +14,7 @@ while True :
             print("ingresar de nuevo la contraseña")
         contador = contador - 1
     elif clave_correcta == clabe :
-        print("puedes ingresar")
+        print("puede ingresar")
         break
 saldo = 50000
 
