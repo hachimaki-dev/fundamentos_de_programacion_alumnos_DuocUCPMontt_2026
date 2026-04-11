@@ -1,3 +1,0 @@
-print(hola mundo)
-
-      
