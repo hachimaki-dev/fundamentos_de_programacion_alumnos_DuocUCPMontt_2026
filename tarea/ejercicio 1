@@ -1,0 +1,17 @@
+#soicitar datos
+dinero_diario= int(input("cuanto dinero gastas en almuerzo diario?: "))
+impresiones= int(input("¿cuantas impresiones haces al dia?: "))
+
+#costo por impresion 
+costo_impresion = 50
+#calculos 
+costo_diario = dinero_diario + (impresiones * costo_impresion)
+gasto_semanal = costo_diario * 5
+#resultado
+print("El gasto semanal es:", gasto_semanal)
+
+#condicion 
+if gasto_semanal > 20000:
+    print("alerta: presupuesto alto")
+else:
+    print("presupuesto moderado")

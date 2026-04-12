@@ -1,0 +1,6 @@
+grupo = input("Guardia: ¿A que grupo K-pop pereteneces? ")
+
+while grupo != "BTS" and grupo != "BLACKPINK" and grupo != "STRAY KIDS":
+    print("Acceso denegado. grupo no autorizado.")
+    grupo = input("Intenta nuevamente: ")
+    print("¡Acceso concedido! Bienvenido al fandom. ")

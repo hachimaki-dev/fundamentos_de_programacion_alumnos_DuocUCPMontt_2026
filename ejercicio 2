@@ -1,0 +1,17 @@
+total = 0
+cantidad = 0
+precio = int(input("ingrese el precio del suplemento (0 para terminar): "))
+while precio !=0:
+    total+= precio
+    cantidad+= 1
+    precio = int(input("ingrese otro precio (0 para terminar): "))
+
+
+# aplicar descuento si corresponde 
+if cantidad >=3:
+    descuento = total *0.10
+    total -= descuento
+
+#resultados
+print("cantidad de productos", cantidad)
+print("total a pagar:", total)

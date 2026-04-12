@@ -1,0 +1,48 @@
+vida_jugador = 100 
+mana = 20
+vida_jefe=150
+
+while vida_jugador > 0 and vida_jefe > 0:
+    print("\n--- TURNO ---")
+    print("jugador - vida:", vida_jugador, "mana:", mana)
+    print("jefe - vida:", vida_jefe)
+
+    print("1) Atacar")
+    print("2) Magia")
+    print("3) Pocion")
+    opcion = int(input("Elige una accion: "))
+
+
+    if opcion ==1:
+        vida_jefe-= 20
+        print("Atacaste al jefe (-20 de vida)")
+        
+    elif opcion ==2:
+        if mana >=5:
+            vida_jefe -= 50
+            mana -= 5 
+            print("Usaste magia (-50 de vida , -5 de mana)")
+        else:
+            print("No tienes suficiente mana para lanzar un hechizo.")
+
+    elif opcion ==3:
+        vida_jugador +=30 
+        mana= 0
+        print("Usaste pocion (+30 de vida, mana se restablece a 0)")
+        
+    else: 
+        print("opcion invalida, pierdes turno")
+        
+# Turno del jefe (solo si sigue vivo)
+    if vida_jefe > 0: 
+        vida_jugador -=15 
+        print("El jefe te ataco (-15 de vida)")
+
+#resultado final
+print("\n--- RESULTADO FINAL ---")
+if vida_jugador > 0:
+    print("¡Ganaste!")
+else:
+    print("El jefe te derroto!")
+
+

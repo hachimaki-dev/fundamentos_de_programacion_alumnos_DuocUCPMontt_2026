@@ -1,0 +1,21 @@
+while True:
+
+    print("\n--- Mesa de crafteo ---")
+    print("1. craftear espada")
+    print("2. craftear pico")
+    print("3. craftear hacha")
+    print("4. salir")
+
+    opcion = input("Eige una opcion:")
+
+    if opcion == "1":
+        print("Has crafteado una espada")
+    elif opcion == "2":
+        print("Has crafteado un pico")
+    elif opcion == "3":
+        print("Has crafteado un hacha")
+    elif opcion == "4":
+        print("Saliendo de la mesa de crafteo...")
+        break
+    else:
+        print("Crafteo invalido, por favor elige una opcion valida.")

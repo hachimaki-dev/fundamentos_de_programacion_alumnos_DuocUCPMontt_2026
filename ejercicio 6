@@ -1,0 +1,52 @@
+# Elección de clase
+clase = input("Elige tu clase (Ladrón/Guerrero): ").lower()
+
+if clase not in ["ladrón", "ladron", "guerrero"]:
+    print("Clase inválida. Se te asigna Guerrero por defecto.")
+    clase = "guerrero"
+
+# Recorrido por las 3 habitaciones
+for habitacion in range(1, 4):
+    print(f"\n--- Habitación {habitacion} ---")
+    
+    intentos = 0
+    puerta_abierta = False
+    
+    while intentos < 3 and not puerta_abierta:
+        print("\nOpciones: Forzar / Ganzúa / Buscar Llave")
+        eleccion = input("¿Qué haces?: ").lower()
+        
+        if eleccion == "buscar llave":
+            numero = int(input("Ingresa un número para buscar suerte: "))
+            if numero % 2 == 0:
+                print("¡Encontraste la llave! La puerta se abre.")
+                puerta_abierta = True
+            else:
+                print("No encontraste nada...")
+                intentos += 1
+        
+        elif eleccion == "ganzua" or eleccion == "ganzúa":
+            if clase in ["ladrón", "ladron"]:
+                print("Usas la ganzúa y abres la puerta fácilmente.")
+                puerta_abierta = True
+            else:
+                print("No sabes usar ganzúas.")
+                intentos += 1
+        
+        elif eleccion == "forzar":
+            if clase == "guerrero":
+                print("¡Fuerza bruta! La puerta se abre.")
+                puerta_abierta = True
+            else:
+                print("No tienes la fuerza suficiente.")
+                intentos += 1
+        
+        else:
+            print("Opción inválida.")
+    
+    if not puerta_abierta:
+        print("\nFallaste demasiados intentos... Has perdido la aventura 💀")
+        break
+
+else:
+    print("\n¡Felicidades! Superaste las 3 habitaciones 🎉")

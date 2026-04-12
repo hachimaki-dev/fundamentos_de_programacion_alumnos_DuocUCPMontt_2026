@@ -1,0 +1,41 @@
+saldo= 500000
+opcion = 0
+
+while opcion != 4:
+    print("\n---- CAJERO AUTOMATICO ---")
+    print("1) ver saldo")
+    print("2) girar dinero")
+    print("3) inversion")
+    print("4) salir")
+
+    opcion = int(input("seleccione una opcion: "))
+
+    if opcion == 1:
+        print("saldo actual:", saldo)
+
+    elif opcion == 2:
+        monto = int(input("¿cuanto desea girar?: "))
+
+        if monto <= saldo: 
+            if monto % 5000 == 0:
+                saldo -= monto
+                print("giro realizado. nuevo saldo:", saldo)
+            else:
+                print("monto no aceptado")
+        else:
+            print("saldo insuficiente")
+
+    elif opcion == 3: 
+        inversion = int(input("¿cuanto desea invertir?: "))
+
+        if inversion <= saldo:
+            ganancia = inversion * 2
+            saldo += ganancia 
+            print("inversion exitosa. nuevo saldo:", saldo)
+        else:
+            print("saldo insuficiente")
+            
+    elif opcion == 4:
+        print("cajero apagado")
+    else:
+        print("opcion no valida")

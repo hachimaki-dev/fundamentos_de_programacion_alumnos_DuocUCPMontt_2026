@@ -1,0 +1,52 @@
+# Inventario inicial
+hierbas = 0
+frascos = 0
+pociones = 0
+oro = 500
+
+while True:
+    print("\n--- Inventario del Alquimista ---")
+    print(f"Oro: ${oro}")
+    print(f"Hierbas: {hierbas} | Frascos: {frascos} | Pociones: {pociones}")
+    
+    print("\nMenú:")
+    print("1) Comprar Hierba ($50 c/u)")
+    print("2) Comprar Frasco ($100 c/u)")
+    print("3) Fabricar Poción (2 Hierbas + 1 Frasco)")
+    print("4) Salir")
+    
+    opcion = input("Elige una opción: ")
+    
+    if opcion == "1":
+        if oro >= 50:
+            hierbas += 1
+            oro -= 50
+            print("Compraste 1 Hierba.")
+        else:
+            print("No tienes suficiente oro.")
+    
+    elif opcion == "2":
+        if oro >= 100:
+            frascos += 1
+            oro -= 100
+            print("Compraste 1 Frasco.")
+        else:
+            print("No tienes suficiente oro.")
+    
+    elif opcion == "3":
+        if hierbas >= 2 and frascos >= 1:
+            hierbas -= 2
+            frascos -= 1
+            pociones += 1
+            print("¡Fabricaste una Poción de Fuego!")
+        else:
+            print("No tienes suficientes materiales.")
+    
+    elif opcion == "4":
+        print("\n--- Resultado Final ---")
+        print(f"Pociones creadas: {pociones}")
+        print(f"Oro restante: ${oro}")
+        break
+    
+    else:
+        print("Opción inválida.")
