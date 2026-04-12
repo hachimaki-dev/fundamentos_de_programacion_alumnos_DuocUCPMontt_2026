@@ -22,17 +22,11 @@ print("3) Curación = 30 puntos\n")
 
 #lets goooooooooo
 while vida_jugador > 0 and jefe_final > 0:
-    accion = int(input("Ingresa la acción a realizar: "))
+    accion = int(input("\nIngresa la acción a realizar: "))
     if accion == 1:
         jefe_final = jefe_final - ataque
         print(f"\n¡¡Realizaste un ataque!!\nLa vida actual del jefe es de: {jefe_final} puntos\nTu maná actual es de: {mana_jugador} puntos")
         
-        if jefe_final > 0:
-            vida_jugador = vida_jugador - 15
-            print(f"\nEl jefe te ha atacado\nTienes actualmente {vida_jugador} puntos de vida")
-        else:
-            print("\n¡¡El jefe ha fallado su ataque!!")
-            
     elif accion == 2:
         if mana_jugador >=5:
             jefe_final = jefe_final - magia
@@ -42,26 +36,20 @@ while vida_jugador > 0 and jefe_final > 0:
             print(f"\nManá insuficiente\n¡¡Has fallado!!!")
             continue
             
-            if jefe_final > 0:
-                vida_jugador = vida_jugador - 15
-                print(f"\nEl jefe te ha atacado\n Tienes {vida_jugador} puntos de vida")
-            
-            else:
-                print("\n¡¡El jefe ha fallado su ataque!!")
-                continue
-                
     elif accion == 3:
         vida_jugador = (vida_jugador + curacion)
         mana_jugador = 0
         
-        if jefe_final > 0:
-            vida_jugador = vida_jugador - 15
-            print(f"\nEl jefe te ha atacado\n Tienes {vida_jugador} puntos de vida")
-            
-        else:
-            print("\nEl jefe ha fallado su ataque!!")
     else:
         print("\nAcción inválida\nIntenta de nuevo")
+    
+    #Ataque del jefe
+    if jefe_final > 0:
+        vida_jugador = vida_jugador - 15
+        print(f"\nEl jefe te ha atacado\nTienes {vida_jugador} puntos de vida")
+            
+    else:
+            print("\nEl jefe ha fallado su ataque!!")
 
 #Resultados
 if jefe_final <= 0:
