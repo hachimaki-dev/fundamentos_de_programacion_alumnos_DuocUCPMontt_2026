@@ -40,6 +40,7 @@ while vida_jugador > 0 and jefe_final > 0:
             print(f"\n¡¡Acabas de realizado magia!!!\nLa vida actual del jefe es de: {jefe_final} puntos\nTu maná actual es de: {mana_jugador} puntos")
         else:
             print(f"\nManá insuficiente\n¡¡Has fallado!!!")
+            continue
             
             if jefe_final > 0:
                 vida_jugador = vida_jugador - 15
