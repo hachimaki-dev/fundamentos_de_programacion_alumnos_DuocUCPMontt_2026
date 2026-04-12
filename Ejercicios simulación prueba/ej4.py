@@ -33,7 +33,8 @@ while vida_jugador > 0 and jefe_final > 0:
         else:
             print("\n¡¡El jefe ha fallado su ataque!!")
     elif accion == 2:
-        jefe_final = jefe_final - magia - (mana_jugador - 5)
+        jefe_final = jefe_final - magia 
+        mana_jugador -= 5
         print(f"¡¡Acabas de realiza magia!!!\nLa vida actual del jefe es de: {jefe_final} puntos\nTu maná actual es de: {mana_jugador} puntos")
         
         if jefe_final > 0:
