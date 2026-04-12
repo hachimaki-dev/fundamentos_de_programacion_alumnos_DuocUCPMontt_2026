@@ -20,7 +20,7 @@ print("1) Ataque = 20 puntos")
 print("2) Magia = 50 puntos")
 print("3) Curación = 30 puntos\n")
 
-#lets goooooooooo
+#lets goooooooooo turno jugador
 while vida_jugador > 0 and jefe_final > 0:
     accion = int(input("\nIngresa la acción a realizar: "))
     if accion == 1:
@@ -39,6 +39,7 @@ while vida_jugador > 0 and jefe_final > 0:
     elif accion == 3:
         vida_jugador = (vida_jugador + curacion)
         mana_jugador = 0
+        print(f"\nTe has curado\n Actualmente tienes {vida_jugador} puntos de vida")
         
     else:
         print("\nAcción inválida\nIntenta de nuevo")
