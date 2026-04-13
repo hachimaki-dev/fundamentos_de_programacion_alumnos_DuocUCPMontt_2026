@@ -38,7 +38,7 @@ def opcion_siNo(mensaje):
     
 while atendiendo:
     limpiar()
-    print(f"\n======================\n{negrita}BIENVENIDO A CRUZ AZUL{reset}\n======================")
+    print(f"{reset}\n======================\n{negrita}BIENVENIDO A CRUZ AZUL{reset}\n======================")
     time.sleep(1)
     print("DESTINOS: ")
     print(f"-   {cian}1{reset}. Puerto Varas   {verde}${precio_ptoVaras}{reset}")
@@ -106,94 +106,3 @@ while atendiendo:
     if not opcion_siNo(f"\n{gris}¿Desea atender a un nuevo cliente? (si/no): "):
         print(f"{reset}Cerrando sistema. \n{negrita}{verde}¡Gracias por preferir Cruz Azul!{reset}")
         atendiendo = False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''precio_final = 0
-precio_boletos = 0
-destino_1 = 1
-destino_2 = 2
-destino_3 = 3
-confirmar_compra = False
-
-cantidad_boletos = None
-boleto_ida = 1
-boleto_ida_vuelta = 2
-
-print("BIENVENIDO A CRUZ AZUL")
-print("====================")
-print("ELIJA SU DESTINO:")
-print(f"-     1. Puerto Varas ${precio_PV} ")
-print(f"-     2. Osorno ${precio_osorno} ")
-print(f"-     3. Frutillar ${precio_frutillar} ")
-
-opcion_destino = int(input("Por favor ingrese la opcion de su destino: "))
-
-while True:
-    if opcion_destino == 1:
-        print(f"Su destino es Puerto Varas.\nSeleccione el tipo de viaje:\n -     1. Solo ida ${precio_PV}.\n -     2. Ida y vuelta ${precio_PV * 2}.")
-        opcion_viaje = int(input("Ingrese la opcion de su viaje: "))
-        if opcion_viaje == 1:
-            print("Cuantos asientos desea comprar?")
-            cantidad_boletos = int(input("Ingrese la cantidad de asientos a comprar: "))
-            if cantidad_boletos > 0:
-                precio_boletos = precio_PV * cantidad_boletos
-                if precio_boletos > 10000:
-                    precio_final = precio_boletos * 0.9
-                    precio_descuento = precio_boletos - precio_final
-                    print(f"SUBTOTAL: {precio_boletos}")
-                    print(f"DESCUENTO: {precio_descuento}")
-                    print(f"TOTAL: {precio_final}")
-                    pagar = int(input("1. Para terminar"))
-                elif cantidad_boletos == 0:
-                    print("volviendo al menu")
-                else:
-                    precio_final = precio_boletos
-                    print(f"SUBTOTAL: {precio_final}")
-            elif cantidad_boletos <= 0:
-                print("regresando al menu")
-        elif opcion_viaje == 2:
-            print("Cuantos asientos desea comprar?")
-            cantidad_boletos = int(input("Ingrese la cantidad de asientos a comprar: "))
-            if cantidad_boletos > 0:
-                precio_boletos = precio_PV * cantidad_boletos
-                if precio_boletos > 10000:
-                    precio_final = precio_boletos * 0.9
-                    precio_descuento = precio_boletos - precio_final
-                    print(f"SUBTOTAL: {precio_boletos}")
-                    print(f"DESCUENTO: {precio_descuento}")
-                    print(f"TOTAL: {precio_final}")
-                elif cantidad_boletos == 0:
-                    print("volviendo al menu")
-                else:
-                    precio_final = precio_boletos
-                    print(f"TOTAL: {precio_final}")
-
-
-while True:
-    try:
-        
-    except ValueError:
-        print("POR FAVOR INGRESE UNA OPCION VALIDA")'''

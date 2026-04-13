@@ -6,3 +6,14 @@ Crea un bucle de validación donde el usuario deba ingresar el nombre de su grup
 Utiliza la estructura while combinando lógicas múltiples (con and y el comparador !=) para evaluar si el ingreso resulta no ser autorizado. Es decir, que el ciclo siga solicitando datos mientras no sea "BTS", tampoco sea "BLACKPINK", ni sea "Stray Kids".
 Si el usuario ingresa cualquier otro valor erróneo, deberá quedar atrapado pidiéndoselo nuevamente en la misma consola de ingreso general dentro de la limitante cíclica temporal sin excepción permitiendo salida lógica a las restantes ejecuciones programadas fuera de las llaves del bucle.
 Una vez que se ingrese exitosamente una de las tres opciones válidas y finalice el ciclo general, procede a imprimir un "¡Acceso Concedido! Bienvenido al Fandom." de manera exitosa para informar que validó el programa.'''
+
+
+grupos = ["BTS", "BLACKPINK", "STRAY KIDS"]
+ingreso = False
+while ingreso != True:
+    grupo_ingresado = input("INGRESA EL NOMBRE DE TU GRUPO FAVORITO: ").strip().upper()
+    if grupo_ingresado in grupos:
+        ingreso = True
+        print("¡Acceso Concedido! Bienvenido al Fandom.")    
+    else:
+        print("Acceso denegado!")
