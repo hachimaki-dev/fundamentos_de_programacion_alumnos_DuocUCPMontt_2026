@@ -4,13 +4,13 @@ operacion = 0
 
 #Bienvenida al usuario
 print("---Bienvido/a a Banco Estado---\n")
-#operaciones del cajero autmático
-print("1) Ver Saldo")
-print("2) Girar Dinero")
-print("3) Inversión")
-print("4) Salir")
 
 while operacion != 4:
+    #operaciones del cajero autmático
+    print("1) Ver Saldo")
+    print("2) Girar Dinero")
+    print("3) Inversión")
+    print("4) Salir")
     operacion = int(input("¿Qué operación desea realizar?\n(Presiona 4 para salir)\n"))
 # Aquí el usuario ve su saldo actual
     if operacion == 4:
