@@ -112,28 +112,26 @@ print ("Cargando menú...\n")
 time.sleep(2)
 
 
-print ("/========================/")
-print ("/==========Menú==========/")
-print ("/========================/\n")
-
-print ("1.   - Registrar Actividades.")
-print ("2.   - Mostrar Analisis de tiempo.")
-print ("3    - Salir.\n")
-
-print (f"Cuentenemos {nombre_de_usuario} que opción desea realizar.\n")
-
-
 while True :
+    
+    print ("/========================/")
+    print ("/==========Menú==========/")
+    print ("/========================/\n")
+
+    print ("1.   - Registrar Actividades.")
+    print ("2.   - Mostrar Analisis de tiempo.")
+    print ("3    - Salir.\n")
+
+    print (f"Cuentenemos {nombre_de_usuario} que opción desea realizar.\n")
     
     opcion_elegida = int(input("Ingrese que desea realizar : "))
     
     if opcion_elegida == 2:
             print ()
-            print ("Una vez hayas compleado tus activades, deberas de ingresar aquí.")
-            print ("Ya que contaras con un analicis mas completo.")
+            print ("Ya que contaras con un analicis más completo.")
             print ("Dicho esto comencemos, espere pacientemente.\n")
             
-            print ("Cargando Analicis...\n")
+            print ("Cargando Analisis...\n")
             time.sleep(5)
             
             print (f"bien, ya contamos con sus activiades {nombre_de_usuario}.\n")
