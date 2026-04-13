@@ -81,7 +81,9 @@
 # Uso de estructuras de decisión (if, elif, else).
 # Mensajes claros, ordenados y comprensibles para el usuario.
 
-
+actividades = 3 
+cantidad_actividad >= actividades
+tiempo_de_actividad
 
 input("registro de actividades diarias: ")
 
@@ -94,10 +96,8 @@ while True:
     
 
     if opcion == 1:
-         print(f"cuantas actividades quieres hacer (minimo 3):{actividades} ")
-    print("1. basket")
-    print("2. natacion")
-    print("3. football")
-    print("4. voleyball")
+    cantidad_actividad = int(print(f"cuantas actividades quieres hacer (minimo 3):{actividades} "))
+    
+    
     
     
