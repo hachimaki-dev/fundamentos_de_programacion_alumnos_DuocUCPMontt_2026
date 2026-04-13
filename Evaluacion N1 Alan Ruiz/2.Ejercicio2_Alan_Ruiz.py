@@ -124,4 +124,4 @@ while True:
         break
     else:
         time.sleep(1)
-        print("Opcion no valida")
+        print("Opcion no valida ")
