@@ -1,0 +1,25 @@
+actividad_ingresada = 1
+tiempo_utilizado = 0
+analisis_de_tiempo = 2
+opcion_ingresada = 0
+salir = 3
+print("Registro de actividades.")
+
+while True:
+    
+    opcion_ingresada = int(input("1. Registrar actividad {minimo 3 actividades}. / 2. Mostrar analisis de tiempo. / 3. Salir."))
+    if opcion_ingresada == 1:
+     actividad_ingresada = input("Nombre de la actividad.")
+     tiempo_utilizado = int(input("Ingrese el tiempo que utiliza en ejecutar la actividad ingresada."))
+    if opcion_ingresada == 2:
+     print("El tiempo total diario utiizado") 
+     print(tiempo_utilizado)
+     analisis_de_tiempo = analisis_de_tiempo + tiempo_utilizado
+    if tiempo_utilizado == 180:
+            print("Tiempo diario excesivo")
+    elif tiempo_utilizado <= 180:
+            print("Tiempo diario adecuado.")
+
+    if opcion_ingresada == 3:
+     print("Fin del registro")
+     continue 
