@@ -95,16 +95,14 @@ while opcion != 3:
     
     if opcion == 1:
         regristro_de_actividades = int(input("Ingrese cantidad de actividades a realizar: "))
+        
         if regristro_de_actividades >= 3:
-            contador_actividades = (input("Nombre de actividad: "))
-            tiempo_actividad = int(input("Cuanto tiempo dura esta actividad(en minutos): "))
-            total_tiempo = total_tiempo + tiempo_actividad
-            contador_actividades = contador_actividades + contador_actividades
-            if regristro_de_actividades == contador_actividades:
-                contador_actividades = (input("Nombre de actividad: "))
-                tiempo_actividad = int(input("Cuanto tiempo dura esta actividad(en minutos): "))
-                total_tiempo = total_tiempo + tiempo_actividad
-                contador_actividades = contador_actividades + contador_actividades
+            contador_actividades = 0
+            while contador_actividades < regristro_de_actividades:
+                nombre = input("Nombre de la actividad: ")
+                tiempo_actividad = int(input("¿Cuanto tiempo lleva esta actividad(en minutos)?: ")) 
+                total_tiempo += tiempo_actividad
+                contador_actividades += 1
         else:
             print("Debe ingresar cantidad de actividades mayor a o igual a 3")
 
