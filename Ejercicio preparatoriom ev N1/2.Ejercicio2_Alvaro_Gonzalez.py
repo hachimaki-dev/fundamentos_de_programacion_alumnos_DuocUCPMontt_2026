@@ -100,9 +100,8 @@ while out == True:
         cantidad_actividades = int(input("Ingrese la cantidad de actividades que desea registrar (Ingrese un número mayor o igual a 3)"))
        
         if cantidad_actividades < 3:
-            
             print("Ingrese un número de actividades mayor o igual a 3")
-           
+            cantidad_actividades = int(input("Ingrese la cantidad de actividades que desea registrar (Ingrese un número mayor o igual a 3)")) 
         elif cantidad_actividades >= 3:
             while cantidad_actividades > 0:
                 print(f"Ingrese el nombre de la actividad {cantidad_actividades}")
