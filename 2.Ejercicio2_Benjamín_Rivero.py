@@ -94,10 +94,8 @@ while True:
                 nombre_actividad = input("Que actividad hará? ")
                 tiempo_actividad = int(input("Ingrese la cantidad de minutos de esta actividad: "))
                 tiempo_actividades += tiempo_actividad
-                
         else:
             print("Ingrese una cantidad válida.")
-
     elif accion_menu == 2:
         print("ANALISIS DE TIEMPO")
         print(f"La cantidad de minutos totales es de : {tiempo_actividades}")
@@ -106,8 +104,6 @@ while True:
             print("Tiempo diario excesivo.")
         else:
             print("Tiempo diario adecuado.")
-
-
     elif accion_menu == 3:
         print("Fin del registro.")
         break
