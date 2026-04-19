@@ -46,7 +46,7 @@ while True :
          time.sleep(5)
          entradas = input("Si o No : ").lower
          if entradas == "si":
-            contador_monetario = valor_2d_estudiante + valor_2d_estudiante
+            contador_monetario = valor_3d + valor_3d
             contador = contador + 1 + 1
             print(f"Su cantidad de entradas es : {contador}")
             print(f"Valor total a pagar : {contador_monetario}")

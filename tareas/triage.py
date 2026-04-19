@@ -1,9 +1,9 @@
 import sys
 paciente = int(input("Ingrese su edad : "))
-dificultad = input("Siente que le falta aire? (ingrese su respuesta como Si o No) : ")
+dificultad = input("Siente que le falta aire? (ingrese su respuesta como Si o No) : ").lower
 dolor = int(input("del 1 al 10 , cuanto dolor siente? :"))
 
-if dificultad == "Si" or "si" or "sI" :
+if dificultad == "si" :
     print ("quiero que mantenga la calma en estos momentos")
     print("sera llamado enseguida")
     sys.exit

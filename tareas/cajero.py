@@ -11,11 +11,17 @@ match opcion :
     case 2 :
         print("Giro de dinero")
         
-
+        
 while True:        
     p_ingresado = int(input("ingrese su clave"))
 if p_ingresado == PIN :
     print("Acceso concedido")
+    print("Ha ingresado a su cuenta corriente")
+    print(f"su saldo actual es de {saldo}")
+    print("Desea sacar dinero?")
+    respuestausuario = input("Si o no").lower
+    if respuestausuario == "si":
+        print("")
 elif p_ingresado != PIN :
     print("No haz accedido")
     contador_intentos_fallido =+ 1
