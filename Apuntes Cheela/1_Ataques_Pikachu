@@ -1,0 +1,6 @@
+movimientos = ["Impactrueno", "Ataque Rápido", "Rayo", "Cola Férrea"]
+
+for i in movimientos:
+    print (f"Pikachu sabe {i}")
+
+print (f"Pikachu sabe {len(movimientos)} movimientos")    
