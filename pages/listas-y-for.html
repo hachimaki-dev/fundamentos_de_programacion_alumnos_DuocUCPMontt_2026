@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📦 Taller: Listas y Ciclo FOR — Python</title>
+  <meta name="description" content="Taller interactivo descubriendo el poder de las Listas y el ciclo FOR para recorrer colecciones de datos." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { cute: ['Quicksand','sans-serif'], code: ['Fira Code','monospace'] },
+        colors: { kawaii: { pink:'#fce4ec', rose:'#f8bbd0', lilac:'#e1bee7', mint:'#c8e6c9', sky:'#b3e5fc', peach:'#ffe0b2', cream:'#fffde7', deep:'#ad1457', text:'#4a4a4a', correct:'#66bb6a', wrong:'#ef5350' }}
+      }}
+    }
+  </script>
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:rgba(255,255,255,0.5); font-family:'Quicksand',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:#4a4a4a; }
+    .section-pill:hover { background:rgba(255,255,255,0.8); }
+    .section-pill.active { background:#f8bbd0; border-color:#f48fb1; color:#ad1457; }
+    .section-pill .pill-count { display:inline-flex; align-items:center; justify-content:center; background:rgba(173,20,87,0.1); color:#ad1457; font-size:0.7rem; font-weight:700; width:1.3rem; height:1.3rem; border-radius:50%; margin-left:0.3rem; }
+    .section-pill.active .pill-count { background:rgba(255,255,255,0.5); }
+    
+    .tf-btn { padding:0.8rem 2rem; border-radius:0.8rem; border:2px solid #e1bee7; background:rgba(255,255,255,0.7); font-family:'Quicksand',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; min-width:140px; }
+    .tf-btn:hover:not(.disabled) { transform:scale(1.03); }
+    .tf-btn.true-btn:hover:not(.disabled) { background:#c8e6c9; border-color:#66bb6a; }
+    .tf-btn.false-btn:hover:not(.disabled) { background:#ffcdd2; border-color:#ef5350; }
+    .tf-btn.selected-correct { background:#c8e6c9; border-color:#66bb6a; color:#2e7d32; }
+    .tf-btn.selected-wrong { background:#ffcdd2; border-color:#ef5350; color:#c62828; }
+    .tf-btn.reveal-correct { background:#c8e6c9; border-color:#66bb6a; color:#2e7d32; }
+    .tf-btn.disabled { cursor:default; opacity:0.7; }
+    
+    .match-container { display:grid; grid-template-columns:1fr auto 1fr; gap:0.6rem; align-items:stretch; }
+    .match-left,.match-right { padding:0.7rem 1rem; border-radius:0.6rem; font-size:0.9rem; display:flex; align-items:center; }
+    .match-left { background:#f3e5f5; border:2px solid #ce93d8; font-weight:600; justify-content:center; text-align:center; }
+    .match-right { background:rgba(255,255,255,0.7); border:2px solid #e0e0e0; cursor:pointer; transition:all 0.2s ease; }
+    .match-right:hover:not(.matched) { border-color:#f48fb1; background:#fce4ec; }
+    .match-right.selected { border-color:#7b1fa2; background:#ede7f6; box-shadow:0 0 0 2px rgba(123,31,162,0.2); }
+    .match-right.matched { border-color:#66bb6a; background:#e8f5e9; cursor:default; }
+    .match-right.wrong { border-color:#ef5350; background:#ffebee; animation:shake 0.4s ease; }
+    .match-arrow { display:flex; align-items:center; color:#ce93d8; font-size:1.2rem; }
+    .match-arrow.matched { color:#66bb6a; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    @media (max-width:640px) { .match-container{grid-template-columns:1fr;gap:0.3rem} .match-arrow{justify-content:center;font-size:1rem;transform:rotate(90deg)} }
+    
+    .score-summary { background:linear-gradient(135deg,#fce4ec,#f3e5f5); border:2px solid #f8bbd0; border-radius:1.2rem; padding:1.5rem; text-align:center; }
+    .score-big { font-size:3rem; font-weight:700; color:#ad1457; line-height:1; }
+    .reto-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 1.5rem; border: 2px solid #b3e5fc; transition: transform 0.3s; }
+    .reto-card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">← Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">📦 El Poder de las Listas y FOR</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          ¡Di adiós al procesamiento de a uno! ✨ Es hora de guardar múltiples datos en nuestro primer gran contenedor: <strong>Las Listas</strong>. Para recorrerlas, el compañero perfecto es el ciclo <strong>FOR</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-3xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">📖 Conceptos</button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">🎯 Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">✅ V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">🔗 Unir <span class="pill-count">{{ matchData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">🐛 Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">✍️ Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">🐍 Trazar <span class="pill-count">{{ traceData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'retos' }" @click="goToSection('retos')">⚔️ Retos Finales</button>
+      </div>
+    </div>
+
+    <!-- ═══ REFERENCIA ═══ -->
+    <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <!-- Bloque: Problema Inicial -->
+      <div class="doc-section">
+        <h2>🧐 El Problema: Datos Aislados</h2>
+        <p>
+          Imagina que necesitas procesar las notas de 50 estudiantes. Hasta ahora, tendrías que crear 50 variables (<code>nota1</code>, <code>nota2</code>... <code>nota50</code>) e imprimir cada una manualmente. ¡Eso es una locura, es inescalable y te tomaría horas!
+          <br><br>
+          La solución nace de una necesidad fundamental en programación: <strong>"Tengo enormes cantidades de datos agrupados y necesito procesarlos uno por uno usando las mismas reglas"</strong>.
+        </p>
+      </div>
+
+      <!-- Bloque: Listas e Índices -->
+      <div class="doc-section">
+        <h2>📦 Listas y la Alquimia de los Índices</h2>
+        <p>Una lista es el primer "contenedor" o "caja de almacenamiento" profundo que aprenderás a usar. Técnicamente, es una <strong>colección ordenada y modificable</strong> (mutable) de elementos infinitos.</p>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">🔑 El Secreto del Orden: Los Índices</p>
+          <p class="text-sm">Imagina la lista como un tren con vagones numerados. Cada vagón guarda un dato de tu interés, y el número pintado en la puerta de entrada del vagón es su <strong>Índice</strong>. 
+          ¡ATENCIÓN! En Python (y en casi el 90% de los lenguajes de programación del mundo), <strong>siempre empezamos a contar posiciones matemáticas desde el CERO (0)</strong>.</p>
+        </div>
+
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3 border border-gray-200">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🔍</span><span>Anatomía Absoluta de los Índices</span></div>
+          <pre class="!mt-0"><code class="language-python"># Lista de Ejemplo con 4 elementos
+pokemones = ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"]
+
+# Índices positivos (Leyendo de izquierda a derecha):
+# [0] -> "Pikachu"
+# [1] -> "Charmander"
+# [2] -> "Squirtle"
+# [3] -> "Bulbasaur"
+
+print(pokemones[1]) # Imprime en consola: Charmander
+
+# ¡Magia pura! Índices negativos giran desde el final (Hacia atrás, de derecha a izquierda)
+# [-1] -> "Bulbasaur"
+# [-2] -> "Squirtle"
+
+print(pokemones[-1]) # Imprime rápidamente sin calcular tamaño: Bulbasaur</code></pre>
+        </div>
+
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4 mb-2">
+          <p class="font-bold text-red-800 text-sm">☢️ El Horror del IndexError</p>
+          <p class="text-sm mt-1">Si la lista tiene 4 elementos visuales contables, el máximo índice existente es el 3. Si tú intentas pedir <code>pokemones[4]</code> o <code>pokemones[100]</code>, Python entrará en pánico y el programa colapsará inmediatamente soltando un error fatal: <strong>🚨 IndexError: list index out of range</strong>. Es figurativamente igual a intentar abrir el vagón 10 de un tren que solo tiene la suerte de poseer 4 vagones en pista. Físicamente inalcanzable y rompe el compilador.</p>
+        </div>
+      </div>
+
+      <!-- Bloque: Funciones Esenciales -->
+      <div class="doc-section">
+        <h2>🛠️ Herramientas Fundamentales que DEBES Dominar</h2>
+        <p>Listas de datos huérfanas sin métodos para alterarlas se sienten como una pesada maleta cerrada con llave y olvidada. Adopta y memoriza estas 4 operaciones básicas y reina en Python:</p>
+        
+        <div class="space-y-4 mt-4">
+          <!-- 1. len -->
+          <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
+            <p class="font-bold text-blue-700 font-code text-lg">len(lista)</p>
+            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Es una herramienta de scanner rápida que cuenta y te devuelve contablemente (1,2,3...) la <u>longitud</u> o cantidad total de elementos internos de punta a punta. Nada que ver con buscar índices.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">tamaño = len(["a", "b", "c"]) # Resultado guardable en variable: 3 elementos</p>
+          </div>
+
+          <!-- 2. append -->
+          <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
+            <p class="font-bold text-kawaii-deep font-code text-lg">.append(elemento)</p>
+            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Inyecta sin preguntas el elemento, variable o resultado aritmético que le des y lo lanza justo al <u>final del tren numérico</u> de la lista actual (como hacer fila última en el aburrido supermercado).</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">notas.append(7.0) # El glorioso 7.0 se forma último.</p>
+          </div>
+
+          <!-- 3. insert -->
+          <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
+            <p class="font-bold text-orange-600 font-code text-lg">.insert(indice_num, elemento)</p>
+            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Cansado de ir al final, te permite forzar agresivamente la inserción de un elemento en una posición <u>numérica y exacta</u>, empujando pacíficamente a todos los vecinos actuales uno hacia la derecha para crear un espacio vacío y ceder paso.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.insert(0, "Presidente") # Entra dictatorialmente a rango [0] inicial, el resto decae un sitio.</p>
+          </div>
+
+          <!-- 4. pop -->
+          <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
+            <p class="font-bold text-red-600 font-code text-lg">.pop() &nbsp;&nbsp;|&nbsp;&nbsp; .remove("texto_a_buscar")</p>
+            <p class="text-sm mt-1"><strong>¿Qué hacen destructivamente?</strong> <br><code>pop()</code> sin rellenar los paréntesis elimina ciegamente por defecto siempre el <u>último elemento marginal</u> (o recibe un índice para ejecutar allí). <br><code>remove("x")</code> trabaja como buscador policíaco: busca analógicamente el texto o valor exacto interno por caracteres y expulsa sin piedad al primer sospechoso que cruce.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.pop() # Adiós último.<br>lista.remove("Pikachu") # Busca literalidades despide primeramente a nuestro ratón eléctrico.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque: While VS For -->
+      <div class="doc-section">
+        <h2>⚔️ El Duelo Final Épico: While vs For</h2>
+        <p>¿Cuándo demonios utilizo cada ciclo en una evaluación? La regla y pregunta del millón de dólares descifrada y respondida gráficamente ahora mismo:</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-kawaii-pink/40 p-5 rounded-xl border-2 border-kawaii-rose relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">🔁</div>
+            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">WHILE: El Guardián Eterno</h3>
+            <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🛡️</span> <span>Repite un bucle mortal <strong>solo MIENTRAS una validación se cumpla numéricamente</strong>. Al momento de dar falso detiene el infierno automáticamente.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">❓</span> <span><strong>NO sabemos ni nos importa antemano de cuántas iteraciones relativas hablamos</strong> en el reloj.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Uso estrella empresarial de mercado:</strong> Menús interactivos pidiendo selecciones, validación segura e infinita de contraseñas equivocadas de usuario, rogar sistemáticamente reingresar datos vitales hasta captar sensatez útil.</span></li>
+            </ul>
+          </div>
+          <div class="bg-kawaii-mint/30 p-5 rounded-xl border-2 border-kawaii-mint relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">🔄</div>
+            <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-kawaii-mint pb-2">FOR: Cazador de Colecciones</h3>
+            <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🛠️</span> <span>Rastrea y recorre ordenadamente de esquina a esquina, de vagón a vagón, todos los elementos preexistentes inyectables de tu nueva lista maestra sin salirse, sin reescribir.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">⏱️</span> <span><strong>SÍ sabemos a ciencia cierta universal</strong> cuándo este ciclo va terminar matemáticamente su iterado (justo y exactamente en el milisegundo milimétrico en que agote la lectura general del último pasillo o nodo de la lista madre entregada).</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Uso estrella empresarial de rendimiento:</strong> Recorrer las sumas por notas pasivas de 400 estudiantes de base de datos interconectada, cambiar a mayúsculas mil nombres textuales, sumar y analizar listas matemáticas.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bloque: For directo -->
+      <div class="doc-section">
+        <h2>🚙 Dominando a la bestia FOR: Sus Dos Modos Divinos</h2>
+        <p>El código FOR y sus sub-métodos de desarrollo en pantalla pueden desdoblarse o transmutarse dependiendo la filosofía a resolver. <em>Tú primero debes meditar mentalmente: ¿Solamente requiero LEER datos volátiles o busco activamente re-escribir MANIPULANDO vitalicios datos directos al núcleo de mi lista original maestra de base y que persistan?</em></p>
+        
+        <div class="bg-white p-5 rounded-xl border shadow-sm my-4">
+          <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Recorrido por VALOR (Directo y Volátil)</p>
+          <p class="text-sm text-gray-700">El modelo catalogado mundialmente como "No me toques". Automáticamente extrae fugaces <strong>copias visuales</strong> de elementos por cada vuelta rotatoria en tu lista central y te permite leerlos por variable pasiva. Es un script hermoso y cortísimo. Intocable para cálculos matemáticos, promedios sumatorios de control y simplemente ver sin modificar.</p>
+          <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Extracción Visual (Recorrido por Valor)</span></div>
+            <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
+
+# La variable "n" genera un recipiente clon y es una copia efímera del valor.
+for n in mis_notas:
+    print("El profesor ingresó velozmente de base la  nota:", n)
+    
+# Si trato de cambiar arbitrariamente la variable 'n' dentro de las llaves
+# NO MODIFICARÁ PARA NADA la lista profunda y universal.
+# n = 7.0 será un dato al basurero que no altera mis_notas raizales.</code></pre>
+          </div>
+        </div>
+
+        <div class="bg-blue-50/50 p-5 rounded-xl border shadow-sm my-4">
+          <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: Recorrido por ÍNDICES (Posicional Letal)</p>
+          <p class="text-sm text-gray-700">El modo Avanzado. Aquí combinativamente fusionamos nuestra función calculable externa <code>len()</code> con el operador de serie numérica <code>range()</code>. La unión generativa en <code>range(len(lista))</code> paré universalmente la iteración exacta de rangos de tu variable matriz (entregando números base purísimos que transitan desde tu 0, hasta tu 1, y tu respectivo 2 sin saltarse). Rompiendo y logrando penetrar con la llave posicional que te abre la puerta física a reescribir de lleno todo. <strong>Vas, entras, reseteas o alteras un metadato internamente reescribiendo celdas que afectan la raíz madre base.</strong></p>
+          <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Alteración Posicional del Núcleo y Elementos Base</span></div>
+            <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
+# El método len contaría 3 objetos. Por deducción matemática range(3)
+# arrojará iteración posicional: el 0 pasivo, el 1 continuo, el 2 base.
+
+for contador_de_posicion in range(len(mis_notas)):
+    # Modificación drástica directa del núcleo matriz usando sus corchetes y llaves vitales: 
+    # Apuntamos localitariamente por uso de índice al elemento [contador_de_posicion].
+    mis_notas[contador_de_posicion] = mis_notas[contador_de_posicion] + 0.1
+
+print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxito masivo inyectado en servidor variables.</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-section shadow-sm text-center transform hover:-translate-y-1 transition duration-300" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#a5d6a7;">
+        <h2 class="text-2xl pt-2">🎯 ¡Magia académica asimilada, al campo de batalla!</h2>
+        <p class="max-w-2xl mx-auto pb-2">Ve y ejecuta. Selecciona los botones en formato de pastilla ubicados justo al menú superior (Selección, V o F, Completar...). Caza ese altísimo puntaje perfecto comprobando lúdicamente tu real dominancia con estas reglas y lisonjas divinas matemáticas.</p>
+      </div>
+
+    </div>
+
+    <!-- ═══ SELECCIÓN MÚLTIPLE ═══ -->
+    <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🎯</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #f48fb1, #ce93d8)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in choiceExercises" :key="'choice-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-lilac flex items-center justify-center text-kawaii-deep font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-rose': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('choiceExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ VERDADERO O FALSO ═══ -->
+    <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✅❌</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #66bb6a, #26a69a)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in tfExercises" :key="'tf-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-sky flex items-center justify-center text-blue-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="text-kawaii-text mb-4 leading-relaxed" v-html="ex.statement"></p>
+        <div class="flex gap-3 justify-center">
+          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">✅ Verdadero</button>
+          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">❌ Falso</button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ UNIR CONCEPTOS ═══ -->
+    <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🔗</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Unir Conceptos</h2>
+      </div>
+      <div v-for="(ex, exIdx) in matchData" :key="'match-'+exIdx" class="card p-6 fade-in-up" :style="{ animationDelay: (exIdx*0.1)+'s' }">
+        <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
+        <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
+          <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:#66bb6a;background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:#7b1fa2;background:#ede7f6;box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
+          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">✓</span><span v-else>→</span></div>
+          <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
+        </div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">🎉 ¡Magistral en conceptos!</span></div>
+      </div>
+    </div>
+
+    <!-- ═══ ENCONTRAR EL ERROR ═══ -->
+    <div v-show="currentSection === 'error'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🐛</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Encuentra el Error</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ errorScore }} / {{ errorExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: errorProgress + '%', background: 'linear-gradient(90deg, #ef5350, #ff7043)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in errorExercises" :key="'error-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Modo Depuración</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2 text-sm">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('errorExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ COMPLETAR CÓDIGO ═══ -->
+    <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✍️</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ completeScore }} / {{ completeExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: completeProgress + '%', background: 'linear-gradient(90deg, #ffd54f, #ffb300)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in completeExercises" :key="'complete-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-cream flex items-center justify-center text-yellow-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>✍️</span><span>Rellena los espacios _____</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-yellow-200': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('completeExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ TRAZAR CÓDIGO ═══ -->
+    <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🐍</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Recorrido Mentales</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el hilo lógico del For a través de las listas.</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #ffa726, #ef5350)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in traceData" :key="'trace-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🔍</span><span>Evalúa</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('traceData',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ RETOS FINALES ═══ -->
+    <div v-show="currentSection === 'retos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <p class="text-4xl mb-2">🎓</p>
+        <h2 class="text-2xl font-bold text-indigo-900">Aplicación Práctica y Retos</h2>
+        <p class="text-indigo-800/70 mt-2">Pon tu IDE en marcha e implementa estas soluciones maestras.</p>
+      </div>
+
+      <!-- Reto Fácil -->
+      <div class="reto-card mb-4 border-2 border-green-200">
+        <h3 class="text-xl font-bold text-green-700 mb-2">🟢 Reto Fácil: Ataques de Pikachu</h3>
+        <p class="text-kawaii-text text-sm mb-4">
+          Ash olvidó los movimientos de su Pikachu. Revisa la base de datos (tu lista) e imprime sus ataques.
+        </p>
+        <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
+        <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
+          <li>Crea una lista llamada <code>ataques = ["Impactrueno", "Ataque Rápido", "Rayo", "Cola Férrea"]</code>.</li>
+          <li>Utiliza un ciclo <code>for</code> básico (por valor) para imprimir en consola "Pikachu puede usar: [nombre del ataque]".</li>
+          <li>Al salir del ciclo, usa <code>len()</code> para imprimir un mensaje final que diga: "Pikachu tiene un total de [X] ataques disponibles."</li>
+        </ul>
+      </div>
+
+      <!-- Reto Medio -->
+      <div class="reto-card mb-4 border-2 border-yellow-300">
+        <h3 class="text-xl font-bold text-yellow-600 mb-2">🟡 Reto Medio: El Sombrero Seleccionador</h3>
+        <p class="text-kawaii-text text-sm mb-4">
+          Es el primer año en Hogwarts y tienes una lista de aspirantes. El Sombrero elegirá su casa dependiendo del tamaño de su nombre.
+        </p>
+        <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
+        <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
+          <li>Crea una lista <code>alumnos = ["Harry", "Hermione", "Ron", "Draco", "Neville", "Luna"]</code> y otras dos listas vacías: <code>gryffindor = []</code> y <code>slytherin = []</code>.</li>
+          <li>Recorre la lista <code>alumnos</code> con un ciclo <code>for</code>.</li>
+          <li>Dentro del ciclo, evalúa: si el nombre tiene <strong>más de 5 letras</strong> (recuerda que <code>len()</code> también sirve para medir un texto corto), el alumno será inyectado a <code>gryffindor</code> usando <code>.append()</code>. Si tiene 5 letras o menos, irá a <code>slytherin</code>.</li>
+          <li>Imprime ambas listas finales para ver quién quedó en qué casa.</li>
+        </ul>
+      </div>
+
+      <!-- Reto Medio-Avanzado -->
+      <div class="reto-card border-2 border-red-300">
+        <h3 class="text-xl font-bold text-red-700 mb-2">🔴 Reto Avanzado: Ensamblando a los Vengadores</h3>
+        <p class="text-kawaii-text text-sm mb-4">
+          Thanos se acerca. Nick Fury de Marvel necesita un programa que le permita alistar a los Avengers en la base. Si envía a alguien al frente, debe ser eliminado de la base usando menús.
+        </p>
+        <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
+        <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
+          <li>Inicializa tu base <code>vengadores = []</code>.</li>
+          <li>Inicia un ciclo infinito <code>while True:</code> con un menú de opciones numéricas: 1-Agregar Avenger, 2-Mostrar Base y Modificar, 3-Salir.</li>
+          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del héroe y lo agregas al final de la lista. (Pista: <code>.append()</code>)</li>
+          <li><strong>Si es 2:</strong> Recorre la lista por Índices: <code>for i in range(len(vengadores)):</code> e imprime cada héroe junto a su código de posición (Ej: `0 - Iron Man`, `1 - Thor`). Luego permite a Fury poner en mayúsculas a todos los héroes procesando: <code>vengadores[i] = vengadores[i].upper()</code>.</li>
+          <li><strong>Opcional de Destrucción:</strong> Integra la opción de permitir hacer <code>vengadores.pop()</code> si el usuario escribe la palabra secreta "Sacrificar".</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══ RESUMEN FINAL ═══ -->
+    <div v-if="currentSection !== 'ref' && currentSection !== 'match' && currentSection !== 'retos' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
+      <div class="score-summary fade-in-up">
+        <p class="text-4xl mb-2">🌟</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta parte interactiva</p>
+        <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
+        <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+      </div>
+    </div>
+
+    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+  </div>
+
+  <script src="../data/listas-y-for-data.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const { createApp } = Vue;
+    const app = createApp({
+      data() {
+        return {
+          currentSection: 'ref',
+          choiceExercises: typeof listasForChoiceExercises !== 'undefined' ? listasForChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          tfExercises: typeof listasForTfExercises !== 'undefined' ? listasForTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          errorExercises: typeof listasForErrorExercises !== 'undefined' ? listasForErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          completeExercises: typeof listasForCompleteExercises !== 'undefined' ? listasForCompleteExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          traceData: typeof listasForTraceExercises !== 'undefined' ? listasForTraceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          matchData: typeof listasForMatchExercises !== 'undefined' ? listasForMatchExercises.map(ex => {
+            const shuffled = [...ex.pairs].map(p => ({ text: p.right, id: p.id, matched: false, wrong: false }));
+            for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
+            return { ...ex, pairs: ex.pairs.map(p => ({ ...p, matched: false })), shuffledRights: shuffled, allMatched: false };
+          }) : [],
+          selectedLeft: null, selectedRight: null,
+        };
+      },
+      computed: {
+        choiceScore() { return this.choiceExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        choiceProgress() { const a = this.choiceExercises.filter(e => e.answered).length; return this.choiceExercises.length ? Math.round(a / this.choiceExercises.length * 100) : 0; },
+        tfScore() { return this.tfExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        tfProgress() { const a = this.tfExercises.filter(e => e.answered).length; return this.tfExercises.length ? Math.round(a / this.tfExercises.length * 100) : 0; },
+        errorScore() { return this.errorExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        errorProgress() { const a = this.errorExercises.filter(e => e.answered).length; return this.errorExercises.length ? Math.round(a / this.errorExercises.length * 100) : 0; },
+        completeScore() { return this.completeExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        completeProgress() { const a = this.completeExercises.filter(e => e.answered).length; return this.completeExercises.length ? Math.round(a / this.completeExercises.length * 100) : 0; },
+        traceScore() { return this.traceData.filter(e => e.answered && e.selected === e.correct).length; },
+        traceProgress() { const a = this.traceData.filter(e => e.answered).length; return this.traceData.length ? Math.round(a / this.traceData.length * 100) : 0; },
+        sectionScore() {
+          const m = { choice: this.choiceScore, tf: this.tfScore, error: this.errorScore, complete: this.completeScore, trace: this.traceScore };
+          return m[this.currentSection] || 0;
+        },
+        sectionTotal() {
+          const m = { choice: this.choiceExercises.length, tf: this.tfExercises.length, error: this.errorExercises.length, complete: this.completeExercises.length, trace: this.traceData.length };
+          return m[this.currentSection] || 0;
+        },
+        allAnswered() {
+          const m = { choice: this.choiceExercises, tf: this.tfExercises, error: this.errorExercises, complete: this.completeExercises, trace: this.traceData };
+          const arr = m[this.currentSection];
+          return arr ? arr.every(e => e.answered) : false;
+        },
+        scoreMessage() {
+          const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
+          if (pct === 1) return '🌟 ¡Asombroso! Conocimiento sellado 🌟';
+          if (pct >= 0.8) return '¡Casi perfecto! Excelente trabajo 🎉';
+          if (pct >= 0.6) return '¡Bien! El concepto se va afianzando 💪';
+          if (pct >= 0.4) return 'Buena pelea. ¡Un repaso no viene mal! 📖';
+          return 'No desanimes, el código se domina practicando 📖';
+        },
+      },
+      methods: {
+        highlightCode(code) { return typeof highlightPython === 'function' ? highlightPython(code) : code; },
+        goToSection(section) { this.currentSection = section; window.scrollTo({ top: 0, behavior: 'smooth' }); },
+        answerQuiz(arrName, idx, oi) { const ex = this[arrName][idx]; if (ex.answered) return; ex.selected = oi; ex.answered = true; },
+        answerTF(idx, value) { const ex = this.tfExercises[idx]; if (ex.answered) return; ex.selected = value; ex.answered = true; },
+        selectMatchLeft(exIdx, pIdx) { const pair = this.matchData[exIdx].pairs[pIdx]; if (pair.matched) return; this.selectedLeft = { exIdx, pIdx }; this.tryMatch(); },
+        selectMatchRight(exIdx, pIdx) { const item = this.matchData[exIdx].shuffledRights[pIdx]; if (item.matched) return; this.selectedRight = { exIdx, pIdx }; this.tryMatch(); },
+        tryMatch() {
+          if (!this.selectedLeft || !this.selectedRight) return;
+          if (this.selectedLeft.exIdx !== this.selectedRight.exIdx) { this.selectedLeft = null; this.selectedRight = null; return; }
+          const exIdx = this.selectedLeft.exIdx;
+          const leftPair = this.matchData[exIdx].pairs[this.selectedLeft.pIdx];
+          const rightItem = this.matchData[exIdx].shuffledRights[this.selectedRight.pIdx];
+          if (leftPair.id === rightItem.id) { leftPair.matched = true; rightItem.matched = true; if (this.matchData[exIdx].pairs.every(p => p.matched)) { this.matchData[exIdx].allMatched = true; } }
+          else { rightItem.wrong = true; setTimeout(() => { rightItem.wrong = false; }, 600); }
+          this.selectedLeft = null; this.selectedRight = null;
+        },
+      },
+    });
+    app.mount('#app');
+  </script>
+</body>
+</html>

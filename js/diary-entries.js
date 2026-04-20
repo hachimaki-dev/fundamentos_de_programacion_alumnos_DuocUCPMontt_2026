@@ -134,6 +134,16 @@ const diaryEntries = [
     description: 'Taller completo de break, continue, lógicas complejas y menús interactivos. ¡Con temáticas de Minecraft, K-Pop, LoL y retos propuestos!',
     tags: ['python', 'docs'],
     page: 'pages/mecanismos-ruptura.html',
+    isNew: false,
+  },
+  {
+    id: 'intro-listas-for',
+    date: '2026-04-14',
+    emoji: '📦',
+    title: 'Intro a Listas y ciclo FOR',
+    description: 'Aprende a procesar múltiples datos con Listas y automatiza el recorrido utilizando todo el poder del ciclo For. Práctica interactiva incluida.',
+    tags: ['python'],
+    page: 'pages/listas-y-for.html',
     isNew: true,
   }
 ];
