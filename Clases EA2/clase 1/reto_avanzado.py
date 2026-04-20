@@ -17,11 +17,18 @@ while True:
         print(f"Lista actual: {vengadores}")
     
     elif opcion == 2:
-        contador = 0
         for i in range(len(vengadores)):
-            contador += 1
             vengadores[i] = vengadores[i].upper()
             print(f"{contador}) {vengadores[i]}")
             
+        change = input("\nIngresa la palabra sereta para comunicar que un héroe está fuera de base: ")
+        
+        if change == "SACRIFICAR":
+                heroe = int(input("\nIngresa el NÚMERO del vengador que deseas eliminar: "))
+                eliminado = vengadores.pop(i)
+                vengadores.pop(heroe)
+                print(f"Eliminaste a {heroe} de la lista")
+        else:
+                print("No se realizaron cambios ")
     else:
         print("Ingresa una opción válida")
