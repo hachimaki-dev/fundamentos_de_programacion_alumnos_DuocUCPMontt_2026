@@ -14,7 +14,7 @@ libreria_de_juegos = ["CS 1.6", "Team Fortress 2", "Portal", "Portal 2", "Left 4
 contador = 0
 juego = ""
 
-while contador < 8:
+while contador < len(libreria_de_juegos):
     juego_n = "juego" + str(contador + 1)
     if juego_n == "juego1":
         print(juego1)
@@ -44,6 +44,6 @@ while contador < 8:
 print("\n V V V Ahora utilizando una lista V V V \n")
 
 contador = 0
-while contador < 8:
+while contador < len(libreria_de_juegos):
     print(libreria_de_juegos[contador])
     contador +=1
