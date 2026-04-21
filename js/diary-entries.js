@@ -97,6 +97,16 @@ const diaryEntries = [
     isNew: false,
   },
   {
+    id: 'quiz-interactivo-repaso-2',
+    date: '2026-04-21',
+    emoji: '🧠',
+    title: 'Desafío Python: Nivel 2 (Lógica y Trampas)',
+    description: 'Juego estilo Kahoot para poner a prueba tu lógica, el orden de ejecución y evitar trampas conceptuales. ¡Nivel intermedio/avanzado!',
+    tags: ['python'],
+    page: 'pages/quiz-interactivo-2.html',
+    isNew: true,
+  },
+  {
     id: 'desafio-evaluacion-1',
     date: '2026-04-01',
     emoji: '🔥',

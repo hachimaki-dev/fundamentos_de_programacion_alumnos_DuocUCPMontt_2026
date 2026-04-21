@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎮 Quiz Interactivo: Repaso Python</title>
+  <title>🎮 Quiz Interactivo: Nivel 2</title>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -57,7 +57,7 @@
 
   <style>
     body {
-      background-color: #fffde7;
+      background-color: #fce4ec; /* Pinker background for level 2 */
       font-family: 'Quicksand', sans-serif;
       color: #4a4a4a;
       overflow-x: hidden;
@@ -117,10 +117,9 @@
 
     /* Override Prism background for kawaii feel */
     pre[class*="language-"] {
-      background: #2d2dd9 !important; /* Dark blue background for contrast */
       background: #1e1e3f !important;
       border-radius: 1rem;
-      border: 4px solid #b3e5fc;
+      border: 4px solid #ff80ab; /* Darker pink border */
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       font-size: 1.8rem !important; /* Aumentado */
       line-height: 1.4 !important;
@@ -134,20 +133,20 @@
 <body class="min-h-screen flex flex-col relative text-kawaii-text">
 
   <!-- Background decorations -->
-  <div class="bg-shape" style="width:50vw;height:50vw;background:#fce4ec;top:-10%;left:-10%;"></div>
-  <div class="bg-shape" style="width:40vw;height:40vw;background:#e1bee7;bottom:-10%;right:-10%;"></div>
-  <div class="bg-shape" style="width:30vw;height:30vw;background:#c8e6c9;top:40%;left:30%;"></div>
+  <div class="bg-shape" style="width:50vw;height:50vw;background:#f8bbd0;top:-10%;left:-10%;"></div>
+  <div class="bg-shape" style="width:40vw;height:40vw;background:#ce93d8;bottom:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:#ff80ab;top:40%;left:30%;"></div>
 
   <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
     
     <!-- Top Navigation / Header -->
-    <header class="flex justify-between items-center mb-8 bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/60 shadow-sm relative z-20">
+    <header class="flex justify-between items-center mb-8 bg-white/60 backdrop-blur-md p-4 rounded-3xl border border-white/60 shadow-sm relative z-20">
       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
         <span>⬅️</span> Volver al Diario
       </a>
       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
-        <span>🎮</span>
-        <span>Python Repaso Supremo</span>
+        <span>🔥</span>
+        <span>Python Repaso Supremo - Nivel 2</span>
       </div>
       <div v-if="state !== 'start' && state !== 'results'" class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep">
         Pregunta {{ currentQuestionIndex + 1 }} / {{ questions.length }}
@@ -165,15 +164,15 @@
 
       <!-- VIEW: START -->
       <transition name="fade" mode="out-in">
-        <div v-if="state === 'start'" class="text-center bg-white/60 backdrop-blur-lg p-12 rounded-[3rem] shadow-xl border-4 border-white w-full max-w-4xl">
-          <div class="text-8xl mb-6 animate-bounce-[slow]">🔥</div>
-          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Validación de Conocimientos</h1>
+        <div v-if="state === 'start'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3rem] shadow-xl border-4 border-white w-full max-w-4xl">
+          <div class="text-8xl mb-6 animate-bounce-[slow]">🧠</div>
+          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Nivel 2 (Lógica y Trampas)</h1>
           <p class="text-2xl text-kawaii-text/80 mb-12 max-w-2xl mx-auto">
-            ¡Demuestra lo que has aprendido!<br>
-            Repasaremos variables, input/output, tipos de datos (str, int, bool), if y ciclos while.
+            ¡Sube la temperatura! 🔥<br>
+            Pon a prueba tu lógica, el orden de ejecución y cómo interactúan las estructuras entre sí. ¿Evitarás las trampas conceptuales?
           </p>
           <button @click="startGame" class="pulse-btn bg-kawaii-deep text-white text-4xl font-bold py-6 px-16 rounded-full hover:bg-pink-700 transition-colors shadow-xl">
-            ¡Empezar a Jugar! 🚀
+            ¡Aceptar el Desafío! 🚀
           </button>
         </div>
 
@@ -181,7 +180,7 @@
         <div v-else-if="state === 'question' || state === 'feedback'" :key="currentQuestion.id" class="w-full flex flex-col items-center">
           
           <!-- Question Header -->
-          <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-lg border-2 border-kawaii-rose w-full text-center mb-8 relative">
+          <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-lg border-2 border-kawaii-rose w-full text-center mb-8 relative">
             
             <h2 class="text-4xl md:text-5xl font-bold text-kawaii-deep mb-4 leading-tight" v-html="currentQuestion.text"></h2>
             
@@ -214,15 +213,15 @@
           <transition name="slide">
             <div v-if="state === 'feedback'" class="absolute bottom-4 left-0 right-0 max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border-4 text-center z-20 flex flex-col md:flex-row items-center justify-between gap-6" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
               <div class="flex items-center gap-4 text-left">
-                <div class="text-6xl">{{ isCorrect ? '🎉' : '❌' }}</div>
+                <div class="text-6xl shrink-0">{{ isCorrect ? '🎉' : '❌' }}</div>
                 <div>
                   <h3 class="text-3xl font-bold" :class="isCorrect ? 'text-green-600' : 'text-red-600'">
                     {{ isCorrect ? '¡Correcto!' : '¡Incorrecto!' }}
                   </h3>
-                  <p class="text-xl text-gray-600 mt-1" v-html="currentQuestion.explanation"></p>
+                  <p class="text-lg text-gray-700 mt-1" v-html="currentQuestion.explanation"></p>
                 </div>
               </div>
-              <button @click="nextQuestion" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-10 rounded-full hover:bg-pink-700 transition-colors shadow-lg whitespace-nowrap">
+              <button @click="nextQuestion" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-10 rounded-full hover:bg-pink-700 transition-colors shadow-lg whitespace-nowrap shrink-0">
                 {{ isLastQuestion ? 'Ver Resultados 🏆' : 'Siguiente ➡️' }}
               </button>
             </div>
@@ -231,15 +230,15 @@
         </div>
 
         <!-- VIEW: RESULTS -->
-        <div v-else-if="state === 'results'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
+        <div v-else-if="state === 'results'" class="text-center bg-white/80 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
            <div class="text-8xl mb-6">🏆</div>
-           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Completado!</h1>
-           <p class="text-3xl text-kawaii-text/80 mb-8">Has terminado el repaso interactivo.</p>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Desafío Completado!</h1>
+           <p class="text-3xl text-kawaii-text/80 mb-8">Sobreviviste al nivel 2.</p>
            
-           <div class="bg-blue-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-blue-200 shadow-inner">
-             <p class="text-2xl font-bold text-blue-800 mb-2">Puntuación Final</p>
+           <div class="bg-pink-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-pink-200 shadow-inner">
+             <p class="text-2xl font-bold text-pink-800 mb-2">Puntuación Final</p>
              <p class="text-7xl font-bold text-kawaii-deep drop-shadow-sm">{{ score }} <span class="text-3xl">/ {{ questions.length * 100 }}</span></p>
-             <p class="text-xl mt-4 text-blue-600">Acertaste {{ correctCount }} de {{ questions.length }} preguntas.</p>
+             <p class="text-xl mt-4 text-pink-600">Acertaste {{ correctCount }} de {{ questions.length }} preguntas.</p>
            </div>
            
            <div class="flex justify-center gap-6">
@@ -259,112 +258,139 @@
   </div>
 
   <script>
-    // Quiz questions covering variables, input, output, str, int, bool, if, while
+    // Quiz questions based on "Desafío Python: Nivel 2"
     const quizQuestions = [
       {
         id: 1,
-        topic: 'output',
-        text: '¿Cómo mostramos un mensaje por pantalla en Python?',
+        topic: 'output-mult',
+        text: '1. El clonador matemático: ¿Qué imprimirá exactamente este código en pantalla?',
+        code: 'texto = "Ja"\nprint(texto * 3 + "!")',
         options: [
-          { text: '<code>echo "Hola"</code>', correct: false },
-          { text: '<code>console.log("Hola")</code>', correct: false },
-          { text: '<code>print("Hola")</code>', correct: true },
-          { text: '<code>mostrar("Hola")</code>', correct: false }
+          { text: 'Error', correct: false },
+          { text: 'Ja Ja Ja !', correct: false },
+          { text: 'JaJaJa!', correct: true },
+          { text: '3Ja!', correct: false }
         ],
-        explanation: 'En Python, usamos la función <strong>print()</strong> para mostrar información en la consola/pantalla.'
+        explanation: 'En Python, puedes multiplicar un texto por un número para repetirlo. Como no hay espacios en "Ja", se pega todo junto, y luego se concatena el "!".'
       },
       {
         id: 2,
-        topic: 'variables',
-        text: '¿Cuál será el valor de "z" al final?',
-        code: 'z = 10\nz = z + 5\nz = z * 2',
+        topic: 'elif-logic',
+        text: '2. El guardia distraído: Este código no tiene errores de sintaxis, pero tiene un grave error de lógica. ¿Qué imprime?',
+        code: 'puntaje = 85\nif puntaje > 50:\n    print("Aprobado")\nelif puntaje > 80:\n    print("¡Excelente!")\nelse:\n    print("Reprobado")',
         options: [
-          { text: '15', correct: false },
-          { text: '20', correct: false },
-          { text: '30', correct: true },
-          { text: 'Error', correct: false }
+          { text: 'Imprime "Aprobado", y está perfecto.', correct: false },
+          { text: 'Imprime "¡Excelente!".', correct: false },
+          { text: 'Imprime "Aprobado", pero NUNCA imprimirá "¡Excelente!".', correct: true },
+          { text: 'Da un error.', correct: false }
         ],
-        explanation: 'Primero <code>z</code> vale 10. Luego le sumamos 5 (queda en 15). Finalmente se multiplica por 2 (30).'
+        explanation: 'Python evalúa de arriba hacia abajo. Como 85 es mayor que 50, entra al primer bloque (if), imprime "Aprobado" y <strong>salta</strong> el resto. El orden de las condiciones debe ir del más estricto (> 80) al más flexible (> 50).'
       },
       {
         id: 3,
-        topic: 'input',
-        text: '¿Qué tipo de dato devuelve la función <code>input()</code> por defecto?',
+        topic: 'input-types',
+        text: '3. El cajero en pánico: El usuario quiere sacar dinero e ingresa <code>50</code>. ¿Qué ocurrirá al llegar al <code>if</code>?',
+        code: 'saldo = 100\nretiro = input("Ingrese monto a retirar: ")\nif saldo - retiro >= 0:\n    print("Retiro exitoso")',
         options: [
-          { text: '<strong>int</strong> (entero)', correct: false },
-          { text: '<strong>bool</strong> (booleano)', correct: false },
-          { text: '<strong>str</strong> (texto)', correct: true },
-          { text: 'Depende de qué escribas', correct: false }
+          { text: 'Imprime "Retiro exitoso"', correct: false },
+          { text: 'No imprime nada', correct: false },
+          { text: 'Error de tipo (TypeError)', correct: true },
+          { text: 'Imprime 50', correct: false }
         ],
-        explanation: '<strong>input()</strong> SIEMPRE devuelve un string (texto). ¡Por eso necesitamos int() para convertirlo si queremos sumar números!'
+        explanation: '<code>input()</code> siempre devuelve texto (str). En la condición, intenta restar a 100 (int) el texto "50". Para repararlo, se necesita <code>int(input(...))</code>.'
       },
       {
         id: 4,
-        topic: 'str',
-        text: '¿Qué imprimirá el siguiente código?',
-        code: 'a = "Aba"\nb = "caba"\nprint(a + b)',
+        topic: 'for-break',
+        text: '4. El salto mortal: <strong>VERDADERO O FALSO</strong>: Este código imprimirá en pantalla los números 1, 2, 4, 5 (saltándose el 3).',
+        code: 'for numero in [1, 2, 3, 4, 5]:\n    if numero == 3:\n        break\n    print(numero)',
         options: [
-          { text: '"Aba caba"', correct: false },
-          { text: '"Abacaba"', correct: true },
-          { text: 'Error', correct: false },
-          { text: '"Aba+caba"', correct: false }
+          { text: '<strong>Verdadero</strong>', correct: false },
+          { text: '<strong>Falso</strong>', correct: true },
         ],
-        explanation: 'El operador <code>+</code> une (concatena) los textos sin espacios adicionales.'
+        explanation: 'Imprimirá solo 1 y 2. La instrucción <strong>break</strong> destruye y termina todo el ciclo en ese instante. Para que solo se saltara el 3, habría que usar <strong>continue</strong>.'
       },
       {
         id: 5,
-        topic: 'bool',
-        text: '¿Cuál de las siguientes es una expresión booleana válida en Python?',
+        topic: 'order-logic',
+        text: '5. Ordena la magia: Queremos crear un programa que revise la lista y <strong>solo imprima los números pares</strong>. ¿Cuál es el orden correcto de estas líneas?',
+        code: '1) print(n)\n2) for n in numeros:\n3) numeros = [1, 2, 3, 4, 5]\n4) if n % 2 == 0:',
         options: [
-          { text: '<code>verdadero</code>', correct: false },
-          { text: '<code>True</code>', correct: true },
-          { text: '<code>TRUE</code>', correct: false },
-          { text: '<code>true</code>', correct: false }
+          { text: '2, 3, 4, 1', correct: false },
+          { text: '3, 2, 4, 1', correct: true },
+          { text: '3, 4, 2, 1', correct: false },
+          { text: '2, 4, 1, 3', correct: false }
         ],
-        explanation: 'En Python los booleanos siempre van con mayúscula inicial: <strong>True</strong> o <strong>False</strong>.'
+        explanation: 'Primero la lista (3), luego iniciamos el ciclo (2), dentro la condición if (4), y dentro de la condición la orden print (1). Requiere doble indentación.'
       },
       {
         id: 6,
-        topic: 'if',
-        text: '¿Qué mostrará esto en pantalla?',
-        code: 'x = 8\nif x < 5:\n    print("Gato")\nelse:\n    print("Perro")',
+        topic: 'accumulator',
+        text: '6. El acumulador selectivo: Sigue el valor de <code>total</code> mentalmente. ¿Cuál será el número final impreso?',
+        code: 'precios = [10, 5, 20]\ntotal = 0\nfor p in precios:\n    if p > 5:\n        total = total + p\nprint(total)',
         options: [
-          { text: 'Gato', correct: false },
-          { text: 'Perro', correct: true },
-          { text: 'Gato y Perro', correct: false },
-          { text: 'Nada', correct: false }
+          { text: '35', correct: false },
+          { text: '15', correct: false },
+          { text: '30', correct: true },
+          { text: '0', correct: false }
         ],
-        explanation: 'Como 8 NO es menor que 5, la condición es False, así que entra en bloque <strong>else</strong> e imprime "Perro".'
+        explanation: 'El 10 es mayor a 5 (total sube a 10). El 5 NO es mayor a 5, se ignora. El 20 es mayor a 5 (total sube a 10 + 20 = 30).'
       },
       {
         id: 7,
-        topic: 'while',
-        text: '¿Cuántas veces se imprimirá la palabra "Hola"?',
-        code: 'contador = 0\nwhile contador < 3:\n    print("Hola")\n    contador += 1',
+        topic: 'while-order',
+        text: '7. El contador adelantado: ¿Cuál será el <strong>ÚLTIMO TEXTO</strong> que este programa imprimirá en pantalla antes de terminar?',
+        code: 'vidas = 3\nwhile vidas > 0:\n    vidas = vidas - 1\n    print("Tienes", vidas, "vidas")',
         options: [
-          { text: '2 veces', correct: false },
-          { text: '3 veces', correct: true },
-          { text: '4 veces', correct: false },
-          { text: 'Infinitas veces', correct: false }
+          { text: 'Tienes 1 vidas', correct: false },
+          { text: 'Tienes 0 vidas', correct: true },
+          { text: 'Tienes -1 vidas', correct: false },
+          { text: 'Nunca termina (Bucle infinito)', correct: false }
         ],
-        explanation: 'Se ejecuta cuando contador vale 0, 1 y 2. Cuando llega a 3, la condición 3 < 3 es falsa y se detiene. Son 3 veces.'
+        explanation: 'Cuando vidas es 1, es mayor a 0, entra al while. Inmediatamente se le resta 1, quedando en 0. Luego imprime "Tienes 0 vidas".'
       },
       {
         id: 8,
-        topic: 'if-else',
-        text: '¿Cuál es la palabra reservada en Python equivalente a "Sino si"?',
+        topic: 'while-vs-if',
+        text: '8. La contraseña ingenua: Este código intenta pedir la clave hasta que el usuario acierte. ¿Cuál es el error conceptual?',
+        code: 'clave = input("Clave: ")\nif clave != "1234":\n    print("Clave incorrecta")\n    clave = input("Intenta de nuevo: ")\nprint("Acceso concedido")',
         options: [
-          { text: '<code>else if</code>', correct: false },
-          { text: '<code>elseif</code>', correct: false },
-          { text: '<code>elif</code>', correct: true },
-          { text: '<code>then</code>', correct: false }
+          { text: 'Debería usar == en vez de !=', correct: false },
+          { text: 'Faltan comillas en Acceso concedido', correct: false },
+          { text: 'Debería usar un <strong>while</strong> en lugar de un <strong>if</strong>', correct: true },
+          { text: 'No hay ningún error', correct: false }
         ],
-        explanation: 'En Python se usa <strong>elif</strong> para encadenar múltiples condiciones.'
+        explanation: 'Un <strong>if</strong> solo pregunta una vez. Si se equivoca por segunda vez, el programa seguirá hacia abajo e imprimirá "Acceso concedido" de todas formas.'
+      },
+      {
+        id: 9,
+        topic: 'variable-scope',
+        text: '9. La variable amnésica: ¿Cuántas veces aparecerá la palabra "Adiós" en pantalla?',
+        code: 'mensaje = "Hola"\nfor i in [1, 2, 3]:\n    mensaje = "Adiós"\nprint(mensaje)',
+        options: [
+          { text: 'Ninguna', correct: false },
+          { text: '1 vez', correct: true },
+          { text: '3 veces', correct: false },
+          { text: 'Hola y luego Adiós', correct: false }
+        ],
+        explanation: 'El print no tiene indentación (no está dentro del ciclo for), por lo tanto, ocurre solo cuando el ciclo ya terminó, imprimiendo el último valor guardado (1 sola vez).'
+      },
+      {
+        id: 10,
+        topic: 'boss-level',
+        text: '10. 💀 BOSS LEVEL: ¿Cuál código resuelve correctamente la lógica del portero VIP?',
+        code: '1. Menor de 18: "No pasas".\n2. Mayor o igual a 18: Preguntar si es VIP.\n3. Si es VIP: "Pase directo".\n4. Sino: "A la fila normal".',
+        options: [
+          { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>else:<br>&nbsp;&nbsp;vip = input("VIP?")<br>&nbsp;&nbsp;if vip == "si":<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Pase directo")<br>&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("A la fila normal")</code>', correct: true },
+          { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>elif vip == "si":<br>&nbsp;&nbsp;print("Pase directo")<br>else:<br>&nbsp;&nbsp;print("A la fila normal")</code>', correct: false },
+          { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>else:<br>&nbsp;&nbsp;print("A la fila normal")<br>if vip == "si":<br>&nbsp;&nbsp;print("Pase directo")</code>', correct: false },
+          { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>vip = input("VIP?")<br>if vip == "si":<br>&nbsp;&nbsp;print("Pase directo")</code>', correct: false }
+        ],
+        explanation: 'Pone a prueba condicionales anidados (un if dentro de un else), y el flujo lógico correcto para hacer la segunda pregunta SOLO si pasa la primera condición.'
       }
     ];
 
     // Colors mapping for the Kahoot style shapes
-    // Triangle (Red), Circle (Blue), Square (Yellow/Orange), Diamond (Green)
     const shapeColors = [
       { bg: 'bg-red-500', hover: 'hover:bg-red-600', text: 'text-white', border: 'border-red-600', badge: 'bg-red-700 text-white' },
       { bg: 'bg-blue-500', hover: 'hover:bg-blue-600', text: 'text-white', border: 'border-blue-600', badge: 'bg-blue-700 text-white' },
@@ -419,8 +445,6 @@
               origin: { y: 0.6 },
               colors: ['#4CAF50', '#8BC34A', '#CDDC39']
             });
-          } else {
-            // Shake effect could be added here
           }
           
           this.state = 'feedback';
@@ -441,12 +465,10 @@
         getOptionClasses(index) {
           const sColors = shapeColors[index % 4];
           
-          // Question mode (Normal view)
           if (this.state === 'question') {
             return `${sColors.bg} ${sColors.text} ${sColors.border} ${sColors.hover}`;
           }
           
-          // Feedback mode
           if (this.state === 'feedback') {
             const isThisCorrect = this.currentQuestion.options[index].correct;
             const isThisSelected = this.selectedOptionIndex === index;
@@ -500,9 +522,6 @@
             }));
           }, 250);
         }
-      },
-      mounted() {
-        // Not starting immediately, waiting for start screen
       }
     });
 
