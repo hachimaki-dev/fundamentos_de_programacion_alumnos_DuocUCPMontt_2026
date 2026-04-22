@@ -1,0 +1,38 @@
+print("BIENVENIDO BALABET")
+#Menú
+opcion_usuario = 0
+tomar_copete = 1
+Ruleta = 2
+Tragamonedas = 3
+salir = 4
+fichas = 100
+bebida_0 = 0
+valor_Chela = 30
+valor_Piscola = 50
+valor_vodka = 110
+valor_Blue = 200
+Inventario = [fichas, bebida_0, 0]
+
+
+opcion_usuario= input("""==== QUE DESEA HACER ====
+    (1)Beber algo
+    (2)Jugar a la ruleta
+    (3)Jugar a la tragamonedas
+    (4)Salir
+      """)
+#Se elije la opcion 1 BEBER ALGO
+if opcion_usuario == 1:
+    bebida_0 = 0
+    while True:
+        print("BIENVENIDO AL BAR")
+        print("QUE DESEA BEBER")
+        print("""(1) CERVEZA DUFF [30 FICHAS]
+              (2) Piscola [50 FICHAS]
+              (3) VODKA [100 FICHAS]
+              (4) Blue Label [200]""")
+        bebida_0 = int(input(""))
+        
+        if bebida_0 == 1:
+            fichas = fichas - valor_Chela
+            if fichas < 10:
+                print("No puede comprar un objeto ")
