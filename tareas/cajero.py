@@ -21,7 +21,8 @@ if p_ingresado == PIN :
     print("Desea sacar dinero?")
     respuestausuario = input("Si o no").lower
     if respuestausuario == "si":
-        print("")
+        print("Ha ingresado a sacar dinero")
+        
 elif p_ingresado != PIN :
     print("No haz accedido")
     contador_intentos_fallido =+ 1
