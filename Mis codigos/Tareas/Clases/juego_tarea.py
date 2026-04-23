@@ -94,14 +94,7 @@ print(f"---Darkorus---HP:{vida_jefe1}---")
 print("")
 print(f"---{nombre_jugador}---HP:{vida_jugador}")
 print("")
-print("Habilidades: ")
-print("")
-print("1).rasen shuriken - 50")
-print("")
-print("2).chidogan - 200")
-print("")
-print("3).Pociòn curativa - +300")
-print("")
+
 
 contador_curativa = 0
 
@@ -196,7 +189,7 @@ print("???: Ten tu recompensa")
 time.sleep(2)
 print("")
 print("*Has conseguido 200 Monedas de plata*")
-dinero = dinero + 200
+dinero = 200
 time.sleep(2)
 print("")
 print("???: Se me olvidò explicarte.")
@@ -214,20 +207,87 @@ time.sleep(2)
 print(f"{nombre_jugador}: ¿Entonces... ahora que es lo siguiente?")
 time.sleep(2)
 print("")
-print("???: Lo siguiente serà tu primera compra en la tienda.")
+print("???: Te quitarè tus pociones actuales.")
+time.sleep(2)
+contador_curativa = 3
+print("")
+print("???: Y lo siguiente serà tu primera compra en la tienda de alquimia.")
 time.sleep(2)
 print("")
-print("TIENDA DE ALQUIMIA")
-print("")
-print("1).Pociòn de vida - $100")
-print("")
-print("2).Pociòn de vida media - $300")
-print("")
-print("3).Pociòn de vida mayor - $500")
-print("")
-print("4).Salir")
-print("")
-eleccion_compra = input("¿Què deseas comprar?")
-if eleccion_compra == "1":
+contador_curativa_menor = 0
+contador_curativa_media = 0
+contador_curativa_mayor = 0
+
+pocion_curativa_menor_precio = 100
+pocion_curativa_media_precio = 300
+pocion_curativa_meyor_precio = 500
+
+while True:
+    print("")
+    print("TIENDA DE ALQUIMIA")
+    print("")
+    print("1).Pociòn de vida - $100")
+    print("")
+    print("2).Pociòn de vida media - $300")
+    print("")
+    print("3).Pociòn de vida mayor - $500")
+    print("")
+    print("4).Salir")
+    print("")
+    eleccion_compra = input("¿Què deseas comprar?")
+    print("")
+    if eleccion_compra == "1" and dinero >= pocion_curativa_menor_precio:
+        dinero = dinero - pocion_curativa_menor_precio
+        contador_curativa_menor = contador_curativa_menor + 1
+        print(f"Has comprado pociòn curativa menor\n\nINVENTARIO\n\nPocion curativa menor ({contador_curativa_menor})\n\nPocion curativa media ({contador_curativa_media})\n\nPocion curativa mayor ({contador_curativa_mayor})")
+        seguir_tienda = input("¿Quieres seguir comprando? 1).si 2).no")
+        if seguir_tienda == "1":
+            print("")
+        elif seguir_tienda == "2":
+            break
+
+    elif eleccion_compra == "2" and dinero >= pocion_curativa_media_precio:
+        dinero = dinero - pocion_curativa_media_precio
+        contador_curativa_media = contador_curativa_media + 1
+        print(f"Has comprado pociòn curativa media\n\nINVENTARIO\n\nPocion curativa menor ({contador_curativa_menor})\n\nPocion curativa media ({contador_curativa_media})\n\nPocion curativa mayor ({contador_curativa_mayor})")
+        seguir_tienda = input("¿Quieres seguir comprando? 1).si 2).no")
+        if seguir_tienda == "1":
+            print("")
+        elif seguir_tienda == "2":
+            break
+
+    elif eleccion_compra == "3" and dinero >= pocion_curativa_meyor_precio:
+        dinero = dinero - pocion_curativa_meyor_precio
+        contador_curativa_mayor = contador_curativa_mayor + 1
+        print(f"Has comprado pociòn curativa mayor\n\nINVENTARIO\n\nPocion curativa menor ({contador_curativa_menor})\n\nPocion curativa media ({contador_curativa_media})\n\nPocion curativa mayor ({contador_curativa_mayor})\n\n")
+        seguir_tienda = input("¿Quieres seguir comprando? 1).si 2).no")
+        if seguir_tienda == "1":
+            print("")
+        elif seguir_tienda == "2":
+            break
+
+    elif eleccion_compra == "4":
+        print("???: Perfecto.")
+        time.sleep(2)
+        print("")
+        print("???: Continuemos con tu aventura.")
+        break
+
+    else:
+        print("No tienes suficiente dinero")
+
+
+
+
+
+
+
+
+
+
+
+print("Juego terminado")
+
+
     
 
