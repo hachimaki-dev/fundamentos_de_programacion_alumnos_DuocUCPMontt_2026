@@ -1,5 +1,4 @@
 saldo = 50000
-intentos_fallidos = 0
 pin = 1604
 numero_maximo_intentos = 3
 contador_intentos_fallidos = 0
@@ -19,6 +18,7 @@ while True:
     else:
         print("Ingrese una contraseña vàlida")
     if contador_intentos_fallidos >= 3:
+        print("Tarjeta bloqueada")
         break
 
 

@@ -34,10 +34,10 @@ while True:
         
                 retiro = int(input("¿Cuanto dinero desea retirar?"))
         
-                if retiro > saldo:
-                    print(f"Error. Recuerde que su saldo es de {saldo}")
+                while retiro > saldo:
+                    retiro = int(input(f"Error. Recuerde que su saldo es de {saldo}\n"))
        
-                elif retiro <= saldo:
+                if retiro <= saldo:
                     saldo = saldo - retiro
                     print(f"Dinero retirado {retiro}. Ahora su saldo es de {saldo}")
                     otra_operacion = input("¿Desea realizar otra operaciòn?").lower()
@@ -56,6 +56,7 @@ while True:
                 inversion = int(input("¿cuanto desea invertir?"))
         
                 if inversion <= saldo:
+                    saldo = saldo - inversion
                     inversion = inversion * 2
                     saldo = inversion + saldo
                     print(f"Felicidades. Su sueldo actual es de {saldo}")
