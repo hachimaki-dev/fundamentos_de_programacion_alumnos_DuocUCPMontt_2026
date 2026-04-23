@@ -1,7 +1,7 @@
 vida_jefe1 = 1000
 vida_jugador = 1000
 
-rasen_shuriken = 100
+rasen_shuriken = 50
 chidogan = 200
 
 import time
@@ -35,7 +35,7 @@ time.sleep(2)
 print(f"{nombre_jugador}: ¿Còmo sabes mi nombre?.")
 print("")
 time.sleep(3)
-print("???: Eso ahora mismo no importa. Te explicarè el juego.")
+print("???: Eso ahora mismo no importa. Te explicarè como funcionan las cosas aquì.")
 time.sleep(2)
 print(f"???: Cuentas con {vida_jugador}HP. Tienes que derrotar al jefe de esta secciòn. El jefe tendra UNICAMENTE en esta seccion {vida_jefe1}HP, ya que, a medida que avances te encontraràs con enemigos mucho màs poderosos. Tus poderes son los siguientes:")
 time.sleep(5)
@@ -113,6 +113,25 @@ while vida_jefe1 > 0:
          print(f"---{nombre_jugador}---HP:{vida_jugador}")
          print("")
          time.sleep(1)
+    while vida_jugador <= 0:
+        print("Game Over")
+        print("")
+        continuar_1 = int(input("¿Continuar? 1).si 2).no"))
+        if continuar_1 == 1:
+            vida_jefe1 = 1000
+            vida_jugador = 1000
+
+
+
+        elif continuar_1 == 2:
+            print("Saliste del juego")
+            exit()
+
+        while continuar_1 != 1 and continuar_1 != 2:
+            continuar_1 = input("Ingrese una respuesta valida")
+
+        
+
 print("")
 print("Un destello te ciega la vista")
 print("")
