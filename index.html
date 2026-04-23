@@ -96,6 +96,13 @@
         </button>
         <button 
           class="tag-pill" 
+          :class="{ active: activeFilter === 'sql' }" 
+          @click="activeFilter = 'sql'"
+        >
+          🗄️ SQL
+        </button>
+        <button 
+          class="tag-pill" 
           :class="{ active: activeFilter === 'flow' }" 
           @click="activeFilter = 'flow'"
         >
@@ -111,46 +118,97 @@
       </div>
     </div>
 
-    <!-- ─── Timeline ─── -->
-    <div class="timeline">
-      <a 
-        v-for="(entry, idx) in filteredEntries" 
-        :key="entry.id" 
-        :href="entry.page !== '#' ? entry.page : undefined"
-        class="diary-entry fade-in-up" 
-        :style="{ animationDelay: (idx * 0.08) + 's' }"
-        :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
-        @click="entry.page === '#' && $event.preventDefault()"
-      >
-        <div class="entry-date">{{ formatDate(entry.date) }}</div>
-        <div class="entry-title">
-          <span class="entry-emoji">{{ entry.emoji }}</span>
-          {{ entry.title }}
-          <span v-if="entry.isNew" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+    <!-- ─── EA2 Section (expanded) ─── -->
+    <div class="timeline" v-if="ea2Entries.length > 0">
+      <div class="unit-section">
+        <div class="unit-header" @click="ea2Open = !ea2Open">
+          <span class="unit-chevron" :class="{ open: ea2Open }">▶</span>
+          <span class="unit-badge ea2">EA2</span>
+          <span class="unit-title">Administración de Bases de Datos — Oracle SQL</span>
+          <span class="unit-count">{{ ea2Entries.length }} entradas</span>
         </div>
-        <div class="entry-desc">{{ entry.description }}</div>
-        <div class="entry-tags">
-          <span 
-            v-for="tag in entry.tags" 
-            :key="tag" 
-            class="entry-tag" 
-            :class="tag"
+        <div class="unit-body" :class="ea2Open ? 'expanded' : 'collapsed'" :style="ea2Open ? 'max-height:' + (ea2Entries.length * 250) + 'px' : ''">
+          <a 
+            v-for="(entry, idx) in ea2Entries" 
+            :key="entry.id" 
+            :href="entry.page !== '#' ? entry.page : undefined"
+            class="diary-entry fade-in-up" 
+            :style="{ animationDelay: (idx * 0.08) + 's' }"
+            :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+            @click="entry.page === '#' && $event.preventDefault()"
           >
-            {{ tagLabels[tag] || tag }}
-          </span>
+            <div class="entry-date">{{ formatDate(entry.date) }}</div>
+            <div class="entry-title">
+              <span class="entry-emoji">{{ entry.emoji }}</span>
+              {{ entry.title }}
+              <span v-if="entry.page === '#'" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+            </div>
+            <div class="entry-desc">{{ entry.description }}</div>
+            <div class="entry-tags">
+              <span 
+                v-for="tag in entry.tags" 
+                :key="tag" 
+                class="entry-tag" 
+                :class="tag"
+              >
+                {{ tagLabels[tag] || tag }}
+              </span>
+            </div>
+          </a>
         </div>
-      </a>
-
-      <!-- Empty state -->
-      <div v-if="filteredEntries.length === 0" class="empty-state">
-        <div class="emoji">🔍</div>
-        <p>No se encontraron entradas con ese filtro.</p>
-        <p class="mt-2 text-sm">Intenta con otra búsqueda o quita los filtros 🌸</p>
       </div>
     </div>
 
+    <!-- ─── EA1 Section (collapsed) ─── -->
+    <div class="timeline" v-if="ea1Entries.length > 0">
+      <div class="unit-section">
+        <div class="unit-header" @click="ea1Open = !ea1Open">
+          <span class="unit-chevron" :class="{ open: ea1Open }">▶</span>
+          <span class="unit-badge ea1">EA1</span>
+          <span class="unit-title">Fundamentos de Programación — Python</span>
+          <span class="unit-count">{{ ea1Entries.length }} entradas</span>
+        </div>
+        <div class="unit-body" :class="ea1Open ? 'expanded' : 'collapsed'" :style="ea1Open ? 'max-height:' + (ea1Entries.length * 250) + 'px' : ''">
+          <a 
+            v-for="(entry, idx) in ea1Entries" 
+            :key="entry.id" 
+            :href="entry.page !== '#' ? entry.page : undefined"
+            class="diary-entry fade-in-up" 
+            :style="{ animationDelay: (idx * 0.08) + 's' }"
+            :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+            @click="entry.page === '#' && $event.preventDefault()"
+          >
+            <div class="entry-date">{{ formatDate(entry.date) }}</div>
+            <div class="entry-title">
+              <span class="entry-emoji">{{ entry.emoji }}</span>
+              {{ entry.title }}
+              <span v-if="entry.isNew" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+            </div>
+            <div class="entry-desc">{{ entry.description }}</div>
+            <div class="entry-tags">
+              <span 
+                v-for="tag in entry.tags" 
+                :key="tag" 
+                class="entry-tag" 
+                :class="tag"
+              >
+                {{ tagLabels[tag] || tag }}
+              </span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0" class="empty-state" style="max-width:700px;margin:0 auto;">
+      <div class="emoji">🔍</div>
+      <p>No se encontraron entradas con ese filtro.</p>
+      <p class="mt-2 text-sm">Intenta con otra búsqueda o quita los filtros 🌸</p>
+    </div>
+
     <!-- ─── Stats Section ─── -->
-    <div class="max-w-md mx-auto px-4 mb-8" v-if="filteredEntries.length > 0">
+    <div class="max-w-md mx-auto px-4 mb-8">
       <div class="card p-5 text-center">
         <p class="text-sm text-kawaii-text/50 mb-2">📊 Resumen del curso</p>
         <div class="flex justify-center gap-6">
@@ -199,23 +257,22 @@
           entries: diaryEntries,
           searchQuery: '',
           activeFilter: 'all',
+          ea1Open: false,
+          ea2Open: true,
           tagLabels: {
             python: 'Python',
             flow: 'Diagramas',
             docs: 'Documentación',
+            sql: 'Oracle SQL',
           },
         };
       },
       computed: {
         filteredEntries() {
           let results = this.entries;
-
-          // Filter by tag
           if (this.activeFilter !== 'all') {
             results = results.filter(e => e.tags.includes(this.activeFilter));
           }
-
-          // Filter by search query
           if (this.searchQuery.trim()) {
             const q = this.searchQuery.toLowerCase().trim();
             results = results.filter(e => 
@@ -225,9 +282,13 @@
               e.date.includes(q)
             );
           }
-
-          // Sort by date (newest first)
           return results.sort((a, b) => new Date(b.date) - new Date(a.date));
+        },
+        ea1Entries() {
+          return this.filteredEntries.filter(e => e.unit === 'ea1');
+        },
+        ea2Entries() {
+          return this.filteredEntries.filter(e => e.unit === 'ea2');
         },
         totalEntries() {
           return this.entries.length;
@@ -236,7 +297,7 @@
           return this.entries.filter(e => e.page !== '#').length;
         },
         comingSoonEntries() {
-          return this.entries.filter(e => e.isNew).length;
+          return this.entries.filter(e => e.page === '#').length;
         },
       },
       methods: {

@@ -1,159 +1,33 @@
 // ═══════════════════════════════════════════════════════════════
 //  🗓️ Registro Central de Entradas del Diario
 //  ─────────────────────────────────────────────────────────────
-//  Para agregar una nueva entrada al diario, simplemente agrega
-//  un nuevo objeto al array. La UI se genera automáticamente.
-//
 //  Campos:
-//    id          → identificador único (slug)
-//    date        → fecha de publicación (para ordenar y mostrar)
-//    emoji       → emoji representativo
-//    title       → título de la entrada
-//    description → descripción breve (1-2 líneas)
-//    tags        → array de etiquetas ['python','flow','docs','nuevo']
-//    page        → ruta relativa a la página (desde index.html)
-//    isNew       → (bool) marca visual de "nuevo"
+//    id, date, emoji, title, description, tags, page, isNew, unit
 // ═══════════════════════════════════════════════════════════════
 
 const diaryEntries = [
-  {
-    id: 'entrada-0-git',
-    date: '2026-03-05',
-    emoji: '🐙',
-    title: 'Entrada 0: Lo básico de Git',
-    description: 'Comandos esenciales (init, commit, status, ramas) y flujos de trabajo recomendados.',
-    tags: ['docs'],
-    page: 'pages/git-basics.html',
-    isNew: false,
-  },
-  {
-    id: 'semana-1-ejercicios',
-    date: '2026-03-10',
-    emoji: '🐍',
-    title: 'Ejercicios de Trazado — Semana 1',
-    description: 'Practica trazado de código Python: variables, tipos de datos, operadores y lógica. 10 ejercicios interactivos con feedback inmediato.',
-    tags: ['python'],
-    page: 'pages/exercises.html#python',
-    isNew: false,
-  },
-  {
-    id: 'semana-1-diagramas',
-    date: '2026-03-10',
-    emoji: '🔷',
-    title: 'Diagramas de Flujo — Semana 1',
-    description: 'Sigue el flujo de diagrama paso a paso y determina la salida. 8 ejercicios con decisiones y cálculos.',
-    tags: ['flow'],
-    page: 'pages/exercises.html#flow',
-    isNew: false,
-  },
-  {
-    id: 'documentacion-fundamentos',
-    date: '2026-03-10',
-    emoji: '📚',
-    title: 'Documentación de Referencia',
-    description: 'Guía rápida de consulta: variables, tipos de datos, operadores, input/output, diagramas de flujo y estrategias de resolución.',
-    tags: ['docs'],
-    page: 'pages/docs.html',
-    isNew: false,
-  },
-  {
-    id: 'semana-2-condicionales',
-    date: '2026-03-17',
-    emoji: '🔀',
-    title: 'Condicionales if/elif/else — Semana 2',
-    description: 'Taller completo: referencia, selección múltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de código. ¡26 ejercicios interactivos!',
-    tags: ['python', 'flow', 'docs'],
-    page: 'pages/conditionals.html',
-    isNew: false,
-  },
-  {
-    id: 'semana-3-while',
-    date: '2026-03-23',
-    emoji: '🔁',
-    title: 'Ciclo while — Semana 3',
-    description: 'Taller completo: referencia, selección múltiple, V/F, unir conceptos, encontrar errores, completar código y trazar código. ¡37 ejercicios interactivos!',
-    tags: ['python', 'docs'],
-    page: 'pages/while-loop.html',
-    isNew: true,
-  },
-  {
-    id: 'semana-3-for',
-    date: '2026-03-30',
-    emoji: '🔄',
-    title: 'Ciclo for — Semana 3',
-    description: 'Taller completo: referencia, selección múltiple, V/F, unir conceptos, encontrar errores, completar código y trazar código. ¡39 ejercicios interactivos con for, range, break, continue y strings!',
-    tags: ['python', 'docs'],
-    page: 'pages/for-loop.html',
-    isNew: false,
-  },
-  {
-    id: 'quiz-interactivo-repaso',
-    date: '2026-03-30',
-    emoji: '🎮',
-    title: 'Juego Interactivo: Repaso de Python',
-    description: 'Juego estilo Kahoot para validar conocimientos en la pizarra. Cubre variables, input, output, tipos, if y while.',
-    tags: ['python'],
-    page: 'pages/quiz-interactivo.html',
-    isNew: false,
-  },
-  {
-    id: 'quiz-interactivo-repaso-2',
-    date: '2026-04-21',
-    emoji: '🧠',
-    title: 'Desafío Python: Nivel 2 (Lógica y Trampas)',
-    description: 'Juego estilo Kahoot para poner a prueba tu lógica, el orden de ejecución y evitar trampas conceptuales. ¡Nivel intermedio/avanzado!',
-    tags: ['python'],
-    page: 'pages/quiz-interactivo-2.html',
-    isNew: true,
-  },
-  {
-    id: 'desafio-evaluacion-1',
-    date: '2026-04-01',
-    emoji: '🔥',
-    title: 'Modo Desafío: Preparación Evaluación',
-    description: 'Misiones para prepararte para el parcial. Ataca tus debilidades en indentación, comillas, bucles y condiciones.',
-    tags: ['python'],
-    page: 'pages/desafio-evaluacion.html',
-    isNew: false,
-  },
-  {
-    id: 'banco-ejercicios-eleccion',
-    date: '2026-04-01',
-    emoji: '🛒',
-    title: 'Banco de Ejercicios: Elección Libre',
-    description: '15 misiones de programación con temáticas muy diversas (juegos, salud, delivery). Arma tu propia guía eligiendo de 3 a 5 misiones.',
-    tags: ['python'],
-    page: 'pages/banco-ejercicios.html',
-    isNew: false,
-  },
-  {
-    id: 'evaluacion-formativa-1',
-    date: '2026-04-06',
-    emoji: '📝',
-    title: 'Simulador de Evaluación 1',
-    description: 'Prueba formativa integral (Tipo Universidad). Incluye alternativas, V/F, términos pareados y 3 ejercicios de desarrollo con control de flujo.',
-    tags: ['python', 'docs', 'flow'],
-    page: 'pages/evaluacion-1.html',
-    isNew: true,
-  },
-  {
-    id: 'mecanismos-ruptura-menus',
-    date: '2026-04-09',
-    emoji: '🚀',
-    title: 'Mecanismos de Ruptura y Menús',
-    description: 'Taller completo de break, continue, lógicas complejas y menús interactivos. ¡Con temáticas de Minecraft, K-Pop, LoL y retos propuestos!',
-    tags: ['python', 'docs'],
-    page: 'pages/mecanismos-ruptura.html',
-    isNew: false,
-  },
-  {
-    id: 'intro-listas-for',
-    date: '2026-04-14',
-    emoji: '📦',
-    title: 'Intro a Listas y ciclo FOR',
-    description: 'Aprende a procesar múltiples datos con Listas y automatiza el recorrido utilizando todo el poder del ciclo For. Práctica interactiva incluida.',
-    tags: ['python'],
-    page: 'pages/listas-y-for.html',
-    isNew: true,
-  }
+  // ── EA1 — Fundamentos de Programación (Python) ──
+  { id:'entrada-0-git', date:'2026-03-05', emoji:'🐙', title:'Entrada 0: Lo básico de Git', description:'Comandos esenciales (init, commit, status, ramas) y flujos de trabajo recomendados.', tags:['docs'], page:'pages/git-basics.html', isNew:false, unit:'ea1' },
+  { id:'semana-1-ejercicios', date:'2026-03-10', emoji:'🐍', title:'Ejercicios de Trazado — Semana 1', description:'Practica trazado de código Python: variables, tipos de datos, operadores y lógica. 10 ejercicios interactivos con feedback inmediato.', tags:['python'], page:'pages/exercises.html#python', isNew:false, unit:'ea1' },
+  { id:'semana-1-diagramas', date:'2026-03-10', emoji:'🔷', title:'Diagramas de Flujo — Semana 1', description:'Sigue el flujo de diagrama paso a paso y determina la salida. 8 ejercicios con decisiones y cálculos.', tags:['flow'], page:'pages/exercises.html#flow', isNew:false, unit:'ea1' },
+  { id:'documentacion-fundamentos', date:'2026-03-10', emoji:'📚', title:'Documentación de Referencia', description:'Guía rápida de consulta: variables, tipos de datos, operadores, input/output, diagramas de flujo y estrategias de resolución.', tags:['docs'], page:'pages/docs.html', isNew:false, unit:'ea1' },
+  { id:'semana-2-condicionales', date:'2026-03-17', emoji:'🔀', title:'Condicionales if/elif/else — Semana 2', description:'Taller completo: referencia, selección múltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de código. ¡26 ejercicios interactivos!', tags:['python','flow','docs'], page:'pages/conditionals.html', isNew:false, unit:'ea1' },
+  { id:'semana-3-while', date:'2026-03-23', emoji:'🔁', title:'Ciclo while — Semana 3', description:'Taller completo: referencia, selección múltiple, V/F, unir conceptos, encontrar errores, completar código y trazar código. ¡37 ejercicios interactivos!', tags:['python','docs'], page:'pages/while-loop.html', isNew:false, unit:'ea1' },
+  { id:'semana-3-for', date:'2026-03-30', emoji:'🔄', title:'Ciclo for — Semana 3', description:'Taller completo: referencia, selección múltiple, V/F, unir conceptos, encontrar errores, completar código y trazar código. ¡39 ejercicios interactivos con for, range, break, continue y strings!', tags:['python','docs'], page:'pages/for-loop.html', isNew:false, unit:'ea1' },
+  { id:'quiz-interactivo-repaso', date:'2026-03-30', emoji:'🎮', title:'Juego Interactivo: Repaso de Python', description:'Juego estilo Kahoot para validar conocimientos en la pizarra. Cubre variables, input, output, tipos, if y while.', tags:['python'], page:'pages/quiz-interactivo.html', isNew:false, unit:'ea1' },
+  { id:'quiz-interactivo-repaso-2', date:'2026-04-21', emoji:'🧠', title:'Desafío Python: Nivel 2 (Lógica y Trampas)', description:'Juego estilo Kahoot para poner a prueba tu lógica, el orden de ejecución y evitar trampas conceptuales. ¡Nivel intermedio/avanzado!', tags:['python'], page:'pages/quiz-interactivo-2.html', isNew:false, unit:'ea1' },
+  { id:'desafio-evaluacion-1', date:'2026-04-01', emoji:'🔥', title:'Modo Desafío: Preparación Evaluación', description:'Misiones para prepararte para el parcial. Ataca tus debilidades en indentación, comillas, bucles y condiciones.', tags:['python'], page:'pages/desafio-evaluacion.html', isNew:false, unit:'ea1' },
+  { id:'banco-ejercicios-eleccion', date:'2026-04-01', emoji:'🛒', title:'Banco de Ejercicios: Elección Libre', description:'15 misiones de programación con temáticas muy diversas (juegos, salud, delivery). Arma tu propia guía eligiendo de 3 a 5 misiones.', tags:['python'], page:'pages/banco-ejercicios.html', isNew:false, unit:'ea1' },
+  { id:'evaluacion-formativa-1', date:'2026-04-06', emoji:'📝', title:'Simulador de Evaluación 1', description:'Prueba formativa integral (Tipo Universidad). Incluye alternativas, V/F, términos pareados y 3 ejercicios de desarrollo con control de flujo.', tags:['python','docs','flow'], page:'pages/evaluacion-1.html', isNew:false, unit:'ea1' },
+  { id:'mecanismos-ruptura-menus', date:'2026-04-09', emoji:'🚀', title:'Mecanismos de Ruptura y Menús', description:'Taller completo de break, continue, lógicas complejas y menús interactivos. ¡Con temáticas de Minecraft, K-Pop, LoL y retos propuestos!', tags:['python','docs'], page:'pages/mecanismos-ruptura.html', isNew:false, unit:'ea1' },
+  { id:'intro-listas-for', date:'2026-04-14', emoji:'📦', title:'Intro a Listas y ciclo FOR', description:'Aprende a procesar múltiples datos con Listas y automatiza el recorrido utilizando todo el poder del ciclo For. Práctica interactiva incluida.', tags:['python'], page:'pages/listas-y-for.html', isNew:false, unit:'ea1' },
+
+  // ── EA2 — Administración de Bases de Datos (Oracle SQL) ──
+  { id:'ea2-clase1-dml-basico', date:'2026-04-22', emoji:'🗄️', title:'Clase 1: Introducción al RA2 y DML Básico', description:'INSERT, UPDATE y DELETE en Oracle SQL. Uso correcto de WHERE, validación de datos y relación con claves primarias y foráneas.', tags:['sql','docs'], page:'pages/ea2-clase1-dml-basico.html', isNew:true, unit:'ea2' },
+  { id:'ea2-clase2-insert-integridad', date:'2026-04-29', emoji:'📥', title:'Clase 2: Inserción de Datos con Integridad', description:'Inserciones simples y múltiples, manejo de NULL, orden de columnas, tipos de datos, fechas Oracle y errores típicos.', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
+  { id:'ea2-clase3-update-delete', date:'2026-05-06', emoji:'✏️', title:'Clase 3: Actualización y Eliminación de Datos', description:'UPDATE y DELETE con filtros, condiciones compuestas, actualizaciones masivas y riesgos operativos. ¿Qué pasa sin WHERE?', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
+  { id:'ea2-clase4-vistas', date:'2026-05-13', emoji:'👁️', title:'Clase 4: Vistas como Capa Lógica de Acceso', description:'CREATE VIEW, consulta sobre vistas, simplificar queries, ocultar columnas y vistas modificables vs no modificables.', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
+  { id:'ea2-clase5-indices', date:'2026-05-20', emoji:'⚡', title:'Clase 5: Índices y Rendimiento de Consultas', description:'Qué es un índice, cuándo usarlo, cuándo NO, impacto en lectura vs escritura y análisis conceptual de costo.', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
+  { id:'ea2-clase6-usuarios', date:'2026-05-27', emoji:'👤', title:'Clase 6: Creación de Usuarios y Admin. de Acceso', description:'CREATE USER, esquemas, autenticación y trabajo multiusuario en bases de datos profesionales.', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
+  { id:'ea2-clase7-privilegios-roles', date:'2026-06-03', emoji:'🔐', title:'Clase 7: Privilegios, Roles e Integración Final', description:'GRANT, REVOKE, privilegios de sistema/objeto, roles y actividad integradora: crea, inserta, vista, índice y permisos.', tags:['sql','docs'], page:'#', isNew:true, unit:'ea2' },
 ];
