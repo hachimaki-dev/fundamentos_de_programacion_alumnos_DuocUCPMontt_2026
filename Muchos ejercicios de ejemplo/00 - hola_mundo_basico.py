@@ -8,5 +8,5 @@
 
 print("¡Hola Mundo!")
 print("Bienvenido a Python")
-print("Mi nombre es [tu nombre]")
+print("Mi nombre es [tu leandro]")
 print("Estoy aprendiendo a programar")

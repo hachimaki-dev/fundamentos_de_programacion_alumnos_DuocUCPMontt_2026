@@ -1,0 +1,5 @@
+Numero_ingresado
+numero_ingresado = int(input("Ingrese un numero"))
+
+if numero_ingresado % 2== 0:
+    print("par")
