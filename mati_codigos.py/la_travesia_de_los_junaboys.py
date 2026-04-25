@@ -167,9 +167,25 @@ while vidas_utilizadas < vidas_maximas:
                         if desicion6 == 1:
                             print("\nAl chiflar delatas tu posicion, y el DIABLO corre rapidamente hacia los Junaboys, sera el fin?...")
 
-                            input("\nPresiona enter para continuar...")
+                            input("Presiona enter para continuar...")
 
-                            print("El DIABLO se frena en seco al escuchar... un ladrido, los Junaboys ven como vienen corriendo los tres perros a su rescate, el DIABLO, al escuchar los ladridos sale corriendo, no es el fin, pero estaban a salvo por ahora..")
+                            print("\nEl DIABLO se frena en seco al escuchar... un ladrido, los Junaboys ven como vienen corriendo los tres perros a su rescate, el DIABLO, al escuchar los ladridos sale corriendo, no es el fin, pero estaban a salvo por ahora..")
                             
                         elif desicion6 == 2:
-                            print("deciden ser cautelozos y mantenerse en silencio, no es momento de correr riesgos")
+                            print(f"\ndeciden ser cautelozos y mantenerse en silencio, no es momento de correr riesgos, 'Que debemos hacer {personaje_elegido}, el DIABLO esta cerca', susurra alguien")
+
+                            desicion7= int(input("\n(1. Esconderse entre las ramas y rocas|2. Seguir caminando en la direccion opuesta) debes decidir que hacer, y RAPIDO, el tiempo no espera a nadie... "))
+
+                            if desicion7 == 1:
+                                print("\nAl esconderse, logran ver pasar al DIABLO, todo queda en extremo silencio, el DIABLO se voltea hacia donde estan ustedes, todos sienten un escalofrio por la espalda")
+
+                                input("Presiona enter para continuar: ")
+
+                                print("\nAl no ver ni escuchar nada, el DIABLO sigue su camino, intentando encontrar a los Junaboys,")
+
+                                print(f"\n{personaje_elegido} dice: 'Necesitamos encontrar una forma de vencerlo', 'O escapar' dice otro de los chicos")
+
+                                desicion8= int(input("(1. Vencer al DIABLO|2. Escapar) cual sera tu desicion?: "))
+
+                                if desicion8 == 1:
+                                    print("\nEntre todos comienzan planear como vencerlo")
