@@ -1,20 +1,56 @@
-vengadores= []
-while True:
-    print("\nMenu de opciones")
-    print("1. agregar avenger")
-    print("2. Mostrar base")
-    print("3. salir")
-    opcion_elegida= int(input("Elige una opcion (1/2/3): "))
+print("==== BUEN DIA SEÑOR FURY ====")
 
-    if opcion_elegida == 1:
-        nombre_heroe= input("Ingresa el nombre de el heroe: ")
-        vengadores.append(nombre_heroe)
-    elif opcion_elegida == 2:
-        for i in range(len(vengadores)):
-            vengadores[i]= vengadores[i].upper()
-            print(f"\n{vengadores}")
-    elif opcion_elegida == 4:
-        vengador_sacrificado= input("Ingresa el vengador a sacrificar")
-        vengador_sacrificado= [i].pop
-    else:
+vengadores = []
+
+while True:
+    print("1. Agregar Vengador")
+    print("2. Mostrar Base y Modificar")
+    print("3. Salir")
+
+    opcion_nick_fury = input("ingrese opcion(1/2/3): ").lower()
+
+    if opcion_nick_fury == "1":
+
+        ingreso_vengador = input("como se llama el vengador que desea añadir?: ")
+
+        vengadores.append(ingreso_vengador)
+
+        print("vengador añadido")
+
+    elif opcion_nick_fury == "2":
+
+        if len(vengadores) == 0:
+            print("NO TIENE VENGADORES REGISTRADOS SEÑOR FURY")
+
+        for i in range (len(vengadores)):
+
+            print("=" * 30)
+
+            print(f"{i} - {vengadores[i]}")
+
+            vengadores[i] = vengadores[i].upper()
+
+            print("=" * 30)
+
+    elif opcion_nick_fury == "3":
+
+        print("Hasta luego señor Fury, buena suerte")
         break
+
+    elif opcion_nick_fury == "sacrificar":
+
+        if len(vengadores) == 0:
+            print("No hay nadie a quien sacrificar.")
+        else:
+            for i in range(len(vengadores)):
+                print(f"{i} - {vengadores[i]}")
+            
+            posicion = int(input("¿A quién desea eliminar?:  "))
+            
+            if posicion < len(vengadores):
+                eliminado = vengadores.pop(posicion)
+                print(f"Vengador {eliminado} eliminado")
+
+    else:
+        print("opcion invalida intente nuevamente")
+        continue

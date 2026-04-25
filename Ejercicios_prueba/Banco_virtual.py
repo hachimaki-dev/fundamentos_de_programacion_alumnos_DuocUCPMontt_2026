@@ -14,8 +14,8 @@ while intentos < numero_maximo_intentos:
             print("2.- GIRAR DINERO")
             print("3.- INVERTIR")
             print("4.- SALIR")
-            operacion_elegida= input("ELIGE TU OPERACION: ").lower()
-            if operacion_elegida == "ver saldo":
+            operacion_elegida= int(input("ELIGE TU OPERACION: "))
+            if operacion_elegida == 1:
                 print(f"TU SALDO ES DE {saldo}")
                 otra_operacion= input("DESEA REALIZAR OTRA OPERACION? (SI/NO): ").lower()
                 if otra_operacion == "no":
@@ -23,7 +23,7 @@ while intentos < numero_maximo_intentos:
                     break
                 else:
                     continue
-            elif operacion_elegida == "girar dinero":
+            elif operacion_elegida == 2:
                 monto_a_retirar= int(input("Ingrese monto a retirar: "))
                 if monto_a_retirar > saldo:
                     print("GIRO INVALIDO, SALDO INSUFICIENTE")
@@ -36,7 +36,7 @@ while intentos < numero_maximo_intentos:
                         break
                     else:
                         continue
-            elif operacion_elegida == "invertir":
+            elif operacion_elegida == 3:
                 dinero_invertido= int(input("CUANTO DINERO DESEA INVERTIR? "))
                 saldo= saldo - dinero_invertido
                 if dinero_invertido >= saldo:
