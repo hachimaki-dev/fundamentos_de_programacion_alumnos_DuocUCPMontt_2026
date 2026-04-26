@@ -1,6 +1,6 @@
 vida_personaje = 300
 vida_monstruo = 1000
-turno=0
+turno=1
 print("te perdiste en el bosque, sientes que una vil presencia te esta asechando desde hace un largo rato, vas a revisar el origen del ruido que te lleva acosando. Cuando decides acercarte la bestia se avalanza sobre ti, con un habilidoso movimiento logras esquivarla, ahora solo queda luchar")
 while vida_monstruo > 0 and vida_personaje > 0:
     print(f"====Turno actual: {turno}=====")

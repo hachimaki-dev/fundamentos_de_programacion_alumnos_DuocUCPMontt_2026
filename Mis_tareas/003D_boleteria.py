@@ -3,7 +3,7 @@ puerto_varas=3000
 osorno=7000
 frutillar=5000
 respuesta=""
-#capacidad=0
+
 
 print("Bienvenido/a a la boleteria Juan buses")
 while True:

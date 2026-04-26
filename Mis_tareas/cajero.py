@@ -1,9 +1,10 @@
 saldo=50000
+cajero=100000
 opcion=0
 retiro=0
 inversion=0
 print("====Bienvenido al cajero automatico====")
-while saldo > 0:
+while saldo > 0 and cajero > 0:
     print("1-Ver saldo")
     print("2-Girar dinero")
     print("3-Invertir")
@@ -15,11 +16,12 @@ while saldo > 0:
         retiro =int(input("Cuanto dinero desea retirar (solo billetes de 5 mil) "))
         if retiro > saldo:
             print("Error: Saldo insuficiente")
-        elif retiro%5000 != 0:
+        elif retiro%5 != 0:
             print("Error: Retiro no disponible")
-        elif retiro % 5000 ==0:
+        elif retiro % 5 ==0:
             print(f"Dinero retirado")
             saldo = saldo-retiro
+            cajero= cajero-retiro
     elif opcion==3:
         inversion=int(input("Cuanto desea invertir: "))
         if inversion > saldo:
