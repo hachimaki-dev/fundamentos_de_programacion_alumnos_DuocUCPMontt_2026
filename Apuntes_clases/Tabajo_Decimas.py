@@ -1,7 +1,11 @@
 import random
-
+#Dicionarios
+Pikachu = {"pokemon":"Pikachu","tipo":"Electrico","vida":20}
+Charizard = {"pokemon":"Charizard","tipo":"Fuego","vida":20}
+Venasaur ={"pokemon":"Venasaur","tipo":"Planta","vida":20}
+Blastoise ={"pokemon":"Blastoise","tipo":"Agua","vida":20}
 #Variables
-Pokemones_jugador = ["Pikachu",  "Charizard",  "Venasaur", "Blastoise"]
+Pokemones_jugador = [Pikachu,  Charizard,  Venasaur, Blastoise]
 Pokemones_rival = ["Sandslash", "Gyarados", "Exeggutor", "Arcanine"]
 Pokemones_Debilitados = []
 Pokemon_activo_jugador = []
@@ -10,15 +14,10 @@ Combate = True
 Error= "Opcion Invalida"
 SeleccionJugador= True
 Tipo_pokemon = ""
-vida_pokemon_activo =
+vida_pokemon_activo = ""
 SelecionRival = True
 
-#Dicionarios
-dpikachu = {
-    "tipo":"Electrico"
-    "vida":20
-}
-dcharizard = {}
+
 
 while Combate == True:
     
@@ -29,7 +28,7 @@ while Combate == True:
         
         for i in Pokemones_jugador:
             print (i)
-        Pokemon_Yo_Te_Elijo = (input("Elija un pokemon "))
+        Pokemon_Yo_Te_Elijo = dict(input("Elija un pokemon "))
 
         if Pokemon_Yo_Te_Elijo in Pokemones_jugador:
             Pokemon_activo_jugador.append(Pokemon_Yo_Te_Elijo)
@@ -39,8 +38,9 @@ while Combate == True:
             print (Error)
 
 
-    #print(f"DEBUG {Pokemones_jugador} y {Pokemon_activo_jugador}")  
-           
+    print(f"DEBUG {Pokemones_jugador} y {Pokemon_activo_jugador}")  
+
+    print(Pokemon_activo_jugador[0]["tipo"])       
             
     #Selecion Rival  
     while SelecionRival == True:
@@ -53,7 +53,7 @@ while Combate == True:
     
     #print(f"DEBUG {Pokemones_rival} y {Pokemon_activo_rival}")  
     
-    Turno Jugador
+  
     
     
     Combate=False    
