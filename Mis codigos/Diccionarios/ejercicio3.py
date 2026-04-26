@@ -21,6 +21,7 @@
 # 7. El ciclo debe terminar cuando el usuario escriba salir.
 
 numero_estudiante = 1
+estudiante_encontrado = False
 
 estudiantes = [
     {"nombre":"juan", "edad": 20, "notas": [5.0, 6.0, 5.5]},
@@ -33,4 +34,34 @@ for estudiante in estudiantes:
     print(f"{numero_estudiante}. {estudiante["nombre"]}")
     numero_estudiante += 1
 
-estudiantes["promedio"] = 
+for estudiante in estudiantes:
+    notas = estudiante["notas"]
+    suma = 0
+    for nota in notas:
+        suma += nota
+    estudiante["promedio"] = suma/len(notas)
+    if estudiante["promedio"] >= 4.0:
+        estudiante["estado_aprobacion"] = "aprobado"
+    else:
+        estudiante["estado_aprobacion"] = "reprobado"
+
+while True:
+    consultar_estudiante = input("Buscar estudiante: ").lower()
+    if consultar_estudiante == "salir":
+        break
+    estudiante_encontrado = False
+    for estudiante in estudiantes:
+        if consultar_estudiante == estudiante["nombre"]:
+            print(estudiante)
+            estudiante_encontrado = True
+            break
+    if not estudiante_encontrado:
+        print("Estudiante no encontrado en los registros")
+
+
+
+
+
+
+
+
