@@ -1,4 +1,4 @@
-print ("EL AHORCADO")
+print ("EL AHORCADO *+*")
 
 frutas = ["manzana", "pera", "sandia", "platano", "frutilla", "arandano", "mango", "melon"]
 animales = ["perro", "gato", "conejo", "serpiente", "raton", "pollitos", "camello", "caballo"]
@@ -35,4 +35,4 @@ while True:
 
     if salir == "no":
         print("Gracias por jugar")
-        break
+        break 
