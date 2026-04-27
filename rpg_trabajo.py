@@ -311,7 +311,8 @@ while len(jugadores) < cantidad_jugadores :
             print(f"\nError. Escoja una opción entre 1 y {len(clases)}.")
             continue
 
-enemigo["Vida_Maxima"]
+enemigo["Vida_Maxima"] *= len(jugadores)
+enemigo["Vida_Actual"] *= len(jugadores)
 
 has_ganado = False
 has_perdido = False
