@@ -591,7 +591,7 @@ if Pokemon_inicial_escogido_Bulbasaur == True: # Dependiendo del pokemon basico 
 
                     input()
 
-                    Pidgey_PS = Pidgey_PS - Bulbasaur_Daño_Daño
+                    Pidgey_PS = Pidgey_PS - Bulbasaur_Daño
 
                     if Pidgey_PS <= 0: # En caso de derrotar a Pidgey, la vida se pondra automaticamente en 0. Evitando que aparezcan los numeros en negativo
                         
@@ -1001,7 +1001,7 @@ if Escapar_de_la_batalla == True: # Si se logra escapar de la batalla, se saltar
     
     Escapar_de_la_batalla = False
 
-elif Pidgey_PS <= 0 and Charmander_PS > 0 or Bulbasaur_PS > 0 or Squirtle_PS > 0:
+elif Pidgey_PS <= 0:
 
     print("Has ganado la batalla, ganando 100 de EXP")
 
