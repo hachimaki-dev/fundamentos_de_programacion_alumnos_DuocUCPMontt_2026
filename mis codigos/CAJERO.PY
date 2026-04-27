@@ -5,9 +5,10 @@ intentos_realizados = 0
 
 print("===== CAJERO AUTOMATICO =====")
 
-acceso_clave_usuario = int(input("ingrese PIN:"))
-
 while True:
+
+    acceso_clave_usuario = int(input("ingrese PIN:"))
+
     if acceso_clave_usuario == PIN:
         print(f"1. giro rapido por $10.000")
         print(f"2. giro rapido por $20.000")

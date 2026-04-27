@@ -1,23 +1,27 @@
+# TERMINADO
+
 print("===== CREADOR DE PLAYLIST MP3 =====")
 
 DURACION_TOTAL = 0
 TIEMPO_MAXIMO = 60
 
-while DURACION_TOTAL < TIEMPO_MAXIMO:
-    
-    print(f"\nEspacio ocupado: {DURACION_TOTAL} / {TIEMPO_MAXIMO} min.")
-    añadir_cancion = int(input("Desea añadir una cancion? (SI/NO):"))
+while True:
 
-    if añadir_cancion == "SI" or "si" or "Si":
-        tiempo_cancion = int(input("Minutos de la siguiente cancion:"))
+    cancion_usuario = input("Desea añadir una cancion?: ").lower()
 
-    if DURACION_TOTAL + tiempo_cancion <= TIEMPO_MAXIMO:
+    if cancion_usuario == "si":
 
-        DURACION_TOTAL = DURACION_TOTAL + tiempo_cancion
-        print("Perfecto, cancion añadida.")
+        tiempo_cancion_usuario = int(input("cuanto tiempo dura su cancion?:"))
+        DURACION_TOTAL += tiempo_cancion_usuario
 
-    if tiempo_cancion == tiempo_cancion:
-        print("===== PLAYLIST LLENA AL 100& =====")
-
+        if DURACION_TOTAL > 60:
+            print(f"cancion incompatible, espacio maximo de {TIEMPO_MAXIMO}")
+        elif DURACION_TOTAL == TIEMPO_MAXIMO:
+            print("MEMORIA LLENA, DISFRUTE SUS CANCIONES >:3")
+            break
+        
+    elif cancion_usuario == "no":
+        print("No hay problema, hasta luego <3")
+        break
     else:
-        print(f"La cancion de {tiempo_cancion} minutos no cabe")
+        print("opcion invalida, intente nuevamente")

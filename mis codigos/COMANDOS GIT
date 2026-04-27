@@ -1,0 +1,24 @@
+para tener carpeta de 
+fundamentos de programacion en escritorio entras a la terminal y escribes cd Desktop
+luego git clone https://github.com/hachimaki-dev/fundamentos_de_programacion_alumnos_DuocUCPMontt_2026.git
+
+
+
+git config --global user.name "tu nombre" goxzero8
+git config --global user.email "tu gmail" 
+
+git clone https://github.com/hachimaki-dev/fundamentos_de_programacion_alumnos_DuocUCPMontt_2026.git
+
+git checkout RAMA existente
+git checkout -b RAMA nueva
+
+
+
+PROCESO DE ENVIAR PRUEBA
+
+
+git add .
+
+git commit -m "envio prueba 1"
+
+git push origin "002D/FRANCO_OFICIAL"
