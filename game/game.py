@@ -321,3 +321,5 @@ while True:
 
     print("\n--- FIN DE LA PARTIDA ---")
     input("Presiona Enter para volver al menú principal...")
+
+    #entrega videogame
