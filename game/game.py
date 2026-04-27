@@ -4,6 +4,7 @@ print(50*"-")
 print("\tBienvenido a CASINO DUOC")
 print(50*"-")
 
+
 while True:
     saldo_inicial = int(input("Antes de empezar a jugar, ingresa la cantidad de dinero con el que entras al casino: $"))
 
