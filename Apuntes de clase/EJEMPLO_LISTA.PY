@@ -11,7 +11,3 @@ for cancion in Favoritos :
 Favoritos.append("Milagros - Milo j")
 
 Favoritos.pop()
-
-
-
-
