@@ -73,6 +73,8 @@ if vida_jefe <= 0:
     print("¡haz derrotado al tercer jefe")
     print("¡felicidades, haz ganado el juego!")
     print("haz derrotado a todos los jefes, haz demostrado ser un gran guerrero")
+    print("juego terminado, el guerrero a vuelto a casa con su familia")
+
     
 
 
