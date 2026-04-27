@@ -56,3 +56,5 @@ Para darle más realismo, utiliza un bucle `for` con `range()` para simular la i
 # Ejemplo de lógica esperada
 for i in range(cantidad):
     print(f"🎫 Imprimiendo boleto {i+1} de {cantidad}...")
+
+    
