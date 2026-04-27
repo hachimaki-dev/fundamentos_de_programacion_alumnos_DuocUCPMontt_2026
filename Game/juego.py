@@ -100,3 +100,4 @@ while juego_iniciado == True:
     elif eleccion_menu_juego == "3":
         print("salir")
         juego_iniciado = False
+#cleado por Julian N, Benjamin C, Rogelio H.
