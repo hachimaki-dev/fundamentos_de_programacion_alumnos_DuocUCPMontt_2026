@@ -1,4 +1,4 @@
-#Un diccionario NO ES UNA LISTA
+7#Un diccionario NO ES UNA LISTA
 
 #estudiantes = ["Benjamín", "Caromona", "Su casita", 19, "+569 89548525", "001D", "Fundamentos de Programacion", "Julian", "Navarro" , "Casita de julian"]
 #
