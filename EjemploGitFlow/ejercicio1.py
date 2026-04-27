@@ -1,0 +1,7 @@
+print("Hola mundo 1")
+print("Hola mundo 2")
+print("Hola mundo 3")
+print("Hola mundo 4")
+print("Hola mundo 5")
+print("Hola mundo 6")
+print("Hola mundo 7")
