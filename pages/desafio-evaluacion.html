@@ -1,50 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
   <title>🔥 Modo Desafío: Evaluación 1</title>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- TailwindCSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            cute: ['Quicksand', 'sans-serif'],
-            code: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            kawaii: {
-              pink:    '#fce4ec',
-              rose:    '#f8bbd0',
-              lilac:   '#e1bee7',
-              mint:    '#c8e6c9',
-              sky:     '#b3e5fc',
-              peach:   '#ffe0b2',
-              cream:   '#fffde7',
-              deep:    '#ad1457',
-              text:    '#4a4a4a',
-              correct: '#4CAF50',
-              wrong:   '#F44336'
-            }
-          },
-          animation: {
-            'bounce-slow': 'bounce 3s infinite',
-            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Vue 3 CDN -->
+<!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   
   <!-- Confetti JS for the end screen -->
@@ -160,9 +127,9 @@
 <body class="min-h-screen flex flex-col relative text-kawaii-text">
 
   <!-- Background decorations -->
-  <div class="bg-shape" style="width:50vw;height:50vw;background:#fce4ec;top:-10%;left:-10%;"></div>
-  <div class="bg-shape" style="width:40vw;height:40vw;background:#e1bee7;bottom:-10%;right:-10%;"></div>
-  <div class="bg-shape" style="width:30vw;height:30vw;background:#c8e6c9;top:40%;left:30%;"></div>
+  <div class="bg-shape" style="width:50vw;height:50vw;background:var(--t-surface-alt);top:-10%;left:-10%;"></div>
+  <div class="bg-shape" style="width:40vw;height:40vw;background:var(--t-shape-4);bottom:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:var(--t-shape-3);top:40%;left:30%;"></div>
 
   <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
     
@@ -616,5 +583,6 @@
 
     app.mount('#app');
   </script>
+  <script src="../js/theme-selector.js"></script>
 </body>
 </html>

@@ -1,47 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
   <title>🔀 Taller: Condicionales if/elif/else — Semana 2</title>
   <meta name="description" content="Taller práctico de condicionales en Python: documentación, ejercicios de selección múltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de código." />
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-
-  <!-- TailwindCSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            cute: ['Quicksand', 'sans-serif'],
-            code: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            kawaii: {
-              pink:    '#fce4ec',
-              rose:    '#f8bbd0',
-              lilac:   '#e1bee7',
-              mint:    '#c8e6c9',
-              sky:     '#b3e5fc',
-              peach:   '#ffe0b2',
-              cream:   '#fffde7',
-              deep:    '#ad1457',
-              text:    '#4a4a4a',
-              correct: '#66bb6a',
-              wrong:   '#ef5350',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Prism.js -->
+<!-- Prism.js -->
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -244,10 +215,10 @@
 <body class="min-h-screen relative overflow-x-hidden">
 
   <!-- Background floating shapes -->
-  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
-  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
-  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
-  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
 
   <!-- Vue App -->
   <div id="app" class="relative z-10">
@@ -491,7 +462,7 @@
           <!-- Left -->
           <div class="match-left"
                :class="{ 'cursor-pointer': !pair.matched, 'opacity-60': pair.matched }"
-               :style="pair.matched ? 'border-color:#66bb6a;background:#e8f5e9' : (selectedLeft && selectedLeft.exIdx === exIdx && selectedLeft.pIdx === pIdx ? 'border-color:#7b1fa2;background:#ede7f6;box-shadow:0 0 0 2px rgba(123,31,162,0.2)' : '')"
+               :style="pair.matched ? 'border-color:var(--t-correct);background:#e8f5e9' : (selectedLeft && selectedLeft.exIdx === exIdx && selectedLeft.pIdx === pIdx ? 'border-color:var(--t-purple); background:var(--t-tag-lilac-bg);box-shadow:0 0 0 2px rgba(123,31,162,0.2)' : '')"
                @click="selectMatchLeft(exIdx, pIdx)"
                v-html="pair.left">
           </div>
@@ -842,5 +813,6 @@
     app.mount('#app');
   </script>
 
+  <script src="../js/theme-selector.js"></script>
 </body>
 </html>

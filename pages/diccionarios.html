@@ -10,8 +10,8 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>📦 Taller: Listas y Ciclo FOR — Python</title>
-  <meta name="description" content="Taller interactivo descubriendo el poder de las Listas y el ciclo FOR para recorrer colecciones de datos." />
+  <title>📚 Taller: Diccionarios en Python</title>
+  <meta name="description" content="Taller interactivo sobre Diccionarios en Python: pares clave-valor, métodos esenciales, recorridos con .items() y ejercicios prácticos." />
 <!-- TailwindCSS -->
 <!-- PrismJS para código -->
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
@@ -74,9 +74,9 @@
     <div class="page-container" style="padding-bottom:0;">
       <div class="page-header">
         <a href="../index.html" class="back-btn mb-4">← Volver al diario</a>
-        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">📦 El Poder de las Listas y FOR</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">📚 Diccionarios en Python</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          ¡Di adiós al procesamiento de a uno! ✨ Es hora de guardar múltiples datos en nuestro primer gran contenedor: <strong>Las Listas</strong>. Para recorrerlas, el compañero perfecto es el ciclo <strong>FOR</strong>.
+          ¡Bienvenid@ al mundo de los pares <strong>clave:valor</strong>! 🔑 Los diccionarios son la estructura más poderosa para organizar datos con etiquetas descriptivas en vez de índices numéricos.
         </p>
       </div>
     </div>
@@ -100,159 +100,147 @@
       
       <!-- Bloque: Problema Inicial -->
       <div class="doc-section">
-        <h2>🧐 El Problema: Datos Aislados</h2>
+        <h2>🧐 El Problema: Datos Sin Contexto</h2>
         <p>
-          Imagina que necesitas procesar las notas de 50 estudiantes. Hasta ahora, tendrías que crear 50 variables (<code>nota1</code>, <code>nota2</code>... <code>nota50</code>) e imprimir cada una manualmente. ¡Eso es una locura, es inescalable y te tomaría horas!
+          Con las listas aprendiste a guardar muchos datos en una sola variable. Pero... ¿y si necesitas saber <strong>a quién pertenece cada dato</strong>? Imagina tener <code>["Ash", 10, "Pueblo Paleta"]</code>. ¿El 10 es edad? ¿Nivel? ¿Pokédex? Sin contexto, tus datos son un rompecabezas sin imagen de referencia.
           <br><br>
-          La solución nace de una necesidad fundamental en programación: <strong>"Tengo enormes cantidades de datos agrupados y necesito procesarlos uno por uno usando las mismas reglas"</strong>.
+          La solución: <strong>"Necesito almacenar datos CON etiquetas descriptivas que me digan exactamente QUÉ representa cada valor"</strong>.
         </p>
       </div>
 
-      <!-- Bloque: Listas e Índices -->
+      <!-- Bloque: Qué es un Diccionario -->
       <div class="doc-section">
-        <h2>📦 Listas y la Alquimia de los Índices</h2>
-        <p>Una lista es el primer "contenedor" o "caja de almacenamiento" profundo que aprenderás a usar. Técnicamente, es una <strong>colección ordenada y modificable</strong> (mutable) de elementos infinitos.</p>
+        <h2>📚 El Diccionario: Tu Base de Datos Personal</h2>
+        <p>Un diccionario es una <strong>colección de pares clave:valor</strong>. Piensa en él como un directorio telefónico: buscas por nombre (clave) y obtienes el número (valor). No necesitas recordar posiciones numéricas.</p>
         
         <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
-          <p class="font-bold text-green-800 mb-1">🔑 El Secreto del Orden: Los Índices</p>
-          <p class="text-sm">Imagina la lista como un tren con vagones numerados. Cada vagón guarda un dato de tu interés, y el número pintado en la puerta de entrada del vagón es su <strong>Índice</strong>. 
-          ¡ATENCIÓN! En Python (y en casi el 90% de los lenguajes de programación del mundo), <strong>siempre empezamos a contar posiciones matemáticas desde el CERO (0)</strong>.</p>
+          <p class="font-bold text-green-800 mb-1">🔑 La Diferencia Clave vs Índice</p>
+          <p class="text-sm">En las <strong>listas</strong> accedes por posición numérica: <code>lista[0]</code>. En los <strong>diccionarios</strong> accedes por etiqueta descriptiva: <code>diccionario["nombre"]</code>. Es como la diferencia entre buscar "el cajón #3" vs buscar "el cajón que dice CALCETINES".</p>
         </div>
 
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3 border border-gray-200">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🔍</span><span>Anatomía Absoluta de los Índices</span></div>
-          <pre class="!mt-0"><code class="language-python"># Lista de Ejemplo con 4 elementos
-pokemones = ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"]
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🔍</span><span>Anatomía de un Diccionario</span></div>
+          <pre class="!mt-0"><code class="language-python"># Creación con llaves { } y pares clave: valor
+personaje = {
+    "nombre": "Ash",
+    "edad": 10,
+    "region": "Kanto",
+    "pokemones": ["Pikachu", "Charizard"]
+}
 
-# Índices positivos (Leyendo de izquierda a derecha):
-# [0] -> "Pikachu"
-# [1] -> "Charmander"
-# [2] -> "Squirtle"
-# [3] -> "Bulbasaur"
+# Acceso por CLAVE (no por índice numérico)
+print(personaje["nombre"])   # Ash
+print(personaje["edad"])     # 10
 
-print(pokemones[1]) # Imprime en consola: Charmander
+# Agregar un par nuevo es directo
+personaje["medallas"] = 8
 
-# ¡Magia pura! Índices negativos giran desde el final (Hacia atrás, de derecha a izquierda)
-# [-1] -> "Bulbasaur"
-# [-2] -> "Squirtle"
-
-print(pokemones[-1]) # Imprime rápidamente sin calcular tamaño: Bulbasaur</code></pre>
+# Modificar un valor existente
+personaje["edad"] = 11</code></pre>
         </div>
 
         <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4 mb-2">
-          <p class="font-bold text-red-800 text-sm">☢️ El Horror del IndexError</p>
-          <p class="text-sm mt-1">Si la lista tiene 4 elementos visuales contables, el máximo índice existente es el 3. Si tú intentas pedir <code>pokemones[4]</code> o <code>pokemones[100]</code>, Python entrará en pánico y el programa colapsará inmediatamente soltando un error fatal: <strong>🚨 IndexError: list index out of range</strong>. Es figurativamente igual a intentar abrir el vagón 10 de un tren que solo tiene la suerte de poseer 4 vagones en pista. Físicamente inalcanzable y rompe el compilador.</p>
+          <p class="font-bold text-red-800 text-sm">☢️ El Horror del KeyError</p>
+          <p class="text-sm mt-1">Si intentas acceder a una clave que NO existe usando corchetes — <code>personaje["novia"]</code> — Python colapsa con un <strong>🚨 KeyError</strong>. Solución segura: usa <code>.get("novia", "No tiene")</code> que devuelve un valor por defecto sin romper nada.</p>
         </div>
       </div>
 
-      <!-- Bloque: Funciones Esenciales -->
+      <!-- Bloque: Métodos Esenciales -->
       <div class="doc-section">
-        <h2>🛠️ Herramientas Fundamentales que DEBES Dominar</h2>
-        <p>Listas de datos huérfanas sin métodos para alterarlas se sienten como una pesada maleta cerrada con llave y olvidada. Adopta y memoriza estas 4 operaciones básicas y reina en Python:</p>
+        <h2>🛠️ Métodos que DEBES Dominar</h2>
+        <p>Un diccionario sin métodos es como un cofre del tesoro sin llave. Memoriza estas operaciones y domina Python:</p>
         
         <div class="space-y-4 mt-4">
-          <!-- 1. len -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
-            <p class="font-bold text-blue-700 font-code text-lg">len(lista)</p>
-            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Es una herramienta de scanner rápida que cuenta y te devuelve contablemente (1,2,3...) la <u>longitud</u> o cantidad total de elementos internos de punta a punta. Nada que ver con buscar índices.</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">tamaño = len(["a", "b", "c"]) # Resultado guardable en variable: 3 elementos</p>
+            <p class="font-bold text-blue-700 font-code text-lg">dict['clave'] = valor</p>
+            <p class="text-sm mt-1"><strong>Agregar o modificar:</strong> Si la clave no existe, la crea. Si ya existe, sobrescribe el valor anterior sin avisar.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">pokedex["Bulbasaur"] = "Planta" # Agrega nuevo par</p>
           </div>
-
-          <!-- 2. append -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
-            <p class="font-bold text-kawaii-deep font-code text-lg">.append(elemento)</p>
-            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Inyecta sin preguntas el elemento, variable o resultado aritmético que le des y lo lanza justo al <u>final del tren numérico</u> de la lista actual (como hacer fila última en el aburrido supermercado).</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">notas.append(7.0) # El glorioso 7.0 se forma último.</p>
+            <p class="font-bold text-kawaii-deep font-code text-lg">.get(clave, default)</p>
+            <p class="text-sm mt-1"><strong>Acceso seguro:</strong> Busca la clave sin riesgo de KeyError. Si no existe, devuelve el valor por defecto que tú elijas.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">nivel = jugador.get("nivel", 1) # Si no tiene nivel, devuelve 1</p>
           </div>
-
-          <!-- 3. insert -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
-            <p class="font-bold text-orange-600 font-code text-lg">.insert(indice_num, elemento)</p>
-            <p class="text-sm mt-1"><strong>¿Qué hace de vital?</strong> Cansado de ir al final, te permite forzar agresivamente la inserción de un elemento en una posición <u>numérica y exacta</u>, empujando pacíficamente a todos los vecinos actuales uno hacia la derecha para crear un espacio vacío y ceder paso.</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.insert(0, "Presidente") # Entra dictatorialmente a rango [0] inicial, el resto decae un sitio.</p>
+            <p class="font-bold text-orange-600 font-code text-lg">.keys() / .values() / .items()</p>
+            <p class="text-sm mt-1"><strong>Los 3 mosqueteros:</strong> <code>.keys()</code> devuelve solo las claves, <code>.values()</code> solo los valores, y <code>.items()</code> devuelve pares (clave, valor) — perfecto para recorrer con for.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">for clave, valor in diccionario.items(): print(clave, valor)</p>
           </div>
-
-          <!-- 4. pop -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
-            <p class="font-bold text-red-600 font-code text-lg">.pop() &nbsp;&nbsp;|&nbsp;&nbsp; .remove("texto_a_buscar")</p>
-            <p class="text-sm mt-1"><strong>¿Qué hacen destructivamente?</strong> <br><code>pop()</code> sin rellenar los paréntesis elimina ciegamente por defecto siempre el <u>último elemento marginal</u> (o recibe un índice para ejecutar allí). <br><code>remove("x")</code> trabaja como buscador policíaco: busca analógicamente el texto o valor exacto interno por caracteres y expulsa sin piedad al primer sospechoso que cruce.</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.pop() # Adiós último.<br>lista.remove("Pikachu") # Busca literalidades despide primeramente a nuestro ratón eléctrico.</p>
+            <p class="font-bold text-red-600 font-code text-lg">del dict['clave'] &nbsp;|&nbsp; .pop('clave')</p>
+            <p class="text-sm mt-1"><strong>Eliminar pares:</strong> <code>del</code> borra directamente. <code>.pop("clave")</code> borra y además te devuelve el valor eliminado.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">del persona["edad"] # Elimina el par edad:valor<br>eliminado = persona.pop("region", "N/A") # Borra y guarda</p>
           </div>
         </div>
       </div>
 
-      <!-- Bloque: While VS For -->
+      <!-- Bloque: Lista vs Diccionario -->
       <div class="doc-section">
-        <h2>⚔️ El Duelo Final Épico: While vs For</h2>
-        <p>¿Cuándo demonios utilizo cada ciclo en una evaluación? La regla y pregunta del millón de dólares descifrada y respondida gráficamente ahora mismo:</p>
+        <h2>⚔️ Lista vs Diccionario: ¿Cuándo Uso Cada Uno?</h2>
+        <p>Esta es la pregunta del millón. La respuesta depende de UNA cosa: ¿necesitas etiquetas o solo posiciones?</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div class="bg-kawaii-pink/40 p-5 rounded-xl border-2 border-kawaii-rose relative overflow-hidden group">
-            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">🔁</div>
-            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">WHILE: El Guardián Eterno</h3>
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">📦</div>
+            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">LISTA: Colección Ordenada</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🛡️</span> <span>Repite un bucle mortal <strong>solo MIENTRAS una validación se cumpla numéricamente</strong>. Al momento de dar falso detiene el infierno automáticamente.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">❓</span> <span><strong>NO sabemos ni nos importa antemano de cuántas iteraciones relativas hablamos</strong> en el reloj.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Uso estrella empresarial de mercado:</strong> Menús interactivos pidiendo selecciones, validación segura e infinita de contraseñas equivocadas de usuario, rogar sistemáticamente reingresar datos vitales hasta captar sensatez útil.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🔢</span> <span>Acceso por <strong>posición numérica</strong>: lista[0], lista[1]...</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">📋</span> <span>Ideal para <strong>colecciones homogéneas</strong>: notas, nombres, precios.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Úsala cuando:</strong> solo necesitas almacenar muchos datos del mismo tipo y recorrerlos en orden.</span></li>
             </ul>
           </div>
           <div class="bg-kawaii-mint/30 p-5 rounded-xl border-2 border-kawaii-mint relative overflow-hidden group">
-            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">🔄</div>
-            <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-kawaii-mint pb-2">FOR: Cazador de Colecciones</h3>
+            <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">📚</div>
+            <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-kawaii-mint pb-2">DICCIONARIO: Pares con Nombre</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🛠️</span> <span>Rastrea y recorre ordenadamente de esquina a esquina, de vagón a vagón, todos los elementos preexistentes inyectables de tu nueva lista maestra sin salirse, sin reescribir.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">⏱️</span> <span><strong>SÍ sabemos a ciencia cierta universal</strong> cuándo este ciclo va terminar matemáticamente su iterado (justo y exactamente en el milisegundo milimétrico en que agote la lectura general del último pasillo o nodo de la lista madre entregada).</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Uso estrella empresarial de rendimiento:</strong> Recorrer las sumas por notas pasivas de 400 estudiantes de base de datos interconectada, cambiar a mayúsculas mil nombres textuales, sumar y analizar listas matemáticas.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🔑</span> <span>Acceso por <strong>clave descriptiva</strong>: dict["nombre"], dict["edad"].</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🗂️</span> <span>Ideal para <strong>datos heterogéneos con contexto</strong>: ficha de estudiante, configuración, perfil.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🎯</span> <span><strong>Úsalo cuando:</strong> cada dato necesita una etiqueta que explique qué representa.</span></li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- Bloque: For directo -->
+      <!-- Bloque: Recorridos del Diccionario -->
       <div class="doc-section">
-        <h2>🚙 Dominando a la bestia FOR: Sus Dos Modos Divinos</h2>
-        <p>El código FOR y sus sub-métodos de desarrollo en pantalla pueden desdoblarse o transmutarse dependiendo la filosofía a resolver. <em>Tú primero debes meditar mentalmente: ¿Solamente requiero LEER datos volátiles o busco activamente re-escribir MANIPULANDO vitalicios datos directos al núcleo de mi lista original maestra de base y que persistan?</em></p>
+        <h2>🚀 Recorriendo Diccionarios: Los 3 Modos</h2>
+        <p>El ciclo <code>for</code> sobre diccionarios tiene 3 modos según lo que necesites extraer: solo claves, solo valores, o ambos.</p>
         
         <div class="bg-white p-5 rounded-xl border shadow-sm my-4">
-          <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Recorrido por VALOR (Directo y Volátil)</p>
-          <p class="text-sm text-gray-700">El modelo catalogado mundialmente como "No me toques". Automáticamente extrae fugaces <strong>copias visuales</strong> de elementos por cada vuelta rotatoria en tu lista central y te permite leerlos por variable pasiva. Es un script hermoso y cortísimo. Intocable para cálculos matemáticos, promedios sumatorios de control y simplemente ver sin modificar.</p>
+          <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Solo CLAVES (por defecto)</p>
+          <p class="text-sm text-gray-700">Por defecto, iterar sobre un diccionario recorre <strong>solo las claves</strong>. Útil cuando necesitas verificar existencia o acceder a valores manualmente.</p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Extracción Visual (Recorrido por Valor)</span></div>
-            <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Recorrido por Claves</span></div>
+            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "Eléctrico", "Charmander": "Fuego", "Squirtle": "Agua"}
 
-# La variable "n" genera un recipiente clon y es una copia efímera del valor.
-for n in mis_notas:
-    print("El profesor ingresó velozmente de base la  nota:", n)
-    
-# Si trato de cambiar arbitrariamente la variable 'n' dentro de las llaves
-# NO MODIFICARÁ PARA NADA la lista profunda y universal.
-# n = 7.0 será un dato al basurero que no altera mis_notas raizales.</code></pre>
+# Por defecto, el for recorre las CLAVES
+for pokemon in pokedex:
+    print(pokemon)
+# Imprime: Pikachu, Charmander, Squirtle
+
+# Equivalente a: for pokemon in pokedex.keys():</code></pre>
           </div>
         </div>
 
         <div class="bg-blue-50/50 p-5 rounded-xl border shadow-sm my-4">
-          <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: Recorrido por ÍNDICES (Posicional Letal)</p>
-          <p class="text-sm text-gray-700">El modo Avanzado. Aquí combinativamente fusionamos nuestra función calculable externa <code>len()</code> con el operador de serie numérica <code>range()</code>. La unión generativa en <code>range(len(lista))</code> paré universalmente la iteración exacta de rangos de tu variable matriz (entregando números base purísimos que transitan desde tu 0, hasta tu 1, y tu respectivo 2 sin saltarse). Rompiendo y logrando penetrar con la llave posicional que te abre la puerta física a reescribir de lleno todo. <strong>Vas, entras, reseteas o alteras un metadato internamente reescribiendo celdas que afectan la raíz madre base.</strong></p>
+          <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: CLAVE + VALOR con .items()</p>
+          <p class="text-sm text-gray-700">El modo más poderoso. Con <code>.items()</code> desempaquetas <strong>clave y valor simultáneamente</strong> en dos variables. Es el patrón estrella para procesar diccionarios.</p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Alteración Posicional del Núcleo y Elementos Base</span></div>
-            <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
-# El método len contaría 3 objetos. Por deducción matemática range(3)
-# arrojará iteración posicional: el 0 pasivo, el 1 continuo, el 2 base.
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Desempaquetado con .items()</span></div>
+            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "Eléctrico", "Charmander": "Fuego"}
 
-for contador_de_posicion in range(len(mis_notas)):
-    # Modificación drástica directa del núcleo matriz usando sus corchetes y llaves vitales: 
-    # Apuntamos localitariamente por uso de índice al elemento [contador_de_posicion].
-    mis_notas[contador_de_posicion] = mis_notas[contador_de_posicion] + 0.1
-
-print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxito masivo inyectado en servidor variables.</code></pre>
+# .items() entrega tuplas (clave, valor) - usamos DOS variables
+for pokemon, tipo in pokedex.items():
+    print(f"{pokemon} es de tipo {tipo}")
+# Imprime: Pikachu es de tipo Eléctrico
+#          Charmander es de tipo Fuego</code></pre>
           </div>
         </div>
       </div>
 
       <div class="doc-section shadow-sm text-center transform hover:-translate-y-1 transition duration-300" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2 class="text-2xl pt-2">🎯 ¡Magia académica asimilada, al campo de batalla!</h2>
-        <p class="max-w-2xl mx-auto pb-2">Ve y ejecuta. Selecciona los botones en formato de pastilla ubicados justo al menú superior (Selección, V o F, Completar...). Caza ese altísimo puntaje perfecto comprobando lúdicamente tu real dominancia con estas reglas y lisonjas divinas matemáticas.</p>
+        <h2 class="text-2xl pt-2">🎯 ¡Diccionarios dominados, a los ejercicios!</h2>
+        <p class="max-w-2xl mx-auto pb-2">Selecciona las pestañas superiores (Selección, V o F, Completar...) y demuestra tu dominio de los diccionarios.</p>
       </div>
-
     </div>
 
     <!-- ═══ SELECCIÓN MÚLTIPLE ═══ -->
@@ -467,46 +455,47 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxit
 
       <!-- Reto Fácil -->
       <div class="reto-card mb-4 border-2 border-green-200">
-        <h3 class="text-xl font-bold text-green-700 mb-2">🟢 Reto Fácil: Ataques de Pikachu</h3>
+        <h3 class="text-xl font-bold text-green-700 mb-2">🟢 Reto Fácil: Pokédex Básica</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Ash olvidó los movimientos de su Pikachu. Revisa la base de datos (tu lista) e imprime sus ataques.
+          Ash quiere registrar a sus primeros 3 Pokémon con su tipo elemental en la Pokédex.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea una lista llamada <code>ataques = ["Impactrueno", "Ataque Rápido", "Rayo", "Cola Férrea"]</code>.</li>
-          <li>Utiliza un ciclo <code>for</code> básico (por valor) para imprimir en consola "Pikachu puede usar: [nombre del ataque]".</li>
-          <li>Al salir del ciclo, usa <code>len()</code> para imprimir un mensaje final que diga: "Pikachu tiene un total de [X] ataques disponibles."</li>
+          <li>Crea un diccionario <code>pokedex = {"Pikachu": "Eléctrico", "Charmander": "Fuego", "Squirtle": "Agua"}</code>.</li>
+          <li>Usa un ciclo <code>for pokemon, tipo in pokedex.items():</code> para iterar.</li>
+          <li>Dentro del ciclo, imprime en consola "El Pokémon [nombre] es de tipo [tipo]".</li>
+          <li>Al salir, usa <code>len()</code> para imprimir "Ash tiene [X] Pokémon registrados".</li>
         </ul>
       </div>
 
       <!-- Reto Medio -->
       <div class="reto-card mb-4 border-2 border-yellow-300">
-        <h3 class="text-xl font-bold text-yellow-600 mb-2">🟡 Reto Medio: El Sombrero Seleccionador</h3>
+        <h3 class="text-xl font-bold text-yellow-600 mb-2">🟡 Reto Medio: Registro de Alumnos</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Es el primer año en Hogwarts y tienes una lista de aspirantes. El Sombrero elegirá su casa dependiendo del tamaño de su nombre.
+          El profesor necesita calcular el promedio de notas de cada alumno a partir de un diccionario que contiene listas de notas.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea una lista <code>alumnos = ["Harry", "Hermione", "Ron", "Draco", "Neville", "Luna"]</code> y otras dos listas vacías: <code>gryffindor = []</code> y <code>slytherin = []</code>.</li>
-          <li>Recorre la lista <code>alumnos</code> con un ciclo <code>for</code>.</li>
-          <li>Dentro del ciclo, evalúa: si el nombre tiene <strong>más de 5 letras</strong> (recuerda que <code>len()</code> también sirve para medir un texto corto), el alumno será inyectado a <code>gryffindor</code> usando <code>.append()</code>. Si tiene 5 letras o menos, irá a <code>slytherin</code>.</li>
-          <li>Imprime ambas listas finales para ver quién quedó en qué casa.</li>
+          <li>Crea el diccionario base: <code>alumnos = {"Ana": [6.5, 7.0, 5.5], "Luis": [4.0, 3.5, 5.0], "Marta": [7.0, 6.8, 6.5]}</code>.</li>
+          <li>Recorre el diccionario con <code>for nombre, notas in alumnos.items():</code>.</li>
+          <li>Dentro del ciclo, calcula el promedio sumando las notas y dividiendo por la cantidad: <code>prom = sum(notas) / len(notas)</code>.</li>
+          <li>Evalúa si el promedio es mayor o igual a 4.0. Imprime "[Nombre] tiene promedio [Prom] - APROBADO" o "REPROBADO".</li>
         </ul>
       </div>
 
       <!-- Reto Medio-Avanzado -->
       <div class="reto-card border-2 border-red-300">
-        <h3 class="text-xl font-bold text-red-700 mb-2">🔴 Reto Avanzado: Ensamblando a los Vengadores</h3>
+        <h3 class="text-xl font-bold text-red-700 mb-2">🔴 Reto Avanzado: Sistema de Inventario RPG</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Thanos se acerca. Nick Fury de Marvel necesita un programa que le permita alistar a los Avengers en la base. Si envía a alguien al frente, debe ser eliminado de la base usando menús.
+          Crea un sistema de inventario para un RPG donde el jugador pueda agregar, ver, modificar y eliminar objetos usando un menú interactivo.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Inicializa tu base <code>vengadores = []</code>.</li>
-          <li>Inicia un ciclo infinito <code>while True:</code> con un menú de opciones numéricas: 1-Agregar Avenger, 2-Mostrar Base y Modificar, 3-Salir.</li>
-          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del héroe y lo agregas al final de la lista. (Pista: <code>.append()</code>)</li>
-          <li><strong>Si es 2:</strong> Recorre la lista por Índices: <code>for i in range(len(vengadores)):</code> e imprime cada héroe junto a su código de posición (Ej: `0 - Iron Man`, `1 - Thor`). Luego permite a Fury poner en mayúsculas a todos los héroes procesando: <code>vengadores[i] = vengadores[i].upper()</code>.</li>
-          <li><strong>Opcional de Destrucción:</strong> Integra la opción de permitir hacer <code>vengadores.pop()</code> si el usuario escribe la palabra secreta "Sacrificar".</li>
+          <li>Inicializa <code>inventario = {}</code> (diccionario vacío).</li>
+          <li>Crea un <code>while True:</code> con un menú numérico: 1-Agregar objeto, 2-Ver inventario, 3-Modificar cantidad, 4-Eliminar objeto, 5-Salir.</li>
+          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del objeto y su cantidad. Guárdalo con <code>inventario[nombre] = cantidad</code>.</li>
+          <li><strong>Si es 2:</strong> Recorre el inventario con <code>.items()</code> y muestra todo en pantalla.</li>
+          <li><strong>Si es 4:</strong> Solicita el nombre del objeto, verifica <code>if nombre in inventario:</code> y elimínalo usando la instrucción <code>del</code> o <code>.pop()</code>.</li>
         </ul>
       </div>
     </div>
@@ -524,7 +513,7 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxit
     <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
   </div>
 
-  <script src="../data/listas-y-for-data.js"></script>
+  <script src="../data/diccionarios-data.js"></script>
   <script src="../js/app.js"></script>
   <script>
     const { createApp } = Vue;
@@ -532,12 +521,12 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxit
       data() {
         return {
           currentSection: 'ref',
-          choiceExercises: typeof listasForChoiceExercises !== 'undefined' ? listasForChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
-          tfExercises: typeof listasForTfExercises !== 'undefined' ? listasForTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
-          errorExercises: typeof listasForErrorExercises !== 'undefined' ? listasForErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
-          completeExercises: typeof listasForCompleteExercises !== 'undefined' ? listasForCompleteExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
-          traceData: typeof listasForTraceExercises !== 'undefined' ? listasForTraceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
-          matchData: typeof listasForMatchExercises !== 'undefined' ? listasForMatchExercises.map(ex => {
+          choiceExercises: typeof dictChoiceExercises !== 'undefined' ? dictChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          tfExercises: typeof dictTfExercises !== 'undefined' ? dictTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          errorExercises: typeof dictErrorExercises !== 'undefined' ? dictErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          completeExercises: typeof dictCompleteExercises !== 'undefined' ? dictCompleteExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          traceData: typeof dictTraceExercises !== 'undefined' ? dictTraceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          matchData: typeof dictMatchExercises !== 'undefined' ? dictMatchExercises.map(ex => {
             const shuffled = [...ex.pairs].map(p => ({ text: p.right, id: p.id, matched: false, wrong: false }));
             for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
             return { ...ex, pairs: ex.pairs.map(p => ({ ...p, matched: false })), shuffledRights: shuffled, allMatched: false };
@@ -602,3 +591,4 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxit
   <script src="../js/theme-selector.js"></script>
 </body>
 </html>
+

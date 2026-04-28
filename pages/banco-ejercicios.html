@@ -1,42 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
   <title>🛒 Banco de Ejercicios — Modo Selección</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            cute: ['Quicksand', 'sans-serif'],
-            code: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            kawaii: {
-              pink:    '#fce4ec',
-              rose:    '#f8bbd0',
-              lilac:   '#e1bee7',
-              mint:    '#c8e6c9',
-              sky:     '#b3e5fc',
-              peach:   '#ffe0b2',
-              cream:   '#fffde7',
-              deep:    '#ad1457',
-              text:    '#4a4a4a',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
   <style>
     body {
@@ -113,8 +88,8 @@
 <body class="min-h-screen flex flex-col relative text-kawaii-text pb-20">
 
   <!-- Background decorations -->
-  <div class="bg-shape" style="width:40vw;height:40vw;background:#b3e5fc;top:-10%;right:-10%;"></div>
-  <div class="bg-shape" style="width:30vw;height:30vw;background:#e1bee7;bottom:10%;left:20%;"></div>
+  <div class="bg-shape" style="width:40vw;height:40vw;background:var(--t-shape-2);top:-10%;right:-10%;"></div>
+  <div class="bg-shape" style="width:30vw;height:30vw;background:var(--t-shape-4);bottom:10%;left:20%;"></div>
 
   <div id="app" class="relative z-10 flex-grow flex flex-col w-full max-w-7xl mx-auto px-4 py-8">
     
@@ -303,5 +278,6 @@
     });
     app.mount('#app');
   </script>
+  <script src="../js/theme-selector.js"></script>
 </body>
 </html>

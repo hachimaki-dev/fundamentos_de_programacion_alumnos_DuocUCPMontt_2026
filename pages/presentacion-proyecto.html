@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Práctico: Aplicaciones de Consola en Python</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --accent-color: #58a6ff;
+            --secondary-accent: #3fb950;
+            --highlight: #d2a8ff;
+            --warning: #ff7b72;
+            --border-color: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 4rem 8rem;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        .slide.prev {
+            transform: translateY(-20px);
+        }
+
+        h1, h2, h3 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.8rem;
+            color: var(--highlight);
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-top: 1rem;
+        }
+
+        p {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        ul {
+            font-size: 1.5rem;
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+        
+        .success {
+            color: var(--secondary-accent);
+        }
+
+        .terminal-block {
+            background-color: #161b22;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .terminal-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: #21262d;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .terminal-header .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .terminal-header .dot:nth-child(1) { background-color: #ff5f56; }
+        .terminal-header .dot:nth-child(2) { background-color: #ffbd2e; }
+        .terminal-header .dot:nth-child(3) { background-color: #27c93f; }
+
+        .terminal-content {
+            margin-top: 20px;
+        }
+        
+        .code-keyword { color: #ff7b72; }
+        .code-string { color: #a5d6ff; }
+        .code-comment { color: #8b949e; font-style: italic; }
+        .code-function { color: #d2a8ff; }
+        .code-operator { color: #c9d1d9; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 1.2rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #161b22;
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.6rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #161b22;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 1rem;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+        
+        .controls:hover {
+            opacity: 1;
+        }
+
+        button {
+            background-color: #21262d;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+            color: #000;
+        }
+
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: #161b22;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .module-badge {
+            display: inline-block;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-color);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            vertical-align: middle;
+            margin-left: 1rem;
+            border: 1px solid var(--accent-color);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .kpi-box {
+            border-left: 4px solid var(--secondary-accent);
+            background-color: rgba(63, 185, 80, 0.05);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1.5rem;
+        }
+        
+        .kpi-title {
+            color: var(--secondary-accent);
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .blinking-cursor::after {
+            content: '█';
+            animation: blink 1s step-start infinite;
+            color: var(--accent-color);
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            font-size: 1.2rem;
+            color: #8b949e;
+            z-index: 100;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Keyboard hint styling */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 4rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: #8b949e;
+            opacity: 0.5;
+            z-index: 99;
+        }
+
+        .icon-box {
+            font-size: 3rem;
+            color: var(--highlight);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="slide-counter" id="slideCounter">1 / X</div>
+    
+    <div class="keyboard-hint">Use flechas <i class="fa-solid fa-arrow-left"></i> <i class="fa-solid fa-arrow-right"></i> para navegar</div>
+
+    <div class="controls">
+        <button id="prevBtn" title="Anterior (Flecha Izquierda)"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="nextBtn" title="Siguiente (Flecha Derecha)"><i class="fa-solid fa-chevron-right"></i></button>
+        <button id="fullscreenBtn" title="Pantalla Completa (F)"><i class="fa-solid fa-expand"></i></button>
+    </div>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="terminal-block" style="background-color: transparent; border: none; box-shadow: none;">
+                <div class="icon-box">
+                    <i class="fa-solid fa-terminal" style="font-size: 5rem;"></i>
+                </div>
+                <h1 class="blinking-cursor">Aplicaciones de Consola en Python</h1>
+                <div class="subtitle">& Documentación Técnica</div>
+                <p style="text-align: center; color: #8b949e;">Guía de Proyecto y Especificación Técnica</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Resumen -->
+        <div class="slide">
+            <h2><i class="fa-solid fa-bullseye"></i> Resumen del Proyecto</h2>
+            <p>El objetivo de este proyecto es que los estudiantes profundicen en conceptos avanzados de Python aplicados a la lógica de programas de terminal (CLI) y traduzcan ese conocimiento técnico en un <span class="highlight">recurso educativo digital</span> (página web).</p>
+            
+            <div class="terminal-block">
+                <div class="terminal-header">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+                <div class="terminal-content">
+                    <span class="code-comment"># Habilidades a desarrollar:</span><br>
+                    - Programación robusta<br>
+                    - Estructuración de datos complejas<br>
+                    - Comunicación técnica (Docs)<br>
+                </div>
+            </div>
+            
+            <p>A continuación se presentan los <span class="success">3 Pilares de Investigación</span>. Cada estudiante deberá elegir un módulo de forma individual para investigar y desarrollar.</p>
+        </div>
+
+        <!-- Slide 3: Modulo 1 -->
+        <div class="slide">
+            <h2>Módulo 1 <span class="module-badge">Algoritmia</span></h2>
+            <h3>Algoritmia y Ordenamiento en Consola</h3>
+            
+            <div class="grid-2">
+                <div>
+                    <p><i class="fa-solid fa-book-open"></i> <strong>Fundamento:</strong><br>
+                    Lógica de comparación y ordenamiento detrás de las funciones nativas.</p>
+                    
+                    <p><i class="fa-solid fa-code"></i> <strong>Requerimiento Técnico:</strong><br>
+                    Comparar el uso de <code>.sort()</code> vs <code>sorted()</code>. <br><br>Implementar una versión simplificada de <em>Bubble Sort</em> o <em>Merge Sort</em> que <span class="highlight">imprima en la terminal cada paso</span> del proceso (visualización por pasos).</p>
+                </div>
+                
+                <div class="terminal-block">
+                    <div class="terminal-header">
+                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                    <div class="terminal-content">
+                        > Iniciando Bubble Sort...<br>
+                        Paso 1: [3, 1, 4, 2] -> Intercambiando 3 y 1<br>
+                        Paso 2: [1, 3, 4, 2] -> 3 y 4 en orden<br>
+                        Paso 3: [1, 3, 4, 2] -> Intercambiando 4 y 2<br>
+                        Resultado parcial: [1, 3, 2, 4]<br>
+                        ...
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-box">
+                <div class="kpi-title"><i class="fa-solid fa-graduation-cap"></i> KPI de Aprendizaje</div>
+                Entender la complejidad básica y la diferencia entre métodos <em>in-place</em> y aquellos que retornan nuevas listas.
+            </div>
+        </div>
+
+        <!-- Slide 4: Modulo 2 -->
+        <div class="slide">
+            <h2>Módulo 2 <span class="module-badge">Manejo de Errores</span></h2>
+            <h3>Gestión de Excepciones</h3>
+            
+            <div class="grid-2">
+                <div>
+                    <p><i class="fa-solid fa-book-open"></i> <strong>Fundamento:</strong><br>
+                    Robustez de software y experiencia de usuario en terminal.</p>
+                    
+                    <p><i class="fa-solid fa-code"></i> <strong>Requerimiento Técnico:</strong><br>
+                    Crear un programa que solicite múltiples inputs y gestione mediante bloques <code>try/except/finally</code> al menos 3 tipos de errores comunes:</p>
+                    <ul>
+                        <li><code>ValueError</code></li>
+                        <li><code>FileNotFoundError</code></li>
+                        <li><code>ZeroDivisionError</code></li>
+                    </ul>
+                </div>
+                
+                <div class="terminal-block">
+                    <div class="terminal-header">
+                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                    <div class="terminal-content">
+                        <span class="code-keyword">try</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;edad <span class="code-operator">=</span> <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"Edad: "</span>))<br>
+                        <span class="code-keyword">except</span> <span class="code-function">ValueError</span>:<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-function">print</span>(<span class="code-string">"❌ Error: Ingresa un número entero."</span>)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-box">
+                <div class="kpi-title"><i class="fa-solid fa-graduation-cap"></i> KPI de Aprendizaje</div>
+                Evitar el "crash" o caída abrupta del programa y proveer feedback útil al usuario.
+            </div>
+        </div>
+
+        <!-- Slide 5: Modulo 3 -->
+        <div class="slide">
+            <h2>Módulo 3 <span class="module-badge">F-Strings</span></h2>
+            <h3>F-Strings y Reportes Profesionales</h3>
+            
+            <div class="grid-2">
+                <div>
+                    <p><i class="fa-solid fa-book-open"></i> <strong>Fundamento:</strong><br>
+                    Formateo avanzado de strings y presentación de datos.</p>
+                    
+                    <p><i class="fa-solid fa-code"></i> <strong>Requerimiento Técnico:</strong><br>
+                    Uso de f-strings para: redondeo de decimales, alineación (izquierda, derecha, centro) y relleno de caracteres.<br><br>El entregable debe ser un generador de <span class="highlight">"Tickets" o "Reportes"</span> perfectamente tabulados.</p>
+                </div>
+                
+                <div class="terminal-block">
+                    <div class="terminal-header">
+                        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                    <div class="terminal-content">
+                        ==================================<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TICKET DE COMPRA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                        ==================================<br>
+                        Item&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Precio<br>
+                        ----------------------------------<br>
+                        Teclado Mec...&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$45.99<br>
+                        Monitor 24"...&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$120.50<br>
+                        ==================================<br>
+                        TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$212.48
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kpi-box">
+                <div class="kpi-title"><i class="fa-solid fa-graduation-cap"></i> KPI de Aprendizaje</div>
+                Dominar el control total sobre la salida de texto en consola sin depender de librerías externas.
+            </div>
+        </div>
+
+        <!-- Slide 6: Web Specifications -->
+        <div class="slide">
+            <h2><i class="fa-solid fa-globe"></i> Especificaciones del Entregable Web</h2>
+            <p>La página web no es solo un adorno; es el <strong>Manual Técnico</strong> del tema elegido.</p>
+            
+            <div class="grid-2" style="align-items: start;">
+                <div>
+                    <h3>🎨 Estética Sugerida</h3>
+                    <p>Basada en terminales (Dark mode, fuentes monoespaciadas tipo JetBrains Mono, Fira Code o Courier).</p>
+                    
+                    <h3>🖱️ Interactividad</h3>
+                    <p>Debe incluir bloques de código resaltados y, de ser posible, una <span class="highlight">simulación visual (vía CSS o texto)</span> de cómo se ve el programa ejecutándose en la terminal.</p>
+                </div>
+                <div>
+                    <h3>📑 Estructura Requerida</h3>
+                    <ul>
+                        <li>Título y Definición del concepto.</li>
+                        <li>Sección <strong>"Antes vs. Después"</strong> (Código ineficiente vs. Código optimizado).</li>
+                        <li>Diagrama de flujo o infografía técnica.</li>
+                        <li>Snippet de código interactivo.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Rubrica -->
+        <div class="slide">
+            <h2><i class="fa-solid fa-list-check"></i> Rúbrica de Evaluación</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Criterio de Éxito</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Lógica Python</strong></td>
+                        <td>El código CLI es funcional, libre de errores y aplica el concepto avanzado correctamente.</td>
+                        <td style="color: var(--secondary-accent); font-weight: bold; text-align: center;">30%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Calidad de la Web</strong></td>
+                        <td>Diseño profesional, responsive y alineado a la estética "hacker/terminal".</td>
+                        <td style="color: var(--secondary-accent); font-weight: bold; text-align: center;">25%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capacidad Expositiva</strong></td>
+                        <td>Explican el "por qué" técnico detrás del código, no solo el "qué".</td>
+                        <td style="color: var(--secondary-accent); font-weight: bold; text-align: center;">25%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentación</strong></td>
+                        <td>Uso correcto de comentarios en Python y HTML limpio.</td>
+                        <td style="color: var(--secondary-accent); font-weight: bold; text-align: center;">20%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="text-align: center; margin-top: 2rem; color: var(--highlight);" class="blinking-cursor">¿Dudas o consultas?</p>
+        </div>
+
+        <!-- Slide 8: Guia Despliegue -->
+        <div class="slide">
+            <h2><i class="fa-brands fa-github"></i> Guía: Cómo subir tu proyecto a la Web</h2>
+            <p>Puedes usar la interfaz de VS Code, o mejor aún, demostrar tus habilidades usando la terminal integrada:</p>
+            
+            <div class="grid-2" style="align-items: start; margin-top: 1.5rem;">
+                <div>
+                    <div class="kpi-box" style="border-left-color: var(--highlight); border-radius: 4px; margin-bottom: 1rem; margin-top: 0;">
+                        <h3 style="color: var(--highlight); font-size: 1.3rem; margin-top: 0;">1. Prepara tu Repositorio</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Crea un repositorio <strong>vacío</strong> en GitHub. Luego abre tu terminal en la carpeta del proyecto e inicializa Git:</p>
+                        <div class="terminal-block" style="padding: 0.8rem; margin-bottom: 0; font-size: 1.1rem; box-shadow: none;">
+                            <span class="code-operator">$</span> <span class="code-function">git</span> init
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-box" style="border-left-color: var(--highlight); border-radius: 4px; margin-bottom: 1rem; margin-top: 0;">
+                        <h3 style="color: var(--highlight); font-size: 1.3rem; margin-top: 0;">2. Prepara tus Archivos</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Añade tus archivos y realiza tu primer guardado (commit):</p>
+                        <div class="terminal-block" style="padding: 0.8rem; margin-bottom: 0; font-size: 1.1rem; box-shadow: none;">
+                            <span class="code-operator">$</span> <span class="code-function">git</span> add .<br>
+                            <span class="code-operator">$</span> <span class="code-function">git</span> commit -m <span class="code-string">"Versión inicial"</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="kpi-box" style="border-left-color: var(--highlight); border-radius: 4px; margin-bottom: 1rem; margin-top: 0;">
+                        <h3 style="color: var(--highlight); font-size: 1.3rem; margin-top: 0;">3. Conecta y Sube a GitHub</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Vincula tu código local con GitHub y sube tu proyecto:</p>
+                        <div class="terminal-block" style="padding: 0.8rem; margin-bottom: 0; font-size: 1.1rem; box-shadow: none;">
+                            <span class="code-operator">$</span> <span class="code-function">git</span> remote add origin &lt;URL-GITHUB&gt;<br>
+                            <span class="code-operator">$</span> <span class="code-function">git</span> branch -M main<br>
+                            <span class="code-operator">$</span> <span class="code-function">git</span> push -u origin main
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-box" style="border-left-color: var(--secondary-accent); background-color: rgba(63, 185, 80, 0.1); border-radius: 4px; margin-top: 0;">
+                        <h3 style="color: var(--secondary-accent); font-size: 1.3rem; margin-top: 0;">4. ¡Activa la Web! 🚀</h3>
+                        <p style="font-size: 1.2rem; margin-bottom: 0;">En tu repositorio de GitHub, ve a <strong>Settings > Pages</strong>. En "Branch", selecciona <strong>"main"</strong> y guarda. ¡Tu link estará listo en breve!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+            const progressBar = document.getElementById('progressBar');
+            const slideCounter = document.getElementById('slideCounter');
+            let currentSlide = 0;
+
+            const updatePresentation = () => {
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'prev');
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else if (index < currentSlide) {
+                        slide.classList.add('prev');
+                    }
+                });
+
+                // Update progress bar
+                const progress = ((currentSlide) / (totalSlides - 1)) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Update counter
+                slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            };
+
+            const nextSlide = () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updatePresentation();
+                }
+            };
+
+            const prevSlide = () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updatePresentation();
+                }
+            };
+
+            // Event listeners for buttons
+            document.getElementById('nextBtn').addEventListener('click', nextSlide);
+            document.getElementById('prevBtn').addEventListener('click', prevSlide);
+            
+            // Fullscreen toggle
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    document.exitFullscreen();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'f' || e.key === 'F') {
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    } else {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+
+            // Initialize
+            updatePresentation();
+        });
+    </script>
+</body>
+</html>

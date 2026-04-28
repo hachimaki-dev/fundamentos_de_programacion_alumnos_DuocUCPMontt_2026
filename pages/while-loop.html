@@ -1,63 +1,58 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
   <title>🔁 Taller: Ciclo while — Python</title>
   <meta name="description" content="Taller interactivo del ciclo while en Python: referencia, selección múltiple, verdadero/falso, unir conceptos, encontrar errores, completar código y trazar código." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: {
-        fontFamily: { cute: ['Quicksand','sans-serif'], code: ['Fira Code','monospace'] },
-        colors: { kawaii: { pink:'#fce4ec', rose:'#f8bbd0', lilac:'#e1bee7', mint:'#c8e6c9', sky:'#b3e5fc', peach:'#ffe0b2', cream:'#fffde7', deep:'#ad1457', text:'#4a4a4a', correct:'#66bb6a', wrong:'#ef5350' }}
-      }}
-    }
-  </script>
-  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <link rel="stylesheet" href="../css/main.css" />
   <style>
     .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
-    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:rgba(255,255,255,0.5); font-family:'Quicksand',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:#4a4a4a; }
-    .section-pill:hover { background:rgba(255,255,255,0.8); }
-    .section-pill.active { background:#f8bbd0; border-color:#f48fb1; color:#ad1457; }
-    .section-pill .pill-count { display:inline-flex; align-items:center; justify-content:center; background:rgba(173,20,87,0.1); color:#ad1457; font-size:0.7rem; font-weight:700; width:1.3rem; height:1.3rem; border-radius:50%; margin-left:0.3rem; }
-    .section-pill.active .pill-count { background:rgba(255,255,255,0.5); }
-    .tf-btn { padding:0.8rem 2rem; border-radius:0.8rem; border:2px solid #e1bee7; background:rgba(255,255,255,0.7); font-family:'Quicksand',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; min-width:140px; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+    .section-pill .pill-count { display:inline-flex; align-items:center; justify-content:center; background:var(--t-accent-bg); color:var(--t-accent); font-size:0.7rem; font-weight:700; width:1.3rem; height:1.3rem; border-radius:50%; margin-left:0.3rem; }
+    .section-pill.active .pill-count { background:var(--t-surface); }
+    .tf-btn { padding:0.8rem 2rem; border-radius:0.8rem; border:2px solid var(--t-glass-border); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; min-width:140px; }
     .tf-btn:hover:not(.disabled) { transform:scale(1.03); }
-    .tf-btn.true-btn:hover:not(.disabled) { background:#c8e6c9; border-color:#66bb6a; }
-    .tf-btn.false-btn:hover:not(.disabled) { background:#ffcdd2; border-color:#ef5350; }
-    .tf-btn.selected-correct { background:#c8e6c9; border-color:#66bb6a; color:#2e7d32; }
-    .tf-btn.selected-wrong { background:#ffcdd2; border-color:#ef5350; color:#c62828; }
-    .tf-btn.reveal-correct { background:#c8e6c9; border-color:#66bb6a; color:#2e7d32; }
+    .tf-btn.true-btn:hover:not(.disabled) { background:var(--t-shape-3); border-color:var(--t-correct); }
+    .tf-btn.false-btn:hover:not(.disabled) { background:var(--t-wrong-bg); border-color:var(--t-wrong); }
+    .tf-btn.selected-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
+    .tf-btn.selected-wrong { background:var(--t-wrong-bg); border-color:var(--t-wrong); color:var(--t-wrong-text); }
+    .tf-btn.reveal-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
     .tf-btn.disabled { cursor:default; opacity:0.7; }
     .match-container { display:grid; grid-template-columns:1fr auto 1fr; gap:0.6rem; align-items:stretch; }
     .match-left,.match-right { padding:0.7rem 1rem; border-radius:0.6rem; font-size:0.9rem; display:flex; align-items:center; }
-    .match-left { background:#f3e5f5; border:2px solid #ce93d8; font-weight:600; justify-content:center; text-align:center; }
-    .match-right { background:rgba(255,255,255,0.7); border:2px solid #e0e0e0; cursor:pointer; transition:all 0.2s ease; }
-    .match-right:hover:not(.matched) { border-color:#f48fb1; background:#fce4ec; }
-    .match-right.selected { border-color:#7b1fa2; background:#ede7f6; box-shadow:0 0 0 2px rgba(123,31,162,0.2); }
-    .match-right.matched { border-color:#66bb6a; background:#e8f5e9; cursor:default; }
-    .match-right.wrong { border-color:#ef5350; background:#ffebee; animation:shake 0.4s ease; }
-    .match-arrow { display:flex; align-items:center; color:#ce93d8; font-size:1.2rem; }
-    .match-arrow.matched { color:#66bb6a; }
+    .match-left { background:var(--t-deep-bg); border:2px solid var(--t-deep-border); font-weight:600; justify-content:center; text-align:center; }
+    .match-right { background:var(--t-surface); border:2px solid var(--t-surface-border); cursor:pointer; transition:all 0.2s ease; }
+    .match-right:hover:not(.matched) { border-color:var(--t-accent); background:var(--t-accent-bg); }
+    .match-right.selected { border-color:var(--t-purple); background:var(--t-tag-lilac-bg); box-shadow:0 0 0 2px rgba(123,31,162,0.2); }
+    .match-right.matched { border-color:var(--t-correct); background:var(--t-correct-bg); cursor:default; }
+    .match-right.wrong { border-color:var(--t-wrong); background:var(--t-wrong-bg); animation:shake 0.4s ease; }
+    .match-arrow { display:flex; align-items:center; color:var(--t-deep-border); font-size:1.2rem; }
+    .match-arrow.matched { color:var(--t-correct); }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
     @media (max-width:640px) { .match-container{grid-template-columns:1fr;gap:0.3rem} .match-arrow{justify-content:center;font-size:1rem;transform:rotate(90deg)} }
-    .score-summary { background:linear-gradient(135deg,#fce4ec,#f3e5f5); border:2px solid #f8bbd0; border-radius:1.2rem; padding:1.5rem; text-align:center; }
-    .score-big { font-size:3rem; font-weight:700; color:#ad1457; line-height:1; }
+    .score-summary { background:var(--t-score-bg); border:2px solid var(--t-score-border); border-radius:1.2rem; padding:1.5rem; text-align:center; }
+    .score-big { font-size:3rem; font-weight:700; color:var(--t-accent); line-height:1; }
   </style>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
-  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
-  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
-  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
-  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
 
   <div id="app" class="relative z-10">
 
@@ -216,7 +211,7 @@ print("Programa terminado")</code></pre>
         </table>
       </div>
 
-      <div class="doc-section" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#a5d6a7;">
+      <div class="doc-section" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
         <h2>🎯 ¡Estás list@! ¡A practicar!</h2>
         <p>Usa los botones de arriba para navegar. Recomendación: Selección → V o F → Unir → Errores → Completar → Trazar 🚀</p>
       </div>
@@ -293,7 +288,7 @@ print("Programa terminado")</code></pre>
       <div v-for="(ex, exIdx) in matchData" :key="'match-'+exIdx" class="card p-6 fade-in-up" :style="{ animationDelay: (exIdx*0.1)+'s' }">
         <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
         <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
-          <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:#66bb6a;background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:#7b1fa2;background:#ede7f6;box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
+          <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:var(--t-correct);background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:var(--t-purple); background:var(--t-tag-lilac-bg);box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
           <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">✓</span><span v-else>→</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
@@ -499,5 +494,6 @@ print("Programa terminado")</code></pre>
     });
     app.mount('#app');
   </script>
+  <script src="../js/theme-selector.js"></script>
 </body>
 </html>

@@ -1,0 +1,380 @@
+/* ============================================================
+   🎨 Theme Engine — CSS Custom Properties
+   ============================================================
+   Each theme defines ~40 semantic variables.
+   Active theme is set via data-theme attribute on <html>.
+   ============================================================ */
+
+/* ─── THEME: Legacy Kawaii (el viejito 🌸) ─── */
+html[data-theme="legacy"] {
+  --t-bg-primary: linear-gradient(135deg, #fce4ec 0%, #e1bee7 30%, #b3e5fc 60%, #c8e6c9 100%);
+  --t-bg-secondary: #fce4ec;
+  --t-surface: rgba(255, 255, 255, 0.82);
+  --t-surface-solid: #ffffff;
+  --t-surface-alt: #fce4ec;
+  --t-surface-hover: rgba(255, 255, 255, 0.95);
+  --t-surface-border: rgba(255, 255, 255, 0.5);
+  --t-glass-bg: rgba(255, 255, 255, 0.82);
+  --t-glass-border: rgba(255, 255, 255, 0.5);
+  --t-accent: #ad1457;
+  --t-accent-hover: #880e4f;
+  --t-accent-subtle: #f8bbd0;
+  --t-accent-bg: rgba(248, 187, 208, 0.4);
+  --t-text: #4a4a4a;
+  --t-text-secondary: rgba(74, 74, 74, 0.6);
+  --t-text-muted: rgba(74, 74, 74, 0.4);
+  --t-text-inverse: #ffffff;
+  --t-shadow: rgba(173, 20, 87, 0.08);
+  --t-shadow-hover: rgba(173, 20, 87, 0.14);
+  --t-radius: 1.2rem;
+  --t-radius-lg: 1.5rem;
+  --t-font-main: 'Quicksand';
+  --t-font-code: 'Fira Code';
+  --t-correct: #66bb6a;
+  --t-correct-bg: #c8e6c9;
+  --t-correct-text: #2e7d32;
+  --t-correct-border: #a5d6a7;
+  --t-wrong: #ef5350;
+  --t-wrong-bg: #ffcdd2;
+  --t-wrong-text: #c62828;
+  --t-wrong-border: #ef9a9a;
+  --t-info-bg: rgba(179, 229, 252, 0.3);
+  --t-info-text: #1565c0;
+  --t-info-border: #90caf9;
+  --t-warning-border: #ffe082;
+  --t-warning-text: #f57f17;
+  --t-tag-lilac-bg: #e1bee7;
+  --t-tag-sky-bg: #b3e5fc;
+  --t-tag-peach-bg: #ffe0b2;
+  --t-tag-cream-bg: #fffde7;
+  --t-code-bg: #2d2d2d;
+  --t-code-text: #ccc;
+  --t-shape-1: #f8bbd0;
+  --t-shape-2: #b3e5fc;
+  --t-shape-3: #c8e6c9;
+  --t-shape-4: #e1bee7;
+  --t-timeline-gradient: linear-gradient(180deg, #f8bbd0, #e1bee7, #b3e5fc);
+  --t-timeline-dot: #f8bbd0;
+  --t-timeline-dot-hover: #ad1457;
+  --t-purple: #7b1fa2;
+  --t-tip-bg: linear-gradient(135deg, #fffde7, #fff9c4);
+  --t-tip-border: #ffe082;
+  --t-deep-bg: linear-gradient(135deg, #e1bee7, #f3e5f5);
+  --t-deep-border: #ce93d8;
+  --t-score-bg: linear-gradient(135deg, #fce4ec, #f3e5f5);
+  --t-score-border: #f8bbd0;
+  /* Bento layout off */
+  --t-layout-mode: timeline;
+}
+
+/* ─── THEME: City Pop Retro-Futurista 🌃 (DEFAULT) ─── */
+html[data-theme="city-pop"],
+html:not([data-theme]) {
+  --t-bg-primary: linear-gradient(45deg, #0d0221 0%, #1a0a3e 30%, #0f2027 60%, #150529 100%);
+  --t-bg-secondary: #0d0221;
+  --t-surface: rgba(255, 255, 255, 0.06);
+  --t-surface-solid: rgba(30, 15, 60, 0.9);
+  --t-surface-alt: rgba(255, 107, 157, 0.08);
+  --t-surface-hover: rgba(255, 255, 255, 0.12);
+  --t-surface-border: rgba(255, 107, 157, 0.25);
+  --t-glass-bg: rgba(255, 255, 255, 0.06);
+  --t-glass-border: rgba(255, 107, 157, 0.25);
+  --t-accent: #ff6b9d;
+  --t-accent-hover: #ff3d7f;
+  --t-accent-subtle: rgba(255, 107, 157, 0.3);
+  --t-accent-bg: rgba(255, 107, 157, 0.15);
+  --t-text: #e8e0f0;
+  --t-text-secondary: rgba(232, 224, 240, 0.65);
+  --t-text-muted: rgba(232, 224, 240, 0.4);
+  --t-text-inverse: #0d0221;
+  --t-shadow: rgba(255, 107, 157, 0.15);
+  --t-shadow-hover: rgba(0, 245, 212, 0.2);
+  --t-radius: 1rem;
+  --t-radius-lg: 1.5rem;
+  --t-font-main: 'Outfit';
+  --t-font-code: 'Fira Code';
+  --t-correct: #00f5d4;
+  --t-correct-bg: rgba(0, 245, 212, 0.15);
+  --t-correct-text: #00f5d4;
+  --t-correct-border: rgba(0, 245, 212, 0.4);
+  --t-wrong: #ff3d7f;
+  --t-wrong-bg: rgba(255, 61, 127, 0.15);
+  --t-wrong-text: #ff6b9d;
+  --t-wrong-border: rgba(255, 61, 127, 0.4);
+  --t-info-bg: rgba(0, 245, 212, 0.08);
+  --t-info-text: #00f5d4;
+  --t-info-border: rgba(0, 245, 212, 0.3);
+  --t-warning-border: rgba(255, 214, 10, 0.4);
+  --t-warning-text: #ffd60a;
+  --t-tag-lilac-bg: rgba(167, 100, 255, 0.25);
+  --t-tag-sky-bg: rgba(0, 245, 212, 0.15);
+  --t-tag-peach-bg: rgba(255, 214, 10, 0.15);
+  --t-tag-cream-bg: rgba(255, 214, 10, 0.1);
+  --t-code-bg: #0a001a;
+  --t-code-text: #e8e0f0;
+  --t-shape-1: rgba(255, 107, 157, 0.15);
+  --t-shape-2: rgba(0, 245, 212, 0.12);
+  --t-shape-3: rgba(167, 100, 255, 0.12);
+  --t-shape-4: rgba(255, 214, 10, 0.1);
+  --t-timeline-gradient: linear-gradient(180deg, #ff6b9d, #a764ff, #00f5d4);
+  --t-timeline-dot: #ff6b9d;
+  --t-timeline-dot-hover: #00f5d4;
+  --t-purple: #a764ff;
+  --t-tip-bg: rgba(255, 214, 10, 0.1);
+  --t-tip-border: rgba(255, 214, 10, 0.35);
+  --t-deep-bg: rgba(167, 100, 255, 0.12);
+  --t-deep-border: rgba(167, 100, 255, 0.35);
+  --t-score-bg: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(167, 100, 255, 0.15));
+  --t-score-border: rgba(255, 107, 157, 0.3);
+  --t-layout-mode: timeline;
+}
+
+/* ─── THEME: Post-Textual Minimalista 📐 ─── */
+html[data-theme="post-textual"] {
+  --t-bg-primary: #0a0a0a;
+  --t-bg-secondary: #0a0a0a;
+  --t-surface: rgba(255, 255, 255, 0.04);
+  --t-surface-solid: #141414;
+  --t-surface-alt: rgba(255, 255, 255, 0.06);
+  --t-surface-hover: rgba(255, 255, 255, 0.08);
+  --t-surface-border: rgba(255, 255, 255, 0.08);
+  --t-glass-bg: rgba(255, 255, 255, 0.04);
+  --t-glass-border: rgba(255, 255, 255, 0.08);
+  --t-accent: #e0e0e0;
+  --t-accent-hover: #ffffff;
+  --t-accent-subtle: rgba(255, 255, 255, 0.12);
+  --t-accent-bg: rgba(255, 255, 255, 0.06);
+  --t-text: #d4d4d4;
+  --t-text-secondary: rgba(212, 212, 212, 0.6);
+  --t-text-muted: rgba(212, 212, 212, 0.35);
+  --t-text-inverse: #0a0a0a;
+  --t-shadow: rgba(0, 0, 0, 0.3);
+  --t-shadow-hover: rgba(0, 0, 0, 0.5);
+  --t-radius: 0.75rem;
+  --t-radius-lg: 1rem;
+  --t-font-main: 'Inter';
+  --t-font-code: 'JetBrains Mono';
+  --t-correct: #4ade80;
+  --t-correct-bg: rgba(74, 222, 128, 0.1);
+  --t-correct-text: #4ade80;
+  --t-correct-border: rgba(74, 222, 128, 0.25);
+  --t-wrong: #f87171;
+  --t-wrong-bg: rgba(248, 113, 113, 0.1);
+  --t-wrong-text: #f87171;
+  --t-wrong-border: rgba(248, 113, 113, 0.25);
+  --t-info-bg: rgba(96, 165, 250, 0.08);
+  --t-info-text: #60a5fa;
+  --t-info-border: rgba(96, 165, 250, 0.2);
+  --t-warning-border: rgba(251, 191, 36, 0.2);
+  --t-warning-text: #fbbf24;
+  --t-tag-lilac-bg: rgba(192, 132, 252, 0.12);
+  --t-tag-sky-bg: rgba(96, 165, 250, 0.12);
+  --t-tag-peach-bg: rgba(251, 191, 36, 0.1);
+  --t-tag-cream-bg: rgba(251, 191, 36, 0.06);
+  --t-code-bg: #000000;
+  --t-code-text: #d4d4d4;
+  --t-shape-1: transparent;
+  --t-shape-2: transparent;
+  --t-shape-3: transparent;
+  --t-shape-4: transparent;
+  --t-timeline-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  --t-timeline-dot: rgba(255, 255, 255, 0.2);
+  --t-timeline-dot-hover: rgba(255, 255, 255, 0.6);
+  --t-purple: #c084fc;
+  --t-tip-bg: rgba(251, 191, 36, 0.06);
+  --t-tip-border: rgba(251, 191, 36, 0.15);
+  --t-deep-bg: rgba(192, 132, 252, 0.06);
+  --t-deep-border: rgba(192, 132, 252, 0.15);
+  --t-score-bg: rgba(255, 255, 255, 0.04);
+  --t-score-border: rgba(255, 255, 255, 0.1);
+  --t-layout-mode: minimal;
+}
+
+/* ─── THEME: Bento Box Moderno 🍱 ─── */
+html[data-theme="bento"] {
+  --t-bg-primary: #f5f0eb;
+  --t-bg-secondary: #ede5db;
+  --t-surface: #ffffff;
+  --t-surface-solid: #ffffff;
+  --t-surface-alt: #f9f5f0;
+  --t-surface-hover: #f0ebe5;
+  --t-surface-border: rgba(0, 0, 0, 0.06);
+  --t-glass-bg: #ffffff;
+  --t-glass-border: rgba(0, 0, 0, 0.06);
+  --t-accent: #1a1a2e;
+  --t-accent-hover: #16213e;
+  --t-accent-subtle: #e8d5c4;
+  --t-accent-bg: rgba(232, 213, 196, 0.4);
+  --t-text: #2d2d2d;
+  --t-text-secondary: rgba(45, 45, 45, 0.6);
+  --t-text-muted: rgba(45, 45, 45, 0.35);
+  --t-text-inverse: #ffffff;
+  --t-shadow: rgba(0, 0, 0, 0.04);
+  --t-shadow-hover: rgba(0, 0, 0, 0.08);
+  --t-radius: 1.5rem;
+  --t-radius-lg: 2rem;
+  --t-font-main: 'DM Sans';
+  --t-font-code: 'Fira Code';
+  --t-correct: #4caf50;
+  --t-correct-bg: #e8f5e9;
+  --t-correct-text: #2e7d32;
+  --t-correct-border: #a5d6a7;
+  --t-wrong: #e53935;
+  --t-wrong-bg: #ffebee;
+  --t-wrong-text: #c62828;
+  --t-wrong-border: #ef9a9a;
+  --t-info-bg: #e8eaf6;
+  --t-info-text: #283593;
+  --t-info-border: #9fa8da;
+  --t-warning-border: #ffe082;
+  --t-warning-text: #e65100;
+  --t-tag-lilac-bg: #f3e8ff;
+  --t-tag-sky-bg: #e0f2fe;
+  --t-tag-peach-bg: #fff3e0;
+  --t-tag-cream-bg: #fffde7;
+  --t-code-bg: #1e1e2e;
+  --t-code-text: #cdd6f4;
+  --t-shape-1: rgba(232, 213, 196, 0.35);
+  --t-shape-2: rgba(196, 220, 232, 0.3);
+  --t-shape-3: rgba(196, 232, 209, 0.3);
+  --t-shape-4: rgba(220, 196, 232, 0.25);
+  --t-timeline-gradient: linear-gradient(180deg, #e8d5c4, #c4dce8, #c4e8d1);
+  --t-timeline-dot: #e8d5c4;
+  --t-timeline-dot-hover: #1a1a2e;
+  --t-purple: #5c6bc0;
+  --t-tip-bg: #fff8e1;
+  --t-tip-border: #ffe082;
+  --t-deep-bg: #f3e8ff;
+  --t-deep-border: #ce93d8;
+  --t-score-bg: linear-gradient(135deg, #f9f5f0, #f3e8ff);
+  --t-score-border: #e8d5c4;
+  --t-layout-mode: bento;
+}
+
+/* ─── Theme Transition ─── */
+html[data-theme] body,
+html:not([data-theme]) body {
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+html[data-theme] .card,
+html[data-theme] .diary-entry,
+html[data-theme] .doc-section,
+html[data-theme] .tag-pill,
+html[data-theme] .option-btn,
+html[data-theme] .search-input,
+html[data-theme] .unit-header,
+html:not([data-theme]) .card,
+html:not([data-theme]) .diary-entry,
+html:not([data-theme]) .doc-section,
+html:not([data-theme]) .tag-pill,
+html:not([data-theme]) .option-btn,
+html:not([data-theme]) .search-input,
+html:not([data-theme]) .unit-header {
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* ─── City Pop Glow Effects ─── */
+html[data-theme="city-pop"] .diary-entry:hover,
+html:not([data-theme]) .diary-entry:hover {
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.2), 0 0 40px rgba(167, 100, 255, 0.1);
+}
+
+html[data-theme="city-pop"] .card:hover,
+html:not([data-theme]) .card:hover {
+  box-shadow: 0 0 15px rgba(0, 245, 212, 0.15), 0 8px 32px rgba(255, 107, 157, 0.1);
+}
+
+html[data-theme="city-pop"] .tag-pill.active,
+html:not([data-theme]) .tag-pill.active {
+  box-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+}
+
+html[data-theme="city-pop"] .search-input:focus,
+html:not([data-theme]) .search-input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2), 0 0 15px rgba(255, 107, 157, 0.1);
+}
+
+/* ─── Post-Textual Minimalism ─── */
+html[data-theme="post-textual"] .bg-shape {
+  display: none;
+}
+
+html[data-theme="post-textual"] .diary-entry::before {
+  opacity: 0.3;
+}
+
+html[data-theme="post-textual"] .diary-header h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+html[data-theme="post-textual"] .entry-emoji {
+  font-size: 2rem;
+}
+
+/* ─── Bento Box Layout: Index page grid ─── */
+html[data-theme="bento"] .timeline {
+  max-width: 900px;
+}
+
+html[data-theme="bento"] .timeline::before {
+  display: none;
+}
+
+html[data-theme="bento"] .unit-body.expanded {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+html[data-theme="bento"] .diary-entry {
+  margin-left: 0;
+  border-radius: var(--t-radius-lg);
+}
+
+html[data-theme="bento"] .diary-entry::before {
+  display: none;
+}
+
+html[data-theme="bento"] .diary-entry:nth-child(4n+1) {
+  background: rgba(232, 213, 196, 0.25);
+}
+
+html[data-theme="bento"] .diary-entry:nth-child(4n+2) {
+  background: rgba(196, 220, 232, 0.25);
+}
+
+html[data-theme="bento"] .diary-entry:nth-child(4n+3) {
+  background: rgba(196, 232, 209, 0.25);
+}
+
+html[data-theme="bento"] .diary-entry:nth-child(4n+4) {
+  background: rgba(220, 196, 232, 0.25);
+}
+
+/* ─── Bento Box Layout: Sub-pages content grid ─── */
+html[data-theme="bento"] .space-y-8 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+html[data-theme="bento"] .space-y-8>*+* {
+  margin-top: 0;
+}
+
+html[data-theme="bento"] .space-y-8>.card:first-child {
+  grid-column: 1 / -1;
+}
+
+/* ─── Bento Card Shadows ─── */
+html[data-theme="bento"] .card {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04), 0 8px 40px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--t-surface-border);
+}
+
+html[data-theme="bento"] .card:hover {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06), 0 12px 50px rgba(0, 0, 0, 0.03);
+}

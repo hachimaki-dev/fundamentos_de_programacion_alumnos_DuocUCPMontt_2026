@@ -6,52 +6,27 @@
   <title>🌸 Diario de Fundamentos de Programación 2026</title>
   <meta name="description" content="Bitácora del curso de Fundamentos de Programación 2026 — ejercicios, documentación y recursos organizados semana a semana." />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="js/theme-engine.js"></script>
 
-  <!-- TailwindCSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            cute: ['Quicksand', 'sans-serif'],
-            code: ['Fira Code', 'monospace'],
-          },
-          colors: {
-            kawaii: {
-              pink:    '#fce4ec',
-              rose:    '#f8bbd0',
-              lilac:   '#e1bee7',
-              mint:    '#c8e6c9',
-              sky:     '#b3e5fc',
-              peach:   '#ffe0b2',
-              cream:   '#fffde7',
-              deep:    '#ad1457',
-              text:    '#4a4a4a',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/utilities.css" />
+  <link rel="stylesheet" href="css/main.css" />
 
   <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
-  <!-- Shared Styles -->
-  <link rel="stylesheet" href="css/main.css" />
+  <!-- Theme Selector UI -->
+  <script src="js/theme-selector.js" defer></script>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
 
   <!-- Background floating shapes -->
-  <div class="bg-shape" style="width:300px;height:300px;background:#f8bbd0;top:10%;left:-5%;"></div>
-  <div class="bg-shape" style="width:200px;height:200px;background:#b3e5fc;top:60%;right:-3%;"></div>
-  <div class="bg-shape" style="width:250px;height:250px;background:#c8e6c9;bottom:5%;left:40%;"></div>
-  <div class="bg-shape" style="width:180px;height:180px;background:#e1bee7;top:30%;right:20%;"></div>
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
 
   <!-- Vue App -->
   <div id="app" class="relative z-10">
@@ -94,13 +69,7 @@
         >
           🐍 Python
         </button>
-        <button 
-          class="tag-pill" 
-          :class="{ active: activeFilter === 'sql' }" 
-          @click="activeFilter = 'sql'"
-        >
-          🗄️ SQL
-        </button>
+
         <button 
           class="tag-pill" 
           :class="{ active: activeFilter === 'flow' }" 
@@ -124,7 +93,7 @@
         <div class="unit-header" @click="ea2Open = !ea2Open">
           <span class="unit-chevron" :class="{ open: ea2Open }">▶</span>
           <span class="unit-badge ea2">EA2</span>
-          <span class="unit-title">Administración de Bases de Datos — Oracle SQL</span>
+          <span class="unit-title">Unidad 2 — Listas y Diccionarios</span>
           <span class="unit-count">{{ ea2Entries.length }} entradas</span>
         </div>
         <div class="unit-body" :class="ea2Open ? 'expanded' : 'collapsed'" :style="ea2Open ? 'max-height:' + (ea2Entries.length * 250) + 'px' : ''">
@@ -231,9 +200,9 @@
     <!-- ─── Footer ─── -->
     <footer class="site-footer">
       <div class="flex flex-col items-center justify-center gap-3">
-        <div class="flex items-center gap-3 bg-white/40 p-3 rounded-2xl border border-white/50 shadow-sm backdrop-blur-sm">
+        <div class="flex items-center gap-3 card p-3 rounded-2xl">
           <a href="https://github.com/hachimaki-dev" target="_blank" rel="noopener noreferrer">
-            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 border-kawaii-rose shadow-md transition-transform hover:scale-110" />
+            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 shadow-md transition-transform hover:scale-110" style="border-color: var(--t-accent-subtle);" />
           </a>
           <div class="text-left leading-tight">
             <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
@@ -263,7 +232,6 @@
             python: 'Python',
             flow: 'Diagramas',
             docs: 'Documentación',
-            sql: 'Oracle SQL',
           },
         };
       },
