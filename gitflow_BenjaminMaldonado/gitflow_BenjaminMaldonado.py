@@ -3,7 +3,3 @@ print("Hola soy el profe")
 print("chao soy el profe")
 print("Hola soy Benja")
 print("Chao")
-
-
-
-bghngjyjjjgbdskjg
