@@ -15,9 +15,7 @@
 
 
 # Ejercicio 2 (59 puntos)
-# Desarrolle un programa en Python que permita gestionar y analizar actividades diarias, calculando el tiempo total dedicado a ellas.
-
-# El programa debe operar mediante un menú de opciones que se repite continuamente hasta que el usuario decida salir.
+# Desarrolle u
 
 # Paso 1: Inicio
 
@@ -79,37 +77,36 @@
 # Uso de un acumulador.
 # Uso de estructuras de repetición (por ejemplo, while o for).
 # Uso de estructuras de decisión (if, elif, else).
-# Mensajes claros, ordenados y comprensibles para el usuario.
-contador = 0
-opciones = 0
-print("registro de actividades diarias")
-print("--menu--")
-print("1. Registrar actividades")
-print("2. Mostrar analisis del tiempo ")
-print("3. Salir")
-opciones = int(input("Ingrese opcion :"))
-while opciones != 3: 
+cantidadactividades = 0
+actividadtiempo = 0
+print("--Registro de actividades diarias--")
+print("1 . Registrar actividades")
+print("2 . Mostrar analisis del tiempo")
+print("3 . Salir del programa")
+opciones = int(input("Ingrese una opcion valida (1 al 3)"))
+while True:
     if opciones == 1:
-        print("ha entrado a registrar actividades")
-        cantidadactividades = int(input("Cantidad de actividades realizadas"))
-    if cantidadactividades >= 3 :
-        print("Iniciando..")
-        print(f"Ha realizado mas o igual de actividades {cantidadactividades}")
-        nombreactividad = input("Como se llama la actividad realizada : ")
-        actividadtiempo = int(input("Cuanto tiempo ha realizado la actividad (en minutos) : "))
-        print(f"el nombre de la actividad realiza es : {nombreactividad} y la cantidad de tiempo realizada en total es {actividadtiempo}")
-    if cantidadactividades < 3 :
-        print("no ha ingresado la cantidad de actividades suficiente")
-        break
+        print("Ha ingresado a registar actividades")
+        activades_realizadas = int(input("Ingrese cuantas actividades ha realizado : "))
+    if activades_realizadas <= 3:
+        print(f"Ha realizado  {activades_realizadas} actividades realizadas")
+        for i in range(activades_realizadas):
+            print(f"--Registrando actividades {i + 1} --")
+            nombreactividad = input("Como se llama la actividad que ha realizado?")
+            tiempo_actual = int(input("Cuanto tiempo ha realizado la actividad?"))
+            actividadtiempo = actividadtiempo + tiempo_actual
+            print(f"Tiempo acumulado total hasta ahora : {actividadtiempo}")
+        else :
+            print("No ha ingresado la cantidad de actividades suficientes (minimo 3)")
     elif opciones == 2:
-        print("ha ingresado al analisis de tiempo")
-        print(f"tiempo acumulado de las actividades realizadas es : {actividadtiempo}")
-    if actividadtiempo >= 180:
-        print("Tiempo diario excedido")
-    else :
-        print("Tiempo diario adecuado")
-    if opciones == 3:
-        print("fin del registro")
+        print("Ha ingresado al analisis de tiempo")
+        print(f"Tiempo realizado {tiempo_actual}")
+        if tiempo_actual >=180:
+            print("Usted ha excedido el tiempo! Descanse.")
+        elif tiempo_actual <=180 :
+            print("Usted no ha excedido el tiempo , tenga cuidado y tome agua")
+    elif opciones == 3:
+        print("--fin del proceso--")
         break
-else :
-    print("ingrese opcion valida")
+    else :
+        print("Ingrese opcion valida!")
