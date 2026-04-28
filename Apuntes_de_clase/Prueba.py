@@ -1,0 +1,1 @@
+## Comprobación del funcionamiento de la interfaz grafica
