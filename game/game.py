@@ -11,19 +11,20 @@ escudo_activo = False
 while vida_jugador > 0 and vida_alien > 0: 
     print("👾======Bienvenido a Batalla Espacial======👾")
     print(f"Turno: {turno}")
-    print(f"Energia: {vida_jugador} Bateria: {bateria_laser}")
+    print(f"Energia: {vida_jugador}")
+    print(f"Bateria: {bateria_laser}")
     print(f"Vida Alien: {vida_alien}")
 
 
-    print("Acciones")
-    print("1. Disparo basico (-20)")
+    print("\n====Acciones====")
+    print("\n1. Disparo basico (-20)")
     print("2. Laser potente (-50)")
     print("3. Reparar (+30)")
     print("4. Activar escudo (-50 bateria, reduce daño enemigo)")
     print("5. Recargar bateria (+10)")
     print("6. Ataque critico (Daño alto)")
 
-    opcion = int(input("Escoge una opcion"))
+    opcion = int(input("Escoge una opcion: "))
 
     if opcion == 1: 
         daño = 20
