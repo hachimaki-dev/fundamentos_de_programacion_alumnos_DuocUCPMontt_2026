@@ -26,7 +26,7 @@ alumno = {
     "estatura" : 1.72
 }
 
-#print(f"  { alumno["hermanos"][0]["nombre"]  }  ")
+#print(f"  { alumno["hermanos"][1]["nombre"]  }  ")
 
 #print(f"{alumno["nombre"]}  {alumno["apellido_1"]}")
 #
