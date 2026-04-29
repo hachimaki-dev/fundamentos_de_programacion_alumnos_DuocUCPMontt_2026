@@ -76,37 +76,54 @@
 # Uso de un contador.
 # Uso de un acumulador.
 # Uso de estructuras de repetición (por ejemplo, while o for).
-# Uso de estructuras de decisión (if, elif, else).
-cantidadactividades = 0
+# Uso de estructuras de decisión (if, elif, else). 
+
+# Inicializamos las variables principales
 actividadtiempo = 0
-print("--Registro de actividades diarias--")
-print("1 . Registrar actividades")
-print("2 . Mostrar analisis del tiempo")
-print("3 . Salir del programa")
-opciones = int(input("Ingrese una opcion valida (1 al 3)"))
-while True:
+opciones = 0 # Valor inicial para que el while pueda comenzar
+
+while opciones != 3:
+    # 1. El menú está ADENTRO del while, así se muestra en cada vuelta
+    print("\n--Registro de actividades diarias--")
+    print("1 . Registrar actividades")
+    print("2 . Mostrar analisis del tiempo")
+    print("3 . Salir del programa")
+    
+    # 2. Pedimos la opción ADENTRO del while para que puedas cambiar de número
+    opciones = int(input("Ingrese una opcion valida (1 al 3): "))
+    
     if opciones == 1:
-        print("Ha ingresado a registar actividades")
-        activades_realizadas = int(input("Ingrese cuantas actividades ha realizado : "))
-    if activades_realizadas <= 3:
-        print(f"Ha realizado  {activades_realizadas} actividades realizadas")
-        for i in range(activades_realizadas):
-            print(f"--Registrando actividades {i + 1} --")
-            nombreactividad = input("Como se llama la actividad que ha realizado?")
-            tiempo_actual = int(input("Cuanto tiempo ha realizado la actividad?"))
-            actividadtiempo = actividadtiempo + tiempo_actual
-            print(f"Tiempo acumulado total hasta ahora : {actividadtiempo}")
-        else :
+        print("\nHa ingresado a registrar actividades")
+        activades_realizadas = int(input("Ingrese cuantas actividades ha realizado: "))
+        
+        # 3. Esta validación ahora está DENTRO de la opción 1 (alineada a la derecha)
+        if activades_realizadas >= 3:
+            print(f"Ha registrado {activades_realizadas} actividades.")
+            
+            for i in range(activades_realizadas):
+                print(f"\n--Registrando actividad {i + 1} --")
+                nombreactividad = input("Como se llama la actividad que ha realizado? ")
+                tiempo_actual = int(input("Cuanto tiempo ha realizado la actividad (en minutos)? "))
+                
+                # Acumulamos el tiempo
+                actividadtiempo = actividadtiempo + tiempo_actual
+                print(f"Tiempo acumulado total hasta ahora: {actividadtiempo}")
+                
+        else: # Este else responde a si las actividades fueron menores a 3
             print("No ha ingresado la cantidad de actividades suficientes (minimo 3)")
+            
     elif opciones == 2:
-        print("Ha ingresado al analisis de tiempo")
-        print(f"Tiempo realizado {tiempo_actual}")
-        if tiempo_actual >=180:
+        print("\nHa ingresado al analisis de tiempo")
+        # 4. Evaluamos la variable 'actividadtiempo' (el total), no el tiempo de una sola actividad
+        print(f"Tiempo total realizado: {actividadtiempo} minutos")
+        
+        if actividadtiempo > 180:
             print("Usted ha excedido el tiempo! Descanse.")
-        elif tiempo_actual <=180 :
+        else: # Si no es mayor a 180, usamos un simple else
             print("Usted no ha excedido el tiempo , tenga cuidado y tome agua")
+            
     elif opciones == 3:
         print("--fin del proceso--")
-        break
-    else :
+        
+    else:
         print("Ingrese opcion valida!")
