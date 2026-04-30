@@ -49,16 +49,44 @@
     }
     
     .error-box {
-      background: #ffebee;
-      color: #c62828;
-      border: 1px solid #ef9a9a;
-      border-radius: 0.5rem;
-      padding: 1rem;
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
       font-family: 'Fira Code', 'Consolas', monospace;
       white-space: pre-wrap;
       font-size: 0.9rem;
-      max-height: 150px;
+      max-height: 200px;
       overflow-y: auto;
+      line-height: 1.6;
+    }
+    .error-box.syntax-error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+    .error-box.logic-error {
+      background: #fff8e1;
+      color: #f57f17;
+      border: 1px solid #ffe082;
+    }
+    .test-results {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+    .test-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .test-badge.pass {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .test-badge.fail {
+      background: #ffebee;
+      color: #c62828;
     }
 
     .level-pills {
@@ -173,8 +201,14 @@
             ></textarea>
           </div>
 
-          <div v-if="errorMessage" class="error-box mb-6 fade-in-up">
-            <strong>❌ Error detectado:</strong><br>{{ errorMessage }}
+          <div v-if="testResults.length" class="test-results fade-in-up">
+            <span v-for="(tr, idx) in testResults" :key="idx" class="test-badge" :class="tr.passed ? 'pass' : 'fail'">
+              {{ tr.passed ? '✅' : '❌' }} Prueba {{ idx + 1 }}
+            </span>
+          </div>
+
+          <div v-if="errorMessage" class="error-box fade-in-up" :class="errorType">
+            {{ errorMessage }}
           </div>
 
           <div class="flex justify-end">
@@ -219,20 +253,18 @@
     const app = createApp({
       data() {
         return {
-          gameState: 'loading', // loading, start, playing, victory
+          gameState: 'loading',
           pyodide: null,
           exercises: speedRunnerExercises,
           currentExerciseIndex: 0,
           userCode: '',
           errorMessage: '',
+          errorType: 'syntax-error',
+          testResults: [],
           isEvaluating: false,
-          
-          // Timer
           startTime: null,
           timerInterval: null,
           elapsedSeconds: 0,
-          
-          // Audio
           successAudio: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3')
         };
       },
@@ -243,10 +275,10 @@
           return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         },
         rank() {
-          if (this.elapsedSeconds <= 1500) return 'S'; // <= 25 mins
-          if (this.elapsedSeconds <= 2400) return 'A'; // <= 40 mins
-          if (this.elapsedSeconds <= 3300) return 'B'; // <= 55 mins
-          if (this.elapsedSeconds <= 4500) return 'C'; // <= 75 mins
+          if (this.elapsedSeconds <= 1500) return 'S';
+          if (this.elapsedSeconds <= 2400) return 'A';
+          if (this.elapsedSeconds <= 3300) return 'B';
+          if (this.elapsedSeconds <= 4500) return 'C';
           return 'D';
         },
         rankClass() {
@@ -254,7 +286,6 @@
         }
       },
       async mounted() {
-        // Load Pyodide on mount
         try {
           this.pyodide = await loadPyodide();
           this.gameState = 'start';
@@ -277,6 +308,8 @@
         loadExercise() {
           this.userCode = this.exercises[this.currentExerciseIndex].initialCode;
           this.errorMessage = '';
+          this.errorType = 'syntax-error';
+          this.testResults = [];
         },
         handleTab(e) {
           if (e.key === 'Tab') {
@@ -284,71 +317,250 @@
             const start = e.target.selectionStart;
             const end = e.target.selectionEnd;
             this.userCode = this.userCode.substring(0, start) + "    " + this.userCode.substring(end);
-            // Move cursor
             this.$nextTick(() => {
               e.target.selectionStart = e.target.selectionEnd = start + 4;
             });
           }
         },
-        async evaluateCode() {
-          this.isEvaluating = true;
-          this.errorMessage = '';
-          const currentEx = this.exercises[this.currentExerciseIndex];
-          
-          let allTestsPassed = true;
 
-          for (let i = 0; i < currentEx.tests.length; i++) {
-            const test = currentEx.tests[i];
-            
-            // Construimos el bloque de código a evaluar
-            // 1. Limpiamos variables globales creadas por el usuario en intentos anteriores para evitar arrastre de estados (excepto las built-ins de Pyodide).
-            // Usaremos un enfoque más simple: correr el setup del test, luego el codigo del user, luego el assert.
-            // Si el user hace cosas destructivas, Pyodide lo permite, pero trataremos de reescribir variables en 'setup'.
-            
-            const pythonScript = `
-${test.setup}
-${this.userCode}
-${test.assert}
-`;
-            try {
-              await this.pyodide.runPythonAsync(pythonScript);
-              // Si no lanza excepción, el test pasó
-            } catch (err) {
-              allTestsPassed = false;
-              // Extraer solo la última línea del error de Python (que suele ser el AssertionError u otro)
-              const errorLines = err.toString().trim().split('\\n');
-              let cleanError = errorLines[errorLines.length - 1];
-              
-              // Simplificar mensajes comunes para los alumnos
-              if (cleanError.includes("SyntaxError")) {
-                cleanError = "❌ Error de Sintaxis: Revisa que no te falten dos puntos (:), comillas, o paréntesis.";
-              } else if (cleanError.includes("IndentationError")) {
-                cleanError = "❌ Error de Indentación: Revisa los espacios al inicio de las líneas dentro del for/while/if.";
-              } else if (cleanError.includes("NameError")) {
-                cleanError = "❌ Error de Nombre: " + cleanError.replace("NameError:", "Usaste una variable que no existe:");
+        /**
+         * Preprocesses student code to handle input() calls.
+         * Removes lines like: var = input(...), var = int(input(...)), var = float(input(...))
+         * ONLY if the variable is in setupVars (i.e., already provided by the test).
+         */
+        preprocessUserCode(code, setupVars) {
+          if (!setupVars || setupVars.length === 0) return code;
+
+          const lines = code.split('\n');
+          const processed = [];
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            let shouldRemove = false;
+
+            for (const varName of setupVars) {
+              // Match patterns: var = input(...), var = int(input(...)), var = float(input(...)), var = str(input(...))
+              const patterns = [
+                new RegExp(`^${varName}\\s*=\\s*input\\s*\\(`),
+                new RegExp(`^${varName}\\s*=\\s*int\\s*\\(\\s*input\\s*\\(`),
+                new RegExp(`^${varName}\\s*=\\s*float\\s*\\(\\s*input\\s*\\(`),
+                new RegExp(`^${varName}\\s*=\\s*str\\s*\\(\\s*input\\s*\\(`),
+                // Also match direct re-assignment of a setup variable to a literal
+                // e.g. nota = 5.5 or nota = "algo"
+                new RegExp(`^${varName}\\s*=\\s*[0-9"'\\[\\{]`)
+              ];
+
+              if (patterns.some(p => p.test(trimmed))) {
+                shouldRemove = true;
+                break;
               }
-              
-              this.errorMessage = "Fallo en la prueba " + (i+1) + ":\\n" + cleanError;
-              
-              // Penalización de tiempo!
-              this.elapsedSeconds += 10; 
-              
-              break; // Detener evaluación de los demás tests si uno falla
+            }
+
+            if (!shouldRemove) {
+              processed.push(line);
             }
           }
 
+          return processed.join('\n');
+        },
+
+        /**
+         * Converts a raw Python error into a friendly, pedagogical message.
+         * Returns { message: string, type: 'syntax-error' | 'logic-error' }
+         */
+        friendlyError(rawError) {
+          const errStr = rawError.toString();
+          // Extract the last meaningful line from the Python traceback
+          const lines = errStr.trim().split('\n');
+          const lastLine = lines[lines.length - 1] || errStr;
+
+          if (errStr.includes('SyntaxError')) {
+            return {
+              message: '💡 Error de Sintaxis: Revisa que no te falten dos puntos (:) al final del if/for/while, comillas sin cerrar, o paréntesis desbalanceados.',
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('IndentationError')) {
+            return {
+              message: '📐 Error de Indentación: El código dentro de un if/for/while debe tener 4 espacios al inicio. Revisa que las líneas internas estén correctamente alineadas.',
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('EOFError')) {
+            return {
+              message: '📥 Usaste input() pero en este entorno no hay teclado. Las variables que necesitas ya están definidas — úsalas directamente sin input().',
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('NameError')) {
+            const match = errStr.match(/name '(\w+)' is not defined/);
+            const varName = match ? match[1] : '(desconocida)';
+            return {
+              message: `🔍 La variable "${varName}" no existe. ¿La escribiste correctamente? Recuerda que Python distingue mayúsculas de minúsculas (ej: "Estado" ≠ "estado").`,
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('TypeError')) {
+            return {
+              message: '🔄 Error de Tipo: Estás mezclando tipos de datos incompatibles. Por ejemplo, no puedes sumar un número con un texto directamente.',
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('KeyError')) {
+            const match = errStr.match(/KeyError:\s*(.+)/);
+            const key = match ? match[1].trim() : '(desconocida)';
+            return {
+              message: `🗝️ La clave ${key} no existe en el diccionario. Revisa que estés usando la clave correcta y con la ortografía exacta.`,
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('IndexError')) {
+            return {
+              message: '📋 Intentaste acceder a una posición que no existe en la lista. Recuerda que las listas empiezan en posición 0.',
+              type: 'syntax-error'
+            };
+          }
+          if (errStr.includes('AssertionError') || errStr.includes('AssertionError') || errStr.includes('AssertError')) {
+            // Extract the custom message from the assert
+            const match = errStr.match(/AssertionError:\s*(.+)/i) || errStr.match(/AssertError:\s*(.+)/i);
+            const detail = match ? match[1].trim() : '';
+            return {
+              message: `⚡ Tu código corrió sin errores, pero el resultado no es el esperado. ${detail}`,
+              type: 'logic-error'
+            };
+          }
+          if (errStr.includes('TIMEOUT')) {
+            return {
+              message: '⏰ Tu código tardó demasiado en ejecutarse. ¿Tienes un bucle while que nunca termina? Revisa que la condición de salida se cumpla en algún momento.',
+              type: 'syntax-error'
+            };
+          }
+
+          // Fallback: show the last line but cleaned up
+          return {
+            message: `⚠️ Error: ${lastLine}`,
+            type: 'syntax-error'
+          };
+        },
+
+        async evaluateCode() {
+          this.isEvaluating = true;
+          this.errorMessage = '';
+          this.errorType = 'syntax-error';
+          this.testResults = [];
+
+          const currentEx = this.exercises[this.currentExerciseIndex];
+          const setupVars = currentEx.setupVars || [];
+          const cleanCode = this.preprocessUserCode(this.userCode, setupVars);
+          const initialCode = currentEx.initialCode || '';
+
+          let allTestsPassed = true;
+          const results = [];
+
+          for (let i = 0; i < currentEx.tests.length; i++) {
+            const test = currentEx.tests[i];
+
+            // Build a Python script that runs everything in an isolated namespace.
+            // _ns is the namespace dict — setup vars, initialCode, and user code
+            // all execute inside _ns so there's zero global leakage.
+            // We use a counter-based timeout to catch infinite loops.
+            const pythonScript = `
+import sys as _sys
+
+_ns = {}
+_setup_code = ${JSON.stringify(test.setup)}
+_init_code = ${JSON.stringify(initialCode)}
+_user_code = ${JSON.stringify(cleanCode)}
+_assert_code = ${JSON.stringify(test.assert)}
+
+# Step 1: Run setup (inject test variables into namespace)
+exec(_setup_code, _ns)
+_ns['_ns'] = _ns  # Make _ns accessible inside exec'd assert code
+
+# Step 2: Run initialCode (reset accumulators like contador_a = 0)
+# Filter out incomplete prompt lines (e.g. "saludo = ") and pure comments
+_init_lines = []
+for _il in _init_code.split('\\n'):
+    _s = _il.strip()
+    if _s == '' or _s.startswith('#'):
+        continue
+    if _s.endswith('= ') or _s.endswith('='):
+        continue
+    _init_lines.append(_il)
+_clean_init = '\\n'.join(_init_lines)
+if _clean_init.strip():
+    exec(_clean_init, _ns)
+
+# Step 3: Inject a loop counter to prevent infinite loops
+_timeout_patch = """
+import sys as _sys
+class _LoopGuard:
+    def __init__(self, limit=500000):
+        self.count = 0
+        self.limit = limit
+    def check(self):
+        self.count += 1
+        if self.count > self.limit:
+            raise RuntimeError("TIMEOUT")
+_guard = _LoopGuard()
+"""
+exec(_timeout_patch, _ns)
+
+# Patch while/for loops in user code to include guard checks
+import re as _re
+_safe_code = _user_code
+# Insert _guard.check() after every 'for ...:' and 'while ...:' line
+_patched_lines = []
+for _line in _safe_code.split('\\n'):
+    _patched_lines.append(_line)
+    _stripped = _line.lstrip()
+    if _stripped.startswith('for ') and _stripped.endswith(':'):
+        _indent = len(_line) - len(_stripped) + 4
+        _patched_lines.append(' ' * _indent + '_guard.check()')
+    elif _stripped.startswith('while ') and _stripped.endswith(':'):
+        _indent = len(_line) - len(_stripped) + 4
+        _patched_lines.append(' ' * _indent + '_guard.check()')
+_safe_code = '\\n'.join(_patched_lines)
+
+# Step 4: Run user code in isolated namespace
+exec(_safe_code, _ns)
+
+# Step 5: Run assertions in the same namespace
+exec(_assert_code, _ns)
+
+# If we get here, test passed
+"PASS"
+`;
+
+            try {
+              await this.pyodide.runPythonAsync(pythonScript);
+              results.push({ passed: true });
+            } catch (err) {
+              allTestsPassed = false;
+              results.push({ passed: false });
+
+              const friendly = this.friendlyError(err);
+              this.errorType = friendly.type;
+              this.errorMessage = `Prueba ${i + 1} de ${currentEx.tests.length}:\n${friendly.message}`;
+
+              // Time penalty
+              this.elapsedSeconds += 10;
+              break;
+            }
+          }
+
+          this.testResults = results;
           this.isEvaluating = false;
 
           if (allTestsPassed) {
             this.triggerSuccess();
           }
         },
+
         triggerSuccess() {
-          // Play sound
           this.successAudio.currentTime = 0;
           this.successAudio.play().catch(e => console.log("Audio autoplay prevented by browser"));
-          
-          // Trigger confetti
+
           confetti({
             particleCount: 100,
             spread: 70,
@@ -356,7 +568,6 @@ ${test.assert}
             colors: ['#f48fb1', '#81c784', '#64b5f6', '#ffb74d']
           });
 
-          // Wait a moment, then next exercise
           setTimeout(() => {
             if (this.currentExerciseIndex < this.exercises.length - 1) {
               this.currentExerciseIndex++;
@@ -369,8 +580,7 @@ ${test.assert}
         finishGame() {
           clearInterval(this.timerInterval);
           this.gameState = 'victory';
-          
-          // Grand Confetti
+
           var duration = 3 * 1000;
           var end = Date.now() + duration;
 
@@ -401,8 +611,6 @@ ${test.assert}
       }
     });
 
-    // Theme Selector Script requires to be loaded after Vue App is mounted if we had to integrate, 
-    // but in this project it seems it runs independently querying the DOM. 
     app.mount('#app');
   </script>
   <script src="../js/theme-selector.js"></script>
