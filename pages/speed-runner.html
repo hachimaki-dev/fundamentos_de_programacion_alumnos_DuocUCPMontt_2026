@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <title>⏱️ Speed Runner: Modo Desafío Python</title>
+  <meta name="description" content="15 ejercicios estilo Codewars para medir tu velocidad y precisión en Python." />
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Pyodide CDN -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    .editor-textarea {
+      width: 100%;
+      min-height: 200px;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      font-size: 1rem;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      border: 2px solid var(--t-glass-border);
+      resize: vertical;
+      outline: none;
+    }
+    .editor-textarea:focus {
+      border-color: var(--t-accent);
+      box-shadow: 0 0 0 3px var(--t-accent-bg);
+    }
+    
+    .timer-display {
+      font-family: 'Courier New', Courier, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .error-box {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .level-pills {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .level-pill {
+      width: 24px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--t-glass-border);
+      transition: all 0.3s ease;
+    }
+    .level-pill.active {
+      background: var(--t-accent);
+      transform: scaleY(1.5);
+    }
+    .level-pill.completed {
+      background: var(--t-correct);
+    }
+
+    .rank-s { color: #fbc02d; text-shadow: 0 0 10px rgba(251, 192, 45, 0.5); }
+    .rank-a { color: #e53935; text-shadow: 0 0 10px rgba(229, 57, 53, 0.5); }
+    .rank-b { color: #1e88e5; text-shadow: 0 0 10px rgba(30, 136, 229, 0.5); }
+    .rank-c { color: #43a047; text-shadow: 0 0 10px rgba(67, 160, 71, 0.5); }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  
+  <div id="app" class="relative z-10 min-h-screen flex flex-col">
+    <div class="page-container flex-grow max-w-4xl mx-auto w-full px-4 pt-6 pb-12">
+      
+      <div class="flex items-center justify-between mb-6">
+        <a href="../index.html" class="back-btn m-0">← Volver al diario</a>
+        <div class="theme-selector-container"></div>
+      </div>
+
+      <!-- ESTADO: CARGANDO PYODIDE -->
+      <div v-if="gameState === 'loading'" class="card p-12 text-center fade-in-up">
+        <div class="text-6xl mb-4 animate-bounce">🐍</div>
+        <h2 class="text-2xl font-bold text-kawaii-deep mb-2">Preparando Entorno de Python...</h2>
+        <p class="text-kawaii-text">Descargando el motor interactivo (WebAssembly). Esto puede tardar unos segundos la primera vez.</p>
+        <div class="mt-6 flex justify-center">
+          <div class="w-8 h-8 border-4 border-kawaii-mint border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </div>
+
+      <!-- ESTADO: INICIO -->
+      <div v-else-if="gameState === 'start'" class="card p-10 text-center fade-in-up border-2 border-kawaii-purple">
+        <div class="text-6xl mb-4">⏱️</div>
+        <h1 class="text-4xl font-bold text-kawaii-deep mb-4">Modo Speed Runner</h1>
+        <p class="text-lg text-kawaii-text mb-6 max-w-xl mx-auto">
+          Enfréntate a 20 desafíos progresivos de Python. Completa el código correctamente lo más rápido que puedas. 
+          <br><br>
+          <strong>⚠️ Advertencia:</strong> Ten cuidado con los bucles infinitos (como <code>while True:</code>), ¡pueden congelar tu navegador!
+        </p>
+        <button @click="startGame" class="tf-btn true-btn text-xl px-10 py-4 !rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+          ¡INICIAR DESAFÍO! 🚀
+        </button>
+      </div>
+
+      <!-- ESTADO: JUGANDO -->
+      <div v-else-if="gameState === 'playing'" class="fade-in-up">
+        <!-- Barra superior: Cronómetro y Progreso -->
+        <div class="flex flex-col md:flex-row justify-between items-center bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-sm border border-gray-100 mb-6 sticky top-4 z-50">
+          <div class="text-3xl font-bold text-kawaii-deep timer-display flex items-center gap-2">
+            ⏱️ {{ formattedTime }}
+          </div>
+          
+          <div class="mt-4 md:mt-0 flex-1 md:mx-8 max-w-md w-full">
+            <div class="flex justify-between text-xs font-bold text-kawaii-text/70 mb-1">
+              <span>Progreso</span>
+              <span>{{ currentExerciseIndex + 1 }} / {{ exercises.length }}</span>
+            </div>
+            <div class="level-pills">
+              <div v-for="(ex, idx) in exercises" :key="ex.id" 
+                   class="level-pill"
+                   :class="{ 'active': idx === currentExerciseIndex, 'completed': idx < currentExerciseIndex }">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta del Ejercicio Actual -->
+        <div class="card p-6 md:p-8 border-t-4" style="border-top-color: var(--t-accent);">
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-12 h-12 rounded-xl bg-kawaii-cream flex items-center justify-center text-xl font-bold text-yellow-800 shrink-0">
+              {{ exercises[currentExerciseIndex].id }}
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-kawaii-deep">{{ exercises[currentExerciseIndex].title }}</h2>
+            </div>
+          </div>
+          
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+            <p class="text-gray-800 text-lg leading-relaxed" v-html="exercises[currentExerciseIndex].description"></p>
+          </div>
+
+          <div class="mb-4 relative">
+            <textarea 
+              v-model="userCode" 
+              class="editor-textarea" 
+              spellcheck="false"
+              @keydown="handleTab"
+              placeholder="# Escribe tu código aquí..."
+            ></textarea>
+          </div>
+
+          <div v-if="errorMessage" class="error-box mb-6 fade-in-up">
+            <strong>❌ Error detectado:</strong><br>{{ errorMessage }}
+          </div>
+
+          <div class="flex justify-end">
+            <button @click="evaluateCode" :disabled="isEvaluating" class="tf-btn true-btn flex items-center gap-2 px-8">
+              <span v-if="isEvaluating" class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span v-else>▶ Evaluar Código</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO: VICTORIA -->
+      <div v-else-if="gameState === 'victory'" class="card p-10 text-center fade-in-up border-4 border-kawaii-mint">
+        <div class="text-8xl mb-6">🏆</div>
+        <h1 class="text-5xl font-bold text-kawaii-deep mb-2">¡Desafío Completado!</h1>
+        <p class="text-xl text-kawaii-text mb-8">Has superado los 20 niveles de Python.</p>
+        
+        <div class="bg-gray-50 rounded-2xl p-6 max-w-md mx-auto mb-8 border border-gray-200 shadow-inner">
+          <p class="text-sm text-gray-500 uppercase tracking-wide font-bold mb-1">Tu Tiempo Total</p>
+          <p class="text-5xl font-bold font-mono text-kawaii-deep mb-4">{{ formattedTime }}</p>
+          
+          <div class="border-t border-gray-200 pt-4">
+            <p class="text-sm text-gray-500 uppercase tracking-wide font-bold mb-1">Rango Obtenido</p>
+            <p class="text-6xl font-black" :class="rankClass">{{ rank }}</p>
+          </div>
+        </div>
+
+        <button @click="resetGame" class="tf-btn px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-bold">
+          🔄 Volver a Jugar
+        </button>
+      </div>
+
+    </div>
+    
+    <footer class="site-footer mt-auto">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+  </div>
+
+  <script src="../data/speed-runner-data.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    const app = createApp({
+      data() {
+        return {
+          gameState: 'loading', // loading, start, playing, victory
+          pyodide: null,
+          exercises: speedRunnerExercises,
+          currentExerciseIndex: 0,
+          userCode: '',
+          errorMessage: '',
+          isEvaluating: false,
+          
+          // Timer
+          startTime: null,
+          timerInterval: null,
+          elapsedSeconds: 0,
+          
+          // Audio
+          successAudio: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3')
+        };
+      },
+      computed: {
+        formattedTime() {
+          const minutes = Math.floor(this.elapsedSeconds / 60);
+          const seconds = this.elapsedSeconds % 60;
+          return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        },
+        rank() {
+          if (this.elapsedSeconds <= 1500) return 'S'; // <= 25 mins
+          if (this.elapsedSeconds <= 2400) return 'A'; // <= 40 mins
+          if (this.elapsedSeconds <= 3300) return 'B'; // <= 55 mins
+          if (this.elapsedSeconds <= 4500) return 'C'; // <= 75 mins
+          return 'D';
+        },
+        rankClass() {
+          return `rank-${this.rank.toLowerCase()}`;
+        }
+      },
+      async mounted() {
+        // Load Pyodide on mount
+        try {
+          this.pyodide = await loadPyodide();
+          this.gameState = 'start';
+        } catch (error) {
+          console.error("Error loading Pyodide:", error);
+          alert("Hubo un error cargando el motor de Python. Revisa tu conexión a internet.");
+        }
+      },
+      methods: {
+        startGame() {
+          this.currentExerciseIndex = 0;
+          this.elapsedSeconds = 0;
+          this.loadExercise();
+          this.gameState = 'playing';
+          this.startTime = Date.now();
+          this.timerInterval = setInterval(() => {
+            this.elapsedSeconds = Math.floor((Date.now() - this.startTime) / 1000);
+          }, 1000);
+        },
+        loadExercise() {
+          this.userCode = this.exercises[this.currentExerciseIndex].initialCode;
+          this.errorMessage = '';
+        },
+        handleTab(e) {
+          if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+            this.userCode = this.userCode.substring(0, start) + "    " + this.userCode.substring(end);
+            // Move cursor
+            this.$nextTick(() => {
+              e.target.selectionStart = e.target.selectionEnd = start + 4;
+            });
+          }
+        },
+        async evaluateCode() {
+          this.isEvaluating = true;
+          this.errorMessage = '';
+          const currentEx = this.exercises[this.currentExerciseIndex];
+          
+          let allTestsPassed = true;
+
+          for (let i = 0; i < currentEx.tests.length; i++) {
+            const test = currentEx.tests[i];
+            
+            // Construimos el bloque de código a evaluar
+            // 1. Limpiamos variables globales creadas por el usuario en intentos anteriores para evitar arrastre de estados (excepto las built-ins de Pyodide).
+            // Usaremos un enfoque más simple: correr el setup del test, luego el codigo del user, luego el assert.
+            // Si el user hace cosas destructivas, Pyodide lo permite, pero trataremos de reescribir variables en 'setup'.
+            
+            const pythonScript = `
+${test.setup}
+${this.userCode}
+${test.assert}
+`;
+            try {
+              await this.pyodide.runPythonAsync(pythonScript);
+              // Si no lanza excepción, el test pasó
+            } catch (err) {
+              allTestsPassed = false;
+              // Extraer solo la última línea del error de Python (que suele ser el AssertionError u otro)
+              const errorLines = err.toString().trim().split('\\n');
+              let cleanError = errorLines[errorLines.length - 1];
+              
+              // Simplificar mensajes comunes para los alumnos
+              if (cleanError.includes("SyntaxError")) {
+                cleanError = "❌ Error de Sintaxis: Revisa que no te falten dos puntos (:), comillas, o paréntesis.";
+              } else if (cleanError.includes("IndentationError")) {
+                cleanError = "❌ Error de Indentación: Revisa los espacios al inicio de las líneas dentro del for/while/if.";
+              } else if (cleanError.includes("NameError")) {
+                cleanError = "❌ Error de Nombre: " + cleanError.replace("NameError:", "Usaste una variable que no existe:");
+              }
+              
+              this.errorMessage = "Fallo en la prueba " + (i+1) + ":\\n" + cleanError;
+              
+              // Penalización de tiempo!
+              this.elapsedSeconds += 10; 
+              
+              break; // Detener evaluación de los demás tests si uno falla
+            }
+          }
+
+          this.isEvaluating = false;
+
+          if (allTestsPassed) {
+            this.triggerSuccess();
+          }
+        },
+        triggerSuccess() {
+          // Play sound
+          this.successAudio.currentTime = 0;
+          this.successAudio.play().catch(e => console.log("Audio autoplay prevented by browser"));
+          
+          // Trigger confetti
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#f48fb1', '#81c784', '#64b5f6', '#ffb74d']
+          });
+
+          // Wait a moment, then next exercise
+          setTimeout(() => {
+            if (this.currentExerciseIndex < this.exercises.length - 1) {
+              this.currentExerciseIndex++;
+              this.loadExercise();
+            } else {
+              this.finishGame();
+            }
+          }, 1500);
+        },
+        finishGame() {
+          clearInterval(this.timerInterval);
+          this.gameState = 'victory';
+          
+          // Grand Confetti
+          var duration = 3 * 1000;
+          var end = Date.now() + duration;
+
+          (function frame() {
+            confetti({
+              particleCount: 5,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0 },
+              colors: ['#f48fb1', '#81c784']
+            });
+            confetti({
+              particleCount: 5,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1 },
+              colors: ['#64b5f6', '#ffb74d']
+            });
+
+            if (Date.now() < end) {
+              requestAnimationFrame(frame);
+            }
+          }());
+        },
+        resetGame() {
+          this.gameState = 'start';
+        }
+      }
+    });
+
+    // Theme Selector Script requires to be loaded after Vue App is mounted if we had to integrate, 
+    // but in this project it seems it runs independently querying the DOM. 
+    app.mount('#app');
+  </script>
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>
