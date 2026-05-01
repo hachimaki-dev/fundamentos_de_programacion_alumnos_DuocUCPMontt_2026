@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algoritmia y Ordenamiento en Consola</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Exo+2:wght@300;600;800;900&display=swap" rel="stylesheet"/>
+
+  <!-- Highlight.js CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+  <!-- Skulpt (Python in browser) -->
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono: ['Space Mono', 'monospace'],
+            display: ['Exo 2', 'sans-serif'],
+          },
+          colors: {
+            acid: '#00FF87',
+            plasma: '#60efff',
+            void: '#060a12',
+            deep: '#0d1526',
+            panel: '#111c30',
+            border: '#1e3a5f',
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'scan': 'scan 3s linear infinite',
+            'pulse-slow': 'pulse 4s ease-in-out infinite',
+            'grid-move': 'gridMove 20s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            scan: {
+              '0%': { top: '0%' },
+              '100%': { top: '100%' },
+            },
+            gridMove: {
+              '0%': { backgroundPosition: '0 0' },
+              '100%': { backgroundPosition: '60px 60px' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #060a12;
+      font-family: 'Exo 2', sans-serif;
+      color: #c9d8f0;
+      overflow-x: hidden;
+    }
+
+    /* Animated grid background */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,135,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,135,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+      z-index: 0;
+      pointer-events: none;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    /* Glitch effect for title */
+    .glitch {
+      position: relative;
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .glitch::before {
+      color: #00FF87;
+      animation: glitch1 3s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+    .glitch::after {
+      color: #60efff;
+      animation: glitch2 3s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: translate(0); }
+      92% { transform: translate(-3px, 1px); }
+      94% { transform: translate(3px, -1px); }
+      96% { transform: translate(-2px, 0); }
+    }
+    @keyframes glitch2 {
+      0%, 88%, 100% { transform: translate(0); }
+      90% { transform: translate(3px, 2px); }
+      93% { transform: translate(-3px, -1px); }
+      96% { transform: translate(2px, 0); }
+    }
+
+    /* Card panels */
+    .card {
+      background: rgba(17, 28, 48, 0.85);
+      border: 1px solid rgba(30, 58, 95, 0.8);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00FF87, #60efff, transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover {
+      border-color: rgba(0,255,135,0.4);
+      box-shadow: 0 0 40px rgba(0,255,135,0.08), 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    /* Section badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,255,135,0.1);
+      border: 1px solid rgba(0,255,135,0.3);
+      color: #00FF87;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Code blocks */
+    .hljs {
+      background: #080f1e !important;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+    .code-wrapper {
+      position: relative;
+    }
+
+    /* Run button */
+    .run-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #00FF87, #00c96a);
+      color: #060a12;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .run-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,255,135,0.4);
+    }
+    .run-btn:active { transform: translateY(0); }
+    .run-btn.running {
+      background: linear-gradient(135deg, #60efff, #0099cc);
+    }
+
+    /* Output console */
+    .console-out {
+      background: #040810;
+      border: 1px solid rgba(96,239,255,0.2);
+      border-radius: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: #60efff;
+      padding: 16px;
+      min-height: 60px;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .console-out .line-swap { color: #00FF87; }
+    .console-out .line-ok { color: #a0c4ff; }
+    .console-out .line-result { color: #ffd166; font-weight: bold; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      background: rgba(0,255,135,0.08);
+      color: #00FF87;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,255,135,0.2);
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(30,58,95,0.5);
+      color: #a0bfe0;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(0,255,135,0.04); }
+
+    /* Complexity bars */
+    .complexity-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .complexity-fill {
+      height: 100%;
+      border-radius: 999px;
+      animation: fillBar 1.5s ease-out forwards;
+    }
+    @keyframes fillBar {
+      from { width: 0%; }
+    }
+
+    /* Bubble Sort visualizer */
+    .bar-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 160px;
+      padding: 0 8px;
+    }
+    .bar {
+      flex: 1;
+      border-radius: 6px 6px 0 0;
+      transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .bar span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: #060a12;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .bar.comparing { box-shadow: 0 0 16px rgba(255, 209, 102, 0.8); }
+    .bar.swapping { box-shadow: 0 0 20px rgba(255, 100, 80, 0.9); }
+    .bar.sorted { box-shadow: 0 0 14px rgba(0,255,135,0.6); }
+
+    /* Concept cards */
+    .concept-card {
+      background: rgba(13, 21, 38, 0.9);
+      border: 1px solid rgba(30,58,95,0.7);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    .concept-card:hover {
+      border-color: rgba(96,239,255,0.4);
+      transform: translateY(-3px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #060a12; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,255,135,0.3); border-radius: 999px; }
+
+    /* Scan line effect */
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,255,135,0.15), transparent);
+      animation: scan 4s linear infinite;
+      pointer-events: none;
+    }
+
+    .section-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 4rem;
+      font-weight: 700;
+      color: rgba(0,255,135,0.06);
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dashed rgba(0,255,135,0.4);
+    }
+    .tooltip::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111c30;
+      border: 1px solid rgba(0,255,135,0.3);
+      color: #00FF87;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 99;
+    }
+    .tooltip:hover::after { opacity: 1; }
+
+    /* copy button */
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,255,135,0.1);
+      border: 1px solid rgba(0,255,135,0.25);
+      color: #00FF87;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(0,255,135,0.2); }
+  </style>
+</head>
+<body>
+
+<!-- Animated background -->
+<div class="grid-bg"></div>
+<div class="glow-orb" style="width:600px;height:600px;background:#00FF87;top:-200px;left:-200px;animation-delay:0s;"></div>
+<div class="glow-orb" style="width:500px;height:500px;background:#60efff;bottom:-150px;right:-150px;animation-delay:-3s;"></div>
+<div class="glow-orb" style="width:400px;height:400px;background:#7c3aed;top:50%;left:50%;animation-delay:-5s;"></div>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ===== HEADER ===== -->
+<header class="relative z-10 pt-16 pb-10 text-center px-4">
+  <div class="animate__animated animate__fadeInDown">
+    <div class="badge mb-6">
+      <span>⚡</span> python · algorithms · sorting
+    </div>
+    <h1 class="glitch text-4xl md:text-6xl font-black tracking-tight text-white mb-4" data-text="Algoritmia y Ordenamiento" style="font-family:'Exo 2',sans-serif; text-shadow: 0 0 40px rgba(0,255,135,0.3);">
+      Algoritmia y Ordenamiento
+    </h1>
+    <p class="text-base md:text-lg font-light text-blue-200 opacity-80 tracking-widest font-mono">EN CONSOLA</p>
+
+    <div class="mt-8 flex justify-center gap-3 flex-wrap">
+      <a href="#intro" class="badge" style="cursor:pointer">🧠 Intro</a>
+      <a href="#metodos" class="badge" style="background:rgba(96,239,255,0.1);border-color:rgba(96,239,255,0.3);color:#60efff">⚙️ Métodos</a>
+      <a href="#comparacion" class="badge" style="background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.3);color:#a78bfa">⚖️ Comparación</a>
+      <a href="#bubble" class="badge" style="background:rgba(255,209,102,0.1);border-color:rgba(255,209,102,0.3);color:#ffd166">🔄 Bubble Sort</a>
+      <a href="#complejidad" class="badge" style="background:rgba(255,100,80,0.1);border-color:rgba(255,100,80,0.3);color:#ff6450">⏱️ Complejidad</a>
+    </div>
+  </div>
+
+  <!-- Decorative line -->
+  <div class="mt-12 flex justify-center items-center gap-4">
+    <div class="h-px w-32 bg-gradient-to-r from-transparent to-green-400 opacity-40"></div>
+    <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+    <div class="h-px w-32 bg-gradient-to-l from-transparent to-cyan-400 opacity-40"></div>
+  </div>
+</header>
+
+<main class="relative z-10 max-w-5xl mx-auto px-4 pb-24 space-y-10">
+
+  <!-- ===== SECTION 1: INTRO ===== -->
+  <section id="intro" data-aos="fade-up">
+    <div class="card p-8">
+      <div class="scan-line"></div>
+      <span class="section-number">01</span>
+      <div class="badge mb-4">🧠 Introducción</div>
+      <h2 class="text-2xl font-extrabold text-white mb-6" style="font-family:'Exo 2',sans-serif;">¿Qué es la Algoritmia?</h2>
+
+      <div class="grid md:grid-cols-3 gap-4 mb-6">
+        <div class="concept-card">
+          <div class="text-2xl mb-2">📐</div>
+          <p class="text-sm text-blue-200 leading-relaxed">La <strong class="text-acid">algoritmia</strong> es la base de la programación: diseña pasos lógicos para resolver problemas.</p>
+        </div>
+        <div class="concept-card">
+          <div class="text-2xl mb-2">📊</div>
+          <p class="text-sm text-blue-200 leading-relaxed">El <strong class="text-plasma">ordenamiento</strong> permite organizar información de menor a mayor, o viceversa.</p>
+        </div>
+        <div class="concept-card">
+          <div class="text-2xl mb-2">🐍</div>
+          <p class="text-sm text-blue-200 leading-relaxed">En Python existen métodos nativos y algoritmos manuales, cada uno con sus ventajas.</p>
+        </div>
+      </div>
+
+      <div class="bg-void rounded-xl p-5 border border-border">
+        <p class="text-sm text-blue-300 mb-3 font-semibold">En esta página aprenderás:</p>
+        <ul class="space-y-2 text-sm text-blue-200">
+          <li class="flex items-center gap-2"><span class="text-acid">▸</span> Cómo funcionan los métodos de ordenamiento en Python</li>
+          <li class="flex items-center gap-2"><span class="text-acid">▸</span> Diferencias entre <code class="text-plasma">.sort()</code> y <code class="text-plasma">sorted()</code></li>
+          <li class="flex items-center gap-2"><span class="text-acid">▸</span> Implementación de Bubble Sort paso a paso</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 2: MÉTODOS ===== -->
+  <section id="metodos" data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">02</span>
+      <div class="badge mb-4" style="background:rgba(96,239,255,0.1);border-color:rgba(96,239,255,0.3);color:#60efff">⚙️ Métodos de Ordenamiento</div>
+      <h2 class="text-2xl font-extrabold text-white mb-8" style="font-family:'Exo 2',sans-serif;">Métodos Nativos de Python</h2>
+
+      <div class="grid md:grid-cols-2 gap-8">
+
+        <!-- .sort() -->
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🔹</span>
+            <h3 class="text-xl font-bold text-acid">.sort()</h3>
+          </div>
+          <p class="text-sm text-blue-200 mb-4 leading-relaxed">
+            El método <code class="text-acid">.sort()</code> ordena una lista <strong>directamente</strong>, modificando su contenido original sin crear una copia.
+          </p>
+
+          <div class="code-wrapper mb-3">
+            <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            <pre><code class="language-python" id="code-sort">numeros = [3, 1, 4, 2]
+numeros.sort()
+print(numeros)  # [1, 2, 3, 4]</code></pre>
+          </div>
+
+          <button class="run-btn mb-4" onclick="runCode('code-sort', 'out-sort', this)">
+            ▶ Ejecutar
+          </button>
+          <div class="console-out" id="out-sort">// Presiona ▶ Ejecutar para ver la salida</div>
+
+          <div class="mt-4 space-y-2">
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-acid">✓</span> Modifica la lista original</div>
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-red-400">✗</span> No retorna un nuevo valor</div>
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-acid">✓</span> Es eficiente</div>
+          </div>
+        </div>
+
+        <!-- sorted() -->
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-2xl">🔹</span>
+            <h3 class="text-xl font-bold text-plasma">sorted()</h3>
+          </div>
+          <p class="text-sm text-blue-200 mb-4 leading-relaxed">
+            La función <code class="text-plasma">sorted()</code> crea una <strong>nueva lista ordenada</strong> sin modificar la original.
+          </p>
+
+          <div class="code-wrapper mb-3">
+            <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            <pre><code class="language-python" id="code-sorted">numeros = [3, 1, 4, 2]
+ordenados = sorted(numeros)
+print(numeros)    # [3, 1, 4, 2]
+print(ordenados)  # [1, 2, 3, 4]</code></pre>
+          </div>
+
+          <button class="run-btn mb-4" onclick="runCode('code-sorted', 'out-sorted', this)">
+            ▶ Ejecutar
+          </button>
+          <div class="console-out" id="out-sorted">// Presiona ▶ Ejecutar para ver la salida</div>
+
+          <div class="mt-4 space-y-2">
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-red-400">✗</span> No modifica la lista original</div>
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-acid">✓</span> Retorna una nueva lista</div>
+            <div class="flex items-center gap-2 text-xs text-blue-300"><span class="text-acid">✓</span> Muy útil para conservar datos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 3: COMPARACIÓN ===== -->
+  <section id="comparacion" data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">03</span>
+      <div class="badge mb-4" style="background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.3);color:#a78bfa">⚖️ Comparación Directa</div>
+      <h2 class="text-2xl font-extrabold text-white mb-6" style="font-family:'Exo 2',sans-serif;">.sort() vs sorted()</h2>
+
+      <div class="overflow-x-auto rounded-xl border border-border">
+        <table>
+          <thead>
+            <tr>
+              <th>Característica</th>
+              <th><code>.sort()</code></th>
+              <th><code>sorted()</code></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-blue-300 font-medium">Modifica original</td>
+              <td><span class="text-acid font-bold font-mono">Sí</span></td>
+              <td><span class="text-red-400 font-bold font-mono">No</span></td>
+            </tr>
+            <tr>
+              <td class="text-blue-300 font-medium">Retorna nueva lista</td>
+              <td><span class="text-red-400 font-bold font-mono">No</span></td>
+              <td><span class="text-acid font-bold font-mono">Sí</span></td>
+            </tr>
+            <tr>
+              <td class="text-blue-300 font-medium">Tipo</td>
+              <td><span class="text-plasma font-mono">Método</span></td>
+              <td><span class="text-plasma font-mono">Función</span></td>
+            </tr>
+            <tr>
+              <td class="text-blue-300 font-medium">Complejidad</td>
+              <td><span class="text-yellow-400 font-mono">O(n log n)</span></td>
+              <td><span class="text-yellow-400 font-mono">O(n log n)</span></td>
+            </tr>
+            <tr>
+              <td class="text-blue-300 font-medium">Conserva datos originales</td>
+              <td><span class="text-red-400 font-bold font-mono">No</span></td>
+              <td><span class="text-acid font-bold font-mono">Sí</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 4: BUBBLE SORT ===== -->
+  <section id="bubble" data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">04</span>
+      <div class="badge mb-4" style="background:rgba(255,209,102,0.1);border-color:rgba(255,209,102,0.3);color:#ffd166">🔄 Bubble Sort</div>
+      <h2 class="text-2xl font-extrabold text-white mb-2" style="font-family:'Exo 2',sans-serif;">Algoritmo Paso a Paso</h2>
+      <p class="text-sm text-blue-300 mb-6 leading-relaxed">Bubble Sort compara elementos consecutivos y los intercambia si están en el orden incorrecto, haciendo que el mayor "burbujee" al final.</p>
+
+      <!-- Visual Bubble Sort -->
+      <div class="bg-void rounded-xl p-6 border border-border mb-6">
+        <div class="flex justify-between items-center mb-4">
+          <p class="text-xs font-mono text-blue-400">VISUALIZADOR INTERACTIVO</p>
+          <div class="flex gap-2">
+            <button onclick="startVisualization()" class="run-btn text-xs px-3 py-2">▶ Visualizar</button>
+            <button onclick="resetVisualization()" class="run-btn text-xs px-3 py-2" style="background:rgba(96,239,255,0.15);color:#60efff;border:1px solid rgba(96,239,255,0.3);">↺ Reset</button>
+          </div>
+        </div>
+
+        <div class="bar-container mb-4" id="bars"></div>
+
+        <div class="text-center text-xs font-mono text-blue-400" id="vis-status">Presiona ▶ Visualizar para comenzar</div>
+
+        <div class="flex justify-center gap-6 mt-4 text-xs font-mono">
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded inline-block" style="background:#ffd166;box-shadow:0 0 6px rgba(255,209,102,0.6)"></span> Comparando</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded inline-block" style="background:#ff6450;box-shadow:0 0 6px rgba(255,100,80,0.6)"></span> Intercambiando</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded inline-block" style="background:#00FF87;box-shadow:0 0 6px rgba(0,255,135,0.6)"></span> Ordenado</span>
+        </div>
+      </div>
+
+      <!-- Code -->
+      <p class="text-sm font-semibold text-blue-300 mb-3">💻 Implementación con Visualización en Consola:</p>
+      <div class="code-wrapper mb-4">
+        <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+        <pre><code class="language-python" id="code-bubble">def bubble_sort_visual(lista):
+    n = len(lista)
+    paso = 1
+    
+    print("Iniciando Bubble Sort...\n")
+    
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            
+            print(f"Paso {paso}: {lista}", end=" ")
+            
+            if lista[j] > lista[j + 1]:
+                print(f"-> Intercambiando {lista[j]} y {lista[j + 1]}")
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+            else:
+                print(f"-> {lista[j]} y {lista[j + 1]} en orden")
+            
+            paso += 1
+        
+        print(f"Resultado parcial: {lista}\n")
+    print("Lista ordenada:", lista)
+
+numeros = [3, 1, 4, 2]
+bubble_sort_visual(numeros)</code></pre>
+      </div>
+
+      <button class="run-btn mb-4" onclick="runCode('code-bubble', 'out-bubble', this)">
+        ▶ Ejecutar en Consola
+      </button>
+      <div class="console-out" id="out-bubble">// Presiona ▶ Ejecutar para ver la salida</div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 5: CÓMO FUNCIONA ===== -->
+  <section id="como" data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">05</span>
+      <div class="badge mb-4">🔍 ¿Cómo Funciona?</div>
+      <h2 class="text-2xl font-extrabold text-white mb-6" style="font-family:'Exo 2',sans-serif;">Mecanismo de Bubble Sort</h2>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="concept-card flex gap-4 items-start">
+          <span class="text-3xl">1️⃣</span>
+          <div>
+            <p class="font-bold text-white mb-1">Recorre la lista</p>
+            <p class="text-sm text-blue-300">Se hacen múltiples pasadas sobre todos los elementos de la lista.</p>
+          </div>
+        </div>
+        <div class="concept-card flex gap-4 items-start">
+          <span class="text-3xl">2️⃣</span>
+          <div>
+            <p class="font-bold text-white mb-1">Compara vecinos</p>
+            <p class="text-sm text-blue-300">En cada paso compara dos elementos consecutivos entre sí.</p>
+          </div>
+        </div>
+        <div class="concept-card flex gap-4 items-start">
+          <span class="text-3xl">3️⃣</span>
+          <div>
+            <p class="font-bold text-white mb-1">Intercambia si hay desorden</p>
+            <p class="text-sm text-blue-300">Si el izquierdo es mayor que el derecho, los intercambia.</p>
+          </div>
+        </div>
+        <div class="concept-card flex gap-4 items-start">
+          <span class="text-3xl">4️⃣</span>
+          <div>
+            <p class="font-bold text-white mb-1">El mayor "sube"</p>
+            <p class="text-sm text-blue-300">Al final de cada pasada, el valor mayor queda al final como una burbuja que sube.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 6: COMPLEJIDAD ===== -->
+  <section id="complejidad" data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">06</span>
+      <div class="badge mb-4" style="background:rgba(255,100,80,0.1);border-color:rgba(255,100,80,0.3);color:#ff6450">⏱️ Complejidad Algorítmica</div>
+      <h2 class="text-2xl font-extrabold text-white mb-8" style="font-family:'Exo 2',sans-serif;">Eficiencia Comparada</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Bubble Sort -->
+        <div class="bg-void rounded-xl p-6 border border-border">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">🐢</span>
+            <div>
+              <h3 class="font-bold text-white">Bubble Sort</h3>
+              <code class="text-red-400 text-sm">O(n²)</code>
+            </div>
+          </div>
+          <div class="complexity-bar mb-4">
+            <div class="complexity-fill" style="width:90%;background:linear-gradient(90deg,#ff6450,#ff9f43);"></div>
+          </div>
+          <ul class="space-y-2 text-xs text-blue-300">
+            <li class="flex items-center gap-2"><span class="text-red-400">▸</span> Lento para listas grandes</li>
+            <li class="flex items-center gap-2"><span class="text-red-400">▸</span> Cuadrático en el peor caso</li>
+            <li class="flex items-center gap-2"><span class="text-acid">▸</span> Útil para aprender conceptos</li>
+          </ul>
+        </div>
+
+        <!-- Nativos -->
+        <div class="bg-void rounded-xl p-6 border border-border">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-3xl">⚡</span>
+            <div>
+              <h3 class="font-bold text-white">.sort() / sorted()</h3>
+              <code class="text-acid text-sm">O(n log n)</code>
+            </div>
+          </div>
+          <div class="complexity-bar mb-4">
+            <div class="complexity-fill" style="width:30%;background:linear-gradient(90deg,#00FF87,#00c96a);"></div>
+          </div>
+          <ul class="space-y-2 text-xs text-blue-300">
+            <li class="flex items-center gap-2"><span class="text-acid">▸</span> Mucho más eficientes</li>
+            <li class="flex items-center gap-2"><span class="text-acid">▸</span> Usan <span class="tooltip" data-tip="Híbrido de Merge Sort y Insertion Sort">Timsort</span></li>
+            <li class="flex items-center gap-2"><span class="text-acid">▸</span> Recomendados en producción</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Comparación rápida -->
+      <div class="mt-6 p-4 rounded-xl border border-border bg-void">
+        <p class="text-xs font-mono text-blue-400 mb-3">COMPARACIÓN VISUAL DE EFICIENCIA (n = 100 elementos)</p>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span class="text-red-400">Bubble Sort O(n²)</span>
+              <span class="text-red-400">~10,000 ops</span>
+            </div>
+            <div class="complexity-bar">
+              <div class="complexity-fill" style="width:95%;background:linear-gradient(90deg,#ff6450,#ff9f43);animation-delay:0.3s"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-mono mb-1">
+              <span class="text-acid">Timsort O(n log n)</span>
+              <span class="text-acid">~664 ops</span>
+            </div>
+            <div class="complexity-bar">
+              <div class="complexity-fill" style="width:15%;background:linear-gradient(90deg,#00FF87,#00c96a);animation-delay:0.5s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 7: IN-PLACE VS NUEVA LISTA ===== -->
+  <section data-aos="fade-up">
+    <div class="card p-8">
+      <span class="section-number">07</span>
+      <div class="badge mb-4">🎯 Concepto Clave</div>
+      <h2 class="text-2xl font-extrabold text-white mb-6" style="font-family:'Exo 2',sans-serif;">In-Place vs Nueva Lista</h2>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-void rounded-xl p-6 border-l-4 border-acid">
+          <p class="text-xs font-mono text-acid mb-2 tracking-widest">IN-PLACE</p>
+          <p class="text-white font-bold text-lg mb-2">.sort()</p>
+          <p class="text-sm text-blue-300 leading-relaxed">Modifica la lista original en memoria. No crea una copia. Ideal cuando no necesitas el estado anterior.</p>
+          <div class="mt-4 text-xs font-mono">
+            <span class="text-blue-500">lista</span> <span class="text-white">→</span> <span class="text-acid">[ordenada]</span><br>
+            <span class="text-gray-600">// misma referencia</span>
+          </div>
+        </div>
+        <div class="bg-void rounded-xl p-6 border-l-4 border-plasma">
+          <p class="text-xs font-mono text-plasma mb-2 tracking-widest">NUEVA LISTA</p>
+          <p class="text-white font-bold text-lg mb-2">sorted()</p>
+          <p class="text-sm text-blue-300 leading-relaxed">Crea una copia ordenada manteniendo el original intacto. Ideal para pipelines de datos o análisis.</p>
+          <div class="mt-4 text-xs font-mono">
+            <span class="text-blue-500">lista</span> <span class="text-white">→</span> <span class="text-gray-500">[original]</span><br>
+            <span class="text-plasma">nueva</span> <span class="text-white">→</span> <span class="text-plasma">[ordenada]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SECTION 8: CONCLUSIÓN ===== -->
+  <section data-aos="fade-up">
+    <div class="card p-8" style="border-color:rgba(0,255,135,0.2);box-shadow:0 0 60px rgba(0,255,135,0.06)">
+      <span class="section-number">08</span>
+      <div class="badge mb-4">🧾 Conclusión</div>
+      <h2 class="text-2xl font-extrabold text-white mb-6" style="font-family:'Exo 2',sans-serif;">¿Cuándo usar cada método?</h2>
+
+      <div class="space-y-4 mb-8">
+        <div class="flex gap-4 items-start p-4 rounded-xl bg-void border border-border">
+          <span class="text-2xl flex-shrink-0">⚡</span>
+          <div>
+            <p class="font-bold text-acid mb-1">Usa .sort()</p>
+            <p class="text-sm text-blue-300">Si quieres eficiencia y no necesitas conservar la lista original. Opera directamente en memoria.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start p-4 rounded-xl bg-void border border-border">
+          <span class="text-2xl flex-shrink-0">🛡️</span>
+          <div>
+            <p class="font-bold text-plasma mb-1">Usa sorted()</p>
+            <p class="text-sm text-blue-300">Si necesitas mantener los datos originales intactos. Perfecto para análisis y transformaciones de datos.</p>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start p-4 rounded-xl bg-void border border-border">
+          <span class="text-2xl flex-shrink-0">📚</span>
+          <div>
+            <p class="font-bold text-yellow-400 mb-1">Bubble Sort</p>
+            <p class="text-sm text-blue-300">Permite entender la lógica del ordenamiento. Excelente para aprender, pero no eficiente para producción con listas grandes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center p-6 rounded-xl" style="background:linear-gradient(135deg,rgba(0,255,135,0.05),rgba(96,239,255,0.05));border:1px solid rgba(0,255,135,0.15)">
+        <p class="text-base text-blue-200 leading-relaxed">
+          Dominar los algoritmos de ordenamiento es el primer paso para comprender cómo las computadoras organizan y procesan información de forma eficiente.
+        </p>
+        <p class="mt-3 text-acid font-mono font-bold tracking-widest text-sm">// HAPPY CODING 🚀</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="relative z-10 text-center py-10 border-t border-border">
+  <p class="font-mono text-xs text-blue-500">Algoritmia y Ordenamiento en Python · Hecho con 💻 y mucho café</p>
+</footer>
+
+<!-- ============================
+     SCRIPTS
+============================= -->
+<script>
+  // ---- Init ----
+  hljs.highlightAll();
+  AOS.init({ duration: 700, once: true, offset: 60 });
+
+  // ---- Canvas particles ----
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function createParticle() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 1.5 + 0.3,
+      speedX: (Math.random() - 0.5) * 0.3,
+      speedY: (Math.random() - 0.5) * 0.3,
+      opacity: Math.random() * 0.5 + 0.1,
+      color: Math.random() > 0.5 ? '0,255,135' : '96,239,255'
+    };
+  }
+
+  for (let i = 0; i < 80; i++) particles.push(createParticle());
+
+  function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
+      ctx.fill();
+      p.x += p.speedX;
+      p.y += p.speedY;
+      if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+        Object.assign(p, createParticle());
+      }
+    });
+    requestAnimationFrame(animateCanvas);
+  }
+  animateCanvas();
+
+  // ---- Copy Code ----
+  function copyCode(btn) {
+    const pre = btn.nextElementSibling;
+    const text = pre.querySelector('code').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ copiado';
+      btn.style.color = '#00FF87';
+      setTimeout(() => { btn.textContent = 'copiar'; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  // ---- Skulpt Python Runner ----
+  function runCode(codeId, outputId, btn) {
+    const code = document.getElementById(codeId).innerText;
+    const outDiv = document.getElementById(outputId);
+    outDiv.innerHTML = '';
+    btn.classList.add('running');
+    btn.textContent = '⟳ Ejecutando...';
+
+    function outf(text) {
+      const line = document.createTextNode(text);
+      outDiv.appendChild(line);
+      // color hints
+      const content = outDiv.innerHTML;
+      outDiv.innerHTML = content
+        .replace(/(Intercambiando[^\n<]*)/g, '<span class="line-swap">$1</span>')
+        .replace(/(en orden[^\n<]*)/g, '<span class="line-ok">$1</span>')
+        .replace(/(Lista ordenada:[^\n<]*)/g, '<span class="line-result">$1</span>')
+        .replace(/(Resultado parcial:[^\n<]*)/g, '<span class="line-result">$1</span>');
+    }
+
+    function builtinRead(x) {
+      if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+        throw "File not found: '" + x + "'";
+      return Sk.builtinFiles["files"][x];
+    }
+
+    Sk.configure({ output: outf, read: builtinRead });
+    const promise = Sk.misceval.asyncToPromise(() =>
+      Sk.importMainWithBody("<stdin>", false, code, true)
+    );
+    promise.then(() => {
+      btn.classList.remove('running');
+      btn.textContent = '▶ Ejecutar';
+    }, err => {
+      outDiv.innerHTML += `<span style="color:#ff6450">\nError: ${err.toString()}</span>`;
+      btn.classList.remove('running');
+      btn.textContent = '▶ Ejecutar';
+    });
+  }
+
+  // ---- Bubble Sort Visualizer ----
+  let visRunning = false;
+  let visData = [7, 3, 9, 1, 5, 8, 2, 6, 4];
+
+  const COLORS = {
+    default: { bg: 'linear-gradient(180deg,#60efff,#0099cc)', label: '#060a12' },
+    comparing: { bg: 'linear-gradient(180deg,#ffd166,#e6a800)', label: '#060a12' },
+    swapping: { bg: 'linear-gradient(180deg,#ff6450,#cc2200)', label: '#fff' },
+    sorted: { bg: 'linear-gradient(180deg,#00FF87,#00a855)', label: '#060a12' },
+  };
+
+  function renderBars(arr, comparing = [], swapping = [], sorted = []) {
+    const container = document.getElementById('bars');
+    const max = Math.max(...arr);
+    container.innerHTML = arr.map((v, i) => {
+      let state = 'default';
+      if (sorted.includes(i)) state = 'sorted';
+      if (comparing.includes(i)) state = 'comparing';
+      if (swapping.includes(i)) state = 'swapping';
+      const c = COLORS[state];
+      const h = Math.max(24, Math.round((v / max) * 140));
+      return `<div class="bar ${state}" style="height:${h}px;background:${c.bg};min-width:28px;" title="${v}">
+        <span style="color:${c.label}">${v}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function startVisualization() {
+    if (visRunning) return;
+    visRunning = true;
+    let arr = [...visData];
+    const n = arr.length;
+    const sortedIdx = [];
+    const status = document.getElementById('vis-status');
+
+    renderBars(arr);
+    await sleep(400);
+
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = 0; j < n - i - 1; j++) {
+        status.textContent = `Comparando posición ${j} (${arr[j]}) y ${j+1} (${arr[j+1]})`;
+        renderBars(arr, [j, j+1], [], sortedIdx);
+        await sleep(500);
+
+        if (arr[j] > arr[j+1]) {
+          status.textContent = `🔁 Intercambiando ${arr[j]} ↔ ${arr[j+1]}`;
+          renderBars(arr, [], [j, j+1], sortedIdx);
+          await sleep(400);
+          [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+          renderBars(arr, [], [j, j+1], sortedIdx);
+          await sleep(350);
+        }
+      }
+      sortedIdx.push(n - 1 - i);
+      renderBars(arr, [], [], sortedIdx);
+      await sleep(300);
+    }
+    sortedIdx.push(0);
+    renderBars(arr, [], [], sortedIdx);
+    status.textContent = `✅ Lista ordenada: [${arr.join(', ')}]`;
+    visRunning = false;
+  }
+
+  function resetVisualization() {
+    visRunning = false;
+    visData = [7, 3, 9, 1, 5, 8, 2, 6, 4];
+    renderBars(visData);
+    document.getElementById('vis-status').textContent = 'Presiona ▶ Visualizar para comenzar';
+  }
+
+  // Initial render
+  resetVisualization();
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
