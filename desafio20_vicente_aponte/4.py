@@ -1,0 +1,6 @@
+suma = 0
+contador = 1
+while contador <= 5:
+    suma = contador + suma
+    contador = contador + 1
+print(suma)
