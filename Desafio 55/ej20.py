@@ -14,7 +14,7 @@ if retiro > lim_max:
     print("Excede límite diario")
 elif retiro > saldo:
     print("Saldo insuficiente")
-elif retiro % 5000 == 0:
+elif retiro % 5000 != 0:
     print("Monto inválido")
 else:
     print("Retiro Exitoso")
