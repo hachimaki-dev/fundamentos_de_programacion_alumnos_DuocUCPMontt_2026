@@ -1,0 +1,6 @@
+print("*****************************************************")
+print("            !!haz subido de nivel¡¡"                  )
+print("tu vida ahora es de 2000hp")
+print("todos tus ataquen ganan un +100 de daño")
+print("haz desbloqueado una nueva habilidad super genkidama")
+print("*****************************************************")
