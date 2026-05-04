@@ -1,5 +1,5 @@
 intentos_fallidos = 0
-clave_user = input("ingrese clave")
+clave_user = input("ingrese clave ")
 if clave_user != "secreto":
     while clave_user != "secreto":
 
