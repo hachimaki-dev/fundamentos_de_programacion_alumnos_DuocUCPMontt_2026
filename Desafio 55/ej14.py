@@ -14,11 +14,9 @@ if asistencia >= 80:
     nota += 0.5
     
     if nota >= 4.0:
-        print ("Aprobado")
-        
+        print ("Aprobado")  
     elif 3.5 <= nota <= 3.9:
         print('Examen')
-    
     else:
         print('Reprobado')
         
