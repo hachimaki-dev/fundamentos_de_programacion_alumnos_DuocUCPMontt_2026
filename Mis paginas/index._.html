@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Rocket Boost Pro</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <!-- Particles -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet"/>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-white overflow-x-hidden">
+
+<div id="app">
+
+<!-- 🔥 NAV -->
+<header class="flex justify-between items-center p-6">
+  <h1 class="text-2xl font-bold text-purple-400">RocketBoost</h1>
+  <button @click="dark = !dark" class="bg-purple-500 px-4 py-2 rounded">
+    Toggle Theme
+  </button>
+</header>
+
+<!-- 🌌 HERO -->
+<section class="relative h-screen flex flex-col justify-center items-center text-center">
+
+  <div id="particles-js" class="absolute w-full h-full top-0 left-0"></div>
+
+  <h1 class="text-5xl font-bold z-10" data-aos="fade-up">
+    Sube de rango en Rocket League como un pro
+  </h1>
+
+  <p class="mt-4 text-gray-300 z-10" data-aos="fade-up">
+    Coaching, boosting y análisis profesional
+  </p>
+
+  <button @click="scrollTo('services')"
+    class="mt-6 px-6 py-3 bg-purple-600 rounded z-10 hover:scale-110 transition">
+    Comenzar ahora
+  </button>
+
+</section>
+
+<!-- 🚀 SERVICIOS -->
+<section id="services" class="p-10">
+  <h2 class="text-3xl mb-6 text-center">Servicios</h2>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <service-card
+      v-for="s in services"
+      :key="s.name"
+      :service="s"
+      @buy="addToCart">
+    </service-card>
+
+  </div>
+</section>
+
+<!-- 💰 CALCULADORA -->
+<section class="p-10 bg-gray-800">
+  <h2 class="text-3xl mb-6 text-center">Calculadora de Boost</h2>
+
+  <div class="max-w-xl mx-auto">
+
+    <select v-model="rankFrom" class="w-full p-2 text-black mb-4">
+      <option v-for="r in ranks">{{r}}</option>
+    </select>
+
+    <select v-model="rankTo" class="w-full p-2 text-black mb-4">
+      <option v-for="r in ranks">{{r}}</option>
+    </select>
+
+    <div class="text-center text-2xl">
+      Precio: ${{ price }}
+    </div>
+
+  </div>
+</section>
+
+<!-- 🏆 CASOS -->
+<section class="p-10">
+  <h2 class="text-3xl text-center mb-6">Casos de éxito</h2>
+
+  <div v-for="c in cases" class="mb-4 bg-gray-800 p-4 rounded">
+    {{c}}
+  </div>
+</section>
+
+<!-- ⭐ TESTIMONIOS -->
+<section class="p-10 bg-gray-800">
+  <h2 class="text-3xl text-center mb-6">Testimonios</h2>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    <div v-for="t in testimonials" class="p-4 bg-gray-700 rounded">
+      ⭐⭐⭐⭐⭐
+      <p>{{t}}</p>
+    </div>
+  </div>
+</section>
+
+<!-- 📊 DASHBOARD -->
+<section class="p-10">
+  <h2 class="text-3xl text-center mb-6">Panel Usuario</h2>
+
+  <div class="max-w-xl mx-auto bg-gray-800 p-6 rounded">
+
+    <input v-model="login" placeholder="Usuario"
+      class="w-full p-2 text-black mb-4">
+
+    <button @click="logged = true"
+      class="bg-purple-600 px-4 py-2 rounded">
+      Login
+    </button>
+
+    <div v-if="logged" class="mt-4">
+      <p>Estado: En progreso</p>
+      <p>Boost: 60%</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- 📩 CONTACTO -->
+<section class="p-10 bg-gray-800">
+  <h2 class="text-3xl text-center mb-6">Contacto</h2>
+
+  <div class="max-w-xl mx-auto">
+
+    <input v-model="form.name" placeholder="Nombre"
+      class="w-full p-2 text-black mb-3">
+
+    <input v-model="form.email" placeholder="Correo"
+      class="w-full p-2 text-black mb-3">
+
+    <textarea v-model="form.msg" placeholder="Mensaje"
+      class="w-full p-2 text-black mb-3"></textarea>
+
+    <button @click="sendForm"
+      class="bg-purple-600 px-4 py-2 rounded">
+      Enviar
+    </button>
+
+  </div>
+</section>
+
+<!-- ⚠️ DISCLAIMER -->
+<footer class="text-center p-6 text-gray-400 text-sm">
+  Este sitio es solo demostrativo. No promueve prácticas que violen los términos del juego.
+</footer>
+
+<!-- 🔔 TOAST -->
+<div v-if="toast"
+  class="fixed bottom-5 right-5 bg-green-500 p-4 rounded">
+  {{toast}}
+</div>
+
+</div>
+
+<!-- 🔧 COMPONENTE -->
+<script>
+const app = Vue.createApp({
+  data() {
+    return {
+      dark: true,
+      rankFrom: "Bronze",
+      rankTo: "Gold",
+      ranks: ["Bronze","Silver","Gold","Platinum","Diamond","Champion","Grand Champion","SSL"],
+      services: [
+        {name:"Boosting", price:15, desc:"Subimos tu cuenta"},
+        {name:"Coaching", price:10, desc:"Entrenamiento 1 a 1"},
+        {name:"Análisis", price:5, desc:"Revisión de partidas"}
+      ],
+      cases: [
+        "DarkShadow | Gold → Champion | Coaching + BakkesMod",
+        "NeoRL | Silver → Diamond | Boosting",
+        "AeroX | Platinum → GC | Coaching"
+      ],
+      testimonials: [
+        "Subí rapidísimo!",
+        "Muy profesional",
+        "Recomendado 100%"
+      ],
+      form: {name:"",email:"",msg:""},
+      toast: "",
+      login: "",
+      logged: false,
+      cart: []
+    }
+  },
+  computed:{
+    price(){
+      return (this.ranks.indexOf(this.rankTo) - this.ranks.indexOf(this.rankFrom)) * 20
+    }
+  },
+  methods:{
+    scrollTo(id){
+      document.getElementById(id).scrollIntoView({behavior:"smooth"})
+    },
+    addToCart(s){
+      this.cart.push(s)
+      this.toast = "Agregado al carrito"
+      setTimeout(()=>this.toast="",2000)
+    },
+    sendForm(){
+      if(!this.form.name || !this.form.email){
+        this.toast="Completa los campos"
+      } else {
+        this.toast="Mensaje enviado 🚀"
+      }
+      setTimeout(()=>this.toast="",2000)
+    }
+  }
+})
+
+app.component('service-card',{
+  props:['service'],
+  template:`
+  <div class="bg-white/10 backdrop-blur p-6 rounded hover:scale-105 transition">
+    <h3 class="text-xl mb-2">{{service.name}}</h3>
+    <p>{{service.desc}}</p>
+    <p class="mt-2 font-bold">$ {{service.price}}</p>
+    <button @click="$emit('buy', service)"
+      class="mt-3 bg-purple-600 px-4 py-2 rounded">
+      Comprar
+    </button>
+  </div>
+  `
+})
+
+app.mount("#app")
+
+AOS.init()
+
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 80 },
+    size: { value: 3 },
+    move: { speed: 1 },
+    line_linked: { enable: true }
+  }
+})
+</script>
+
+</body>
+</html>

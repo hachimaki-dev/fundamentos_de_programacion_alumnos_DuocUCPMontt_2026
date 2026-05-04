@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaiña y Núñez | Reclutamiento y Operaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0e11;
+            --mapbox-blue: #4264fb;
+            --text-main: #ffffff;
+            --text-secondary: #8a8f98;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --naranja: #FF5A00;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(11, 14, 17, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .logo { font-weight: 800; font-size: 1.1rem; }
+        nav a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; margin-left: 20px; transition: 0.3s; }
+        nav a:hover { color: var(--text-main); }
+
+        .section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+        .tag { color: var(--mapbox-blue); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { font-size: 2.5rem; margin: 10px 0 40px 0; font-weight: 800; }
+
+        /* SECCIÓN CARRERAS */
+        .grid-carreras { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { 
+            border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; 
+            transition: 0.3s; background: rgba(255,255,255,0.02);
+        }
+        .card:hover { border-color: var(--naranja); background: rgba(255, 90, 0, 0.05); }
+        .card ul { padding-left: 18px; color: var(--text-secondary); font-size: 0.9rem; }
+        .card li { margin-bottom: 8px; }
+
+        /* SECCIÓN EQUIPO/FLOTA (Modelos 3D Placeholder) */
+        .equipo-container { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+        .equipo-text { flex: 1; min-width: 300px; }
+        .canvas-3d-placeholder { 
+            flex: 1; min-width: 300px; height: 400px; 
+            background: linear-gradient(45deg, #161b22, #0b0e11);
+            border-radius: 20px; border: 1px dashed var(--border-color);
+            display: flex; align-items: center; justify-content: center; color: var(--text-secondary);
+        }
+
+        /* SECCIÓN UBICACIÓN (Google Maps) */
+        .map-container { 
+            width: 100%; height: 450px; border-radius: 15px; overflow: hidden; 
+            border: 1px solid var(--border-color); margin-top: 20px;
+        }
+
+        .btn {
+            background: var(--mapbox-blue); color: white; padding: 12px 25px; 
+            border-radius: 30px; text-decoration: none; display: inline-block;
+            font-weight: 600; margin-top: 20px; font-size: 0.9rem;
+        }
+
+        footer { padding: 40px; text-align: center; border-top: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">JAIÑA & NÚÑEZ <span style="color:var(--naranja)">.</span></div>
+        <div>
+            <a href="#equipo">Equipo</a>
+            <a href="#carreras">Carreras</a>
+            <a href="#ubicacion">Ubicación</a>
+        </div>
+    </nav>
+
+    <!-- SECCIÓN EQUIPO Y TECNOLOGÍA -->
+    <section class="section" id="equipo">
+        <span class="tag">Infraestructura</span>
+        <h2>Nuestro Equipo y Maquinaria</h2>
+        <div class="equipo-container">
+            <div class="equipo-text">
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    En <strong>Sociedad Comercial Jaiña y Núñez Limitada</strong>, combinamos fuerza operativa con precisión técnica. Nuestra flota incluye excavadoras de alto tonelaje, camiones tolva y equipos de soldadura de última generación.
+                </p>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    Mantenemos un estándar de seguridad riguroso, asegurando que cada operario cuente con herramientas certificadas para el desarrollo de obras civiles y montajes industriales.
+                </p>
+            </div>
+            <!-- Aquí se integraría el canvas de Three.js para la maquinaria -->
+            <div class="canvas-3d-placeholder">
+                [ Espacio para Modelo 3D de Maquinaria ]
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CARRERAS (RECLUTAMIENTO) -->
+    <section class="section" id="carreras" style="background: #0d1117;">
+        <span class="tag">Talento Humano</span>
+        <h2>Vacantes Disponibles</h2>
+        <div class="grid-carreras">
+            
+            <div class="card">
+                <h3>Soldador Especialista</h3>
+                <p>Responsable de uniones metálicas de alta resistencia bajo normas internacionales.</p>
+                <ul>
+                    <li><strong>Tareas:</strong> Soldadura en estructuras pesadas, lectura de planos.</li>
+                    <li><strong>Cursos:</strong> Certificación 3G, 4G o 6G vigente.</li>
+                    <li><strong>Requisito:</strong> Curso de Seguridad en Altura Física.</li>
+                </ul>
+                <a href="mailto:rrhh@jainaynunez.cl" class="btn">Enviar CV</a>
+            </div>
+
+            <div class="card">
+                <h3>Maestro de Obras</h3>
+                <p>Líder técnico encargado de la ejecución y supervisión de la cuadrilla en terreno.</p>
+                <ul>
+                    <li><strong>Tareas:</strong> Trazado, interpretación de planos y control de materiales.</li>
+                    <li><strong>Cursos:</strong> Prevención de Riesgos (40 hrs), Lectura de Planos.</li>
+                    <li><strong>Requisito:</strong> 5 años de experiencia demostrable.</li>
+                </ul>
+                <a href="mailto:rrhh@jainaynunez.cl" class="btn">Enviar CV</a>
+            </div>
+
+            <div class="card">
+                <h3>Ayudante Avanzado</h3>
+                <p>Soporte crítico en la cadena de montaje y logística de materiales.</p>
+                <ul>
+                    <li><strong>Tareas:</strong> Preparación de superficies, uso de herramientas eléctricas.</li>
+                    <li><strong>Cursos:</strong> Manejo de herramientas manuales, Seguridad Industrial.</li>
+                    <li><strong>Requisito:</strong> Residencia en Calbuco o alrededores (Deseable).</li>
+                </ul>
+                <a href="mailto:rrhh@jainaynunez.cl" class="btn">Enviar CV</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN UBICACIÓN (GOOGLE MAPS) -->
+    <section class="section" id="ubicacion">
+        <span class="tag">Geolocalización</span>
+        <h2>Nuestra Ubicación en Calbuco</h2>
+        <p style="color: var(--text-secondary);">Visítanos en nuestra casa matriz para consultas comerciales y entrega de documentos oficiales.</p>
+        
+        <div class="map-container">
+            <!-- Google Maps Embed de Calbuco -->
+            <iframe 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                style="border:0" 
+                src="https://www.google.com/maps/embed/v1/place?key=TU_API_KEY_AQUI&q=Calbuco,Chile" 
+                allowfullscreen>
+            </iframe>
+            <!-- NOTA: Para producción, genera una API KEY en Google Cloud Console -->
+        </div>
+        
+        <div style="margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1;">
+                <h4 style="color: var(--naranja);">Oficina Central</h4>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Comuna de Calbuco, Región de Los Lagos.<br>Sector Industrial.</p>
+            </div>
+            <div style="flex: 1;">
+                <h4 style="color: var(--naranja);">Horario de Atención</h4>
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Lunes a Viernes: 08:30 - 18:00 hrs.<br>Sábado: 09:00 - 13:00 hrs.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>SOCIEDAD COMERCIAL JAIÑA Y NUÑEZ LIMITADA</strong></p>
+        <p>RUT: 76.305.159-5 | Calbuco, Chile</p>
+        <p style="opacity: 0.4; margin-top: 20px;">Diseño Industrial Tecnológico © 2026</p>
+    </footer>
+
+</body>
+</html>

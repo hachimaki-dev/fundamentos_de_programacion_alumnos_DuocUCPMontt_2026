@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panadería PRO+ (Ultra UI)</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{font-family:'Inter',sans-serif}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-thumb{background:#444;border-radius:10px}
+</style>
+</head>
+
+<body :class="dark ? 'bg-gray-950 text-gray-100':'bg-gray-100 text-gray-900'">
+
+<div id="app" class="min-h-screen flex flex-col">
+
+<!-- NAV -->
+<nav class="flex justify-between items-center px-6 py-4 backdrop-blur border-b sticky top-0 z-50" :class="dark?'bg-black/40 border-gray-800':'bg-white/80 border-gray-200'">
+  <h1 class="font-bold text-lg tracking-wide">🥖 Panadería PRO+</h1>
+  <div class="flex gap-3 items-center">
+    <button @click="scroll('catalogo')" class="hover:text-yellow-400">Productos</button>
+    <button @click="scroll('ubicacion')" class="hover:text-yellow-400">Ubicación</button>
+    <button @click="toggleTheme" class="px-2">🌓</button>
+    <button @click="toggleCart" class="bg-yellow-500 text-black px-3 py-1 rounded-xl shadow">🛒 {{count}}</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="text-center py-20 px-6 max-w-3xl mx-auto">
+  <h1 class="text-5xl font-extrabold mb-3">Pan recién horneado 🔥</h1>
+  <p class="opacity-70 mb-4">Encarga online • Retira sin filas • Hecho hoy 🥖</p>
+
+  <div class="flex justify-center gap-3 mb-4 text-sm">
+    <span :class="abierto?'text-green-400':'text-red-400'">{{abierto?'🟢 Abierto':'🔴 Cerrado'}}</span>
+    <span class="opacity-70">{{mensajeHora}}</span>
+  </div>
+
+  <button @click="scroll('catalogo')" class="mt-3 bg-yellow-500 text-black px-8 py-3 rounded-xl font-semibold shadow hover:scale-105 transition">
+    Ver productos
+  </button>
+</section>
+
+<!-- BENEFICIOS -->
+<section class="grid md:grid-cols-3 gap-6 px-6 max-w-6xl mx-auto mb-12">
+  <div class="p-6 rounded-2xl border" :class="dark?'bg-gray-900 border-gray-800':'bg-white border-gray-200'">
+    <h3 class="font-semibold">⚡ Rápido</h3>
+    <p class="text-sm opacity-70">Pedidos listos en minutos</p>
+  </div>
+  <div class="p-6 rounded-2xl border" :class="dark?'bg-gray-900 border-gray-800':'bg-white border-gray-200'">
+    <h3 class="font-semibold">🥖 Fresco</h3>
+    <p class="text-sm opacity-70">Horneado el mismo día</p>
+  </div>
+  <div class="p-6 rounded-2xl border" :class="dark?'bg-gray-900 border-gray-800':'bg-white border-gray-200'">
+    <h3 class="font-semibold">📍 Fácil</h3>
+    <p class="text-sm opacity-70">Retiro rápido en tienda</p>
+  </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section id="catalogo" class="px-6 max-w-6xl mx-auto pb-16">
+  <div class="flex justify-between mb-4">
+    <h2 class="text-2xl font-bold">Catálogo</h2>
+    <input v-model="busqueda" placeholder="Buscar producto..." class="p-2 rounded bg-gray-800 text-sm">
+  </div>
+
+  <div v-if="filtrados.length===0" class="text-center opacity-60 py-10">
+    No encontramos productos 😢
+  </div>
+
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div v-for="p in filtrados" class="p-4 rounded-2xl border shadow-sm hover:shadow-xl transition" :class="dark?'bg-gray-900 border-gray-800':'bg-white border-gray-200'">
+      <img :src="p.img" class="h-40 w-full object-cover rounded-xl">
+      <h3 class="mt-2 font-semibold">{{p.nombre}}</h3>
+      <p class="text-yellow-500 font-bold">{{clp(p.precio)}}</p>
+
+      <div class="text-xs mt-1 flex gap-2">
+        <span v-if="p.popular" class="text-green-400">🔥 Popular</span>
+        <span v-if="p.oferta" class="text-yellow-400">2x1</span>
+        <span v-if="p.stock<3" class="text-red-400">Últimas</span>
+      </div>
+
+      <button @click="add(p)" class="mt-3 w-full bg-yellow-500 text-black py-2 rounded-xl hover:scale-105 transition">
+        Agregar
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- CARRITO -->
+<div v-if="showCart" class="fixed inset-0 bg-black/70 flex justify-end">
+  <div class="w-full sm:w-96 p-5 overflow-auto" :class="dark?'bg-gray-950':'bg-white'">
+    <div class="flex justify-between mb-4">
+      <h2 class="font-bold text-lg">Tu pedido</h2>
+      <button @click="toggleCart">✖</button>
+    </div>
+
+    <div v-if="carrito.length===0" class="text-center opacity-60">Carrito vacío</div>
+
+    <div v-for="i in carrito" class="flex justify-between py-2 border-b">
+      <div>
+        {{i.nombre}}
+        <div class="text-xs flex gap-2 mt-1">
+          <button @click="dec(i)">➖</button>
+          {{i.cantidad}}
+          <button @click="inc(i)">➕</button>
+        </div>
+      </div>
+      <span>{{clp(i.precio*i.cantidad)}}</span>
+    </div>
+
+    <p class="mt-3 font-bold text-lg">Total: {{clp(total)}}</p>
+
+    <div class="mt-4 space-y-2">
+      <input v-model="nombre" placeholder="Nombre" class="w-full p-2 rounded text-black">
+      <input v-model="telefono" placeholder="Teléfono" class="w-full p-2 rounded text-black">
+      <input type="time" v-model="hora" class="w-full p-2 rounded text-black">
+
+      <select v-model="pago" class="w-full p-2 rounded text-black">
+        <option>Webpay</option>
+        <option>MercadoPago</option>
+        <option>Contra entrega</option>
+      </select>
+    </div>
+
+    <button @click="comprar" class="mt-4 w-full bg-green-500 py-2 rounded-xl">Confirmar</button>
+    <button @click="whatsapp" class="mt-2 w-full bg-green-700 py-2 rounded-xl">WhatsApp</button>
+  </div>
+</div>
+
+<!-- UBICACIÓN -->
+<section id="ubicacion" class="px-6 max-w-6xl mx-auto pb-16">
+  <h2 class="text-2xl font-bold mb-3">Ubicación</h2>
+  <iframe class="w-full h-72 rounded-xl" src="https://maps.google.com/maps?q=calbuco&output=embed"></iframe>
+  <p class="mt-2 opacity-70">Distancia: {{distancia}} km</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="text-center py-6 border-t" :class="dark?'border-gray-800':'border-gray-200'">
+  <p class="text-sm opacity-60">© 2026 Panadería PRO+ • Hecho con amor 🥖</p>
+</footer>
+
+</div>
+
+<script>
+const {createApp}=Vue;
+createApp({
+ data(){return{
+ productos:[
+ {id:1,nombre:'Pan',precio:1200,stock:5,popular:true,oferta:false,img:'https://picsum.photos/200?1'},
+ {id:2,nombre:'Torta',precio:8000,stock:2,popular:true,oferta:true,img:'https://picsum.photos/200?2'},
+ {id:3,nombre:'Croissant',precio:1500,stock:10,popular:false,oferta:false,img:'https://picsum.photos/200?3'},
+ {id:4,nombre:'Donas',precio:2000,stock:6,popular:true,oferta:false,img:'https://picsum.photos/200?4'}
+ ],
+ carrito:[],nombre:'',telefono:'',hora:'',pago:'Webpay',
+ showCart:false,busqueda:'',distancia:0,dark:true
+ }},
+ computed:{
+ total(){return this.carrito.reduce((t,i)=>t+i.precio*i.cantidad,0)},
+ filtrados(){return this.productos.filter(p=>p.nombre.toLowerCase().includes(this.busqueda.toLowerCase()))},
+ count(){return this.carrito.reduce((t,i)=>t+i.cantidad,0)},
+ abierto(){let h=new Date().getHours();return h>=8&&h<=20},
+ mensajeHora(){return this.abierto?'Cierra a las 20:00':'Abre a las 08:00'}
+ },
+ methods:{
+ clp(v){return new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP'}).format(v)},
+ add(p){
+ let i=this.carrito.find(x=>x.id===p.id);
+ if(i){i.cantidad++}else{this.carrito.push({...p,cantidad:1})}
+ this.save();
+ },
+ inc(i){i.cantidad++;this.save()},
+ dec(i){if(i.cantidad>1)i.cantidad--;this.save()},
+ save(){localStorage.setItem('carrito',JSON.stringify(this.carrito))},
+ comprar(){
+ if(!this.nombre||!this.telefono||!this.hora){Swal.fire('Completa los datos');return}
+ Swal.fire('Pedido confirmado',`Listo a las ${this.hora}`,'success')
+ },
+ whatsapp(){
+ let texto='Pedido:%0A'+this.carrito.map(i=>`${i.nombre} x${i.cantidad}`).join('%0A');
+ window.open(`https://wa.me/?text=${texto}`);
+ },
+ scroll(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})},
+ toggleCart(){this.showCart=!this.showCart},
+ toggleTheme(){this.dark=!this.dark;localStorage.setItem('theme',this.dark)}
+ },
+ mounted(){
+ let d=localStorage.getItem('carrito');if(d)this.carrito=JSON.parse(d);
+ let t=localStorage.getItem('theme');if(t!==null)this.dark=(t==='true');
+ navigator.geolocation.getCurrentPosition(pos=>{
+ const R=6371;
+ const lat1=pos.coords.latitude*Math.PI/180;
+ const lon1=pos.coords.longitude*Math.PI/180;
+ const lat2=-41.7738*Math.PI/180;
+ const lon2=-73.1305*Math.PI/180;
+ const dlat=lat2-lat1;
+ const dlon=lon2-lon1;
+ const a=Math.sin(dlat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dlon/2)**2;
+ const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+ this.distancia=(R*c).toFixed(2);
+ });
+ }
+}).mount('#app');
+</script>
+
+</body>
+</html>

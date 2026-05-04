@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora con Manejo de Errores</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Fira Code', monospace; }
+.typing::after { content: '|'; animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+</style>
+</head>
+
+<body class="bg-black text-green-400 p-6">
+
+<!-- TITULO -->
+<section class="mb-12">
+<h1 class="text-4xl font-bold mb-4">💻 Calculadora Básica con Manejo de Errores</h1>
+<p class="text-gray-400">
+El manejo de errores en Python permite evitar que un programa falle inesperadamente usando <span class="text-green-300">try/except</span>, mejorando la estabilidad y experiencia del usuario.
+</p>
+</section>
+
+<!-- ANTES VS DESPUES -->
+<section class="mb-12">
+<h2 class="text-2xl mb-6">⚔️ Antes vs Después</h2>
+<div class="grid md:grid-cols-2 gap-6">
+
+<!-- ANTES -->
+<div class="bg-gray-900 p-5 rounded-lg border border-red-500">
+<h3 class="text-red-400 text-xl mb-2">❌ Código sin manejo de errores</h3>
+<pre class="text-sm overflow-auto">print("Calculadora básica")
+
+a = int(input("Número 1: "))
+b = int(input("Número 2: "))
+
+print("Resultado:", a / b)</pre>
+
+<p class="text-gray-400 mt-3">
+Este código es frágil. Si el usuario escribe texto o divide por 0, el programa se rompe completamente.
+</p>
+</div>
+
+<!-- DESPUES -->
+<div class="bg-gray-900 p-5 rounded-lg border border-green-500">
+<h3 class="text-green-400 text-xl mb-2">✅ Código con manejo de errores</h3>
+<pre class="text-sm overflow-auto">try:
+    a = int(input("Número 1: "))
+    b = int(input("Número 2: "))
+    print(a / b)
+
+except ValueError:
+    print("Ingrese solo números")
+
+except ZeroDivisionError:
+    print("No se puede dividir entre 0")</pre>
+
+<p class="text-gray-400 mt-3">
+Ahora el programa es seguro: detecta errores, informa al usuario y continúa funcionando.
+</p>
+</div>
+
+</div>
+</section>
+
+<!-- MEJORAS -->
+<section class="mb-12">
+<h2 class="text-2xl mb-4">🧠 ¿Qué mejora?</h2>
+<ul class="list-disc ml-6 text-gray-400 space-y-2">
+<li>🛡️ Evita que el programa se cierre inesperadamente</li>
+<li>🎮 Permite interacción continua con el usuario</li>
+<li>⚠️ Maneja errores comunes como entradas inválidas</li>
+<li>💻 Mejora la experiencia general del sistema</li>
+</ul>
+</section>
+
+<!-- TERMINAL -->
+<section>
+<h2 class="text-2xl mb-4">🖥️ Simulación de Terminal</h2>
+
+<div class="bg-gray-900 p-4 rounded">
+<div id="terminal" class="text-sm"></div>
+
+<button onclick="runSimulation()" class="mt-4 bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400">
+Ejecutar simulación
+</button>
+</div>
+</section>
+
+<script>
+function runSimulation() {
+const term = document.getElementById("terminal");
+term.innerHTML = "";
+
+let steps = [
+"Iniciando calculadora...",
+"Cargando módulos...",
+"Listo ✔",
+"> Número 1: hola",
+"⚠ Error: ValueError",
+"> Número 1: 10",
+"> Número 2: 0",
+"⚠ Error: División por 0",
+"> Número 1: 10",
+"> Número 2: 2",
+"✔ Resultado: 5"
+];
+
+let i = 0;
+let interval = setInterval(() => {
+if(i < steps.length) {
+term.innerHTML += steps[i] + "<br>";
+i++;
+} else {
+clearInterval(interval);
+}
+}, 700);
+}
+</script>
+
+</body>
+</html>
