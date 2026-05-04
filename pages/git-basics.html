@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -75,38 +75,71 @@
         <h3>4. Cambio de rama: <code>git branch</code> y <code>git checkout</code></h3>
         <p>Las ramas (branches) te permiten experimentar sin romper el código principal. Puedes crear una rama nueva o cambiar a una existente.</p>
         <div class="code-example"># Ver todas las ramas<br>git branch<br><br># Crear y cambiar a una rama nueva<br>git checkout -b mi-nueva-funcion<br># (o en versiones nuevas de Git: git switch -c mi-nueva-funcion)<br><br># Cambiar de vuelta a la rama principal (main)<br>git checkout main<br># (o git switch main)</div>
+
+        <h3>5. Clonar un proyecto: <code>git clone</code></h3>
+        <p>Descarga un repositorio completo de internet (como GitHub) a tu computadora. ¡Esto es lo que haces al inicio del semestre!</p>
+        <div class="code-example">git clone https://github.com/usuario/mi-proyecto.git</div>
+
+        <h3>6. Enviar a GitHub: <code>git push</code></h3>
+        <p>Tus commits (puntos de guardado) viven en tu computadora hasta que los "empujas" a la nube. Usa esto para subir tu progreso a GitHub.</p>
+        <div class="code-example">git push origin main</div>
+
+        <h3>7. Traer cambios de GitHub: <code>git pull</code></h3>
+        <p>Si el profesor actualizó el repositorio del curso o tú trabajaste en otro computador, usa esto para traer los últimos cambios a tu PC.</p>
+        <div class="code-example">git pull origin main</div>
+      </div>
+
+      <!-- Mini Tutorial -->
+      <div class="doc-section">
+        <h2>🚀 Mini-Tutorial: Tu primer "Push" a GitHub</h2>
+        <p>¿Listo para publicar tu código al mundo? Sigue estos pasos para subir un archivo local a un repositorio de GitHub.</p>
+        
+        <ol class="list-decimal list-inside space-y-2 mt-2 pl-4">
+          <li>Crea un repositorio nuevo en GitHub (sin README, para que esté vacío).</li>
+          <li>Abre tu terminal en la carpeta de tu código y escribe: <code class="bg-gray-100 px-1 rounded text-sm text-kawaii-deep">git init</code></li>
+          <li>Agrega todos tus archivos: <code class="bg-gray-100 px-1 rounded text-sm text-kawaii-deep">git add .</code></li>
+          <li>Crea tu punto de guardado: <code class="bg-gray-100 px-1 rounded text-sm text-kawaii-deep">git commit -m "Mi primera vez usando Git"</code></li>
+          <li>Conecta tu carpeta con el repo de la nube: <code class="bg-gray-100 px-1 rounded text-sm text-kawaii-deep">git remote add origin [URL_DE_TU_REPO]</code></li>
+          <li>¡Lanza tu código a las estrellas! ✨ <code class="bg-gray-100 px-1 rounded text-sm text-kawaii-deep">git push -u origin main</code></li>
+        </ol>
+
+        <div class="tip-box mt-6">
+          💡 <strong>¡No tengas miedo de experimentar!</strong> Git está diseñado exactamente para que puedas cometer errores y volver atrás. ¿Algo salió mal? Visita nuestra <a href="git-errores.html" class="text-kawaii-deep font-bold hover:underline">Clínica de Primeros Auxilios de Git 🚑</a>.
+        </div>
       </div>
 
       <!-- Gitflow -->
       <div class="doc-section">
         <h2>🌊 Entendiendo Gitflow</h2>
         <p><strong>Gitflow</strong> es un modelo de trabajo (una forma de organizarse) para usar las ramas de Git en proyectos más grandes. Define un conjunto estricto de ramas principales y de soporte:</p>
-        <ul>
+        <ul class="list-disc list-inside mt-2 space-y-1">
           <li><code>main</code> (o master): El código perfecto y en producción.</li>
           <li><code>develop</code>: Donde integramos todas las nuevas funciones antes de lanzarlas.</li>
           <li><code>feature/...</code>: Ramas temporales donde programamos cada nueva funcionalidad.</li>
         </ul>
 
-        <h3>🤔 Recomendaciones de Flujos de Trabajo</h3>
+        <h3 class="mt-4">🤔 Recomendaciones de Flujos de Trabajo</h3>
         
-        <table class="doc-table mt-4 w-full">
-          <tr><th>Escenario</th><th>¿Qué flujo usar?</th><th>Descripción</th></tr>
-          <tr>
-            <td><strong>Para aprender o proyectos personales pequeños</strong></td>
-            <td><strong>Trunk-based básico (Solo Main)</strong></td>
-            <td>Trabaja directamente en <code>main</code>. Haz <code>add</code> y <code>commit</code> frecuentemente. Es perfecto para empezar y no complicarse con ramas hasta que domines lo básico.</td>
-          </tr>
-          <tr>
-            <td><strong>Trabajar solo (nivel intermedio)</strong></td>
-            <td><strong>GitHub Flow (Main + Feature branches)</strong></td>
-            <td>La rama <code>main</code> siempre está limpia. Si vas a agregar algo nuevo, creas una rama <code>feature/mi-idea</code>, haces tus cambios, y luego la unes (merge) a <code>main</code>.</td>
-          </tr>
-          <tr>
-            <td><strong>Trabajar en equipo completo</strong></td>
-            <td><strong>GitHub Flow con Pull Requests (Recomendado hoy) o Gitflow Clásico</strong></td>
-            <td>En equipos modernos, GitHub Flow es más ágil. Cada developer crea una rama, sube su código y abre un "Pull Request" para que el equipo revise el código antes de unirlo a <code>main</code>. Gitflow Clásico se usa en proyectos corporativos con ciclos de lanzamiento estáticos y complejos.</td>
-          </tr>
-        </table>
+        <div class="overflow-x-auto mt-4">
+          <table class="doc-table w-full">
+            <tr><th>Escenario</th><th>¿Qué flujo usar?</th><th>Descripción</th></tr>
+            <tr>
+              <td><strong>Para aprender o proyectos personales pequeños</strong></td>
+              <td><strong>Trunk-based básico (Solo Main)</strong></td>
+              <td>Trabaja directamente en <code>main</code>. Haz <code>add</code> y <code>commit</code> frecuentemente. Es perfecto para empezar y no complicarse con ramas hasta que domines lo básico.</td>
+            </tr>
+            <tr>
+              <td><strong>Trabajar solo (nivel intermedio)</strong></td>
+              <td><strong>GitHub Flow (Main + Feature branches)</strong></td>
+              <td>La rama <code>main</code> siempre está limpia. Si vas a agregar algo nuevo, creas una rama <code>feature/mi-idea</code>, haces tus cambios, y luego la unes (merge) a <code>main</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>Trabajar en equipo completo</strong></td>
+              <td><strong>GitHub Flow con Pull Requests o Gitflow</strong></td>
+              <td>En equipos modernos, GitHub Flow es más ágil. Cada developer crea una rama, sube su código y abre un "Pull Request" para revisión.</td>
+            </tr>
+          </table>
+        </div>
         
         <div class="deep-box mt-6">🌟 <strong>En este curso:</strong> Te recomendamos empezar usando solo <code>main</code> para tus primeros ejercicios si trabajas solo. ¡Concéntrate en entender cómo funcionan <code>status</code>, <code>add</code> y <code>commit</code> primero!</div>
       </div>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🚑 Clínica de Errores de Git — Fundamentos 2026</title>
+  <meta name="description" content="Solución a los problemas y errores más comunes de Git y GitHub." />
+  <link rel="stylesheet" href="../css/main.css" />
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div class="relative z-10">
+
+    <!-- Back button + Header -->
+    <div class="page-container">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">
+          ← Volver al diario
+        </a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">
+          🚑 ¡Auxilio, Git! Clínica de Errores
+        </h1>
+        <p class="text-kawaii-text/70 max-w-xl text-sm">
+          Todos rompemos algo de vez en cuando. No entres en pánico, respira profundo. Aquí tienes el botiquín de primeros auxilios para salvar tu código. 🩹
+        </p>
+      </div>
+    </div>
+
+    <!-- Documentation content -->
+    <div class="max-w-3xl mx-auto px-4 pb-16 mt-2 space-y-6 fade-in-up">
+
+      <div class="doc-section">
+        <h2>📝 1. "Me equivoqué en el mensaje del commit"</h2>
+        <p>Hiciste <code>git commit -m "Solución de la gía"</code> y te diste cuenta de que escribiste "gía" en vez de "guía" o querías agregar más detalles.</p>
+        <p><strong>La Cura:</strong> Si <em>aún no has hecho push</em>, puedes modificar el mensaje del último commit fácilmente:</p>
+        <div class="code-example">git commit --amend -m "Solución de la guía"</div>
+      </div>
+
+      <div class="doc-section">
+        <h2>🗑️ 2. "Borré código importante y quiero volver a como estaba antes de modificarlo"</h2>
+        <p>Estuviste programando, borraste una función que funcionaba perfecto, y ahora nada compila. Todavía no has hecho <code>add</code> ni <code>commit</code>.</p>
+        <p><strong>La Cura:</strong> Puedes descartar todos los cambios no guardados en un archivo y dejarlo como estaba en tu último commit:</p>
+        <div class="code-example">
+          # Para restaurar un archivo específico<br>
+          git restore nombre_del_archivo.py<br><br>
+          # Para descartar TODO lo que no hayas guardado (¡Cuidado, esto no se puede deshacer!)<br>
+          git restore .
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>⏪ 3. "Hice un commit, pero me arrepentí"</h2>
+        <p>Hiciste commit, pero te faltó incluir un archivo o el código estaba roto y quieres "deshacer" ese commit sin perder tu trabajo actual.</p>
+        <p><strong>La Cura:</strong> Usamos <code>reset</code>. Esto borra el commit del historial de Git, pero <em>mantiene tus archivos intactos</em> en tu carpeta para que puedas arreglarlos y hacer otro commit.</p>
+        <div class="code-example">git reset --soft HEAD~1</div>
+        <div class="tip-box mt-4">
+          ⚠️ <strong>Peligro:</strong> Si usas <code>git reset --hard HEAD~1</code>, borrarás el commit <strong>y también borrarás los cambios en tus archivos</strong>. Úsalo solo si de verdad quieres destruir lo último que hiciste.
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>⚔️ 4. "¡Git dice que tengo Conflictos (Merge Conflicts)!"</h2>
+        <p>Hiciste <code>git pull</code> y te salió un mensaje aterrador: <em>"Automatic merge failed; fix conflicts and then commit the result."</em></p>
+        <p>Esto pasa cuando tú y un compañero (o tú en otro PC) editaron <strong>la misma línea de código</strong> y Git no sabe cuál versión es la correcta.</p>
+        
+        <p><strong>La Cura:</strong> Abre tu código en VS Code. Verás algo así:</p>
+        <div class="code-example bg-gray-900 text-red-300">
+          <<<<<<< HEAD<br>
+          print("Hola, Profesor Carlos")<br>
+          =======<br>
+          print("Hola, Mundo")<br>
+          >>>>>>> rama-del-companero
+        </div>
+        <p class="mt-4"><strong>Sigue estos pasos:</strong></p>
+        <ol class="list-decimal list-inside space-y-2 mt-2">
+          <li>Abre el archivo con conflicto.</li>
+          <li>Borra las líneas raras de Git (<code><<<<<<<</code>, <code>=======</code>, <code>>>>>>>></code>).</li>
+          <li>Deja el código <strong>exactamente como quieres que quede finalmente</strong>.</li>
+          <li>Guarda el archivo.</li>
+          <li>Haz <code>git add .</code> y luego <code>git commit -m "Resolviendo conflictos"</code>. ¡Listo!</li>
+        </ol>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔑 5. "GitHub me dice 'Permission denied' al hacer Push"</h2>
+        <p>Intentas hacer <code>git push</code> y te sale un error de autenticación. Probablemente GitHub no reconoce quién eres.</p>
+        <p><strong>La Cura:</strong> Asegúrate de que hayas iniciado sesión en VS Code o en tu terminal. Si Git te pide configurar tu email y nombre, ejecuta:</p>
+        <div class="code-example">
+          git config --global user.name "Tu Nombre"<br>
+          git config --global user.email "tu@email.com"
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <div class="flex items-center gap-3 card p-3 rounded-2xl">
+          <a href="https://github.com/hachimaki-dev" target="_blank" rel="noopener noreferrer">
+            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 border-kawaii-rose shadow-md transition-transform hover:scale-110" />
+          </a>
+          <div class="text-left leading-tight">
+            <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
+            <p class="text-xs font-semibold text-kawaii-text/80">Puerto Montt DuocUc 2026</p>
+          </div>
+        </div>
+        <p class="text-sm text-kawaii-text/60">Hecho con 💖 para Fundamentos de Programación 2026</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>
