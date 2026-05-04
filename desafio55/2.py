@@ -1,7 +1,7 @@
-sueldo_Base = 500000
-colacion = 50000
-movilizacion = 30000
-descuento_afp = sueldo_Base/100*10
-descuento_salud = sueldo_Base/100*7
-sueldo_liquido = sueldo_Base - descuento_salud - descuento_afp + colacion + movilizacion
-print(sueldo_liquido)
+auto = 5000000
+ahorrado = 1500000
+meses = 0
+ahorro_mensual = 150000
+falta = auto - ahorrado
+final = falta//ahorro_mensual
+print(final)
