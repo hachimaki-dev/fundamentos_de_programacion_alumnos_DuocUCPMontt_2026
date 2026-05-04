@@ -12,10 +12,12 @@ plan = 15 #GB
 gasto = 18 #GB
 
 if tipo_cliente == 'Postpago':
+    
     if gasto > plan:
         extra = (gasto - plan) * 1000
         print(f"Debes pagar ${extra} por los GB extras utilizados")
     else:
         print("Sin recargos extras")
+        
 else:
     print("Cliente prepago: Sin saldo")
