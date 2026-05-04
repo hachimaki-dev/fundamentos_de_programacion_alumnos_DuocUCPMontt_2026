@@ -7,4 +7,4 @@ ahorro = 1500000
 ahorro_mensual = 150000
 ahorro_faltante = costo_auto - ahorro
 meses_faltantes = ahorro_faltante // ahorro_mensual
-print(meses_faltantes + 1)
+print(meses_faltantes)
