@@ -110,3 +110,26 @@ while True :
 
         except ValueError : 
                 ("\n\033[91mERROR : INGRESE NÚMERO DEL 1 AL 5.\033[0m\n")
+
+        match opcion_de_usuario :
+               
+               case 1 :
+                      print ("¿Desea sumar o restar ?")
+                      opcion_de_usuario_2 = str(input("Ingrese su elección : ")).lower
+
+                      match opcion_de_usuario_2:
+                             case "sumar":
+
+                                while True : 
+                                        
+                                        try :
+                                               
+                                                numero_1 = int(input("INGRESE UN NÚMERO : "))
+                                                numero_2 = int(input("INGRESE UN NÚMERO : "))
+
+                                                resultado = numero_1 + numero_2
+
+                                                print ("")
+                                                
+
+

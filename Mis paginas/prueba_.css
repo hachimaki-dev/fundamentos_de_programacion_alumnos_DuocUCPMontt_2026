@@ -1,0 +1,48 @@
+/* Modifica esta parte en tus estilos */
+.reveal { 
+    opacity: 0; 
+    transform: translateY(30px); /* Empieza desplazado hacia abajo */
+    transition: all 0.8s ease-out; 
+}
+
+.reveal.active { 
+    opacity: 1; 
+    transform: translateY(0); /* Sube a su posición original */
+}
+
+h2 {
+    font-size: clamp(2rem, 5vw, 3.5rem); /* Se ajusta entre 2rem y 3.5rem según la pantalla */
+    background: linear-gradient(to right, #fff, var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Efecto de degradado elegante en el texto */
+    margin-bottom: 50px;
+}
+
+nav {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(11, 14, 17, 0.7);
+    backdrop-filter: blur(20px) saturate(180%); /* Efecto premium de difuminado */
+}
+
+.card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 1;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 16px;
+    background: linear-gradient(45deg, transparent, rgba(66, 100, 251, 0.1), transparent);
+    z-index: -1;
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.card:hover::after {
+    opacity: 1;
+}

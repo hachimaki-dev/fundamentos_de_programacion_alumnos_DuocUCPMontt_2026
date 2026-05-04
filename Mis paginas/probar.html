@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaiña y Núñez | Ingeniería, Montaje y Operaciones Industriales</title>
+    
+    <!-- Fuentes y Recursos Externos -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. VARIABLES Y RESET
+           ========================================= */
+        :root {
+            --bg-dark: #0b0e11;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --mapbox-blue: #4264fb;
+            --naranja: #FF5A00;
+            --naranja-glow: rgba(255, 90, 0, 0.3);
+            --text-main: #ffffff;
+            --text-secondary: #8a8f98;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass: rgba(11, 14, 17, 0.8);
+            --transition-smooth: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Barra de Scroll Personalizada */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; border: 2px solid var(--bg-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--naranja); }
+
+        /* =========================================
+           2. ANIMACIONES Y EFECTOS
+           ========================================= */
+        #particles-js {
+            position: fixed; width: 100%; height: 100%;
+            top: 0; left: 0; z-index: 1; pointer-events: none;
+        }
+
+        .main-content { position: relative; z-index: 2; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition-smooth);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
+        /* =========================================
+           3. COMPONENTES GLOBALES
+           ========================================= */
+        .btn {
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-primary { background: var(--naranja); color: white; }
+        .btn-primary:hover { 
+            background: #ff7326; 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 20px var(--naranja-glow); 
+        }
+
+        .btn-outline { 
+            background: transparent; 
+            border: 1px solid var(--border-color); 
+            color: white; 
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--naranja); }
+
+        .tag-line {
+            color: var(--naranja);
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #fff 40%, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* =========================================
+           4. NAVEGACIÓN
+           ========================================= */
+        nav {
+            position: fixed; top: 0; width: 100%;
+            padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--glass);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { 
+            color: var(--text-secondary); text-decoration: none; 
+            font-size: 0.85rem; font-weight: 500; transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--naranja); }
+
+        /* =========================================
+           5. SECCIÓN HERO
+           ========================================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 50px;
+            text-align: center;
+        }
+
+        .hero-content { max-width: 900px; }
+        .hero h1 { 
+            font-size: clamp(2.5rem, 8vw, 5rem); 
+            font-weight: 800; line-height: 1; 
+            margin-bottom: 25px; letter-spacing: -2px;
+        }
+
+        /* =========================================
+           6. SECCIÓN ESTADÍSTICAS (LOGROS)
+           ========================================= */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-item h3 { font-size: 2.5rem; color: var(--naranja); margin-bottom: 5px; }
+        .stat-item p { font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; }
+
+        /* =========================================
+           7. SECCIÓN VACANTES (ESTILO PREMIUM)
+           ========================================= */
+        .section-padding { padding: 120px 50px; max-width: 1300px; margin: 0 auto; }
+
+        .vacantes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .job-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 20px;
+            transition: var(--transition-smooth);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-card:hover {
+            border-color: var(--naranja);
+            background: rgba(255, 90, 0, 0.02);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .status-badge {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.7rem; font-weight: 700; color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        .dot { 
+            height: 8px; width: 8px; background: #00ff88; border-radius: 50%; 
+            animation: pulse-green 2s infinite;
+        }
+
+        .job-card h3 { font-size: 1.6rem; margin-bottom: 15px; }
+        
+        .specs-list { list-style: none; margin: 25px 0; }
+        .specs-list li { 
+            display: flex; align-items: flex-start; gap: 10px;
+            color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .specs-list li i { color: var(--naranja); margin-top: 5px; }
+
+        .job-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .salary { font-weight: 700; font-size: 1.1rem; }
+
+        /* =========================================
+           8. SECCIÓN CONTACTO Y MAPA
+           ========================================= */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: rgba(255,255,255,0.01);
+            border-radius: 30px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .contact-info { padding: 60px; }
+
+        .map-box { height: 100%; min-height: 400px; filter: grayscale(1) invert(0.9); }
+
+        /* =========================================
+           9. FOOTER ROBUSTO
+           ========================================= */
+        footer {
+            background: #050709;
+            padding: 80px 50px 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo { font-weight: 800; font-size: 1.5rem; margin-bottom: 20px; }
+        .footer-col h4 { margin-bottom: 20px; color: var(--naranja); font-size: 0.9rem; text-transform: uppercase; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a { color: var(--text-secondary); text-decoration: none; transition: 0.3s; font-size: 0.9rem; }
+        .footer-col ul li a:hover { color: white; }
+
+        .copyright {
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .contact-container, .footer-grid { grid-template-columns: 1fr; }
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo de Partículas -->
+    <div id="particles-js"></div>
+
+    <div class="main-content">
+        
+        <!-- Header / Nav -->
+        <nav>
+            <div class="logo">JAIÑA & NÚÑEZ <span style="color:var(--naranja)">.</span></div>
+            <div class="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#nosotros">Nosotros</a>
+                <a href="#servicios">Servicios</a>
+                <a href="#vacantes">Vacantes</a>
+                <a href="#contacto">Contacto</a>
+            </div>
+            <a href="mailto:rrhh@jainaynunez.cl" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.7rem;">Postular CV</a>
+        </nav>
+
+        <!-- Hero Section -->
+        <header class="hero reveal" id="inicio">
+            <div class="hero-content">
+                <span class="tag-line">Calbuco, Región de los Lagos</span>
+                <h1>Fuerza Operativa en Montaje Industrial</h1>
+                <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 40px;">
+                    Especialistas en obras civiles, soldadura de alta precisión y servicios logísticos para la industria pesada del sur de Chile.
+                </p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <a href="#vacantes" class="btn btn-primary">Ver Oportunidades</a>
+                    <a href="#servicios" class="btn btn-outline">Nuestra Flota</a>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3 class="counter">10</h3>
+                        <p>Años de Trayectoria</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="counter">150</h3>
+                        <p>Proyectos Ejecutados</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="counter">85</h3>
+                        <p>Operarios Certificados</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="counter">0</h3>
+                        <p>Accidentes Graves</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sección de Servicios / Flota -->
+        <section class="section-padding reveal" id="servicios">
+            <span class="tag-line">Capacidades Técnicas</span>
+            <h2>Servicios y Maquinaria</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+                <div class="reveal">
+                    <h4 style="color: var(--naranja); margin-bottom: 15px;">01. Montaje de Estructuras</h4>
+                    <p style="color: var(--text-secondary);">Ejecución de galpones industriales, soportes de cañerías y estructuras metálicas pesadas bajo normas AWS.</p>
+                </div>
+                <div class="reveal">
+                    <h4 style="color: var(--naranja); margin-bottom: 15px;">02. Soldadura Especializada</h4>
+                    <p style="color: var(--text-secondary);">Procesos TIG, MIG y Arco Manual en acero carbono e inoxidable para plantas de procesos alimentarios.</p>
+                </div>
+                <div class="reveal">
+                    <h4 style="color: var(--naranja); margin-bottom: 15px;">03. Movimiento de Tierra</h4>
+                    <p style="color: var(--text-secondary);">Flota propia de excavadoras, retroexcavadoras y camiones tolva para preparación de terrenos industriales.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Vacantes -->
+        <section class="section-padding reveal" id="vacantes" style="background: rgba(255,255,255,0.015);">
+            <span class="tag-line">Talento Humano</span>
+            <h2>Únete a la Cuadrilla</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 50px; max-width: 600px;">
+                Buscamos profesionales comprometidos con la seguridad y la calidad. Ofrecemos estabilidad y desarrollo en la zona de Calbuco y Puerto Montt.
+            </p>
+
+            <div class="vacantes-grid">
+                <!-- Tarjeta 1 -->
+                <div class="job-card reveal">
+                    <div class="status-badge"><span class="dot"></span> Vacante Activa</div>
+                    <h3>Soldador Estructural 6G</h3>
+                    <p>Necesitamos expertos para faena de montaje en planta de procesos salmoneros.</p>
+                    <ul class="specs-list">
+                        <li><i>✔</i> Certificación 6G vigente.</li>
+                        <li><i>✔</i> Experiencia en acero inoxidable.</li>
+                        <li><i>✔</i> Residencia en la X Región.</li>
+                    </ul>
+                    <div class="job-footer">
+                        <span class="salary">Sueldo Competitivo</span>
+                        <a href="mailto:rrhh@jainaynunez.cl" class="btn btn-outline" style="padding: 8px 15px;">Postular</a>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="job-card reveal">
+                    <div class="status-badge"><span class="dot"></span> Vacante Activa</div>
+                    <h3>Maestro Mayor Montaje</h3>
+                    <p>Líder de terreno con capacidad de interpretación de planos y trazado industrial.</p>
+                    <ul class="specs-list">
+                        <li><i>✔</i> 5+ años en cargos similares.</li>
+                        <li><i>✔</i> Manejo de personal y seguridad.</li>
+                        <li><i>✔</i> Conocimiento en rigging e izaje.</li>
+                    </ul>
+                    <div class="job-footer">
+                        <span class="salary">Contrato Indefinido</span>
+                        <a href="mailto:rrhh@jainaynunez.cl" class="btn btn-outline" style="padding: 8px 15px;">Postular</a>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="job-card reveal">
+                    <div class="status-badge" style="color: #4264fb;"><span class="dot" style="background: #4264fb; animation: none;"></span> Próximamente</div>
+                    <h3>Operador de Excavadora</h3>
+                    <p>Operador certificado para movimientos de tierra en expansión de planta industrial.</p>
+                    <ul class="specs-list">
+                        <li><i>✔</i> Licencia Clase D al día.</li>
+                        <li><i>✔</i> Conocimiento en mantenimiento preventivo.</li>
+                        <li><i>✔</i> Hoja de vida del conductor impecable.</li>
+                    </ul>
+                    <div class="job-footer">
+                        <span class="salary">Turnos 7x7</span>
+                        <a href="#" class="btn btn-outline" style="padding: 8px 15px; opacity: 0.5; pointer-events: none;">Cerrado</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Contacto -->
+        <section class="section-padding reveal" id="contacto">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <span class="tag-line">Estamos cerca</span>
+                    <h2>Casa Matriz Calbuco</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                        Visítanos para coordinar entregas técnicas o reuniones de proyecto.
+                    </p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--naranja);">Dirección</h4>
+                        <p>Sector Industrial, Calbuco. Región de Los Lagos.</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: var(--naranja);">Contacto</h4>
+                        <p>Email: contacto@jainaynunez.cl</p>
+                        <p>RRHH: rrhh@jainaynunez.cl</p>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="color: var(--naranja);">Horario</h4>
+                        <p>Lun - Vie: 08:30 a 18:30</p>
+                    </div>
+
+                    <a href="https://wa.me/569XXXXXXXX" class="btn btn-primary">Contactar por WhatsApp</a>
+                </div>
+                <div class="map-box">
+                    <iframe width="100%" height="100%" frameborder="0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11943.518178120353!2d-73.134114!3d-41.774431!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9618179427e99763%3A0x62916b9996d83b0!2sCalbuco%2C%20Los%20Lagos!5e0!3m2!1ses!2scl!4v1714800000000!5m2!1ses!2scl"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">JAIÑA & NÚÑEZ <span style="color:var(--naranja)">.</span></div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; max-width: 300px;">
+                        Sociedad Comercial Jaiña y Núñez Limitada. Comprometidos con el desarrollo industrial de la zona sur desde Calbuco.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navegación</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#vacantes">Carreras</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="#">Montaje Industrial</a></li>
+                        <li><a href="#">Obras Civiles</a></li>
+                        <li><a href="#">Arriendo de Equipos</a></li>
+                        <li><a href="#">Soldadura Certificada</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">RUT: 76.305.159-5</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Jaiña & Núñez Limitada. Diseño e Ingeniería Industrial.
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 1. Configuración de Partículas
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#FF5A00" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2, "random": true },
+                "size": { "value": 2, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#4264fb", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } }
+            },
+            "retina_detect": true
+        });
+
+        // 2. Animación de Aparición (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 3. Efecto de números contando
+        const counters = document.querySelectorAll('.counter');
+        const countSpeed = 200;
+
+        const startCounting = (el) => {
+            const target = +el.getAttribute('data-target') || +el.innerText;
+            el.innerText = '0';
+            const updateCount = () => {
+                const count = +el.innerText;
+                const inc = target / countSpeed;
+                if (count < target) {
+                    el.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 10);
+                } else {
+                    el.innerText = target + "+";
+                }
+            };
+            updateCount();
+        };
+
+        // Activamos los contadores solo cuando son visibles
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    startCounting(entry.target);
+                    countObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 1 });
+
+        counters.forEach(c => countObserver.observe(c));
+    </script>
+</body>
+</html>

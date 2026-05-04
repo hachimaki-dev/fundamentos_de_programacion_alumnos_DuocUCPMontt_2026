@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaiña y Núñez | Ingeniería Industrial & Montaje de Precisión</title>
+    
+    <!-- Recursos Externos -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================================
+           1. CORE DESIGN SYSTEM (VARIABLES & RESET)
+           ============================================================ */
+        :root {
+            /* Paleta Principal */
+            --primary: #FF5A00;
+            --primary-dark: #cc4800;
+            --primary-soft: rgba(255, 90, 0, 0.1);
+            --secondary: #4264fb;
+            --bg-deep: #05070a;
+            --bg-main: #0b0e11;
+            --bg-surface: #161b22;
+            
+            /* Tipografía */
+            --text-white: #ffffff;
+            --text-muted: #8b949e;
+            --text-dark: #484f58;
+            
+            /* Efectos */
+            --border-ui: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(11, 14, 17, 0.75);
+            --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.5);
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: all 0.4s var(--ease-out);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-white);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Personalización de la Barra de Desplazamiento */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { 
+            background: #21262d; 
+            border-radius: 5px; 
+            border: 2px solid var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* ============================================================
+           2. LAYOUT & GRID SYSTEM
+           ============================================================ */
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .section-gap { padding: 160px 0; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .section-gap { padding: 100px 0; }
+        }
+
+        /* ============================================================
+           3. BACKGROUND ENGINE (PARTICLES)
+           ============================================================ */
+        #particles-js {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
+        .main-wrapper { position: relative; z-index: 10; }
+
+        /* ============================================================
+           4. NAVIGATION COMPONENT
+           ============================================================ */
+        .nav-master {
+            position: fixed; top: 0; width: 100%; z-index: 9999;
+            padding: 20px 0; transition: var(--transition);
+        }
+
+        .nav-master.scrolled {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-ui);
+        }
+
+        .nav-inner {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand-logo {
+            font-size: 1.4rem; font-weight: 900; letter-spacing: -1.5px;
+            color: var(--text-white); text-decoration: none;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .brand-logo span { color: var(--primary); }
+
+        .nav-links { display: flex; list-style: none; gap: 32px; }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.85rem; font-weight: 500; transition: var(--transition);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        /* ============================================================
+           5. HERO SECTION
+           ============================================================ */
+        .hero-v5 {
+            height: 100vh; min-height: 800px;
+            display: flex; align-items: center; position: relative;
+            overflow: hidden;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 6.5rem);
+            font-weight: 900; line-height: 0.95;
+            letter-spacing: -4px; margin-bottom: 30px;
+            background: linear-gradient(to bottom, #fff, #555);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem; color: var(--text-muted);
+            max-width: 600px; margin-bottom: 40px;
+        }
+
+        /* ============================================================
+           6. BENTO GRID (VALORES)
+           ============================================================ */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 300px);
+            gap: 24px;
+        }
+
+        .bento-item {
+            background: var(--bg-surface);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border-ui);
+            transition: var(--transition);
+            display: flex; flex-direction: column; justify-content: flex-end;
+        }
+
+        .bento-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            background: rgba(255, 90, 0, 0.03);
+        }
+
+        .bento-1 { grid-column: span 2; }
+        .bento-4 { grid-column: span 2; }
+
+        /* ============================================================
+           7. VACANTES (SISTEMA DE TARJETAS)
+           ============================================================ */
+        .job-card-v5 {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-ui);
+            padding: 48px; border-radius: 32px;
+            height: 100%; display: flex; flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .job-card-v5:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .salary-badge {
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 6px 12px; border-radius: 100px;
+            font-size: 0.75rem; font-weight: 700;
+        }
+
+        /* ============================================================
+           8. ANIMACIONES POR SCROLL (CLASES REUSABLES)
+           ============================================================ */
+        .reveal-up { opacity: 0; transform: translateY(60px); transition: var(--transition); }
+        .reveal-up.active { opacity: 1; transform: translateY(0); }
+
+        /* ============================================================
+           9. FORMULARIO DE CONTACTO
+           ============================================================ */
+        .form-group { margin-bottom: 24px; }
+        .form-label { display: block; margin-bottom: 8px; color: var(--text-muted); font-size: 0.85rem; }
+        .form-input {
+            width: 100%; background: var(--bg-main);
+            border: 1px solid var(--border-ui);
+            padding: 16px; border-radius: 12px; color: white;
+            transition: var(--transition);
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); background: #1c2128; }
+
+        /* ============================================================
+           10. FOOTER CORPORATIVO
+           ============================================================ */
+        .footer-v5 {
+            background: var(--bg-deep); padding: 100px 0 40px;
+            border-top: 1px solid var(--border-ui);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="main-wrapper">
+        
+        <!-- NAVEGACIÓN -->
+        <nav class="nav-master">
+            <div class="container nav-inner">
+                <a href="#" class="brand-logo">JAIÑA & NÚÑEZ <span>.</span></a>
+                <ul class="nav-links">
+                    <li><a href="#experiencia">Experiencia</a></li>
+                    <li><a href="#proceso">Proceso</a></li>
+                    <li><a href="#vacantes">Vacantes</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                <a href="#postular" class="btn-cta" style="background: white; color: black; padding: 10px 24px; border-radius: 100px; font-weight: 700; text-decoration: none; font-size: 0.8rem;">COTIZAR</a>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section class="hero-v5">
+            <div class="container">
+                <div class="reveal-up" id="hero-trigger">
+                    <span style="color: var(--primary); font-weight: 800; letter-spacing: 5px; text-transform: uppercase; font-size: 0.75rem; display: block; margin-bottom: 20px;">Liderazgo Industrial</span>
+                    <h1 class="hero-title">Ingeniería que <br> Mueve al Sur.</h1>
+                    <p class="hero-subtitle">Desde Calbuco, Sociedad Comercial Jaiña y Núñez transforma desafíos operativos en soluciones de montaje industrial con precisión técnica y estándares internacionales.</p>
+                    <div style="display: flex; gap: 20px;">
+                        <button class="btn-main" style="background: var(--primary); color: white; border: none; padding: 18px 40px; border-radius: 12px; font-weight: 800; cursor: pointer;">VER PROYECTOS</button>
+                        <button class="btn-main" style="background: transparent; color: white; border: 1px solid var(--border-ui); padding: 18px 40px; border-radius: 12px; font-weight: 800; cursor: pointer;">CONOCER MÁS</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BENTO VALUES -->
+        <section class="section-gap" id="experiencia">
+            <div class="container">
+                <h2 style="margin-bottom: 60px;">Nuestra Identidad.</h2>
+                <div class="bento-grid">
+                    <div class="bento-item bento-1 reveal-up">
+                        <h3 style="margin-bottom: 10px;">Excelencia Operativa</h3>
+                        <p style="color: var(--text-muted);">Más de una década optimizando procesos en plantas de proceso y logística marina.</p>
+                    </div>
+                    <div class="bento-item reveal-up">
+                        <h3 style="margin-bottom: 10px;">Seguridad</h3>
+                        <p style="color: var(--text-muted);">Cero accidentes es nuestra meta y nuestra realidad diaria.</p>
+                    </div>
+                    <div class="bento-item reveal-up">
+                        <h3 style="margin-bottom: 10px;">Innovación</h3>
+                        <p style="color: var(--text-muted);">Uso de tecnologías de trazado y soldadura avanzada.</p>
+                    </div>
+                    <div class="bento-item reveal-up">
+                        <h3 style="margin-bottom: 10px;">Ubicación</h3>
+                        <p style="color: var(--text-muted);">Presencia estratégica en Calbuco.</p>
+                    </div>
+                    <div class="bento-item bento-4 reveal-up">
+                        <h3 style="margin-bottom: 10px;">Compromiso Social</h3>
+                        <p style="color: var(--text-muted);">Fomentamos la empleabilidad local y el desarrollo de técnicos en la Región de los Lagos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE VACANTES EXPANDIDA -->
+        <section class="section-gap" id="vacantes" style="background: var(--bg-main);">
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 80px;">
+                    <div>
+                        <span class="tag">Talento Humano</span>
+                        <h2>Carreras Disponibles</h2>
+                    </div>
+                    <p style="max-width: 400px; color: var(--text-muted);">No solo buscamos empleados, buscamos especialistas apasionados por el montaje industrial y la calidad técnica.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px;">
+                    <!-- Job 1 -->
+                    <div class="job-card-v5 reveal-up">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <span class="salary-badge">$ Competitivo</span>
+                            <span style="font-size: 0.8rem; color: #00ff88;">Full-Time</span>
+                        </div>
+                        <h3>Soldador TIG / Inox</h3>
+                        <p style="color: var(--text-muted); margin: 20px 0;">Especialista en soldadura de alta presión para líneas de proceso alimentario en acero inoxidable.</p>
+                        <ul style="list-style: none; margin-bottom: 30px;">
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— Calificación 6G Vigente</li>
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— 3 años experiencia en plantas</li>
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— Conocimiento de gases inertes</li>
+                        </ul>
+                        <button style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); font-weight: 800; cursor: pointer; transition: 0.3s;">POSTULAR</button>
+                    </div>
+
+                    <!-- Job 2 -->
+                    <div class="job-card-v5 reveal-up">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <span class="salary-badge">$ A convenir</span>
+                            <span style="font-size: 0.8rem; color: #00ff88;">Indefinido</span>
+                        </div>
+                        <h3>Operador Maquinaria Pesada</h3>
+                        <p style="color: var(--text-muted); margin: 20px 0;">Operación de excavadoras y retroexcavadoras para obras civiles en terrenos complejos.</p>
+                        <ul style="list-style: none; margin-bottom: 30px;">
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— Licencia Clase D</li>
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— Residencia en Calbuco/Puerto Montt</li>
+                            <li style="margin-bottom: 10px; font-size: 0.9rem;">— Certificación de competencias</li>
+                        </ul>
+                        <button style="width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--primary); background: transparent; color: var(--primary); font-weight: 800; cursor: pointer; transition: 0.3s;">POSTULAR</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN FAQ / PROCESO -->
+        <section class="section-gap">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 100px;">
+                    <div>
+                        <h2>Preguntas <br> Frecuentes.</h2>
+                        <p style="color: var(--text-muted);">Resolvemos tus dudas sobre el proceso de reclutamiento y servicios operativos.</p>
+                    </div>
+                    <div>
+                        <!-- Acordeones -->
+                        <div style="border-bottom: 1px solid var(--border-ui); padding: 24px 0;">
+                            <h4 style="margin-bottom: 10px;">¿Ofrecen traslado desde Puerto Montt?</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Sí, contamos con buses de acercamiento para nuestras faenas ubicadas en el sector de Calbuco.</p>
+                        </div>
+                        <div style="border-bottom: 1px solid var(--border-ui); padding: 24px 0;">
+                            <h4 style="margin-bottom: 10px;">¿Qué certificaciones exigen a los soldadores?</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Dependiendo del proyecto, requerimos calificación 3G, 4G o 6G bajo normas AWS o ASME.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACTO -->
+        <section class="section-gap" id="contacto">
+            <div class="container">
+                <div style="background: var(--bg-surface); padding: 80px; border-radius: 48px; border: 1px solid var(--border-ui);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px;">
+                        <div>
+                            <h2>Hablemos de <br> su proyecto.</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 40px;">Complete el formulario y un especialista técnico lo contactará en menos de 24 horas.</p>
+                            <div style="display: flex; flex-direction: column; gap: 20px;">
+                                <div>
+                                    <h4 style="color: var(--primary);">Email Directo</h4>
+                                    <p>contacto@jainaynunez.cl</p>
+                                </div>
+                                <div>
+                                    <h4 style="color: var(--primary);">RRHH</h4>
+                                    <p>reclutamiento@jainaynunez.cl</p>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="main-form">
+                            <div class="form-group">
+                                <label class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-input" placeholder="Ej: Juan Pérez">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Corporativo</label>
+                                <input type="email" class="form-input" placeholder="nombre@empresa.cl">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mensaje / Requerimiento</label>
+                                <textarea class="form-input" rows="4" placeholder="Describa brevemente su necesidad..."></textarea>
+                            </div>
+                            <button class="btn-main" style="width: 100%; padding: 20px; background: white; color: black; border-radius: 12px; font-weight: 800; border: none; cursor: pointer;">ENVIAR SOLICITUD</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer-v5">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 80px;">
+                    <div style="grid-column: span 2;">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 20px;">JAIÑA & NÚÑEZ <span>.</span></h2>
+                        <p style="color: var(--text-muted); max-width: 400px;">Expertos en ingeniería industrial y servicios de montaje. Comprometidos con la excelencia y seguridad en cada obra civil ejecutada.</p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">Explorar</h4>
+                        <ul style="list-style: none; color: var(--text-muted); font-size: 0.9rem;">
+                            <li style="margin-bottom: 12px;">Servicios</li>
+                            <li style="margin-bottom: 12px;">Maquinaria</li>
+                            <li style="margin-bottom: 12px;">Seguridad</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 20px;">Legal</h4>
+                        <ul style="list-style: none; color: var(--text-muted); font-size: 0.9rem;">
+                            <li style="margin-bottom: 12px;">RUT: 76.305.159-5</li>
+                            <li style="margin-bottom: 12px;">Calbuco, Chile</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="padding-top: 40px; border-top: 1px solid var(--border-ui); text-align: center; color: var(--text-dark); font-size: 0.8rem;">
+                    © 2026 Sociedad Comercial Jaiña y Núñez Limitada. Todos los derechos reservados.
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // 1. Inicialización de Partículas Avanzado
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 100, "density": { "enable": true, "value_area": 1000 } },
+                "color": { "value": ["#FF5A00", "#4264fb"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": true },
+                "size": { "value": 1.5, "random": true },
+                "line_linked": { "enable": true, "distance": 120, "color": "#ffffff", "opacity": 0.05, "width": 1 },
+                "move": { "enable": true, "speed": 0.8, "direction": "none", "out_mode": "out" }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" } },
+                "modes": { "bubble": { "distance": 200, "size": 4, "duration": 2, "opacity": 0.8 } }
+            }
+        });
+
+        // 2. Efecto de Scroll en Navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav-master');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // 3. Sistema de Revelación al Scroll (Avanzado)
+        const setupReveal = () => {
+            const options = { threshold: 0.15, rootMargin: "0px 0px -50px 0px" };
+            const callback = (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    } else {
+                        // Opcional: remover para repetir animación
+                        // entry.target.classList.remove('active');
+                    }
+                });
+            };
+            const observer = new IntersectionObserver(callback, options);
+            document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+        };
+
+        // 4. Lógica de Formulario
+        document.getElementById('main-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por su mensaje. Jaiña & Núñez le contactará a la brevedad.');
+            this.reset();
+        });
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            setupReveal();
+        });
+    </script>
+</body>
+</html>

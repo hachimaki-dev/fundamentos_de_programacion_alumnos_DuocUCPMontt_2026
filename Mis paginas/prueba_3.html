@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panadería Artesanal - El Trigo de Oro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --primary-color: #d4a373;
+            --secondary-color: #faedcd;
+            --dark-color: #1a1a1a;
+            --text-color: #4a4a4a;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            padding: 0.5rem 1.5rem;
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-links li a:hover {
+            color: var(--primary-color);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            background-color: var(--primary-color);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: #bc8a5f;
+            transform: scale(1.05);
+        }
+
+        /* SECTIONS GENERAL */
+        section {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* CARDS & GRID */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-img {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-price {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* HISTORY SECTION */
+        .history {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            background-color: var(--secondary-color);
+            border-radius: 20px;
+            padding: 4rem;
+        }
+
+        .history-content {
+            flex: 1;
+        }
+
+        .history-img {
+            flex: 1;
+            border-radius: 15px;
+            box-shadow: 20px 20px 0 var(--primary-color);
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--white);
+            padding: 4rem 2rem 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+        }
+
+        /* KEYFRAMES */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .history { flex-direction: column; padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <a href="#" class="logo">El Trigo de Oro</a>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#productos">Productos</a></li>
+                <li><a href="#historia">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="inicio" class="hero">
+        <h1>Pan Fresco Cada Mañana</h1>
+        <p>Artesanía, tradición y el aroma inolvidable del pan recién salido del horno de leña.</p>
+        <a href="#productos" class="btn">Ver Menú</a>
+    </section>
+
+    <section id="productos">
+        <h2 class="section-title">Nuestras Especialidades</h2>
+        <div class="products-grid">
+            <!-- Producto 1 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1585478259715-876a6a81fc08?auto=format&fit=crop&w=500&q=80')"></div>
+                <div class="card-content">
+                    <h3>Pan de Masa Madre</h3>
+                    <p>Fermentación natural de 24 horas para un sabor y textura inigualables.</p>
+                    <span class="card-price">$4.50</span>
+                </div>
+            </div>
+            <!-- Producto 2 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=500&q=80')"></div>
+                <div class="card-content">
+                    <h3>Croissants de Mantequilla</h3>
+                    <p>Capas crujientes y un corazón tierno que se deshace en tu boca.</p>
+                    <span class="card-price">$2.00</span>
+                </div>
+            </div>
+            <!-- Producto 3 -->
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500&q=80')"></div>
+                <div class="card-content">
+                    <h3>Baguette Tradicional</h3>
+                    <p>La receta clásica francesa con corteza dorada y miga alveolada.</p>
+                    <span class="card-price">$1.50</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="historia">
+        <div class="history">
+            <div class="history-content">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem;">Desde 1954</h2>
+                <p>Nuestra historia comenzó en un pequeño horno local, donde el abuelo Julián perfeccionó el arte de la panadería. Tres generaciones después, mantenemos la misma pasión, utilizando ingredientes orgánicos y procesos lentos para garantizar la máxima calidad en cada pieza.</p>
+                <br>
+                <p>Creemos que el pan es el alma de la mesa, y por eso ponemos el corazón en cada amasado.</p>
+            </div>
+            <img src="https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?auto=format&fit=crop&w=600&q=80" alt="Horno artesanal" class="history-img">
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-grid">
+            <div>
+                <h3>El Trigo de Oro</h3>
+                <p>Panadería artesanal y repostería fina.</p>
+            </div>
+            <div>
+                <h4>Horarios</h4>
+                <p>Lunes - Viernes: 7:00 - 20:00</p>
+                <p>Sábados - Domingos: 8:00 - 14:00</p>
+            </div>
+            <div>
+                <h4>Ubicación</h4>
+                <p>Calle de los Panaderos, 123</p>
+                <p>Ciudad del Sabor, CP 5678</p>
+            </div>
+            <div>
+                <h4>Contacto</h4>
+                <p>Tel: +34 900 123 456</p>
+                <p>Email: hola@eltrigodeoro.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Panadería El Trigo de Oro. Todos los derechos reservados.
+        </div>
+    </footer>
+
+</body>
+</html>
