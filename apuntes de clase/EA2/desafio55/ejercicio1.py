@@ -10,6 +10,7 @@ Restricciones: Asigna todos los valores directamente en el código (no uses inpu
 sueldo = 500000
 colacion = 50000
 movilizacion = 30000
+
 descuento_salud = sueldo * 0.07
 descuento_afp = sueldo * 0.10
 
