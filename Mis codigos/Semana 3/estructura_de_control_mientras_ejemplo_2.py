@@ -14,5 +14,6 @@ while condicion == True :
         print("Contamos las adivinanzas")
     if opcion_elegida == 3 :
         condicion = False
+        
 
 print (f"la condicion a cambiado a {condicion}")

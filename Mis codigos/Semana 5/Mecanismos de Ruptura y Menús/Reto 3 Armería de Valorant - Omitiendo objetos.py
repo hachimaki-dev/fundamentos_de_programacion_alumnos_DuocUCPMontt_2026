@@ -15,6 +15,5 @@ while 5 > arma:
     arma += 1
     if arma == 4:
         print("Arma 4: agotada")
-        continue
     else:
         print(f"Comprando arma número {arma} ")
