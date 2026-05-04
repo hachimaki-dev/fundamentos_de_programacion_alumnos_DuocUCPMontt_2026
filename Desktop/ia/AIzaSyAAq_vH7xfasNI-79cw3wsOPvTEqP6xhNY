@@ -1,0 +1,8 @@
+cd ~/Desktop/ia
+cp .env.example .env
+
+            export GEMINI_API_KEY="[GCP_API_KEY]"
+        
+cd ~/Desktop/ia
+npm install
+npm start
