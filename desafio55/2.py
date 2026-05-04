@@ -15,4 +15,4 @@ ahorro_mensual = 150000 # 150,000
 
 ahorro_faltante = valor_auto - ahorro_inicial
 
-print(ahorro_faltante // ahorro_mensual)
+print(f"Si ahorra $150.000 al mes, se demorara {ahorro_faltante // ahorro_mensual} meses en comprar su auto")
