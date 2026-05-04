@@ -1,11 +1,8 @@
-bono_asistencia = 0.5
-nota_alumno = 3.6
-asistencia = 0.85
-if asistencia >= 0.80:
-    nota_alumno = nota_alumno + bono_asistencia
-if nota_alumno >= 4.0:
-    print("Aprobado")
-elif nota_alumno >= 3.5 and nota_alumno <= 3.9:
-    print("Examen")
-elif nota_alumno < 3.5:
-    print("Reprobado")
+salario_cliente = 800000
+años_con_el_banco = 6
+deudas = 0
+
+if salario_cliente > 1000000 or años_con_el_banco >= 5 and deudas == 0:
+    print("Cliente VIP")
+else:
+    print("Cliente Normal")
