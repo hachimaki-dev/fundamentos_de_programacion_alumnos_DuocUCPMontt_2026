@@ -6,6 +6,6 @@ bono_movilizacion = 30000
 sueldo_base = sueldo_base * 0.83
 
 # Sueldo + bonos
-sueldo_base = sueldo_base + bono_colacion + bono_movilizacion
+sueldo_final = sueldo_base + bono_colacion + bono_movilizacion
 
-print(sueldo_base)
+print(sueldo_final)
