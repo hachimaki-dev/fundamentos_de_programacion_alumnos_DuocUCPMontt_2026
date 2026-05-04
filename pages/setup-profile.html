@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👤 Completar Perfil — Fundamentos 2026</title>
+  <meta name="description" content="Completa tu perfil de estudiante para acceder a la plataforma." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+
+  <div id="app" class="relative z-10" style="padding: 2rem 1rem; min-height: 100vh;">
+
+    <!-- Loading -->
+    <div v-if="pageLoading" class="auth-page">
+      <div class="auth-card text-center">
+        <div class="auth-logo">🔄</div>
+        <p class="auth-subtitle">Cargando tu perfil...</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Setup Form -->
+    <div v-else class="setup-card auth-card" style="margin: 2rem auto;">
+      <div class="auth-logo">🎨</div>
+      <h1 class="auth-title">Completa tu Perfil</h1>
+      <p class="auth-subtitle">¡Solo unos datos más para comenzar tu aventura! 🚀</p>
+
+      <!-- Step indicator -->
+      <div class="setup-step-indicator">
+        <div class="setup-step-dot" :class="{ active: step === 1, done: step > 1 }"></div>
+        <div class="setup-step-dot" :class="{ active: step === 2, done: step > 2 }"></div>
+        <div class="setup-step-dot" :class="{ active: step === 3 }"></div>
+      </div>
+
+      <!-- STEP 1: Datos personales -->
+      <form v-if="step === 1" @submit.prevent="nextStep" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="full-name">Nombre completo</label>
+          <input id="full-name" type="text" class="form-input" :class="{ error: errors.full_name }"
+            v-model="form.full_name" placeholder="Ej: María González Pérez" autocomplete="name"
+            @input="errors.full_name = ''" />
+          <p v-if="errors.full_name" class="form-error">❌ {{ errors.full_name }}</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="birth-date">Fecha de nacimiento</label>
+          <input id="birth-date" type="date" class="form-input" :class="{ error: errors.birth_date }"
+            v-model="form.birth_date" @input="errors.birth_date = ''" />
+          <p v-if="errors.birth_date" class="form-error">❌ {{ errors.birth_date }}</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="section">Sección</label>
+          <select id="section" class="form-input" :class="{ error: errors.section }"
+            v-model="form.section" @change="errors.section = ''">
+            <option value="" disabled>Selecciona tu sección</option>
+            <option v-for="s in sections" :key="s.value" :value="s.value">{{ s.label }}</option>
+          </select>
+          <p v-if="errors.section" class="form-error">❌ {{ errors.section }}</p>
+        </div>
+
+        <button type="submit" class="btn-primary">Siguiente →</button>
+      </form>
+
+      <!-- STEP 2: Nickname + GitHub -->
+      <form v-if="step === 2" @submit.prevent="nextStep" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="nickname">Nickname / Alias</label>
+          <input id="nickname" type="text" class="form-input" :class="{ error: errors.nickname, success: nicknameOk }"
+            v-model="form.nickname" placeholder="Tu alias en la plataforma"
+            @input="checkNickname" maxlength="20" />
+          <p v-if="errors.nickname" class="form-error">❌ {{ errors.nickname }}</p>
+          <p v-else-if="nicknameOk" class="form-hint" style="color: var(--t-correct-text);">✅ Disponible</p>
+          <p v-else-if="checkingNickname" class="form-hint">🔍 Verificando...</p>
+          <p v-else class="form-hint">Máximo 20 caracteres, sin espacios</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="github">GitHub Username</label>
+          <input id="github" type="text" class="form-input" :class="{ error: errors.github_username }"
+            v-model="form.github_username" placeholder="Ej: hachimaki-dev"
+            @input="errors.github_username = ''" />
+          <p v-if="errors.github_username" class="form-error">❌ {{ errors.github_username }}</p>
+          <!-- GitHub preview -->
+          <div v-if="form.github_username && !errors.github_username" class="github-preview fade-in-up">
+            <img :src="'https://github.com/' + form.github_username + '.png'" @error="$event.target.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22><rect fill=%22%23ccc%22 width=%2240%22 height=%2240%22 rx=%2220%22/></svg>'" alt="GitHub Avatar" />
+            <span>github.com/{{ form.github_username }}</span>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="button" class="btn-secondary" @click="step = 1" style="flex:1;">← Atrás</button>
+          <button type="submit" class="btn-primary" style="flex:2;">Siguiente →</button>
+        </div>
+      </form>
+
+      <!-- STEP 3: Avatar Selection -->
+      <div v-if="step === 3">
+        <div class="text-center mb-4">
+          <p class="text-sm font-semibold" style="color: var(--t-text-muted); text-transform: uppercase; letter-spacing: 0.8px;">
+            Elige tu avatar
+          </p>
+        </div>
+
+        <!-- Avatar preview -->
+        <div class="avatar-preview fade-in-up">
+          <img :src="selectedAvatarSrc" :alt="selectedAvatarLabel" />
+        </div>
+        <p class="text-center text-sm font-bold mb-4" style="color: var(--t-accent);">{{ selectedAvatarLabel }}</p>
+
+        <!-- Category pills -->
+        <div class="category-pills">
+          <button class="category-pill" :class="{ active: avatarCategory === 'all' }"
+            @click="avatarCategory = 'all'">✨ Todos</button>
+          <button v-for="cat in avatarCategories" :key="cat.id"
+            class="category-pill" :class="{ active: avatarCategory === cat.id }"
+            @click="avatarCategory = cat.id">
+            {{ cat.icon }} {{ cat.id }}
+          </button>
+        </div>
+
+        <!-- Avatar grid -->
+        <div class="avatar-grid mb-4">
+          <button v-for="av in filteredAvatars" :key="av.id"
+            class="avatar-option" :class="{ selected: form.avatar_id === av.id }"
+            @click="form.avatar_id = av.id"
+            :title="av.label" :aria-label="'Seleccionar avatar: ' + av.label">
+            <img :src="av.src" :alt="av.label" loading="lazy" />
+          </button>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="button" class="btn-secondary" @click="step = 2" style="flex:1;">← Atrás</button>
+          <button type="button" class="btn-primary" :disabled="submitting" @click="saveProfile" style="flex:2;">
+            <span v-if="submitting" class="spinner"></span>
+            <span v-else>¡Listo! 🎉</span>
+          </button>
+        </div>
+      </div>
+
+      <p v-if="generalError" class="form-error mt-3" style="justify-content:center;">{{ generalError }}</p>
+    </div>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          pageLoading: true,
+          step: 1,
+          submitting: false,
+          generalError: '',
+          errors: { full_name: '', birth_date: '', section: '', nickname: '', github_username: '' },
+          form: {
+            full_name: '',
+            birth_date: '',
+            section: '',
+            nickname: '',
+            github_username: '',
+            avatar_id: 'python-01',
+          },
+          sections: SupabaseManager.getSections(),
+          avatarCatalog: SupabaseManager.getAvatarCatalog(),
+          avatarCategories: SupabaseManager.getAvatarCategories(),
+          avatarCategory: 'all',
+          nicknameOk: false,
+          checkingNickname: false,
+          _nicknameTimer: null,
+        };
+      },
+      computed: {
+        filteredAvatars() {
+          if (this.avatarCategory === 'all') return this.avatarCatalog;
+          return this.avatarCatalog.filter(a => a.category === this.avatarCategory);
+        },
+        selectedAvatarSrc() {
+          const av = this.avatarCatalog.find(a => a.id === this.form.avatar_id);
+          return av ? av.src : this.avatarCatalog[0].src;
+        },
+        selectedAvatarLabel() {
+          const av = this.avatarCatalog.find(a => a.id === this.form.avatar_id);
+          return av ? av.label : '';
+        },
+      },
+      async mounted() {
+        const user = await SupabaseManager.requireAuth('login.html');
+        if (!user) return;
+
+        // If profile already completed, go to dashboard
+        const { profile } = await SupabaseManager.getProfile();
+        if (profile && profile.profile_completed) {
+          window.location.href = 'dashboard.html';
+          return;
+        }
+
+        // Pre-fill existing data if any
+        if (profile) {
+          if (profile.full_name) this.form.full_name = profile.full_name;
+          if (profile.birth_date) this.form.birth_date = profile.birth_date;
+          if (profile.section) this.form.section = profile.section;
+          if (profile.nickname) this.form.nickname = profile.nickname;
+          if (profile.github_username) this.form.github_username = profile.github_username;
+          if (profile.avatar_id) this.form.avatar_id = profile.avatar_id;
+        }
+
+        this.pageLoading = false;
+      },
+      methods: {
+        nextStep() {
+          this.generalError = '';
+          if (this.step === 1) {
+            let valid = true;
+            if (!this.form.full_name.trim()) { this.errors.full_name = 'El nombre es obligatorio'; valid = false; }
+            if (!this.form.birth_date) { this.errors.birth_date = 'La fecha es obligatoria'; valid = false; }
+            if (!this.form.section) { this.errors.section = 'Selecciona una sección'; valid = false; }
+            if (valid) this.step = 2;
+          } else if (this.step === 2) {
+            let valid = true;
+            const nick = this.form.nickname.trim();
+            if (!nick) { this.errors.nickname = 'El nickname es obligatorio'; valid = false; }
+            else if (nick.includes(' ')) { this.errors.nickname = 'Sin espacios'; valid = false; }
+            else if (nick.length < 3) { this.errors.nickname = 'Mínimo 3 caracteres'; valid = false; }
+            if (!this.form.github_username.trim()) { this.errors.github_username = 'Tu GitHub es obligatorio'; valid = false; }
+            if (valid) this.step = 3;
+          }
+        },
+
+        checkNickname() {
+          this.nicknameOk = false;
+          this.errors.nickname = '';
+          clearTimeout(this._nicknameTimer);
+          const nick = this.form.nickname.trim();
+          if (!nick || nick.length < 3) return;
+          if (nick.includes(' ')) { this.errors.nickname = 'Sin espacios'; return; }
+
+          this.checkingNickname = true;
+          this._nicknameTimer = setTimeout(async () => {
+            const taken = await SupabaseManager.isNicknameTaken(nick);
+            this.checkingNickname = false;
+            if (taken) {
+              this.errors.nickname = 'Este nickname ya está en uso';
+            } else {
+              this.nicknameOk = true;
+            }
+          }, 600);
+        },
+
+        async saveProfile() {
+          this.submitting = true;
+          this.generalError = '';
+
+          const { data, error } = await SupabaseManager.updateProfile({
+            full_name: this.form.full_name.trim(),
+            birth_date: this.form.birth_date,
+            section: this.form.section,
+            nickname: this.form.nickname.trim(),
+            github_username: this.form.github_username.trim(),
+            avatar_id: this.form.avatar_id,
+            profile_completed: true,
+          });
+
+          this.submitting = false;
+
+          if (error) {
+            this.generalError = '⚠️ Error al guardar: ' + (error.message || error);
+            return;
+          }
+
+          SupabaseManager.showToast('¡Perfil completado! Bienvenid@ 🎉', 'success');
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📖 Mi Diario de Clase — Fundamentos 2026</title>
+  <meta name="description" content="Diario personal de clase para registrar aprendizajes diarios." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <!-- EasyMDE Markdown Editor -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+  <!-- Marked for MD rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+
+    <!-- Loading -->
+    <div v-if="loading" class="auth-page">
+      <div class="auth-card text-center">
+        <div class="auth-logo">📖</div>
+        <p class="auth-subtitle">Cargando tu diario...</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+    </div>
+
+    <template v-else>
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4 fade-in-up">
+        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
+        <h1 class="text-xl font-bold" style="color: var(--t-accent);">📖 Mi Diario</h1>
+      </div>
+
+      <!-- Search -->
+      <div class="search-bar mb-4 fade-in-up" style="max-width:100%;padding:0;">
+        <div class="search-input-wrap" style="margin-bottom:0.5rem;">
+          <span class="icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Buscar en tu diario..."
+            v-model="searchQuery" id="diary-search-input" />
+        </div>
+      </div>
+
+      <!-- Tag filters -->
+      <div class="tag-filters mb-4 fade-in-up" style="animation-delay:0.05s;">
+        <button class="tag-pill" :class="{ active: activeTag === '' }" @click="activeTag = ''">✨ Todas</button>
+        <button v-for="tag in availableTags" :key="tag" class="tag-pill"
+          :class="{ active: activeTag === tag }" @click="activeTag = tag">
+          {{ tagEmoji(tag) }} {{ tag }}
+        </button>
+      </div>
+
+      <!-- Entries list -->
+      <div v-if="filteredEntries.length" class="timeline" style="max-width:100%;padding:0 0 2rem;">
+        <div v-for="(entry, idx) in filteredEntries" :key="entry.id"
+          class="diary-entry fade-in-up" style="margin-left:0;cursor:pointer;"
+          :style="{ animationDelay: (idx * 0.05) + 's' }"
+          @click="viewEntry(entry)">
+          <div class="entry-date">{{ formatDate(entry.created_at) }}</div>
+          <div class="entry-title">
+            <span class="entry-emoji">📝</span>
+            {{ entry.title }}
+          </div>
+          <div class="entry-desc" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            {{ stripMd(entry.content) }}
+          </div>
+          <div class="entry-tags" v-if="entry.tags && entry.tags.length">
+            <span v-for="tag in entry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
+          </div>
+          <!-- Actions -->
+          <div class="flex gap-2 mt-2" @click.stop>
+            <button class="tag-pill" style="font-size:0.72rem;padding:0.2rem 0.6rem;" @click="editEntry(entry)">✏️ Editar</button>
+            <button class="tag-pill" style="font-size:0.72rem;padding:0.2rem 0.6rem;color:var(--t-wrong-text);" @click="confirmDelete(entry)">🗑️</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div v-else class="empty-state fade-in-up">
+        <div class="emoji">📖</div>
+        <p v-if="searchQuery || activeTag">No se encontraron entradas con ese filtro.</p>
+        <p v-else>¡Tu diario está vacío! Crea tu primera entrada.</p>
+        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Pulsa el botón + para comenzar 🌟</p>
+      </div>
+
+      <!-- FAB -->
+      <button class="diary-fab" @click="openEditor()" title="Nueva entrada" aria-label="Crear nueva entrada">+</button>
+
+      <!-- Editor Modal -->
+      <div v-if="showEditor" class="diary-modal-overlay" @click.self="cancelEditor">
+        <div class="diary-modal">
+          <div class="diary-modal-header">
+            <h2 class="text-lg font-bold" style="color:var(--t-accent);">
+              {{ editingEntry ? '✏️ Editar Entrada' : '✨ Nueva Entrada' }}
+            </h2>
+            <button class="diary-modal-close" @click="cancelEditor">✕</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="entry-title">Título</label>
+            <input id="entry-title" type="text" class="form-input" v-model="editorTitle"
+              placeholder="¿Qué aprendiste hoy? 🌟" maxlength="100" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Contenido (Markdown)</label>
+            <textarea id="md-editor" style="display:none;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tags</label>
+            <div class="flex gap-2 flex-wrap">
+              <button v-for="tag in defaultTags" :key="tag"
+                class="tag-pill" :class="{ active: editorTags.includes(tag) }"
+                @click="toggleTag(tag)" type="button" style="font-size:0.78rem;">
+                {{ tagEmoji(tag) }} {{ tag }}
+              </button>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button class="btn-secondary" @click="cancelEditor" style="flex:1;">Cancelar</button>
+            <button class="btn-primary" :disabled="saving" @click="saveEntry" style="flex:2;">
+              <span v-if="saving" class="spinner"></span>
+              <span v-else>{{ editingEntry ? 'Guardar' : 'Crear' }} 💾</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- View Modal -->
+      <div v-if="viewingEntry" class="diary-modal-overlay" @click.self="viewingEntry = null">
+        <div class="diary-modal">
+          <div class="diary-modal-header">
+            <h2 class="text-lg font-bold" style="color:var(--t-accent);">{{ viewingEntry.title }}</h2>
+            <button class="diary-modal-close" @click="viewingEntry = null">✕</button>
+          </div>
+          <p class="text-xs mb-3" style="color:var(--t-text-muted);">{{ formatDate(viewingEntry.created_at) }}</p>
+          <div v-if="viewingEntry.tags && viewingEntry.tags.length" class="flex gap-2 flex-wrap mb-3">
+            <span v-for="tag in viewingEntry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
+          </div>
+          <div class="doc-section" v-html="renderMd(viewingEntry.content)"></div>
+        </div>
+      </div>
+
+      <!-- Delete confirmation -->
+      <div v-if="deletingEntry" class="diary-modal-overlay" @click.self="deletingEntry = null">
+        <div class="diary-modal" style="max-width:400px;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:1rem;">🗑️</div>
+          <p class="font-bold mb-2" style="color:var(--t-text);">¿Eliminar esta entrada?</p>
+          <p class="text-sm mb-4" style="color:var(--t-text-muted);">{{ deletingEntry.title }}</p>
+          <div class="flex gap-3">
+            <button class="btn-secondary" @click="deletingEntry = null" style="flex:1;">Cancelar</button>
+            <button class="btn-primary" @click="deleteEntry" style="flex:1;background:var(--t-wrong);">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          loading: true,
+          profile: null,
+          entries: [],
+          searchQuery: '',
+          activeTag: '',
+          showEditor: false,
+          editorTitle: '',
+          editorTags: [],
+          editingEntry: null,
+          viewingEntry: null,
+          deletingEntry: null,
+          saving: false,
+          mdeInstance: null,
+          defaultTags: ['Python', 'Git', 'Proyecto', 'Clase', 'Bug', 'Logro', 'Recurso'],
+        };
+      },
+      computed: {
+        availableTags() {
+          const tags = new Set();
+          this.entries.forEach(e => (e.tags || []).forEach(t => tags.add(t)));
+          return Array.from(tags).sort();
+        },
+        filteredEntries() {
+          let results = this.entries;
+          if (this.activeTag) {
+            results = results.filter(e => (e.tags || []).includes(this.activeTag));
+          }
+          if (this.searchQuery.trim()) {
+            const q = this.searchQuery.toLowerCase();
+            results = results.filter(e =>
+              e.title.toLowerCase().includes(q) ||
+              e.content.toLowerCase().includes(q) ||
+              (e.tags || []).some(t => t.toLowerCase().includes(q))
+            );
+          }
+          return results.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        },
+      },
+      async mounted() {
+        const profile = await SupabaseManager.requireProfile('setup-profile.html');
+        if (!profile) return;
+        this.profile = profile;
+        await this.loadEntries();
+        this.loading = false;
+      },
+      methods: {
+        async loadEntries() {
+          const client = SupabaseManager.getClient();
+          const { data, error } = await client
+            .from('diary_entries')
+            .select('*')
+            .eq('user_id', this.profile.id)
+            .order('created_at', { ascending: false });
+          if (!error && data) this.entries = data;
+        },
+        formatDate(dateStr) {
+          const d = new Date(dateStr);
+          const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()} — ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        },
+        tagEmoji(tag) {
+          const map = { Python:'🐍', Git:'🐙', Proyecto:'💻', Clase:'📚', Bug:'🐛', Logro:'🏆', Recurso:'🔗' };
+          return map[tag] || '🏷️';
+        },
+        stripMd(text) {
+          return (text || '').replace(/[#*_`\[\]()>~-]/g, '').substring(0, 120);
+        },
+        renderMd(text) {
+          if (typeof marked !== 'undefined') return marked.parse(text || '');
+          return (text || '').replace(/\n/g, '<br>');
+        },
+        toggleTag(tag) {
+          const idx = this.editorTags.indexOf(tag);
+          if (idx >= 0) this.editorTags.splice(idx, 1);
+          else this.editorTags.push(tag);
+        },
+        viewEntry(entry) {
+          this.viewingEntry = entry;
+        },
+        openEditor(entry = null) {
+          this.editingEntry = entry;
+          this.editorTitle = entry ? entry.title : '';
+          this.editorTags = entry ? [...(entry.tags || [])] : [];
+          this.showEditor = true;
+          this.$nextTick(() => {
+            const el = document.getElementById('md-editor');
+            if (el && !this.mdeInstance) {
+              this.mdeInstance = new EasyMDE({
+                element: el,
+                placeholder: '¿Qué aprendiste hoy? Puedes usar **Markdown**, enlaces, y bloques de código...',
+                spellChecker: false,
+                status: false,
+                minHeight: '200px',
+                toolbar: ['bold','italic','heading','|','code','quote','|','unordered-list','ordered-list','|','link','image','|','preview','guide'],
+                initialValue: entry ? entry.content : '',
+              });
+            } else if (this.mdeInstance) {
+              this.mdeInstance.value(entry ? entry.content : '');
+            }
+          });
+        },
+        cancelEditor() {
+          this.showEditor = false;
+          if (this.mdeInstance) {
+            this.mdeInstance.toTextArea();
+            this.mdeInstance = null;
+          }
+        },
+        editEntry(entry) {
+          this.openEditor(entry);
+        },
+        confirmDelete(entry) {
+          this.deletingEntry = entry;
+        },
+        async deleteEntry() {
+          const client = SupabaseManager.getClient();
+          const { error } = await client.from('diary_entries').delete().eq('id', this.deletingEntry.id);
+          if (error) {
+            SupabaseManager.showToast('Error al eliminar', 'error');
+          } else {
+            this.entries = this.entries.filter(e => e.id !== this.deletingEntry.id);
+            SupabaseManager.showToast('Entrada eliminada', 'info');
+          }
+          this.deletingEntry = null;
+        },
+        async saveEntry() {
+          if (!this.editorTitle.trim()) {
+            SupabaseManager.showToast('El título es obligatorio', 'warning');
+            return;
+          }
+          const content = this.mdeInstance ? this.mdeInstance.value() : '';
+          if (!content.trim()) {
+            SupabaseManager.showToast('Escribe algo en el contenido', 'warning');
+            return;
+          }
+
+          this.saving = true;
+          const client = SupabaseManager.getClient();
+
+          if (this.editingEntry) {
+            // Update
+            const { error } = await client.from('diary_entries')
+              .update({ title: this.editorTitle.trim(), content, tags: this.editorTags, updated_at: new Date().toISOString() })
+              .eq('id', this.editingEntry.id);
+            if (error) { SupabaseManager.showToast('Error: ' + error.message, 'error'); }
+            else { SupabaseManager.showToast('Entrada actualizada ✅', 'success'); }
+          } else {
+            // Insert
+            const { error } = await client.from('diary_entries')
+              .insert({ user_id: this.profile.id, title: this.editorTitle.trim(), content, tags: this.editorTags });
+            if (error) { SupabaseManager.showToast('Error: ' + error.message, 'error'); }
+            else { SupabaseManager.showToast('Entrada creada ✨', 'success'); }
+          }
+
+          this.saving = false;
+          this.cancelEditor();
+          await this.loadEntries();
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

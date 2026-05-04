@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏆 Competencias — Fundamentos 2026</title>
+  <meta name="description" content="Competencias de código en tiempo real para estudiantes." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+
+    <!-- Loading -->
+    <div v-if="loading" class="auth-page">
+      <div class="auth-card text-center">
+        <div class="auth-logo">🏆</div>
+        <p class="auth-subtitle">Cargando competencias...</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+    </div>
+
+    <template v-else>
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4 fade-in-up">
+        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
+        <h1 class="text-xl font-bold" style="color: var(--t-accent);">🏆 Competencias</h1>
+      </div>
+
+      <!-- Status filter -->
+      <div class="tag-filters mb-4 fade-in-up">
+        <button class="tag-pill" :class="{ active: filter === 'all' }" @click="filter = 'all'">✨ Todas</button>
+        <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢 Activas</button>
+        <button class="tag-pill" :class="{ active: filter === 'upcoming' }" @click="filter = 'upcoming'">📅 Próximas</button>
+        <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅ Finalizadas</button>
+      </div>
+
+      <!-- Competitions list -->
+      <div v-if="filteredComps.length">
+        <div v-for="(comp, idx) in filteredComps" :key="comp.id"
+          class="comp-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="comp-status" :class="comp.status">
+                {{ statusLabel(comp.status) }}
+              </span>
+              <h3 class="text-lg font-bold mt-2" style="color:var(--t-accent);">{{ comp.title }}</h3>
+              <p class="text-sm mt-1" style="color:var(--t-text-secondary);">{{ comp.description }}</p>
+              <div class="flex gap-3 mt-2 text-xs" style="color:var(--t-text-muted);">
+                <span>📅 {{ formatDate(comp.start_time) }}</span>
+                <span>⏰ {{ formatDate(comp.end_time) }}</span>
+              </div>
+            </div>
+            <div class="text-center" style="min-width:60px;">
+              <div class="text-3xl">{{ comp.status === 'active' ? '🔥' : comp.status === 'upcoming' ? '⏳' : '🏁' }}</div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex gap-3 mt-4">
+            <button v-if="comp.status === 'active' && !hasJoined(comp.id)"
+              class="btn-primary" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">
+              ¡Unirme! 🚀
+            </button>
+            <button v-else-if="hasJoined(comp.id)"
+              class="btn-secondary" style="flex:1;padding:0.6rem;" disabled>
+              ✅ Ya participas
+            </button>
+            <button class="btn-secondary" style="flex:1;padding:0.6rem;" @click="viewLeaderboard(comp)">
+              📊 Ranking
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty -->
+      <div v-else class="empty-state fade-in-up">
+        <div class="emoji">🏆</div>
+        <p>No hay competencias {{ filter !== 'all' ? 'en esta categoría' : 'disponibles' }}.</p>
+        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Tu profesor creará nuevas pronto 🌟</p>
+      </div>
+
+      <!-- Leaderboard Modal -->
+      <div v-if="leaderboardComp" class="diary-modal-overlay" @click.self="leaderboardComp = null">
+        <div class="diary-modal" style="max-width:500px;">
+          <div class="diary-modal-header">
+            <h2 class="text-lg font-bold" style="color:var(--t-accent);">📊 {{ leaderboardComp.title }}</h2>
+            <button class="diary-modal-close" @click="leaderboardComp = null">✕</button>
+          </div>
+
+          <div v-if="leaderboardData.length">
+            <div v-for="(entry, idx) in leaderboardData" :key="entry.id" class="leaderboard-row">
+              <span class="leaderboard-rank" :class="{ gold: idx===0, silver: idx===1, bronze: idx===2 }">
+                {{ idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx+1) }}
+              </span>
+              <span class="flex-1 font-semibold" style="color:var(--t-text);">{{ entry.nickname || 'Anónimo' }}</span>
+              <span class="text-sm font-bold" style="color:var(--t-accent);">{{ entry.score }} pts</span>
+              <span class="text-xs" style="color:var(--t-text-muted);">{{ formatTime(entry.time_seconds) }}</span>
+            </div>
+          </div>
+          <div v-else class="text-center p-4">
+            <p style="color:var(--t-text-muted);">Aún no hay participantes</p>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          loading: true,
+          profile: null,
+          competitions: [],
+          myEntries: [],
+          filter: 'all',
+          leaderboardComp: null,
+          leaderboardData: [],
+        };
+      },
+      computed: {
+        filteredComps() {
+          if (this.filter === 'all') return this.competitions;
+          return this.competitions.filter(c => c.status === this.filter);
+        },
+      },
+      async mounted() {
+        const profile = await SupabaseManager.requireProfile('setup-profile.html');
+        if (!profile) return;
+        this.profile = profile;
+        await this.loadData();
+        this.loading = false;
+      },
+      methods: {
+        async loadData() {
+          const client = SupabaseManager.getClient();
+          // Load competitions
+          const { data: comps } = await client.from('competitions').select('*').order('start_time', { ascending: false });
+          this.competitions = comps || [];
+          // Load my entries
+          const { data: entries } = await client.from('competition_entries').select('*').eq('user_id', this.profile.id);
+          this.myEntries = entries || [];
+        },
+        hasJoined(compId) {
+          return this.myEntries.some(e => e.competition_id === compId);
+        },
+        async joinComp(comp) {
+          const client = SupabaseManager.getClient();
+          const { error } = await client.from('competition_entries').insert({
+            competition_id: comp.id,
+            user_id: this.profile.id,
+          });
+          if (error) {
+            SupabaseManager.showToast('Error: ' + error.message, 'error');
+          } else {
+            SupabaseManager.showToast('¡Te has unido! 🚀', 'success');
+            await this.loadData();
+          }
+        },
+        async viewLeaderboard(comp) {
+          this.leaderboardComp = comp;
+          const client = SupabaseManager.getClient();
+          const { data } = await client
+            .from('competition_entries')
+            .select('*, profiles(nickname, avatar_id)')
+            .eq('competition_id', comp.id)
+            .order('score', { ascending: false })
+            .order('time_seconds', { ascending: true });
+          this.leaderboardData = (data || []).map(e => ({
+            ...e,
+            nickname: e.profiles?.nickname || 'Anónimo',
+          }));
+        },
+        statusLabel(status) {
+          return { active: '🟢 Activa', upcoming: '📅 Próxima', finished: '✅ Finalizada' }[status] || status;
+        },
+        formatDate(dateStr) {
+          const d = new Date(dateStr);
+          return `${d.getDate()}/${d.getMonth()+1} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        },
+        formatTime(secs) {
+          if (!secs) return '--:--';
+          const m = Math.floor(secs / 60);
+          const s = secs % 60;
+          return `${m}:${s.toString().padStart(2,'0')}`;
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

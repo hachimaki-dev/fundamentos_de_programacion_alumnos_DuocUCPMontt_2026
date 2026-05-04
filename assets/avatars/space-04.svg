@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+<defs><radialGradient id="g" cx="50%" cy="40%"><stop offset="0%" stop-color="#a764ff" stop-opacity="0.3"/><stop offset="100%" stop-color="#0d0221"/></radialGradient></defs>
+<rect width="256" height="256" rx="48" fill="#0d0221"/><rect width="256" height="256" rx="48" fill="url(#g)"/>
+<text x="128" y="120" text-anchor="middle" dominant-baseline="central" font-size="80">🌌</text>
+<text x="128" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="bold" fill="#a764ff" opacity="0.8">Galaxy</text>
+</svg>

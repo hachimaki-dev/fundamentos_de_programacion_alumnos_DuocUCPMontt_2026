@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="css/themes.css" />
   <link rel="stylesheet" href="css/utilities.css" />
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -27,6 +31,9 @@
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
   <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
   <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <!-- Auth Nav Bar -->
+  <div id="auth-nav" class="nav-auth-bar" style="display:none;"></div>
 
   <!-- Vue App -->
   <div id="app" class="relative z-10">
@@ -218,6 +225,9 @@
   <!-- Diary entries data -->
   <script src="js/diary-entries.js"></script>
 
+  <!-- Supabase Client -->
+  <script src="js/supabase-client.js"></script>
+
   <!-- App initialization -->
   <script>
     const app = Vue.createApp({
@@ -281,6 +291,35 @@
     });
 
     app.mount('#app');
+  </script>
+
+  <!-- Auth Nav Injection -->
+  <script>
+    (async function() {
+      try {
+        const user = await SupabaseManager.getUser();
+        const nav = document.getElementById('auth-nav');
+        if (!nav) return;
+        if (user) {
+          const { profile } = await SupabaseManager.getProfile();
+          if (profile && profile.profile_completed) {
+            const av = SupabaseManager.getAvatarById(profile.avatar_id);
+            nav.innerHTML = `
+              <a href="pages/dashboard.html" class="nav-auth-btn">
+                <span class="nav-auth-avatar"><img src="${av.src.replace('../','')}" alt="Avatar" /></span>
+                Mi Dashboard
+              </a>`;
+          } else {
+            nav.innerHTML = '<a href="pages/setup-profile.html" class="nav-auth-btn">✨ Completar Perfil</a>';
+          }
+        } else {
+          nav.innerHTML = '<a href="pages/login.html" class="nav-auth-btn">🔑 Iniciar Sesión</a>';
+        }
+        nav.style.display = 'flex';
+      } catch(e) {
+        console.log('Auth nav: not available', e);
+      }
+    })();
   </script>
 
 </body>

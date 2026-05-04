@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏠 Dashboard — Fundamentos 2026</title>
+  <meta name="description" content="Tu hub personal en la plataforma de Fundamentos de Programación 2026." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+
+  <div id="app" class="relative z-10" style="max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem;">
+
+    <!-- Loading -->
+    <div v-if="loading" class="auth-page">
+      <div class="auth-card text-center">
+        <div class="auth-logo">🔄</div>
+        <p class="auth-subtitle">Cargando dashboard...</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+    </div>
+
+    <template v-else>
+      <!-- Header -->
+      <div class="dash-header fade-in-up">
+        <div class="dash-avatar">
+          <img :src="avatarSrc" :alt="profile.nickname" />
+        </div>
+        <div class="dash-user-info">
+          <div class="dash-user-name">{{ profile.full_name }}</div>
+          <div class="dash-user-meta">
+            @{{ profile.nickname }} · {{ profile.section }} ·
+            <a :href="'https://github.com/' + profile.github_username" target="_blank" rel="noopener"
+              style="color: var(--t-accent); text-decoration: none;">
+              🐙 {{ profile.github_username }}
+            </a>
+          </div>
+        </div>
+        <button @click="handleSignOut" class="btn-secondary" style="width:auto; padding: 0.5rem 1rem; font-size: 0.82rem;"
+          title="Cerrar sesión">
+          🚪 Salir
+        </button>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dash-grid fade-in-up" style="animation-delay: 0.1s;">
+
+        <!-- Diario de Clase -->
+        <a href="diary.html" class="dash-card">
+          <div class="dash-card-icon">📖</div>
+          <div class="dash-card-title">Mi Diario de Clase</div>
+          <div class="dash-card-desc">
+            Registra tus aprendizajes, enlaces, código y reflexiones de cada clase.
+          </div>
+          <div v-if="diaryCount > 0" class="mt-3">
+            <span class="entry-tag python">{{ diaryCount }} {{ diaryCount === 1 ? 'entrada' : 'entradas' }}</span>
+          </div>
+        </a>
+
+        <!-- Ejercicios -->
+        <a href="../index.html" class="dash-card">
+          <div class="dash-card-icon">📚</div>
+          <div class="dash-card-title">Ejercicios y Tutoriales</div>
+          <div class="dash-card-desc">
+            Accede a todos los ejercicios, quizzes, documentación y desafíos del curso.
+          </div>
+        </a>
+
+        <!-- Competencias -->
+        <a href="competitions.html" class="dash-card">
+          <div class="dash-card-icon">🏆</div>
+          <div class="dash-card-title">Competencias de Código</div>
+          <div class="dash-card-desc">
+            Compite contra tus compañeros en desafíos cronometrados de Python.
+          </div>
+          <div v-if="activeComps > 0" class="mt-3">
+            <span class="comp-status active">{{ activeComps }} activa{{ activeComps > 1 ? 's' : '' }}</span>
+          </div>
+        </a>
+
+        <!-- Mi Perfil -->
+        <div class="dash-card" @click="showProfileModal = true" style="cursor:pointer;">
+          <div class="dash-card-icon">👤</div>
+          <div class="dash-card-title">Mi Perfil</div>
+          <div class="dash-card-desc">
+            Edita tu avatar, nickname y datos personales.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="card p-5 text-center mt-6 fade-in-up" style="animation-delay: 0.2s;">
+        <p class="text-sm mb-2" style="color: var(--t-text-muted);">📊 Tu Actividad</p>
+        <div class="flex justify-center gap-6">
+          <div>
+            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ diaryCount }}</p>
+            <p class="text-xs" style="color: var(--t-text-muted);">entradas diario</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ compsJoined }}</p>
+            <p class="text-xs" style="color: var(--t-text-muted);">competencias</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ daysSinceJoin }}</p>
+            <p class="text-xs" style="color: var(--t-text-muted);">días en la plataforma</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Edit Modal -->
+      <div v-if="showProfileModal" class="diary-modal-overlay" @click.self="showProfileModal = false">
+        <div class="diary-modal" style="max-width:500px;">
+          <div class="diary-modal-header">
+            <h2 class="text-lg font-bold" style="color: var(--t-accent);">Editar Perfil</h2>
+            <button class="diary-modal-close" @click="showProfileModal = false">✕</button>
+          </div>
+          <div class="avatar-preview">
+            <img :src="editAvatarSrc" alt="Avatar" />
+          </div>
+          <div class="category-pills mb-3">
+            <button class="category-pill" :class="{ active: editAvatarCat === 'all' }" @click="editAvatarCat = 'all'">✨</button>
+            <button v-for="cat in avatarCategories" :key="cat.id"
+              class="category-pill" :class="{ active: editAvatarCat === cat.id }"
+              @click="editAvatarCat = cat.id">{{ cat.icon }}</button>
+          </div>
+          <div class="avatar-grid mb-4">
+            <button v-for="av in editFilteredAvatars" :key="av.id"
+              class="avatar-option" :class="{ selected: editForm.avatar_id === av.id }"
+              @click="editForm.avatar_id = av.id">
+              <img :src="av.src" :alt="av.label" loading="lazy" />
+            </button>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nickname</label>
+            <input type="text" class="form-input" v-model="editForm.nickname" maxlength="20" />
+          </div>
+          <button class="btn-primary" :disabled="editSaving" @click="saveEditProfile">
+            <span v-if="editSaving" class="spinner"></span>
+            <span v-else>Guardar Cambios</span>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          loading: true,
+          profile: null,
+          diaryCount: 0,
+          activeComps: 0,
+          compsJoined: 0,
+          showProfileModal: false,
+          editSaving: false,
+          editAvatarCat: 'all',
+          editForm: { avatar_id: '', nickname: '' },
+          avatarCatalog: SupabaseManager.getAvatarCatalog(),
+          avatarCategories: SupabaseManager.getAvatarCategories(),
+        };
+      },
+      computed: {
+        avatarSrc() {
+          if (!this.profile) return '';
+          const av = SupabaseManager.getAvatarById(this.profile.avatar_id);
+          return av.src;
+        },
+        editAvatarSrc() {
+          const av = this.avatarCatalog.find(a => a.id === this.editForm.avatar_id);
+          return av ? av.src : this.avatarCatalog[0].src;
+        },
+        editFilteredAvatars() {
+          if (this.editAvatarCat === 'all') return this.avatarCatalog;
+          return this.avatarCatalog.filter(a => a.category === this.editAvatarCat);
+        },
+        daysSinceJoin() {
+          if (!this.profile) return 0;
+          const created = new Date(this.profile.created_at);
+          const now = new Date();
+          return Math.floor((now - created) / (1000 * 60 * 60 * 24));
+        },
+      },
+      async mounted() {
+        const profile = await SupabaseManager.requireProfile('setup-profile.html');
+        if (!profile) return;
+        this.profile = profile;
+        this.editForm.avatar_id = profile.avatar_id;
+        this.editForm.nickname = profile.nickname;
+
+        // Load diary count
+        try {
+          const client = SupabaseManager.getClient();
+          const { count } = await client.from('diary_entries').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
+          this.diaryCount = count || 0;
+        } catch (e) { /* table may not exist yet */ }
+
+        // Load competition stats
+        try {
+          const client = SupabaseManager.getClient();
+          const { count } = await client.from('competition_entries').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
+          this.compsJoined = count || 0;
+          const { count: activeCount } = await client.from('competitions').select('*', { count: 'exact', head: true }).eq('status', 'active');
+          this.activeComps = activeCount || 0;
+        } catch (e) { /* tables may not exist yet */ }
+
+        this.loading = false;
+      },
+      methods: {
+        async handleSignOut() {
+          await SupabaseManager.signOut();
+          window.location.href = 'login.html';
+        },
+        async saveEditProfile() {
+          this.editSaving = true;
+          const { error } = await SupabaseManager.updateProfile({
+            avatar_id: this.editForm.avatar_id,
+            nickname: this.editForm.nickname.trim(),
+          });
+          this.editSaving = false;
+          if (error) {
+            SupabaseManager.showToast('Error al guardar: ' + error.message, 'error');
+            return;
+          }
+          this.profile.avatar_id = this.editForm.avatar_id;
+          this.profile.nickname = this.editForm.nickname.trim();
+          this.showProfileModal = false;
+          SupabaseManager.showToast('Perfil actualizado ✅', 'success');
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

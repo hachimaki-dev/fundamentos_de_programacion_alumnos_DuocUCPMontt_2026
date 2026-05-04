@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔐 Iniciar Sesión — Fundamentos de Programación 2026</title>
+  <meta name="description" content="Inicia sesión o regístrate en la plataforma de Fundamentos de Programación 2026." />
+
+  <!-- Theme Engine (load FIRST) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Theme Selector UI -->
+  <script src="../js/theme-selector.js" defer></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+
+  <div id="app" class="auth-page relative z-10">
+
+    <!-- Loading state -->
+    <div v-if="loading" class="auth-card text-center">
+      <div class="auth-logo">🔄</div>
+      <p class="auth-subtitle">Verificando sesión...</p>
+      <div class="flex justify-center mt-4">
+        <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+      </div>
+    </div>
+
+    <!-- Auth Card -->
+    <div v-else class="auth-card">
+      <div class="auth-logo">📖</div>
+      <h1 class="auth-title">Fundamentos 2026</h1>
+      <p class="auth-subtitle">Plataforma de aprendizaje — DuocUC Puerto Montt</p>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button
+          class="auth-tab"
+          :class="{ active: mode === 'login' }"
+          @click="mode = 'login'; clearErrors()"
+          id="tab-login"
+        >
+          🔑 Iniciar Sesión
+        </button>
+        <button
+          class="auth-tab"
+          :class="{ active: mode === 'register' }"
+          @click="mode = 'register'; clearErrors()"
+          id="tab-register"
+        >
+          ✨ Registrarse
+        </button>
+      </div>
+
+      <!-- LOGIN Form -->
+      <form v-if="mode === 'login'" @submit.prevent="handleLogin" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Correo electrónico</label>
+          <input
+            id="login-email"
+            type="email"
+            class="form-input"
+            :class="{ error: errors.email }"
+            v-model="email"
+            placeholder="tu.correo@ejemplo.com"
+            autocomplete="email"
+            required
+            @input="clearFieldError('email')"
+          />
+          <p v-if="errors.email" class="form-error">❌ {{ errors.email }}</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Contraseña</label>
+          <input
+            id="login-password"
+            type="password"
+            class="form-input"
+            :class="{ error: errors.password }"
+            v-model="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+            @input="clearFieldError('password')"
+          />
+          <p v-if="errors.password" class="form-error">❌ {{ errors.password }}</p>
+        </div>
+
+        <p v-if="generalError" class="form-error mb-4" style="justify-content:center;">
+          {{ generalError }}
+        </p>
+
+        <button type="submit" class="btn-primary" :disabled="submitting" id="btn-login">
+          <span v-if="submitting" class="spinner"></span>
+          <span v-else>Entrar 🚀</span>
+        </button>
+      </form>
+
+      <!-- REGISTER Form -->
+      <form v-if="mode === 'register'" @submit.prevent="handleRegister" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Correo electrónico</label>
+          <input
+            id="reg-email"
+            type="email"
+            class="form-input"
+            :class="{ error: errors.email }"
+            v-model="email"
+            placeholder="tu.correo@ejemplo.com"
+            autocomplete="email"
+            required
+            @input="clearFieldError('email')"
+          />
+          <p v-if="errors.email" class="form-error">❌ {{ errors.email }}</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Contraseña</label>
+          <input
+            id="reg-password"
+            type="password"
+            class="form-input"
+            :class="{ error: errors.password }"
+            v-model="password"
+            placeholder="Mínimo 6 caracteres"
+            autocomplete="new-password"
+            required
+            @input="clearFieldError('password')"
+          />
+          <p v-if="errors.password" class="form-error">❌ {{ errors.password }}</p>
+          <p v-else class="form-hint">Mínimo 6 caracteres</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password-confirm">Confirmar contraseña</label>
+          <input
+            id="reg-password-confirm"
+            type="password"
+            class="form-input"
+            :class="{ error: errors.confirmPassword }"
+            v-model="confirmPassword"
+            placeholder="Repite la contraseña"
+            autocomplete="new-password"
+            required
+            @input="clearFieldError('confirmPassword')"
+          />
+          <p v-if="errors.confirmPassword" class="form-error">❌ {{ errors.confirmPassword }}</p>
+        </div>
+
+        <p v-if="generalError" class="form-error mb-4" style="justify-content:center;">
+          {{ generalError }}
+        </p>
+
+        <button type="submit" class="btn-primary" :disabled="submitting" id="btn-register">
+          <span v-if="submitting" class="spinner"></span>
+          <span v-else>Crear Cuenta ✨</span>
+        </button>
+      </form>
+
+      <!-- Success message -->
+      <div v-if="registrationSuccess" class="mt-4 p-4 rounded-xl text-center" style="background: var(--t-correct-bg); border: 2px solid var(--t-correct-border);">
+        <p class="text-lg font-bold" style="color: var(--t-correct-text);">📧 ¡Revisa tu correo!</p>
+        <p class="text-sm mt-2" style="color: var(--t-correct-text);">
+          Te hemos enviado un enlace de confirmación a <strong>{{ email }}</strong>.
+          Haz clic en él para activar tu cuenta.
+        </p>
+      </div>
+
+      <!-- Back to home -->
+      <div class="text-center mt-4">
+        <a href="../index.html" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; width: auto; padding: 0.5rem 1.2rem;">
+          ← Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase Client -->
+  <script src="../js/supabase-client.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          loading: true,
+          mode: 'login',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          submitting: false,
+          registrationSuccess: false,
+          generalError: '',
+          errors: {
+            email: '',
+            password: '',
+            confirmPassword: '',
+          },
+        };
+      },
+      async mounted() {
+        // If already authenticated, redirect
+        const redirected = await SupabaseManager.redirectIfAuth('dashboard.html');
+        if (!redirected) {
+          this.loading = false;
+        }
+      },
+      methods: {
+        clearErrors() {
+          this.errors = { email: '', password: '', confirmPassword: '' };
+          this.generalError = '';
+        },
+        clearFieldError(field) {
+          this.errors[field] = '';
+          this.generalError = '';
+        },
+
+        validate() {
+          let valid = true;
+          this.clearErrors();
+
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!this.email.trim()) {
+            this.errors.email = 'El correo es obligatorio';
+            valid = false;
+          } else if (!emailRegex.test(this.email)) {
+            this.errors.email = 'Ingresa un correo válido';
+            valid = false;
+          }
+
+          // Password validation
+          if (!this.password) {
+            this.errors.password = 'La contraseña es obligatoria';
+            valid = false;
+          } else if (this.password.length < 6) {
+            this.errors.password = 'Mínimo 6 caracteres';
+            valid = false;
+          }
+
+          // Confirm password (register only)
+          if (this.mode === 'register') {
+            if (!this.confirmPassword) {
+              this.errors.confirmPassword = 'Confirma tu contraseña';
+              valid = false;
+            } else if (this.password !== this.confirmPassword) {
+              this.errors.confirmPassword = 'Las contraseñas no coinciden';
+              valid = false;
+            }
+          }
+
+          return valid;
+        },
+
+        async handleLogin() {
+          if (!this.validate()) return;
+          this.submitting = true;
+
+          try {
+            const { data, error } = await SupabaseManager.signIn(this.email.trim(), this.password);
+            if (error) {
+              this.generalError = this.translateAuthError(error.message);
+              return;
+            }
+            // Redirect based on profile state
+            const { profile } = await SupabaseManager.getProfile();
+            if (profile && profile.profile_completed) {
+              window.location.href = 'dashboard.html';
+            } else {
+              window.location.href = 'setup-profile.html';
+            }
+          } catch (err) {
+            this.generalError = 'Error de conexión. Intenta de nuevo.';
+          } finally {
+            this.submitting = false;
+          }
+        },
+
+        async handleRegister() {
+          if (!this.validate()) return;
+          this.submitting = true;
+
+          try {
+            const { data, error } = await SupabaseManager.signUp(this.email.trim(), this.password);
+            if (error) {
+              this.generalError = this.translateAuthError(error.message);
+              return;
+            }
+            this.registrationSuccess = true;
+            SupabaseManager.showToast('¡Cuenta creada! Revisa tu correo 📧', 'success');
+          } catch (err) {
+            this.generalError = 'Error de conexión. Intenta de nuevo.';
+          } finally {
+            this.submitting = false;
+          }
+        },
+
+        translateAuthError(msg) {
+          const translations = {
+            'Invalid login credentials': '❌ Correo o contraseña incorrectos',
+            'Email not confirmed': '📧 Tu correo aún no ha sido confirmado. Revisa tu bandeja.',
+            'User already registered': '⚠️ Este correo ya está registrado. ¿Quizás quieres iniciar sesión?',
+            'Password should be at least 6 characters': '🔑 La contraseña debe tener al menos 6 caracteres',
+            'Signup requires a valid password': '🔑 Ingresa una contraseña válida',
+          };
+          return translations[msg] || `⚠️ ${msg}`;
+        },
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

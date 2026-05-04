@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✅ Cuenta Confirmada — Fundamentos 2026</title>
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+
+  <div id="app" class="auth-page relative z-10">
+    <div class="auth-card text-center">
+      <div v-if="status === 'verifying'">
+        <div class="auth-logo">🔄</div>
+        <h1 class="auth-title">Verificando...</h1>
+        <p class="auth-subtitle">Confirmando tu cuenta, espera un momento.</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+
+      <div v-else-if="status === 'success'">
+        <div class="auth-logo">🎉</div>
+        <h1 class="auth-title">¡Cuenta Activada!</h1>
+        <p class="auth-subtitle">Tu cuenta ha sido confirmada exitosamente. Ahora completa tu perfil para comenzar.</p>
+        <a href="setup-profile.html" class="btn-primary mt-4" style="display:inline-flex; width:auto; padding:0.85rem 2rem;">
+          Completar mi Perfil ✨
+        </a>
+      </div>
+
+      <div v-else>
+        <div class="auth-logo">⚠️</div>
+        <h1 class="auth-title">Error de Verificación</h1>
+        <p class="auth-subtitle">{{ errorMsg }}</p>
+        <a href="login.html" class="btn-secondary mt-4" style="display:inline-flex; width:auto; padding:0.75rem 1.5rem;">
+          Ir al Login
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return { status: 'verifying', errorMsg: '' };
+      },
+      async mounted() {
+        try {
+          // Supabase handles the token exchange automatically via the URL hash
+          const { session, error } = await SupabaseManager.getSession();
+          if (session) {
+            this.status = 'success';
+            setTimeout(() => { window.location.href = 'setup-profile.html'; }, 2500);
+          } else {
+            this.status = 'error';
+            this.errorMsg = error?.message || 'No se pudo verificar la cuenta. El enlace puede haber expirado.';
+          }
+        } catch (e) {
+          this.status = 'error';
+          this.errorMsg = 'Error de conexión. Intenta de nuevo.';
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
