@@ -1,30 +1,18 @@
-print("Bienvenido al contador de votos estudiantil")
+print("Ingrese la edad solicitada para póder ingresar")
+      
+edad = 0
 
-encuestados = int(input("¿cuantos estudiantes participan?: "))
-votos_c = 0
-votos_a = 0
-ciclo = 0
+while True:
+    try:
 
-while ciclo < encuestados:
-    voto = input("ingrese voto a favor (A) / voto en contra (C): ")
+     edad = int(input("ingrese su edad \n: "))
 
-    if voto == "a":
-        votos_a += 1
-    elif voto == "c":
-        votos_c += 1
-    else:
-        print("voto nulo")
+     if edad > 17:
+        print("puede acceder")
+        break
+     else:
+        print("edad ingresada es menor")
 
-    ciclo += 1
-
-print("Resultados")
-if votos_a > votos_c:
-    print("Ganador, a favor.")
-elif votos_c > votos_c:
-    print("Ganador, en contra.")
-else:
-    print("empate")
-
-
+    except ValueError:
+        print("edad ingresada es invalida")
     
-
