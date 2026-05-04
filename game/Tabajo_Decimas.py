@@ -21,7 +21,7 @@ Combate = True
 while Combate == True:
     if (VidaPokemon1+VidaPokemon2+VidaPokemon3) <= 0:
             break
-    print ("""                                   ,'\
+    print ("""                                   ,'
     _.----.        ____         ,'  _\   ___    ___     ____
 _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
 \      __    \    '-.  | /   `.  ___    |    \/    |   '-.   \ |  |
@@ -48,7 +48,7 @@ Hecho por: Diego Abad, Gonzalo Olhabe y Axel Trujillo
             Combate = False
             break
         else:
-            Opcion =int(input("""Seleccione uno de los siguientes pokemon:
+            Opcion=int(input("""Seleccione uno de los siguientes pokemon:
                             1) Heatmor
                             2) Cryogonal
                             3) Granbull
