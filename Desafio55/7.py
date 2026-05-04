@@ -1,0 +1,7 @@
+procesador=250000
+placa_madre=120000
+tarjeta_de_video=450000
+descuento_tarjeta_de_video=tarjeta_de_video*0.15
+tarjeta_de_video-=descuento_tarjeta_de_video
+total=procesador+placa_madre+tarjeta_de_video
+print(total)
