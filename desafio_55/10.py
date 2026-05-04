@@ -9,4 +9,4 @@ primera_hora = 1200
 media_hora = 500 
 horas_total = 3 
 total = primera_hora + media_hora * 4 
-print(total)
+print(f"el total a cobrar es :{total}")
