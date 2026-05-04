@@ -1,0 +1,9 @@
+tienda = {
+    'pocion': {'precio': 50, 'stock': 3},
+    'espada': {'precio': 200, 'stock': 1}
+}
+
+capital_total = 0
+
+for objeto in tienda.values():
+    capital_total += objeto["precio"]*objeto["stock"]
