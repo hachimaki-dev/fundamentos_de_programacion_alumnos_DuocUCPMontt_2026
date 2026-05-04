@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Web Animada</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+body {
+  background: linear-gradient(270deg, #0f0f0f, #1a1a1a, #000);
+  background-size: 600% 600%;
+  animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
+</style>
+</head>
+
+<body class="text-white flex items-center justify-center h-screen">
+
+<div id="box" class="text-center">
+  <h1 class="text-5xl font-bold mb-4">🔥 Web Animada</h1>
+  <button class="px-6 py-3 bg-purple-600 rounded-xl hover:scale-110 transition">
+    Empezar
+  </button>
+</div>
+
+<script>
+gsap.from("#box", {
+  opacity: 0,
+  y: 100,
+  duration: 1.5
+});
+</script>
+
+</body>
+</html>
