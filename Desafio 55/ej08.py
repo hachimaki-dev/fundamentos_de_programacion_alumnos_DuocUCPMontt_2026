@@ -7,10 +7,11 @@
 
 #Restricciones: Convierte la RAM restante multiplicándola por 1024 antes de imprimirla. Imprime solo el número.
 
+#Todos los siguientes valores son en GB
 ram = 16
 os = 2.5
 programa = 1.2
 
-ram = (ram - os - (programa * 4)) * 1024
+ram = (ram - os - (programa * 4)) * 1024 #---> Usamos este número para transformar los GB a MB
 
 print(f"Te quedan {ram} MB")
