@@ -17,7 +17,7 @@ sueldo_base = 500000
 bono_colacion = 50000
 bono_movilización = 30000
 
-descuento_salud = 0.07 
+descuento_salud = 0.07
 descuento_afp = 0.1 
 
 descuento_salud = sueldo_base * descuento_salud
@@ -25,4 +25,4 @@ descuento_afp = sueldo_base * descuento_afp
 
 sueldo_liquido = sueldo_base + bono_colacion + bono_movilización - descuento_salud - descuento_afp
 
-print(f"El sueldo a pagar es {sueldo_liquido}")
+print(f"El sueldo a pagar es: {sueldo_liquido}")
