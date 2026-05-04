@@ -21,9 +21,8 @@ descuento_afp = sueldo_base * 0.1
 
 #SUELDO LIQUIDO
 descuento_total = descuento_afp + descuento_salud
-print(f"descuento ${descuento_total}")
-
 sueldo_liquido = sueldo_base - descuento_total
+
 sueldo_liquido = sueldo_liquido + bono_colacion + bono_movilizacion
 
 print(f"sueldo final ${sueldo_liquido}")
