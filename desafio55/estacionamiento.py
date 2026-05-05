@@ -7,5 +7,5 @@
 #Restricciones: Calcula el total sumando el precio de la primera hora más los bloques extra multiplicados por su valor. Imprime el costo total.
 estacionamiento_por_hora = 1200
 estacionamiento_despues_hora = 500
-total_estacionamiento = (500*2) + 1200
+total_estacionamiento = (500*4) + 1200
 print(total_estacionamiento)
