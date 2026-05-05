@@ -7,4 +7,5 @@ sistema_operativo = 2.5
 programas_corriendo = 4
 consumo_programa = 1.2
 
+print("Consume en total: ")
 print((ram_total - (sistema_operativo + (programas_corriendo * consumo_programa))) * 1024)
