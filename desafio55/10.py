@@ -1,7 +1,5 @@
 #Ejercicio 10 : estacionamiento aeropuerto
 
-
-
 una_hora = 1200
 media_hora = 500
 
