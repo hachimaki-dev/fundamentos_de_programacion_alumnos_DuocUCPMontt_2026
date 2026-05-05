@@ -9,3 +9,11 @@ Restricciones: Deja que Python haga todas las multiplicaciones y divisiones. Imp
 
 total_personas = 5
 pichangas = 2*15000
+schops = 5 * 3500
+
+consumo = pichangas + schops
+propina = consumo * 0.10
+total = consumo + propina 
+
+por_persona = total/total_personas
+print(por_persona)
