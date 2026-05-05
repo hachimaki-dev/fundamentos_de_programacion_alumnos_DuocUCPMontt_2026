@@ -4,13 +4,10 @@
 valor_compra = 25000
 destino = "Magallanes"
 
-# 1. Costo base
 if valor_compra > 20000:
     costo_envio = 0
 else:
     costo_envio = 3000
-
-# 2. Recargo de zona extrema (if separado)
 if destino == "Magallanes" or destino == "Aysen":
     costo_envio = costo_envio + 2000
 
