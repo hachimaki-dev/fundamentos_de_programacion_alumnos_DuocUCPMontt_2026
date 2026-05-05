@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4c1d95;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <path d="M50 5 L85 25 L85 75 L50 95 L15 75 L15 25 Z" fill="url(#grad5)" filter="url(#shadow)"/>
+  <circle cx="50" cy="50" r="25" fill="#312e81"/>
+  <path d="M40 50 L45 55 L60 40" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <text x="50" y="85" font-family="Arial" font-size="12" font-weight="bold" fill="#ddd6fe" text-anchor="middle">LVL 5</text>
+</svg>

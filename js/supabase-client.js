@@ -152,6 +152,13 @@ const SupabaseManager = (() => {
       window.location.href = setupPath;
       return null;
     }
+    
+    // Iniciar escucha de logros si no está iniciada
+    if (!window._sbProfileListenerStarted) {
+      listenForProfileChanges(profile);
+      window._sbProfileListenerStarted = true;
+    }
+    
     return profile;
   }
 
@@ -183,6 +190,49 @@ const SupabaseManager = (() => {
     return client.auth.onAuthStateChange((event, session) => {
       callback(event, session);
     });
+  }
+
+  // ═══════════════════════════════════════════
+  //  PROFILE REALTIME LISTENER (GAMIFICATION)
+  // ═══════════════════════════════════════════
+
+  function listenForProfileChanges(initialProfile) {
+    const client = getClient();
+    let currentAchievements = initialProfile.achievements || [];
+
+    client.channel('public:profiles:gamification')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${initialProfile.id}` },
+        (payload) => {
+          const newProfile = payload.new;
+          if (!newProfile) return;
+
+          const newAchievements = newProfile.achievements || [];
+          if (newAchievements.length > currentAchievements.length) {
+            // Find the newly added achievements
+            const added = newAchievements.filter(a => !currentAchievements.includes(a));
+            
+            added.forEach(badgeId => {
+              // Convert ID to a readable title (simple map or fallback)
+              const badgeNames = {
+                'first_blood': 'First Blood',
+                'diarist': 'Querido Diario',
+                'social_butterfly': 'Social Butterfly',
+                'hacker_level_1': 'Script Kiddie (Nivel 2)',
+                'hacker_level_5': 'Code Ninja (Nivel 5)'
+              };
+              const title = badgeNames[badgeId] || badgeId;
+              
+              // Play a sound or show a confetti if we had a confetti function!
+              showToast(`🏆 ¡Logro Desbloqueado: ${title}!`, 'success', 6000);
+            });
+            
+            currentAchievements = newAchievements;
+          }
+        }
+      )
+      .subscribe();
   }
 
   // ═══════════════════════════════════════════
@@ -272,13 +322,70 @@ const SupabaseManager = (() => {
   }
 
   // ═══════════════════════════════════════════
+  //  COMPETITIONS HELPERS
+  // ═══════════════════════════════════════════
+
+  /** Upload a solution to storage and get the path */
+  async function uploadSolutionFile(file, competitionId, problemId) {
+    const user = await getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const client = getClient();
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${competitionId}/${problemId}/${user.id}.${fileExt}`;
+
+    const { data, error } = await client.storage
+      .from('competition-solutions')
+      .upload(filePath, file, { upsert: true });
+
+    return { data, error };
+  }
+
+  /** Get a signed URL to download a solution */
+  async function getSolutionDownloadUrl(filePath, downloadName) {
+    const client = getClient();
+    const { data, error } = await client.storage
+      .from('competition-solutions')
+      .createSignedUrl(filePath, 60 * 60, { // 1 hour
+        download: downloadName
+      });
+    return { data, error };
+  }
+
+  /** Vote on a submission (1 for like, -1 for dislike) */
+  async function voteOnSubmission(submissionId, voteValue) {
+    const user = await getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const client = getClient();
+    
+    if (voteValue === 0) {
+      // Remove vote
+      return await client.from('competition_votes')
+        .delete()
+        .eq('submission_id', submissionId)
+        .eq('user_id', user.id);
+    } else {
+      // Upsert vote
+      return await client.from('competition_votes')
+        .upsert({
+          submission_id: submissionId,
+          user_id: user.id,
+          vote: voteValue
+        }, { onConflict: 'submission_id,user_id' });
+    }
+  }
+
+  // ═══════════════════════════════════════════
   //  SECTIONS CATALOG
   // ═══════════════════════════════════════════
 
   const SECTIONS = [
-    { value: '001D', label: '001D — Diurno' },
-    { value: '001V', label: '001V — Vespertino' },
-    { value: '005V', label: '005V — Vespertino' },
+    { value: '001D', label: '001D' },
+    { value: '002D', label: '002D' },
+    { value: '003D', label: '003D' },
+    { value: '004V', label: '004V' },
+    { value: '405D', label: '405D' },
   ];
 
   function getSections() {
@@ -308,6 +415,10 @@ const SupabaseManager = (() => {
     redirectIfAuth,
     // UI
     showToast,
+    // Competitions
+    uploadSolutionFile,
+    getSolutionDownloadUrl,
+    voteOnSubmission,
     // Data
     getAvatarCatalog,
     getAvatarById,
@@ -315,3 +426,17 @@ const SupabaseManager = (() => {
     getSections,
   };
 })();
+
+// ═══════════════════════════════════════════
+//  INYECCIÓN DE PRESENCIA (WHO IS ONLINE)
+// ═══════════════════════════════════════════
+if (typeof document !== 'undefined') {
+  const isPagesDir = window.location.pathname.includes('/pages/');
+  const presenceScriptPath = isPagesDir ? '../js/presence.js' : 'js/presence.js';
+  
+  // Create script element
+  const presenceScript = document.createElement('script');
+  presenceScript.src = presenceScriptPath;
+  presenceScript.defer = true;
+  document.head.appendChild(presenceScript);
+}

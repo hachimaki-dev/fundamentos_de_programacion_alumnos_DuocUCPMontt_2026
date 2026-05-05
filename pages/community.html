@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌐 Comunidad Dev — Fundamentos 2026</title>
+  <meta name="description" content="Feed global de la comunidad de desarrolladores." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+
+    <!-- Loading -->
+    <div v-if="loading" class="auth-page">
+      <div class="auth-card text-center">
+        <div class="auth-logo">🌐</div>
+        <p class="auth-subtitle">Cargando la comunidad...</p>
+        <div class="flex justify-center mt-4">
+          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+        </div>
+      </div>
+    </div>
+
+    <template v-else>
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6 fade-in-up">
+        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
+        <h1 class="text-xl font-bold" style="color: var(--t-accent);">🌐 Dev Feed</h1>
+      </div>
+
+      <div class="card p-4 text-center mb-6 fade-in-up" style="background:var(--t-surface-alt); border:1px solid var(--t-accent);">
+        <p class="text-sm font-bold" style="color:var(--t-text);">¡Bienvenido al Feed Global!</p>
+        <p class="text-xs mt-1" style="color:var(--t-text-muted);">Aquí puedes ver los Dev Blogs públicos de tus compañeros. Lee, aprende y comenta constructivamente.</p>
+      </div>
+
+      <!-- Feed List -->
+      <div v-if="publicEntries.length" class="flex flex-col gap-5">
+        <div v-for="(entry, idx) in publicEntries" :key="entry.id" class="card p-5 fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
+          
+          <!-- Post Header -->
+          <div class="flex items-center gap-3 mb-4 border-b pb-3" style="border-color:var(--t-glass-border);">
+            <img :src="getAvatar(entry.profiles?.avatar_id)" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--t-accent);" />
+            <div class="flex-1">
+              <p class="font-bold text-sm" style="color:var(--t-text);">
+                {{ entry.profiles?.nickname || 'Usuario Desconocido' }}
+                <span v-if="entry.profiles?.level" class="badge" style="background:var(--t-accent);color:white;font-size:0.6rem;padding:2px 5px;border-radius:8px;">Lvl {{ entry.profiles.level }}</span>
+              </p>
+              <p class="text-xs" style="color:var(--t-text-muted);">
+                Sección {{ entry.profiles?.section || 'N/A' }} • {{ formatDate(entry.created_at) }}
+              </p>
+            </div>
+            <!-- Botón de Compartir -->
+            <div style="position:relative;">
+              <button class="btn-secondary" style="padding:0.4rem;font-size:0.8rem;width:auto;border:none;background:transparent;" @click="toggleShareMenu(entry.id)">
+                🔗 Compartir
+              </button>
+              <div v-if="activeShareMenu === entry.id" class="card p-2" style="position:absolute;right:0;top:100%;z-index:100;min-width:180px;display:flex;flex-direction:column;gap:5px;">
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('twitter', entry)">🐦 Twitter / X</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('linkedin', entry)">💼 LinkedIn</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('instagram', entry)">📸 Instagram</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('tiktok', entry)">🎵 TikTok</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post Content -->
+          <h2 class="text-lg font-bold mb-2" style="color:var(--t-accent);">{{ entry.title }}</h2>
+          <div class="entry-tags mb-3" v-if="entry.tags && entry.tags.length">
+            <span v-for="tag in entry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
+          </div>
+          <div class="doc-section text-sm mb-4" v-html="renderMd(entry.content)"></div>
+
+          <!-- Comments Section -->
+          <div class="mt-4 pt-4 border-t" style="border-color:var(--t-glass-border);">
+            <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color:var(--t-text);">
+              💬 Comentarios ({{ getCommentsForEntry(entry.id).length }})
+            </h3>
+            
+            <div v-if="getCommentsForEntry(entry.id).length > 0" class="flex flex-col gap-3 mb-4">
+              <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm p-3 rounded" style="background:var(--t-surface-alt);">
+                <img :src="getAvatar(comment.profiles?.avatar_id)" style="width:24px;height:24px;border-radius:50%;" />
+                <div class="flex-1">
+                  <div class="flex justify-between items-baseline mb-1">
+                    <span class="font-bold" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
+                    <span class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(comment.created_at) }}</span>
+                  </div>
+                  <p style="color:var(--t-text-secondary); word-break: break-word;">{{ comment.content }}</p>
+                </div>
+              </div>
+            </div>
+            <div v-else class="text-xs mb-4" style="color:var(--t-text-muted);">Sé el primero en comentar...</div>
+
+            <!-- Add Comment -->
+            <div class="flex gap-2">
+              <input type="text" class="form-input text-sm m-0" placeholder="Escribe un comentario constructivo..." v-model="newComments[entry.id]" @keyup.enter="postComment(entry.id)" />
+              <button class="btn-primary" style="padding:0.4rem 1rem; width:auto;" :disabled="postingComment === entry.id" @click="postComment(entry.id)">
+                <span v-if="postingComment === entry.id" class="spinner" style="width:14px;height:14px;"></span>
+                <span v-else>Enviar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div v-else class="empty-state fade-in-up">
+        <div class="emoji">🌐</div>
+        <p>Aún no hay publicaciones en el feed global.</p>
+        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Ve a tu Diario y marca una entrada como Pública para aparecer aquí.</p>
+      </div>
+    </template>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+    createApp({
+      data() {
+        return {
+          loading: true,
+          profile: null,
+          publicEntries: [],
+          comments: [],
+          newComments: {},
+          postingComment: null,
+          activeShareMenu: null,
+          avatarCatalog: SupabaseManager.getAvatarCatalog()
+        };
+      },
+      async mounted() {
+        const profile = await SupabaseManager.requireProfile('setup-profile.html');
+        if (!profile) return;
+        this.profile = profile;
+        await this.loadFeed();
+        this.loading = false;
+      },
+      methods: {
+        async loadFeed() {
+          const client = SupabaseManager.getClient();
+          
+          // Load public entries with user profile
+          const { data: entries, error } = await client
+            .from('diary_entries')
+            .select('*, profiles(nickname, avatar_id, level, section)')
+            .eq('is_public', true)
+            .order('created_at', { ascending: false });
+            
+          if (!error && entries) {
+            this.publicEntries = entries;
+            
+            // Load comments for these entries
+            const entryIds = entries.map(e => e.id);
+            if (entryIds.length > 0) {
+              const { data: commentsData } = await client
+                .from('diary_comments')
+                .select('*, profiles(nickname, avatar_id)')
+                .in('entry_id', entryIds)
+                .order('created_at', { ascending: true });
+                
+              this.comments = commentsData || [];
+            }
+          }
+        },
+        getCommentsForEntry(entryId) {
+          return this.comments.filter(c => c.entry_id === entryId);
+        },
+        formatDate(dateStr) {
+          const d = new Date(dateStr);
+          const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        },
+        renderMd(text) {
+          if (typeof marked !== 'undefined') return marked.parse(text || '');
+          return (text || '').replace(/\n/g, '<br>');
+        },
+        getAvatar(id) {
+          const av = this.avatarCatalog.find(a => a.id === id);
+          return av ? av.src : this.avatarCatalog[0].src;
+        },
+        async postComment(entryId) {
+          const content = (this.newComments[entryId] || '').trim();
+          if (!content) return;
+          
+          this.postingComment = entryId;
+          const client = SupabaseManager.getClient();
+          
+          const { data, error } = await client
+            .from('diary_comments')
+            .insert({
+              entry_id: entryId,
+              user_id: this.profile.id,
+              content: content
+            })
+            .select('*, profiles(nickname, avatar_id)')
+            .single();
+            
+          if (error) {
+            SupabaseManager.showToast('Error publicando: ' + error.message, 'error');
+          } else {
+            this.comments.push(data);
+            this.newComments[entryId] = '';
+            SupabaseManager.showToast('Comentario publicado', 'success');
+          }
+          this.postingComment = null;
+        },
+        toggleShareMenu(entryId) {
+          this.activeShareMenu = this.activeShareMenu === entryId ? null : entryId;
+        },
+        shareTo(network, entry) {
+          const url = window.location.href; // O una URL directa si tuvieras rutas dinámicas
+          const text = encodeURIComponent(`Acabo de publicar "${entry.title}" en mi Dev Blog de Fundamentos 2026. ¡Léelo aquí! 🚀💻`);
+          
+          if (network === 'twitter') {
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
+          } else if (network === 'linkedin') {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+          } else if (network === 'instagram' || network === 'tiktok') {
+            // Instagram/TikTok don't have direct web intents for sharing text links easily
+            navigator.clipboard.writeText(`Acabo de publicar "${entry.title}" en mi Dev Blog! Léelo en: ${url}`);
+            SupabaseManager.showToast(`¡Enlace copiado! Pégalo en tu bio/historia de ${network === 'instagram' ? 'Instagram' : 'TikTok'} 📱`, 'success', 5000);
+          }
+          this.activeShareMenu = null;
+        }
+      },
+    }).mount('#app');
+  </script>
+</body>
+</html>

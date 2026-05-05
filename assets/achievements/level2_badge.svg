@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#064e3b;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <polygon points="50,10 90,80 10,80" fill="url(#grad4)" filter="url(#shadow)"/>
+  <text x="50" y="55" font-family="monospace" font-size="24" font-weight="bold" fill="white" text-anchor="middle">{'}'}</text>
+  <text x="50" y="72" font-family="Arial" font-size="10" font-weight="bold" fill="#a7f3d0" text-anchor="middle">LVL 2</text>
+</svg>

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🏆 Competencias — Fundamentos 2026</title>
-  <meta name="description" content="Competencias de código en tiempo real para estudiantes." />
+  <meta name="description" content="Competencias de código estilo Codewars." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
@@ -13,14 +13,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="../js/theme-selector.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
-  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+  <div id="app" class="relative z-10" style="max-width:900px;margin:0 auto;padding:1.5rem 1rem 6rem;">
 
-    <!-- Loading -->
+    <!-- Loading global -->
     <div v-if="loading" class="auth-page">
       <div class="auth-card text-center">
         <div class="auth-logo">🏆</div>
@@ -32,91 +33,331 @@
     </div>
 
     <template v-else>
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-4 fade-in-up">
-        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
-        <h1 class="text-xl font-bold" style="color: var(--t-accent);">🏆 Competencias</h1>
+      <!-- HEADER -->
+      <div class="flex items-center justify-between mb-6 fade-in-up">
+        <a v-if="currentView === 'list'" href="dashboard.html" class="back-btn m-0">← Dashboard</a>
+        <button v-else @click="goToList" class="back-btn m-0" style="background:transparent;border:none;cursor:pointer;">← Volver</button>
+        <h1 class="text-xl font-bold" style="color: var(--t-accent);">
+          {{ currentView === 'list' ? '🏆 Competencias' : viewComp.title }}
+        </h1>
       </div>
 
-      <!-- Status filter -->
-      <div class="tag-filters mb-4 fade-in-up">
-        <button class="tag-pill" :class="{ active: filter === 'all' }" @click="filter = 'all'">✨ Todas</button>
-        <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢 Activas</button>
-        <button class="tag-pill" :class="{ active: filter === 'upcoming' }" @click="filter = 'upcoming'">📅 Próximas</button>
-        <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅ Finalizadas</button>
-      </div>
-
-      <!-- Competitions list -->
-      <div v-if="filteredComps.length">
-        <div v-for="(comp, idx) in filteredComps" :key="comp.id"
-          class="comp-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <span class="comp-status" :class="comp.status">
-                {{ statusLabel(comp.status) }}
-              </span>
-              <h3 class="text-lg font-bold mt-2" style="color:var(--t-accent);">{{ comp.title }}</h3>
-              <p class="text-sm mt-1" style="color:var(--t-text-secondary);">{{ comp.description }}</p>
-              <div class="flex gap-3 mt-2 text-xs" style="color:var(--t-text-muted);">
-                <span>📅 {{ formatDate(comp.start_time) }}</span>
-                <span>⏰ {{ formatDate(comp.end_time) }}</span>
-              </div>
-            </div>
-            <div class="text-center" style="min-width:60px;">
-              <div class="text-3xl">{{ comp.status === 'active' ? '🔥' : comp.status === 'upcoming' ? '⏳' : '🏁' }}</div>
-            </div>
+      <!-- ==============================================
+           VIEW: LISTADO DE COMPETENCIAS
+           ============================================== -->
+      <div v-if="currentView === 'list'" class="fade-in-up">
+        <!-- Barra de búsqueda e invitación -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+          <div class="search-input-wrap flex-1" style="margin:0;">
+            <span class="icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Buscar competencia..." v-model="searchQuery" />
           </div>
-
-          <!-- Actions -->
-          <div class="flex gap-3 mt-4">
-            <button v-if="comp.status === 'active' && !hasJoined(comp.id)"
-              class="btn-primary" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">
-              ¡Unirme! 🚀
-            </button>
-            <button v-else-if="hasJoined(comp.id)"
-              class="btn-secondary" style="flex:1;padding:0.6rem;" disabled>
-              ✅ Ya participas
-            </button>
-            <button class="btn-secondary" style="flex:1;padding:0.6rem;" @click="viewLeaderboard(comp)">
-              📊 Ranking
-            </button>
+          <div class="search-input-wrap" style="margin:0; max-width: 250px;">
+            <span class="icon">🎟️</span>
+            <input type="text" class="search-input" placeholder="Código inv." v-model="inviteCodeInput" @keyup.enter="joinByCode" />
+            <button class="btn-primary" style="position:absolute;right:4px;top:4px;padding:0.4rem 0.8rem;border-radius:0.5rem;width:auto;font-size:0.8rem;" @click="joinByCode">Unirse</button>
           </div>
         </div>
-      </div>
 
-      <!-- Empty -->
-      <div v-else class="empty-state fade-in-up">
-        <div class="emoji">🏆</div>
-        <p>No hay competencias {{ filter !== 'all' ? 'en esta categoría' : 'disponibles' }}.</p>
-        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Tu profesor creará nuevas pronto 🌟</p>
-      </div>
+        <!-- Filtros -->
+        <div class="tag-filters mb-4">
+          <button class="tag-pill" :class="{ active: filter === 'all' }" @click="filter = 'all'">✨ Todas</button>
+          <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢 Activas</button>
+          <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅ Finalizadas</button>
+          <button class="tag-pill" :class="{ active: filter === 'my' }" @click="filter = 'my'">👤 Mis Competencias</button>
+        </div>
 
-      <!-- Leaderboard Modal -->
-      <div v-if="leaderboardComp" class="diary-modal-overlay" @click.self="leaderboardComp = null">
-        <div class="diary-modal" style="max-width:500px;">
-          <div class="diary-modal-header">
-            <h2 class="text-lg font-bold" style="color:var(--t-accent);">📊 {{ leaderboardComp.title }}</h2>
-            <button class="diary-modal-close" @click="leaderboardComp = null">✕</button>
-          </div>
-
-          <div v-if="leaderboardData.length">
-            <div v-for="(entry, idx) in leaderboardData" :key="entry.id" class="leaderboard-row">
-              <span class="leaderboard-rank" :class="{ gold: idx===0, silver: idx===1, bronze: idx===2 }">
-                {{ idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx+1) }}
-              </span>
-              <span class="flex-1 font-semibold" style="color:var(--t-text);">{{ entry.nickname || 'Anónimo' }}</span>
-              <span class="text-sm font-bold" style="color:var(--t-accent);">{{ entry.score }} pts</span>
-              <span class="text-xs" style="color:var(--t-text-muted);">{{ formatTime(entry.time_seconds) }}</span>
+        <!-- Lista -->
+        <div v-if="filteredComps.length">
+          <div v-for="(comp, idx) in filteredComps" :key="comp.id" class="comp-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <span class="comp-status" :class="comp.status">{{ statusLabel(comp.status) }}</span>
+                <h3 class="text-lg font-bold mt-2" style="color:var(--t-accent);">{{ comp.title }}</h3>
+                <p class="text-sm mt-1" style="color:var(--t-text-secondary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ comp.description }}</p>
+                <div class="flex gap-3 mt-3 text-xs" style="color:var(--t-text-muted);">
+                  <span>⏰ Cierra: {{ formatDate(comp.deadline) }}</span>
+                  <span v-if="comp.created_by === profile.id">👑 Creada por ti</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-3 mt-4">
+              <button v-if="comp.status === 'active' && !hasJoined(comp.id) && comp.created_by !== profile.id" class="btn-primary" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">¡Unirme! 🚀</button>
+              <button class="btn-secondary" style="flex:1;padding:0.6rem;" @click="openComp(comp)">{{ hasJoined(comp.id) || comp.created_by === profile.id ? 'Entrar al dojo 🥋' : 'Ver detalles 👁️' }}</button>
             </div>
           </div>
-          <div v-else class="text-center p-4">
-            <p style="color:var(--t-text-muted);">Aún no hay participantes</p>
+        </div>
+        <div v-else class="empty-state">
+          <div class="emoji">🏆</div>
+          <p>No hay competencias disponibles.</p>
+        </div>
+
+        <!-- FAB Crear -->
+        <button class="diary-fab" @click="showCreateModal = true" title="Crear competencia">+</button>
+      </div>
+
+
+      <!-- ==============================================
+           VIEW: DETALLE DE COMPETENCIA
+           ============================================== -->
+      <div v-else-if="currentView === 'detail' && viewComp" class="fade-in-up">
+        
+        <!-- Info Header -->
+        <div class="card p-5 mb-4 border-2" :style="{ borderColor: viewComp.status === 'active' ? 'var(--t-correct)' : 'var(--t-glass-border)' }">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="comp-status mb-2" :class="viewComp.status">{{ statusLabel(viewComp.status) }}</span>
+              <p class="text-sm" style="color:var(--t-text-secondary);">⏰ Cierre: <strong>{{ formatDate(viewComp.deadline) }}</strong></p>
+            </div>
+            <div class="text-right" v-if="viewComp.created_by === profile.id || hasJoined(viewComp.id)">
+              <p class="text-xs mb-1" style="color:var(--t-text-muted);">Código de Invitación</p>
+              <div class="invite-code-badge" @click="copyCode(viewComp.invite_code)" title="Clic para copiar">
+                {{ viewComp.invite_code }} 📋
+              </div>
+            </div>
+          </div>
+          <div class="doc-section text-sm" v-html="renderMd(viewComp.description)"></div>
+          <div v-if="viewComp.rules" class="mt-4 p-3 rounded" style="background:var(--t-surface-alt); border-left:3px solid var(--t-accent);">
+            <p class="text-xs font-bold mb-1" style="color:var(--t-accent);">Reglas:</p>
+            <div class="text-xs" v-html="renderMd(viewComp.rules)"></div>
+          </div>
+        </div>
+
+        <!-- Tabs Detalle -->
+        <div class="auth-tabs mb-4">
+          <button class="auth-tab" :class="{ active: detailTab === 'problems' }" @click="detailTab = 'problems'">📝 Problemas</button>
+          <button class="auth-tab" :class="{ active: detailTab === 'submissions' }" @click="detailTab = 'submissions'">🧠 Soluciones</button>
+          <button class="auth-tab" :class="{ active: detailTab === 'ranking' }" @click="detailTab = 'ranking'">📊 Ranking</button>
+        </div>
+
+        <!-- TAB: PROBLEMAS -->
+        <div v-if="detailTab === 'problems'">
+          <div v-if="compProblems.length === 0" class="text-center p-6 text-sm" style="color:var(--t-text-muted);">
+            Esta competencia aún no tiene problemas.
+          </div>
+          
+          <div v-for="(prob, idx) in compProblems" :key="prob.id" class="card p-5 mb-4 fade-in-up">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-lg" style="color:var(--t-text);">Problema {{ idx + 1 }}: {{ prob.title }}</h3>
+              <span class="difficulty-badge" :class="prob.difficulty">{{ prob.difficulty }}</span>
+            </div>
+            <div class="doc-section text-sm mb-4" v-html="renderMd(prob.description)"></div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              <div v-if="prob.example_input" class="p-3 rounded" style="background:var(--t-surface-alt);">
+                <p class="text-xs font-bold mb-1" style="color:var(--t-text-muted);">Ejemplo Input:</p>
+                <pre class="m-0 text-xs" style="background:transparent;padding:0;">{{ prob.example_input }}</pre>
+              </div>
+              <div v-if="prob.example_output" class="p-3 rounded" style="background:var(--t-surface-alt);">
+                <p class="text-xs font-bold mb-1" style="color:var(--t-text-muted);">Output Esperado:</p>
+                <pre class="m-0 text-xs" style="background:transparent;padding:0;">{{ prob.example_output }}</pre>
+              </div>
+            </div>
+
+            <!-- Zona de subida (Solo si está activa y el user participa) -->
+            <div v-if="viewComp.status === 'active' && hasJoined(viewComp.id)">
+              <div class="border-t pt-4 mt-2" style="border-color:var(--t-glass-border);">
+                <div v-if="getMySubmission(prob.id)" class="flex justify-between items-center p-3 rounded mb-3" style="background:var(--t-correct-bg); border:1px solid var(--t-correct-border);">
+                  <div>
+                    <p class="text-sm font-bold" style="color:var(--t-correct-text);">✅ Solución entregada</p>
+                    <p class="text-xs" style="color:var(--t-correct-text);">{{ getMySubmission(prob.id).file_name }} (Intento {{ getMySubmission(prob.id).attempt_count }})</p>
+                  </div>
+                  <button class="btn-secondary" style="width:auto;padding:0.4rem 0.8rem;font-size:0.8rem;" @click="triggerUpload(prob.id)">Re-subir .py</button>
+                </div>
+                <div v-else class="upload-zone" @click="triggerUpload(prob.id)" @dragover.prevent="$event.currentTarget.classList.add('dragover')" @dragleave.prevent="$event.currentTarget.classList.remove('dragover')" @drop.prevent="handleDrop($event, prob.id)">
+                  <div class="text-3xl mb-2">📄</div>
+                  <p class="font-bold text-sm" style="color:var(--t-accent);">Sube tu archivo .py</p>
+                  <p class="text-xs mt-1" style="color:var(--t-text-muted);">Haz clic o arrastra aquí. Max 50KB.</p>
+                </div>
+                <input :id="'file-' + prob.id" type="file" accept=".py" @change="handleFileSelect($event, prob.id)" style="display:none;" />
+              </div>
+            </div>
+            <div v-else-if="viewComp.status !== 'active'" class="text-center mt-3 p-2 rounded text-xs font-bold" style="background:var(--t-wrong-bg);color:var(--t-wrong-text);">
+              La competencia está cerrada.
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: SOLUCIONES (Revisiones por pares) -->
+        <div v-if="detailTab === 'submissions'">
+          <!-- Bloqueo de vista -->
+          <div v-if="viewComp.status === 'active' && !userIsCreator(viewComp)" class="text-center p-8 card border-2 border-dashed" style="border-color:var(--t-accent);">
+            <div class="text-4xl mb-3">🔒</div>
+            <h3 class="font-bold text-lg mb-2" style="color:var(--t-text);">Soluciones ocultas</h3>
+            <p class="text-sm" style="color:var(--t-text-secondary);">Para evitar trampas, las soluciones de los demás se revelarán automáticamente cuando termine la competencia.</p>
+          </div>
+          
+          <div v-else>
+            <div v-if="compSubmissions.length === 0" class="text-center p-6 text-sm" style="color:var(--t-text-muted);">
+              Aún no hay soluciones enviadas.
+            </div>
+
+            <!-- Agrupado por problema -->
+            <div v-for="prob in compProblems" :key="'sub-'+prob.id" class="mb-6">
+              <h4 class="font-bold mb-3 border-b pb-2" style="color:var(--t-accent);border-color:var(--t-glass-border);">{{ prob.title }}</h4>
+              
+              <div v-for="sub in getSubmissionsForProblem(prob.id)" :key="sub.id" class="card p-4 mb-3 flex flex-col sm:flex-row items-center gap-4 justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="nav-auth-avatar" style="width:40px;height:40px;"><img :src="getAvatar(sub.profiles.avatar_id)" /></div>
+                  <div>
+                    <p class="font-bold text-sm" style="color:var(--t-text);">{{ sub.profiles.nickname }}</p>
+                    <p class="text-xs" style="color:var(--t-text-muted);">Entregado: {{ formatDate(sub.submitted_at) }} (Intento {{ sub.attempt_count }})</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0 justify-between sm:justify-end">
+                  <button class="btn-secondary" style="width:auto;padding:0.4rem 0.8rem;font-size:0.8rem;" @click="downloadSolution(sub)">⬇ {{ sub.file_name }}</button>
+                  
+                  <div class="flex items-center gap-1" v-if="sub.user_id !== profile.id">
+                    <button class="vote-btn" :class="{ active: hasVoted(sub.id) === 1, like: true }" @click="castVote(sub.id, 1)" title="Funciona perfecto / Buen código">👍 {{ sub.likes_count }}</button>
+                    <button class="vote-btn" :class="{ active: hasVoted(sub.id) === -1, dislike: true }" @click="castVote(sub.id, -1)" title="No funciona / Errores">👎 {{ sub.dislikes_count }}</button>
+                    <button class="btn-secondary ml-2" style="padding:0.4rem;font-size:0.8rem;border:none;background:transparent;" @click="toggleComments(sub.id)">💬 {{ getSubComments(sub.id).length }}</button>
+                  </div>
+                  <div v-else class="text-xs font-bold flex items-center gap-2" style="color:var(--t-accent);">
+                    <span>👍 {{ sub.likes_count }} | 👎 {{ sub.dislikes_count }}</span>
+                    <button class="btn-secondary" style="padding:0.4rem;font-size:0.8rem;border:none;background:transparent;" @click="toggleComments(sub.id)">💬 {{ getSubComments(sub.id).length }}</button>
+                  </div>
+                </div>
+
+                <!-- Comentarios (Code Review) Desplegable -->
+                <div v-if="expandedComments === sub.id" class="w-full mt-3 pt-3 border-t" style="border-color:var(--t-glass-border);">
+                  <div class="flex flex-col gap-2 mb-3">
+                    <div v-for="comment in getSubComments(sub.id)" :key="comment.id" class="text-sm p-2 rounded" style="background:var(--t-surface); border:1px solid var(--t-glass-border);">
+                      <div class="flex items-center gap-2 mb-1">
+                        <img :src="getAvatar(comment.profiles?.avatar_id)" style="width:16px;height:16px;border-radius:50%;" />
+                        <span class="font-bold text-xs" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
+                        <span class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(comment.created_at) }}</span>
+                      </div>
+                      <p style="color:var(--t-text-secondary);margin:0;font-size:0.8rem;">{{ comment.content }}</p>
+                    </div>
+                    <div v-if="getSubComments(sub.id).length === 0" class="text-xs text-center" style="color:var(--t-text-muted);">Sin comentarios. Sé el primero en hacer Code Review.</div>
+                  </div>
+                  <div class="flex gap-2">
+                    <input type="text" class="form-input text-xs m-0 p-2" placeholder="Comenta sobre este código..." v-model="newSubComments[sub.id]" @keyup.enter="postSubComment(sub.id)" />
+                    <button class="btn-primary" style="padding:0.4rem 0.8rem; width:auto; font-size:0.75rem;" :disabled="postingSubComment === sub.id" @click="postSubComment(sub.id)">
+                      Enviar
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div v-if="getSubmissionsForProblem(prob.id).length === 0" class="text-xs italic" style="color:var(--t-text-muted);">Sin entregas para este problema.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: RANKING -->
+        <div v-if="detailTab === 'ranking'">
+          <div class="card p-5">
+            <p class="text-xs mb-4 text-center" style="color:var(--t-text-muted);">
+              Fórmula: <strong>(Likes Netos × 100) + Bonus Velocidad</strong>
+            </p>
+            <div v-if="leaderboard.length">
+              <div v-for="(entry, idx) in leaderboard" :key="entry.user_id" class="leaderboard-row mb-2">
+                <span class="leaderboard-rank" :class="{ gold: idx===0, silver: idx===1, bronze: idx===2 }">
+                  {{ idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '#' + (idx+1) }}
+                </span>
+                <img :src="getAvatar(entry.avatar_id)" style="width:24px;height:24px;border-radius:50%;" />
+                <span class="flex-1 font-semibold" style="color:var(--t-text);">{{ entry.nickname }}</span>
+                <span class="text-sm font-bold" style="color:var(--t-accent);">{{ entry.score }} pts</span>
+              </div>
+            </div>
+            <div v-else class="text-center p-4">
+              <p style="color:var(--t-text-muted);">Aún no hay puntuaciones.</p>
+            </div>
           </div>
         </div>
       </div>
     </template>
 
-    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+    <!-- ==============================================
+         MODAL: CREAR COMPETENCIA
+         ============================================== -->
+    <div v-if="showCreateModal" class="diary-modal-overlay" @click.self="showCreateModal = false">
+      <div class="diary-modal" style="max-width:800px;">
+        <div class="diary-modal-header">
+          <h2 class="text-lg font-bold" style="color:var(--t-accent);">✨ Crear Competencia</h2>
+          <button class="diary-modal-close" @click="showCreateModal = false">✕</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <div class="form-group">
+              <label class="form-label">Título</label>
+              <input type="text" class="form-input" v-model="createForm.title" placeholder="Ej: Reto Algoritmos 1" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Descripción (Markdown)</label>
+              <textarea class="form-input" v-model="createForm.description" rows="3" placeholder="Describe el objetivo general..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reglas (opcional, Markdown)</label>
+              <textarea class="form-input" v-model="createForm.rules" rows="2" placeholder="Ej: No usar librerías externas..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha y Hora Límite</label>
+              <input type="datetime-local" class="form-input" v-model="createForm.deadline" />
+            </div>
+          </div>
+
+          <div style="background:var(--t-surface-alt); padding:1rem; border-radius:0.75rem; border:1px solid var(--t-glass-border);">
+            <div class="flex justify-between items-center mb-3 border-b pb-2" style="border-color:var(--t-glass-border);">
+              <h3 class="font-bold text-sm" style="color:var(--t-text);">Carga Masiva (JSON)</h3>
+              <div class="flex gap-2">
+                <button class="btn-secondary" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;" @click="downloadJsonTemplate">📥 Plantilla</button>
+                <button class="btn-primary" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;" @click="triggerJsonUpload">📤 Subir JSON</button>
+                <input type="file" id="json-upload" accept=".json" style="display:none;" @change="handleJsonUpload" />
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-sm" style="color:var(--t-text);">Problemas ({{ createForm.problems.length }})</h3>
+              <button class="tag-pill" style="padding:0.2rem 0.6rem; font-size:0.75rem;" @click="addProblemFields">+ Añadir</button>
+            </div>
+            
+            <div style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
+              <div v-for="(p, i) in createForm.problems" :key="i" class="mb-4 p-3 border rounded relative" style="border-color:var(--t-glass-border); background:var(--t-surface);">
+                <button v-if="createForm.problems.length > 1" class="absolute top-2 right-2 text-xs" style="color:var(--t-wrong-text);background:transparent;border:none;cursor:pointer;" @click="removeProblemFields(i)">✕</button>
+                <div class="form-group mb-2">
+                  <label class="form-label" style="font-size:0.7rem;">Título del Problema {{ i+1 }}</label>
+                  <input type="text" class="form-input p-2 text-sm" v-model="p.title" placeholder="Ej: Suma de Pares" />
+                </div>
+                <div class="form-group mb-2">
+                  <label class="form-label" style="font-size:0.7rem;">Dificultad</label>
+                  <select class="form-input p-2 text-sm" v-model="p.difficulty">
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Media</option>
+                    <option value="hard">Difícil</option>
+                  </select>
+                </div>
+                <div class="form-group mb-2">
+                  <label class="form-label" style="font-size:0.7rem;">Enunciado (MD)</label>
+                  <textarea class="form-input p-2 text-sm" v-model="p.description" rows="2"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div class="form-group mb-0">
+                    <label class="form-label" style="font-size:0.7rem;">Ejemplo Input</label>
+                    <textarea class="form-input p-2 text-xs" v-model="p.example_input" rows="1"></textarea>
+                  </div>
+                  <div class="form-group mb-0">
+                    <label class="form-label" style="font-size:0.7rem;">Ejemplo Output</label>
+                    <textarea class="form-input p-2 text-xs" v-model="p.example_output" rows="1"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-4">
+          <button class="btn-secondary" @click="showCreateModal = false">Cancelar</button>
+          <button class="btn-primary" :disabled="saving" @click="submitCompetition">
+            <span v-if="saving" class="spinner"></span>
+            <span v-else>Crear Competencia 🚀</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script src="../js/supabase-client.js"></script>
@@ -127,79 +368,457 @@
         return {
           loading: true,
           profile: null,
+          currentView: 'list', // 'list' | 'detail'
+          
+          // Listado
           competitions: [],
-          myEntries: [],
-          filter: 'all',
-          leaderboardComp: null,
-          leaderboardData: [],
+          myParticipants: [], // [{competition_id}]
+          searchQuery: '',
+          filter: 'active',
+          inviteCodeInput: '',
+          
+          // Detalle
+          viewComp: null,
+          detailTab: 'problems', // 'problems' | 'submissions' | 'ranking'
+          compProblems: [],
+          compSubmissions: [],
+          compVotes: [],
+          myVotes: [], // mis votos en esta competencia
+          submissionComments: [],
+          expandedComments: null,
+          newSubComments: {},
+          postingSubComment: null,
+          
+          // Crear Modal
+          showCreateModal: false,
+          saving: false,
+          createForm: this.getEmptyForm()
         };
       },
       computed: {
         filteredComps() {
-          if (this.filter === 'all') return this.competitions;
-          return this.competitions.filter(c => c.status === this.filter);
+          let list = this.competitions;
+          if (this.filter === 'active') list = list.filter(c => c.status === 'active');
+          if (this.filter === 'finished') list = list.filter(c => c.status === 'finished');
+          if (this.filter === 'my') list = list.filter(c => c.created_by === this.profile.id || this.hasJoined(c.id));
+          
+          if (this.searchQuery.trim()) {
+            const q = this.searchQuery.toLowerCase();
+            list = list.filter(c => c.title.toLowerCase().includes(q) || (c.description || '').toLowerCase().includes(q));
+          }
+          return list;
         },
+        leaderboard() {
+          // Calcular score por usuario
+          const scores = {};
+          if (!this.viewComp) return [];
+          const compStart = new Date(this.viewComp.created_at).getTime();
+
+          this.compSubmissions.forEach(sub => {
+            if (!scores[sub.user_id]) {
+              scores[sub.user_id] = { user_id: sub.user_id, nickname: sub.profiles.nickname, avatar_id: sub.profiles.avatar_id, score: 0 };
+            }
+            const likesNetos = sub.likes_count - sub.dislikes_count;
+            // time bonus: max(0, 500 - minutos)
+            const minutesSinceStart = Math.max(0, (new Date(sub.submitted_at).getTime() - compStart) / 60000);
+            const timeBonus = Math.max(0, 500 - Math.floor(minutesSinceStart));
+            
+            scores[sub.user_id].score += (likesNetos * 100) + timeBonus;
+          });
+
+          return Object.values(scores).sort((a, b) => b.score - a.score);
+        }
       },
       async mounted() {
         const profile = await SupabaseManager.requireProfile('setup-profile.html');
         if (!profile) return;
         this.profile = profile;
-        await this.loadData();
+        await this.loadList();
         this.loading = false;
       },
       methods: {
-        async loadData() {
+        getEmptyForm() {
+          const dl = new Date();
+          dl.setDate(dl.getDate() + 7);
+          // format para datetime-local (YYYY-MM-DDThh:mm)
+          const dlStr = new Date(dl.getTime() - (dl.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+          return {
+            title: '', description: '', rules: '', deadline: dlStr,
+            problems: [{ title: '', description: '', difficulty: 'medium', example_input: '', example_output: '' }]
+          };
+        },
+        async loadList() {
           const client = SupabaseManager.getClient();
-          // Load competitions
-          const { data: comps } = await client.from('competitions').select('*').order('start_time', { ascending: false });
+          const { data: comps } = await client.from('competitions').select('*').order('created_at', { ascending: false });
           this.competitions = comps || [];
-          // Load my entries
-          const { data: entries } = await client.from('competition_entries').select('*').eq('user_id', this.profile.id);
-          this.myEntries = entries || [];
+          
+          const { data: parts } = await client.from('competition_participants').select('competition_id').eq('user_id', this.profile.id);
+          this.myParticipants = parts || [];
         },
         hasJoined(compId) {
-          return this.myEntries.some(e => e.competition_id === compId);
+          return this.myParticipants.some(p => p.competition_id === compId);
         },
-        async joinComp(comp) {
-          const client = SupabaseManager.getClient();
-          const { error } = await client.from('competition_entries').insert({
-            competition_id: comp.id,
-            user_id: this.profile.id,
-          });
-          if (error) {
-            SupabaseManager.showToast('Error: ' + error.message, 'error');
-          } else {
-            SupabaseManager.showToast('¡Te has unido! 🚀', 'success');
-            await this.loadData();
-          }
-        },
-        async viewLeaderboard(comp) {
-          this.leaderboardComp = comp;
-          const client = SupabaseManager.getClient();
-          const { data } = await client
-            .from('competition_entries')
-            .select('*, profiles(nickname, avatar_id)')
-            .eq('competition_id', comp.id)
-            .order('score', { ascending: false })
-            .order('time_seconds', { ascending: true });
-          this.leaderboardData = (data || []).map(e => ({
-            ...e,
-            nickname: e.profiles?.nickname || 'Anónimo',
-          }));
+        userIsCreator(comp) {
+          return comp.created_by === this.profile.id;
         },
         statusLabel(status) {
-          return { active: '🟢 Activa', upcoming: '📅 Próxima', finished: '✅ Finalizada' }[status] || status;
+          return { active: '🟢 Activa', finished: '🏁 Finalizada', cancelled: '❌ Cancelada' }[status] || status;
         },
         formatDate(dateStr) {
+          if (!dateStr) return 'Sin límite';
           const d = new Date(dateStr);
-          return `${d.getDate()}/${d.getMonth()+1} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+          return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
         },
-        formatTime(secs) {
-          if (!secs) return '--:--';
-          const m = Math.floor(secs / 60);
-          const s = secs % 60;
-          return `${m}:${s.toString().padStart(2,'0')}`;
+        renderMd(text) {
+          return text ? marked.parse(text) : '';
         },
+        getAvatar(id) {
+          return SupabaseManager.getAvatarById(id).src;
+        },
+        
+        // Acciones Listado
+        async joinComp(comp) {
+          const client = SupabaseManager.getClient();
+          const { error } = await client.from('competition_participants').insert({ competition_id: comp.id, user_id: this.profile.id });
+          if (error) SupabaseManager.showToast('Error: ' + error.message, 'error');
+          else {
+            SupabaseManager.showToast('¡Te has unido al dojo! 🥋', 'success');
+            await this.loadList();
+            this.openComp(comp);
+          }
+        },
+        async joinByCode() {
+          const code = this.inviteCodeInput.trim();
+          if (!code) return;
+          const comp = this.competitions.find(c => c.invite_code === code);
+          if (comp) {
+            if (this.hasJoined(comp.id)) this.openComp(comp);
+            else this.joinComp(comp);
+            this.inviteCodeInput = '';
+          } else {
+            SupabaseManager.showToast('Código inválido o competencia no existe', 'error');
+          }
+        },
+
+        // Acciones Detalle
+        async openComp(comp) {
+          this.loading = true;
+          this.viewComp = comp;
+          this.detailTab = 'problems';
+          const client = SupabaseManager.getClient();
+          
+          // Cargar problemas
+          const { data: probs } = await client.from('competition_problems').select('*').eq('competition_id', comp.id).order('sort_order', {ascending: true});
+          this.compProblems = probs || [];
+          
+          // Cargar entregas (con joins manuales o automaticos)
+          const { data: subs } = await client.from('competition_submissions').select('*, profiles(nickname, avatar_id)').eq('competition_id', comp.id);
+          this.compSubmissions = subs || [];
+
+          // Cargar mis votos
+          if (subs && subs.length) {
+            const subIds = subs.map(s => s.id);
+            const { data: votes } = await client.from('competition_votes').select('*').eq('user_id', this.profile.id).in('submission_id', subIds);
+            this.myVotes = votes || [];
+
+            // Cargar comentarios
+            const { data: comments } = await client.from('submission_comments').select('*, profiles(nickname, avatar_id)').in('submission_id', subIds).order('created_at', { ascending: true });
+            this.submissionComments = comments || [];
+          }
+
+          this.currentView = 'detail';
+          this.loading = false;
+        },
+        goToList() {
+          this.currentView = 'list';
+          this.viewComp = null;
+        },
+        copyCode(code) {
+          navigator.clipboard.writeText(code);
+          SupabaseManager.showToast('Código copiado', 'info');
+        },
+        
+        // Soluciones
+        getMySubmission(probId) {
+          return this.compSubmissions.find(s => s.problem_id === probId && s.user_id === this.profile.id);
+        },
+        getSubmissionsForProblem(probId) {
+          return this.compSubmissions.filter(s => s.problem_id === probId).sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+        },
+        triggerUpload(probId) {
+          document.getElementById('file-' + probId).click();
+        },
+        handleDrop(e, probId) {
+          e.currentTarget.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            this.processFile(e.dataTransfer.files[0], probId);
+          }
+        },
+        handleFileSelect(e, probId) {
+          if (e.target.files && e.target.files.length > 0) {
+            this.processFile(e.target.files[0], probId);
+          }
+          e.target.value = ''; // reset
+        },
+        async processFile(file, probId) {
+          if (!file.name.endsWith('.py')) {
+            SupabaseManager.showToast('Solo se permiten archivos .py', 'warning');
+            return;
+          }
+          if (file.size > 50 * 1024) {
+            SupabaseManager.showToast('El archivo debe pesar menos de 50KB', 'warning');
+            return;
+          }
+
+          this.loading = true;
+          // Upload a Storage
+          const res = await SupabaseManager.uploadSolutionFile(file, this.viewComp.id, probId);
+          if (res.error) {
+            SupabaseManager.showToast('Error subiendo archivo: ' + res.error.message, 'error');
+            this.loading = false;
+            return;
+          }
+
+          // Registrar en DB (Upsert manual)
+          const client = SupabaseManager.getClient();
+          const existing = this.getMySubmission(probId);
+          let dbRes;
+
+          if (existing) {
+            dbRes = await client.from('competition_submissions').update({
+              file_path: res.data.path,
+              file_name: file.name,
+              attempt_count: existing.attempt_count + 1,
+              updated_at: new Date().toISOString(),
+              submitted_at: new Date().toISOString() // reseteamos el tiempo para ranking
+            }).eq('id', existing.id).select('*, profiles(nickname, avatar_id)').single();
+          } else {
+            dbRes = await client.from('competition_submissions').insert({
+              problem_id: probId,
+              competition_id: this.viewComp.id,
+              user_id: this.profile.id,
+              file_path: res.data.path,
+              file_name: file.name
+            }).select('*, profiles(nickname, avatar_id)').single();
+          }
+
+          if (dbRes.error) {
+            SupabaseManager.showToast('Error guardando en BD', 'error');
+          } else {
+            SupabaseManager.showToast('Solución enviada correctamente ✅', 'success');
+            // Actualizar local
+            if (existing) {
+              const idx = this.compSubmissions.findIndex(s => s.id === existing.id);
+              if(idx >= 0) this.compSubmissions[idx] = dbRes.data;
+            } else {
+              this.compSubmissions.push(dbRes.data);
+            }
+          }
+          this.loading = false;
+        },
+        async downloadSolution(sub) {
+          const res = await SupabaseManager.getSolutionDownloadUrl(sub.file_path, sub.file_name);
+          if (res.error) {
+            SupabaseManager.showToast('Error obteniendo link de descarga', 'error');
+          } else {
+            // Abrir link temporal
+            window.open(res.data.signedUrl, '_blank');
+          }
+        },
+
+        // Votos
+        hasVoted(subId) {
+          const vote = this.myVotes.find(v => v.submission_id === subId);
+          return vote ? vote.vote : 0;
+        },
+        async castVote(subId, val) {
+          const current = this.hasVoted(subId);
+          const newVal = current === val ? 0 : val; // toggle
+          
+          // Optimistic UI update
+          const sub = this.compSubmissions.find(s => s.id === subId);
+          if (sub) {
+            if (current === 1) sub.likes_count--;
+            else if (current === -1) sub.dislikes_count--;
+
+            if (newVal === 1) sub.likes_count++;
+            else if (newVal === -1) sub.dislikes_count++;
+          }
+
+          const existingVoteIdx = this.myVotes.findIndex(v => v.submission_id === subId);
+          if (newVal === 0) {
+            if (existingVoteIdx >= 0) this.myVotes.splice(existingVoteIdx, 1);
+          } else {
+            if (existingVoteIdx >= 0) this.myVotes[existingVoteIdx].vote = newVal;
+            else this.myVotes.push({ submission_id: subId, user_id: this.profile.id, vote: newVal });
+          }
+
+          const res = await SupabaseManager.voteOnSubmission(subId, newVal);
+          if (res && res.error) {
+            SupabaseManager.showToast('Error al registrar voto', 'error');
+            // rever UI is complex here, reload
+            this.openComp(this.viewComp);
+          }
+        },
+
+        // Comments
+        getSubComments(subId) {
+          return this.submissionComments.filter(c => c.submission_id === subId);
+        },
+        toggleComments(subId) {
+          this.expandedComments = this.expandedComments === subId ? null : subId;
+        },
+        async postSubComment(subId) {
+          const content = (this.newSubComments[subId] || '').trim();
+          if (!content) return;
+
+          this.postingSubComment = subId;
+          const client = SupabaseManager.getClient();
+
+          const { data, error } = await client
+            .from('submission_comments')
+            .insert({
+              submission_id: subId,
+              user_id: this.profile.id,
+              content: content
+            })
+            .select('*, profiles(nickname, avatar_id)')
+            .single();
+
+          if (error) {
+            SupabaseManager.showToast('Error publicando: ' + error.message, 'error');
+          } else {
+            this.submissionComments.push(data);
+            this.newSubComments[subId] = '';
+            SupabaseManager.showToast('Comentario publicado', 'success');
+          }
+          this.postingSubComment = null;
+        },
+
+        // Crear & Carga Masiva
+        downloadJsonTemplate() {
+          const dl = new Date();
+          dl.setDate(dl.getDate() + 7);
+          const dlStr = new Date(dl.getTime() - (dl.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+          
+          const template = {
+            "_instruction_for_ai": "IMPORTANTE: Este es un archivo de configuración para una competencia de programación. Todas las claves que empiezan con '_' son comentarios y guías, no las modifiques ni las elimines. Rellena los valores reales.",
+            "title": "Reto Algoritmos 1",
+            "_comment_title": "El título de la competencia. Debe ser corto y claro.",
+            "description": "El objetivo general de esta competencia es...",
+            "_comment_description": "Puedes usar Markdown. Explica de qué trata la competencia en general.",
+            "rules": "No usar librerías externas...",
+            "_comment_rules": "Opcional. Reglas específicas para esta competencia. Soporta Markdown.",
+            "deadline": dlStr,
+            "_comment_deadline": "Fecha y hora límite en formato ISO (YYYY-MM-DDThh:mm).",
+            "_comment_problems": "A continuación, la lista de problemas. Puedes añadir tantos como necesites siguiendo la misma estructura.",
+            "problems": [
+              {
+                "title": "Detector de Capicúas",
+                "difficulty": "medium",
+                "_comment_difficulty": "Valores permitidos: 'easy', 'medium' o 'hard'.",
+                "description": "Crea un programa en Python que determine si un número es capicúa. Debe imprimir 'Es capicúa' o 'No es capicúa'.",
+                "_comment_description": "El enunciado del problema. Soporta Markdown.",
+                "example_input": "121",
+                "example_output": "Es capicúa"
+              }
+            ]
+          };
+          
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2));
+          const el = document.createElement('a');
+          el.setAttribute("href", dataStr);
+          el.setAttribute("download", "plantilla_competencia.json");
+          document.body.appendChild(el);
+          el.click();
+          el.remove();
+        },
+        triggerJsonUpload() {
+          document.getElementById('json-upload').click();
+        },
+        handleJsonUpload(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            try {
+              const data = JSON.parse(ev.target.result);
+              
+              if (data.title) this.createForm.title = data.title;
+              if (data.description) this.createForm.description = data.description;
+              if (data.rules !== undefined) this.createForm.rules = data.rules;
+              if (data.deadline) this.createForm.deadline = data.deadline;
+              
+              if (data.problems && Array.isArray(data.problems)) {
+                // Limpiar guías y rellenar defaults
+                this.createForm.problems = data.problems.map(p => ({
+                  title: p.title || '',
+                  difficulty: p.difficulty || 'medium',
+                  description: p.description || '',
+                  example_input: p.example_input || '',
+                  example_output: p.example_output || ''
+                }));
+              }
+              SupabaseManager.showToast('JSON cargado exitosamente', 'success');
+            } catch (err) {
+              SupabaseManager.showToast('Error: El archivo JSON tiene formato inválido', 'error');
+              console.error("JSON Parse Error:", err);
+            }
+            e.target.value = ''; // reset file input
+          };
+          reader.readAsText(file);
+        },
+        addProblemFields() {
+          this.createForm.problems.push({ title: '', description: '', difficulty: 'medium', example_input: '', example_output: '' });
+        },
+        removeProblemFields(idx) {
+          this.createForm.problems.splice(idx, 1);
+        },
+        async submitCompetition() {
+          if (!this.createForm.title.trim()) return SupabaseManager.showToast('El título es requerido', 'warning');
+          const validProbs = this.createForm.problems.filter(p => p.title.trim() && p.description.trim());
+          if (validProbs.length === 0) return SupabaseManager.showToast('Añade al menos 1 problema completo', 'warning');
+
+          this.saving = true;
+          const client = SupabaseManager.getClient();
+
+          // 1. Insert Comp
+          const { data: compData, error: compErr } = await client.from('competitions').insert({
+            title: this.createForm.title.trim(),
+            description: this.createForm.description.trim(),
+            rules: this.createForm.rules.trim(),
+            deadline: new Date(this.createForm.deadline).toISOString(),
+            created_by: this.profile.id
+          }).select().single();
+
+          if (compErr) {
+            this.saving = false;
+            return SupabaseManager.showToast('Error creando comp: ' + compErr.message, 'error');
+          }
+
+          // 2. Insert Problems
+          const probsToInsert = validProbs.map((p, i) => ({
+            ...p,
+            competition_id: compData.id,
+            sort_order: i
+          }));
+          const { error: probErr } = await client.from('competition_problems').insert(probsToInsert);
+
+          // 3. Auto-join creator
+          await client.from('competition_participants').insert({ competition_id: compData.id, user_id: this.profile.id });
+
+          this.saving = false;
+          if (probErr) {
+            SupabaseManager.showToast('Error insertando problemas', 'warning');
+          } else {
+            SupabaseManager.showToast('¡Competencia creada exitosamente!', 'success');
+            this.showCreateModal = false;
+            this.createForm = this.getEmptyForm();
+            await this.loadList();
+            this.openComp(compData);
+          }
+        }
       },
     }).mount('#app');
   </script>

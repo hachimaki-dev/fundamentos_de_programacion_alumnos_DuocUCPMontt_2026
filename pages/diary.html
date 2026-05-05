@@ -77,6 +77,7 @@
           </div>
           <div class="entry-tags" v-if="entry.tags && entry.tags.length">
             <span v-for="tag in entry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
+            <span v-if="entry.is_public" class="entry-tag" style="background:#10b981;color:white;">🌐 Público</span>
           </div>
           <!-- Actions -->
           <div class="flex gap-2 mt-2" @click.stop>
@@ -120,13 +121,21 @@
 
           <div class="form-group">
             <label class="form-label">Tags</label>
-            <div class="flex gap-2 flex-wrap">
+            <div class="flex gap-2 flex-wrap mb-3">
               <button v-for="tag in defaultTags" :key="tag"
                 class="tag-pill" :class="{ active: editorTags.includes(tag) }"
                 @click="toggleTag(tag)" type="button" style="font-size:0.78rem;">
                 {{ tagEmoji(tag) }} {{ tag }}
               </button>
             </div>
+            
+            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:15px;padding:10px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+              <input type="checkbox" v-model="editorIsPublic" style="width:18px;height:18px;accent-color:#10b981;" />
+              <div>
+                <span style="color:#10b981;font-weight:bold;">Hacer Público (Dev Blog)</span>
+                <div style="font-size:0.75rem;color:var(--t-text-muted);font-weight:normal;">Otros desarrolladores podrán leerlo y comentarlo en el Feed Global.</div>
+              </div>
+            </label>
           </div>
 
           <div class="flex gap-3">
@@ -183,6 +192,7 @@
           showEditor: false,
           editorTitle: '',
           editorTags: [],
+          editorIsPublic: false,
           editingEntry: null,
           viewingEntry: null,
           deletingEntry: null,
@@ -258,6 +268,7 @@
           this.editingEntry = entry;
           this.editorTitle = entry ? entry.title : '';
           this.editorTags = entry ? [...(entry.tags || [])] : [];
+          this.editorIsPublic = entry ? !!entry.is_public : false;
           this.showEditor = true;
           this.$nextTick(() => {
             const el = document.getElementById('md-editor');
@@ -317,14 +328,14 @@
           if (this.editingEntry) {
             // Update
             const { error } = await client.from('diary_entries')
-              .update({ title: this.editorTitle.trim(), content, tags: this.editorTags, updated_at: new Date().toISOString() })
+              .update({ title: this.editorTitle.trim(), content, tags: this.editorTags, is_public: this.editorIsPublic, updated_at: new Date().toISOString() })
               .eq('id', this.editingEntry.id);
             if (error) { SupabaseManager.showToast('Error: ' + error.message, 'error'); }
             else { SupabaseManager.showToast('Entrada actualizada ✅', 'success'); }
           } else {
             // Insert
             const { error } = await client.from('diary_entries')
-              .insert({ user_id: this.profile.id, title: this.editorTitle.trim(), content, tags: this.editorTags });
+              .insert({ user_id: this.profile.id, title: this.editorTitle.trim(), content, tags: this.editorTags, is_public: this.editorIsPublic });
             if (error) { SupabaseManager.showToast('Error: ' + error.message, 'error'); }
             else { SupabaseManager.showToast('Entrada creada ✨', 'success'); }
           }

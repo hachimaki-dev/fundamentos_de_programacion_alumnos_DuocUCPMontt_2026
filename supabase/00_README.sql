@@ -1,0 +1,34 @@
+-- ============================================================
+-- 📋 README — Guía de ejecución de scripts SQL
+-- ============================================================
+--
+-- Ejecutar EN ORDEN en Supabase Dashboard → SQL Editor:
+--
+-- 1. 01_profiles.sql    — Tabla de perfiles + trigger auth
+-- 2. 02_diary.sql       — Tabla de diario de clase
+-- 3. 03_competitions.sql — Sistema completo de competencias
+--
+-- NOTA: Todos los scripts son IDEMPOTENTES.
+-- Puedes re-ejecutarlos sin romper la BD.
+-- Usan DROP IF EXISTS antes de CREATE.
+--
+-- CONFIGURACIÓN MANUAL ADICIONAL:
+--
+-- A) Storage → New Bucket:
+--    - Nombre: "competition-solutions"
+--    - Public: NO
+--    - File size limit: 50KB
+--
+-- B) Authentication → Providers → Email:
+--    - Enable Email Signup: ✅
+--    - Enable Email Confirmations: ✅ (o ❌ para testing)
+--
+-- C) Authentication → URL Configuration:
+--    - Site URL: https://tu-sitio.com
+--    - Redirect URLs: https://tu-sitio.com/pages/confirm.html
+--
+-- D) Para hacerte profesor:
+--    UPDATE public.profiles SET role = 'teacher'
+--    WHERE email = 'TU_EMAIL';
+--
+-- ============================================================

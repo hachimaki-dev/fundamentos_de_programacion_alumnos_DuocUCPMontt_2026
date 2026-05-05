@@ -672,7 +672,7 @@
   border-color: var(--t-accent) !important;
 }
 
-/* ─── Competition Styles ─── */
+/* ─── Competition Styles (Redesign) ─── */
 .comp-card {
   background: var(--t-glass-bg);
   backdrop-filter: blur(12px);
@@ -686,6 +686,7 @@
 .comp-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px var(--t-shadow-hover);
+  border-color: var(--t-accent-subtle);
 }
 
 .comp-status {
@@ -719,6 +720,94 @@
 .comp-status.finished {
   background: var(--t-surface-alt);
   color: var(--t-text-muted);
+}
+
+.comp-status.cancelled {
+  background: var(--t-wrong-bg);
+  color: var(--t-wrong-text);
+  border: 1px solid var(--t-wrong-border);
+}
+
+.difficulty-badge {
+  display: inline-flex;
+  padding: 0.15rem 0.6rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.difficulty-badge.easy { background: #e8f5e9; color: #2e7d32; }
+.difficulty-badge.medium { background: #fff3e0; color: #ef6c00; }
+.difficulty-badge.hard { background: #ffebee; color: #c62828; }
+
+.upload-zone {
+  border: 2px dashed var(--t-accent-subtle);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  background: var(--t-surface-alt);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.upload-zone:hover, .upload-zone.dragover {
+  background: var(--t-accent-bg);
+  border-color: var(--t-accent);
+}
+
+.upload-zone input[type="file"] {
+  display: none;
+}
+
+.vote-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--t-glass-border);
+  background: var(--t-surface);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--t-text-muted);
+}
+
+.vote-btn:hover {
+  background: var(--t-surface-hover);
+}
+
+.vote-btn.active.like {
+  background: var(--t-correct-bg);
+  border-color: var(--t-correct);
+  color: var(--t-correct-text);
+}
+
+.vote-btn.active.dislike {
+  background: var(--t-wrong-bg);
+  border-color: var(--t-wrong);
+  color: var(--t-wrong-text);
+}
+
+.invite-code-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--t-surface-alt);
+  border: 1px dashed var(--t-accent);
+  border-radius: 0.5rem;
+  font-family: var(--t-font-code, monospace);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--t-accent);
+  cursor: pointer;
+}
+
+.invite-code-badge:hover {
+  background: var(--t-accent-bg);
 }
 
 .leaderboard-row {
