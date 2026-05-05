@@ -1,7 +1,7 @@
 #Ejercicio 15: Envíos MercadoLibre (Zonas Extremas)
 
 
-productos_compra = 19000
+productos_compra = 25000
 lugar = "Magallanes"
 envio_normal = 0
 envio_porpagar = 3000
