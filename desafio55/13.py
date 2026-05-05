@@ -7,3 +7,4 @@ if (sueldo_cliente > 100000) or (años > 5 and deudas == 0):
     print("Cliente VIP")
 else:
     print("Cliente normal")
+   
