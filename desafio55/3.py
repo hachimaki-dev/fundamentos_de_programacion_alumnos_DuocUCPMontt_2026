@@ -16,7 +16,7 @@ total_personas = 5
 porcentaje_propina = 10
 
 
-propina = total_cuenta / 10
+propina = total_cuenta / porcentaje_propina
 
 cada_uno_cuenta = (propina + total_cuenta) / 5
 
