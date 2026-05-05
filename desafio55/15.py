@@ -12,4 +12,4 @@ else:
 if region == "Magallanes" or "Aysen":
     envio = envio + zona_extrema
 
-print(f"{envio}")
+print(f"El total del envio es de: {envio}")
