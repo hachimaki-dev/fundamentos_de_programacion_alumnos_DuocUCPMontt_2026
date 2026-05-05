@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👤 Perfil Público — Fundamentos 2026</title>
+  
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <!-- DOMPurify para evitar ataques XSS con JS, pero permitiremos estilos y html básico -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+
+  <style>
+    .myspace-container {
+      min-height: 80vh;
+      border-radius: 12px;
+      padding: 2rem;
+      background: var(--t-surface);
+      border: 1px solid var(--t-border);
+      position: relative;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+    
+    .profile-header {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+      z-index: 10;
+      position: relative;
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid var(--t-accent);
+      object-fit: cover;
+      background: var(--t-surface-hover);
+    }
+    
+    .edit-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .edit-modal-content {
+      background: var(--t-surface);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--t-border);
+    }
+    
+    .code-editor {
+      width: 100%;
+      min-height: 200px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: monospace;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #333;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="top-nav">
+    <div class="nav-brand">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div class="nav-links">
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="wanted.html" class="nav-link" style="color: var(--t-accent);">🏴‍☠️ WANTED</a>
+    </div>
+  </nav>
+
+  <div id="app" class="container relative z-10" style="max-width: 900px; margin: 0 auto; padding: 5rem 1rem 4rem;">
+    
+    <div v-if="loading" class="text-center">
+      <div class="spinner"></div>
+      <p class="mt-2 text-muted">Cargando perfil...</p>
+    </div>
+    
+    <div v-else-if="!profile" class="card text-center">
+      <h2>❌ Perfil no encontrado</h2>
+      <p class="text-muted">El hacker que buscas no existe o está oculto en las sombras.</p>
+    </div>
+
+    <div v-else>
+      <div class="flex justify-between items-center mb-4">
+        <button class="btn-secondary" style="width: auto;" onclick="history.back()">← Volver</button>
+        <div class="flex gap-2">
+          <button v-if="!isOwner && !isFollowing" @click="toggleFollow" class="btn-primary" style="width: auto;" :disabled="followLoading">
+            <span v-if="followLoading" class="spinner"></span>
+            <span v-else>➕ Seguir</span>
+          </button>
+          <button v-if="!isOwner && isFollowing" @click="toggleFollow" class="btn-secondary" style="width: auto;" :disabled="followLoading">
+            <span v-if="followLoading" class="spinner"></span>
+            <span v-else>✅ Siguiendo</span>
+          </button>
+          <button v-if="isOwner" @click="showEditModal = true" class="btn-primary" style="width: auto;">
+            🎨 Editar mi "MySpace"
+          </button>
+        </div>
+      </div>
+
+      <!-- CONTENEDOR CUSTOM: Aquí se inyecta el HTML y CSS del usuario -->
+      <div id="user-custom-myspace" class="myspace-container shadow-md">
+        
+        <!-- ESTILOS INYECTADOS -->
+        <component :is="'style'" v-if="sanitizedCSS" v-html="sanitizedCSS"></component>
+        
+        <!-- HEADER ESTÁNDAR (Siempre visible para mantener la identidad) -->
+        <div class="profile-header">
+          <img :src="avatarSrc" :alt="profile.nickname" class="profile-avatar" />
+          <div>
+            <h1 class="text-2xl font-bold" style="margin:0;">
+              {{ profile.nickname }}
+              <span v-if="profile.title" class="text-sm" style="color:var(--t-accent); margin-left: 0.5rem;">
+                [{{ profile.title }}]
+              </span>
+            </h1>
+            <p class="text-muted" style="margin: 0.25rem 0;">
+              Nivel {{ profile.level }} • {{ profile.xp }} XP
+            </p>
+            <p class="text-sm" style="margin: 0;">
+              Facción: <strong>{{ factionName }}</strong>
+            </p>
+            <div class="flex gap-4 mt-2 text-sm text-muted">
+              <span><strong>{{ followersCount }}</strong> Seguidores</span>
+              <span><strong>{{ followingCount }}</strong> Siguiendo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- HTML INYECTADO -->
+        <div class="user-injected-html mt-4" v-if="sanitizedHTML" v-html="sanitizedHTML"></div>
+        <div v-else class="text-center mt-8 text-muted">
+          <p>Este usuario aún no ha personalizado su MySpace.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL DE EDICIÓN -->
+    <div v-if="showEditModal" class="edit-modal">
+      <div class="edit-modal-content">
+        <h2 class="mb-4">🎨 Personaliza tu MySpace</h2>
+        <p class="text-muted mb-4 text-sm">
+          Puedes usar HTML y CSS puro para decorar tu perfil. Por seguridad, el código JavaScript (etiquetas &lt;script&gt;) y eventos (onclick) serán eliminados automáticamente.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label text-accent">TÍTULO (Badge)</label>
+          <input type="text" v-model="editForm.title" class="form-input" placeholder="Ej: Leyenda del Código" maxlength="30">
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="form-label" style="color: #4ade80;">CUSTOM CSS</label>
+          <p class="text-xs text-muted mb-2">Para modificar el fondo de tu perfil usa la clase <code>.myspace-container</code>.</p>
+          <textarea v-model="editForm.css" class="code-editor" placeholder=".myspace-container { background: url('...'); }"></textarea>
+        </div>
+
+        <div class="form-group mt-4">
+          <label class="form-label" style="color: #60a5fa;">CUSTOM HTML</label>
+          <textarea v-model="editForm.html" class="code-editor" placeholder="<h1>Bienvenidos a mi perfil!</h1><img src='gif_animado.gif'>"></textarea>
+        </div>
+
+        <div class="flex gap-3 mt-4 justify-end">
+          <button @click="showEditModal = false" class="btn-secondary" :disabled="saving">Cancelar</button>
+          <button @click="saveCustomizations" class="btn-primary" :disabled="saving">
+            <span v-if="saving" class="spinner"></span>
+            <span v-else>💾 Guardar Cambios</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          loading: true,
+          saving: false,
+          profile: null,
+          currentUser: null,
+          factionName: 'Sin Facción',
+          followersCount: 0,
+          followingCount: 0,
+          isFollowing: false,
+          followLoading: false,
+          showEditModal: false,
+          editForm: {
+            title: '',
+            html: '',
+            css: ''
+          }
+        };
+      },
+      computed: {
+        isOwner() {
+          return this.currentUser && this.profile && this.currentUser.id === this.profile.id;
+        },
+        avatarSrc() {
+          if (!this.profile) return '';
+          const catalog = SupabaseManager.getAvatarCatalog();
+          const av = catalog.find(a => a.id === this.profile.avatar_id);
+          return av ? av.src : catalog[0].src;
+        },
+        sanitizedHTML() {
+          if (!this.profile || !this.profile.custom_html) return '';
+          // Sanitizar permitiendo etiquetas seguras
+          return DOMPurify.sanitize(this.profile.custom_html, {
+            USE_PROFILES: { html: true },
+            ADD_TAGS: ['iframe'], // Si quieres permitir youtube/spotify embeds
+            ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling']
+          });
+        },
+        sanitizedCSS() {
+          if (!this.profile || !this.profile.custom_css) return '';
+          // DOMPurify striptea CSS por defecto si no lo envolvemos o configuramos
+          // Extraemos el CSS en texto plano y lo inyectamos (sin scripts)
+          let css = this.profile.custom_css;
+          // Limpieza básica manual de expresiones inseguras en CSS
+          css = css.replace(/expression\(/gi, '');
+          css = css.replace(/javascript:/gi, '');
+          css = css.replace(/<script/gi, '');
+          return css;
+        }
+      },
+      async mounted() {
+        // Init DOMPurify configs if needed
+        
+        // Obtenemos el usuario logueado
+        this.currentUser = await SupabaseManager.getUser();
+
+        // Determinar qué perfil cargar (por URL param ?nickname=... o ?id=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        let queryNickname = urlParams.get('nickname');
+        let queryId = urlParams.get('id');
+
+        const client = SupabaseManager.getClient();
+        let query = client.from('profiles').select('*');
+
+        if (queryNickname) {
+          query = query.eq('nickname', queryNickname);
+        } else if (queryId) {
+          query = query.eq('id', queryId);
+        } else if (this.currentUser) {
+          query = query.eq('id', this.currentUser.id);
+        } else {
+          this.loading = false;
+          return;
+        }
+
+        const { data, error } = await query.single();
+        
+        if (data && !error) {
+          this.profile = data;
+          
+          // Intentar obtener la facción por separado para evitar fallos de join si el schema cache no está actualizado
+          if (data.faction_id) {
+            try {
+              const { data: fData } = await client.from('factions').select('faction_name').eq('id', data.faction_id).single();
+              if (fData) this.factionName = fData.faction_name;
+            } catch (e) { console.error("Error fetching faction", e); }
+          } else {
+            this.factionName = data.section || 'Nómada';
+          }
+          
+          this.editForm.title = data.title || '';
+          this.editForm.html = data.custom_html || '';
+          this.editForm.css = data.custom_css || '';
+
+          // Cargar seguidores
+          const { count: fCount } = await client.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', data.id);
+          const { count: flCount } = await client.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', data.id);
+          this.followersCount = fCount || 0;
+          this.followingCount = flCount || 0;
+
+          // Ver si lo sigo
+          if (this.currentUser && !this.isOwner) {
+            try {
+              const { data: followData } = await client.from('follows').select('follower_id').eq('follower_id', this.currentUser.id).eq('following_id', data.id).single();
+              if (followData) this.isFollowing = true;
+            } catch(e) { console.error("Error follows", e); }
+          }
+        } else {
+          console.error("Error cargando perfil:", error);
+          if (error && error.message.includes('factions')) {
+            SupabaseManager.showToast('Error de esquema: Falta crear la tabla factions', 'error');
+          }
+        }
+
+        this.loading = false;
+      },
+      methods: {
+        async toggleFollow() {
+          if (!this.currentUser) return;
+          this.followLoading = true;
+          const client = SupabaseManager.getClient();
+          
+          if (this.isFollowing) {
+            // Dejar de seguir
+            await client.from('follows').delete().eq('follower_id', this.currentUser.id).eq('following_id', this.profile.id);
+            this.isFollowing = false;
+            this.followersCount--;
+          } else {
+            // Seguir
+            await client.from('follows').insert({ follower_id: this.currentUser.id, following_id: this.profile.id });
+            this.isFollowing = true;
+            this.followersCount++;
+            SupabaseManager.showToast(`Ahora sigues a ${this.profile.nickname}`, 'success');
+          }
+          this.followLoading = false;
+        },
+        async saveCustomizations() {
+          this.saving = true;
+          
+          const { error } = await SupabaseManager.updateProfile({
+            title: this.editForm.title.trim(),
+            custom_html: this.editForm.html,
+            custom_css: this.editForm.css
+          });
+
+          this.saving = false;
+
+          if (error) {
+            SupabaseManager.showToast('Error al guardar: ' + error.message, 'error');
+            return;
+          }
+
+          // Update local state
+          this.profile.title = this.editForm.title.trim();
+          this.profile.custom_html = this.editForm.html;
+          this.profile.custom_css = this.editForm.css;
+          
+          this.showEditModal = false;
+          SupabaseManager.showToast('¡MySpace actualizado!', 'success');
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

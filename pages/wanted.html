@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏴‍☠️ WANTED — Top Hackers</title>
+  
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <style>
+    body {
+      background-image: radial-gradient(circle at 50% 0%, var(--t-surface-hover) 0%, var(--t-bg) 70%);
+    }
+
+    .wanted-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+    }
+
+    /* Estilos del cartel WANTED inspirados en One Piece pero limpios */
+    .wanted-poster {
+      background: #e8dcb8; /* Color pergamino */
+      padding: 1.5rem;
+      border: 8px solid #3d2b1f; /* Borde oscuro madera */
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: #3d2b1f;
+      font-family: 'Times New Roman', Times, serif;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .wanted-poster:hover {
+      transform: translateY(-10px) rotate(2deg);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    /* El primer lugar es más grande y especial */
+    .wanted-poster.rank-1 {
+      grid-column: 1 / -1;
+      max-width: 450px;
+      margin: 0 auto;
+      transform: scale(1.1);
+      border-color: #b8860b; /* Borde dorado */
+    }
+    .wanted-poster.rank-1:hover {
+      transform: scale(1.1) translateY(-10px) rotate(1deg);
+    }
+
+    .poster-header {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 5px;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+      border-bottom: 3px solid #3d2b1f;
+      padding-bottom: 0.5rem;
+      width: 100%;
+    }
+    .wanted-poster.rank-1 .poster-header { color: #b8860b; }
+
+    .poster-image-container {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 4px solid #3d2b1f;
+      margin: 1rem 0;
+      background: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .poster-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Filtro para que se vea un poco viejo o sepia */
+      filter: sepia(0.6) contrast(1.2);
+    }
+
+    .poster-name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0.5rem 0;
+      line-height: 1.1;
+    }
+
+    .poster-bounty-label {
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      margin-top: 1rem;
+    }
+
+    .poster-bounty-value {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      margin-top: 0.2rem;
+    }
+
+    .poster-title {
+      font-size: 1rem;
+      font-style: italic;
+      color: #664d36;
+      margin-top: -0.5rem;
+    }
+    
+    .poster-faction {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: #8b0000;
+      color: white;
+      padding: 5px 15px;
+      font-weight: bold;
+      font-family: sans-serif;
+      border-radius: 20px;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      transform: rotate(15deg);
+    }
+
+    .wanted-title-main {
+      text-align: center;
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 20px rgba(var(--t-accent-rgb), 0.5);
+      color: var(--t-text);
+      letter-spacing: 4px;
+    }
+
+    .factions-leaderboard {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    .faction-card {
+      background: var(--t-surface);
+      border: 2px solid var(--t-border);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-align: center;
+      min-width: 200px;
+    }
+    .faction-card h3 { margin: 0; color: var(--t-accent); }
+    .faction-card p { font-size: 1.5rem; font-weight: bold; margin: 0; }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="top-nav">
+    <div class="nav-brand">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div class="nav-links">
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="wanted.html" class="nav-link active" style="color: var(--t-accent);">🏴‍☠️ WANTED</a>
+    </div>
+  </nav>
+
+  <div id="app" class="container relative z-10" style="max-width: 1200px; margin: 0 auto; padding: 6rem 1rem 4rem;">
+    
+    <h1 class="wanted-title-main">HALL OF FAME</h1>
+    <p class="text-center text-muted mb-8 text-xl">Los piratas informáticos más buscados del semestre.</p>
+
+    <!-- GUERRA DE FACCIONES -->
+    <div class="factions-leaderboard" v-if="factions.length > 0">
+      <div v-for="(fac, idx) in factions" :key="fac.id" class="faction-card" :style="idx === 0 ? 'border-color: #fbbf24; transform: scale(1.05);' : ''">
+        <h3>{{ fac.faction_name }}</h3>
+        <p>🏆 {{ fac.total_xp.toLocaleString() }} XP</p>
+        <span class="text-xs text-muted">Sección: {{ fac.section_code }}</span>
+      </div>
+    </div>
+
+    <!-- POSTERS WANTED -->
+    <div v-if="loading" class="text-center my-12">
+      <div class="spinner"></div>
+      <p class="mt-4 text-muted">Buscando recompensas...</p>
+    </div>
+
+    <div v-else class="wanted-board">
+      <a :href="'profile.html?id=' + user.id" 
+         v-for="(user, index) in topUsers" :key="user.id" 
+         class="wanted-poster" :class="{'rank-1': index === 0}">
+        
+        <div v-if="user.factions?.faction_name" class="poster-faction">
+          {{ user.factions.faction_name }}
+        </div>
+
+        <div class="poster-header">WANTED</div>
+        <div style="font-size: 0.8rem; letter-spacing: 5px; margin-bottom: 0.5rem;">DEAD OR ALIVE</div>
+        
+        <div class="poster-image-container">
+          <img :src="getAvatar(user.avatar_id)" class="poster-image" alt="Avatar">
+        </div>
+        
+        <div class="poster-name">{{ user.nickname }}</div>
+        <div v-if="user.title" class="poster-title">"{{ user.title }}"</div>
+        
+        <div class="poster-bounty-label">REWARD</div>
+        <div class="poster-bounty-value">
+          <span style="font-size:1.2rem;">XP</span> {{ user.xp.toLocaleString() }}
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          loading: true,
+          topUsers: [],
+          factions: []
+        };
+      },
+      async mounted() {
+        await this.loadWantedList();
+        await this.loadFactions();
+      },
+      methods: {
+        async loadWantedList() {
+          const client = SupabaseManager.getClient();
+          // Obtener los top 10 con más XP
+          const { data, error } = await client
+            .from('profiles')
+            .select('id, nickname, avatar_id, xp, title, factions(faction_name)')
+            .order('xp', { ascending: false })
+            .limit(10);
+            
+          if (!error && data) {
+            this.topUsers = data;
+          }
+          this.loading = false;
+        },
+        async loadFactions() {
+          const client = SupabaseManager.getClient();
+          const { data, error } = await client
+            .from('factions')
+            .select('*')
+            .order('total_xp', { ascending: false });
+            
+          if (!error && data) {
+            this.factions = data;
+          }
+        },
+        getAvatar(id) {
+          return SupabaseManager.getAvatarById(id).src;
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

@@ -49,6 +49,10 @@
               style="color: var(--t-accent); text-decoration: none;">
               🐙 {{ profile.github_username }}
             </a>
+            <button @click="syncGitHub" class="btn-secondary" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 8px; border-radius: 4px; border: 1px solid var(--t-accent); color: var(--t-accent);" :disabled="syncingGithub">
+              <span v-if="syncingGithub">Sincronizando...</span>
+              <span v-else>🔄 Sync XP</span>
+            </button>
           </div>
           <div v-if="profile.xp !== undefined" style="font-size: 0.8rem; color: var(--t-text-muted); margin-top: 4px;">
             🌟 {{ profile.xp }} XP
@@ -105,14 +109,14 @@
           </div>
         </a>
 
-        <!-- Mi Perfil -->
-        <div class="dash-card" @click="showProfileModal = true" style="cursor:pointer;">
+        <!-- Mi Perfil (MySpace) -->
+        <a href="profile.html" class="dash-card">
           <div class="dash-card-icon">👤</div>
-          <div class="dash-card-title">Mi Perfil</div>
+          <div class="dash-card-title">Mi Perfil (MySpace)</div>
           <div class="dash-card-desc">
-            Edita tu avatar, nickname y datos personales.
+            Inyecta tu propio HTML/CSS, muestra tus logros y personaliza tu rincón en la red.
           </div>
-        </div>
+        </a>
       </div>
 
       <!-- Quick Stats -->
@@ -195,6 +199,7 @@
           compsJoined: 0,
           showProfileModal: false,
           editSaving: false,
+          syncingGithub: false,
           editAvatarCat: 'all',
           editForm: { avatar_id: '', nickname: '' },
           avatarCatalog: SupabaseManager.getAvatarCatalog(),
@@ -267,6 +272,69 @@
           this.profile.nickname = this.editForm.nickname.trim();
           this.showProfileModal = false;
           SupabaseManager.showToast('Perfil actualizado ✅', 'success');
+        },
+        async syncGitHub() {
+          if (!this.profile.github_username) {
+            SupabaseManager.showToast('No tienes GitHub configurado en tu perfil', 'warning');
+            return;
+          }
+          this.syncingGithub = true;
+          try {
+            const res = await fetch(`https://api.github.com/users/${this.profile.github_username}/events/public`);
+            if (!res.ok) throw new Error('Error al conectar con GitHub. Verifica tu username.');
+            const events = await res.json();
+            
+            // Buscar eventos push a repos de fundamentos
+            const targetEvents = events.filter(e => 
+              e.type === 'PushEvent' && 
+              e.repo && e.repo.name.toLowerCase().includes('fundamentos')
+            );
+
+            if (targetEvents.length === 0) {
+              SupabaseManager.showToast('No tienes commits recientes en repositorios "fundamentos..."', 'info');
+              this.syncingGithub = false;
+              return;
+            }
+
+            const client = SupabaseManager.getClient();
+            let newXpAwarded = 0;
+
+            for (const event of targetEvents) {
+              const { data: existing } = await client.from('github_sync_history')
+                .select('id').eq('github_event_id', event.id).single();
+              
+              if (!existing) {
+                await client.from('github_sync_history').insert({
+                  user_id: this.profile.id,
+                  github_event_id: event.id,
+                  event_type: event.type,
+                  repo_name: event.repo.name,
+                  xp_awarded: 50
+                });
+                newXpAwarded += 50;
+              }
+            }
+
+            if (newXpAwarded > 0) {
+              // Llamar a la función RPC que creamos internamente
+              const { error } = await client.rpc('award_xp_and_badge', {
+                target_user: this.profile.id,
+                xp_amount: newXpAwarded
+              });
+              
+              if (!error) {
+                 this.profile.xp = (this.profile.xp || 0) + newXpAwarded;
+                 SupabaseManager.showToast(`¡Ganaste +${newXpAwarded} XP por tus commits en GitHub! 🐙🔥`, 'success', 5000);
+              } else {
+                SupabaseManager.showToast('Error al otorgar XP: ' + error.message, 'error');
+              }
+            } else {
+              SupabaseManager.showToast('Tus commits recientes ya fueron sincronizados.', 'info');
+            }
+          } catch(e) {
+            SupabaseManager.showToast(e.message, 'error');
+          }
+          this.syncingGithub = false;
         },
       },
     }).mount('#app');

@@ -640,3 +640,56 @@ code[class*="language-"] {
   .diary-entry::before { left: -2.3rem; }
   .diary-entry .entry-title { font-size: 1.1rem; }
 }
+
+/* ─── Global Top Navigation ─── */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rem;
+  background: var(--t-glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 2px solid var(--t-glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 1000;
+  box-shadow: 0 4px 20px var(--t-shadow);
+}
+
+.nav-brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--t-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: var(--t-text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.nav-link:hover {
+  background: var(--t-accent-subtle);
+  color: var(--t-accent);
+}
+
+@media (max-width: 640px) {
+  .top-nav { padding: 0 1rem; }
+  .hidden-mobile { display: none; }
+}

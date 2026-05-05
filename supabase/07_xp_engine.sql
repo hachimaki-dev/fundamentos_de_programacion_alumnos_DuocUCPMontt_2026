@@ -54,9 +54,10 @@ CREATE OR REPLACE FUNCTION public.award_xp_and_badge(
 ) RETURNS VOID AS $$
 DECLARE
   current_achievements TEXT[];
+  user_faction UUID;
 BEGIN
-  -- Obtener logros actuales
-  SELECT achievements INTO current_achievements FROM public.profiles WHERE id = target_user;
+  -- Obtener logros actuales y faccion
+  SELECT achievements, faction_id INTO current_achievements, user_faction FROM public.profiles WHERE id = target_user;
   
   -- Si badge_id fue provisto y no lo tiene, lo añadimos
   IF badge_id IS NOT NULL AND NOT (badge_id = ANY(current_achievements)) THEN
@@ -71,6 +72,13 @@ BEGIN
     UPDATE public.profiles 
     SET xp = xp + xp_amount
     WHERE id = target_user;
+  END IF;
+
+  -- Actualizar el XP de la facción si el usuario pertenece a una
+  IF user_faction IS NOT NULL THEN
+    UPDATE public.factions
+    SET total_xp = total_xp + xp_amount
+    WHERE id = user_faction;
   END IF;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

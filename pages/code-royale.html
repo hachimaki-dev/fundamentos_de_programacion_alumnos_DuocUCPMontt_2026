@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ Code Royale — Fundamentos 2026</title>
+  
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  
+  <style>
+    .arena-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .player-card {
+      background: var(--t-surface);
+      border: 2px solid var(--t-border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .player-card.is-me { border-color: var(--t-accent); }
+    .player-avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 3px solid var(--t-border);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      background: var(--t-bg);
+    }
+    .status-badge.ready { background: #4ade80; color: #14532d; }
+    .status-badge.coding { background: #fbbf24; color: #78350f; }
+    .status-badge.done { background: #f43f5e; color: #fff; animation: pulse 1s infinite; }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .versus {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--t-accent);
+      text-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 10;
+    }
+    
+    .lobby-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .lobby-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--t-surface);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <nav class="top-nav">
+    <div class="nav-brand">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div class="nav-links">
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="wanted.html" class="nav-link">🏴‍☠️ WANTED</a>
+    </div>
+  </nav>
+
+  <div id="app" class="container" style="padding-top: 6rem; padding-bottom: 4rem;">
+    <h1 class="text-3xl font-bold text-center mb-2">⚔️ CODE ROYALE</h1>
+    <p class="text-center text-muted mb-8">La arena de combate en vivo. El primero en resolver, se lleva el XP.</p>
+
+    <!-- LOADING -->
+    <div v-if="loading" class="text-center">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- LOBBY -->
+    <div v-else-if="!inMatch" class="card">
+      <h2 class="text-xl font-bold mb-4">Lobby Abierto</h2>
+      <p class="text-muted mb-4">Jugadores esperando un oponente...</p>
+      
+      <div class="flex gap-4 mb-6">
+        <button v-if="!isWaiting" @click="joinLobby" class="btn-primary">Entrar al Lobby</button>
+        <button v-else @click="leaveLobby" class="btn-secondary">Salir del Lobby</button>
+      </div>
+      
+      <div class="lobby-list">
+        <div v-if="waitingPlayers.length === 0" class="text-center text-muted py-4">
+          No hay nadie en el lobby ahora mismo.
+        </div>
+        <div v-for="p in waitingPlayers" :key="p.id" class="lobby-item">
+          <div class="flex items-center gap-4">
+            <img :src="getAvatar(p.avatar_id)" style="width:40px; height:40px; border-radius:50%;">
+            <strong>{{ p.nickname }}</strong>
+            <span class="text-xs text-muted">Lvl {{ p.level }}</span>
+          </div>
+          <button v-if="p.id !== currentUser.id && isWaiting" @click="challengePlayer(p)" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;">
+            Desafiar ⚔️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATCH ARENA -->
+    <div v-else class="relative">
+      <div class="card mb-6 text-center" style="border-color: var(--t-accent);">
+        <h2 class="text-2xl font-bold mb-2">Problema: Invertir Diccionario</h2>
+        <p class="mb-4">Crea una función <code>invertir(d)</code> que reciba un diccionario y devuelva uno nuevo donde las llaves sean los valores y los valores las llaves.</p>
+        <button v-if="matchState === 'coding'" @click="declareVictory" class="btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+          ¡LO RESOLVÍ! 🚀
+        </button>
+        <div v-if="matchState === 'finished'" class="text-2xl font-bold mt-4" :style="{color: winnerId === currentUser.id ? '#4ade80' : '#f43f5e'}">
+          {{ winnerId === currentUser.id ? '¡GANASTE! +100 XP' : 'FUISTE DERROTADO' }}
+        </div>
+        <button v-if="matchState === 'finished'" @click="resetMatch" class="btn-secondary mt-4">Volver al Lobby</button>
+      </div>
+
+      <div class="arena-container">
+        <!-- Yo -->
+        <div class="player-card is-me">
+          <img :src="getAvatar(myProfile.avatar_id)" class="player-avatar">
+          <h3 class="text-xl font-bold">{{ myProfile.nickname }}</h3>
+          <p class="text-muted mb-4">Tú</p>
+          <div class="status-badge" :class="myStatus">{{ getStatusText(myStatus) }}</div>
+        </div>
+        
+        <div class="versus">VS</div>
+        
+        <!-- Oponente -->
+        <div class="player-card" v-if="opponent">
+          <img :src="getAvatar(opponent.avatar_id)" class="player-avatar">
+          <h3 class="text-xl font-bold">{{ opponent.nickname }}</h3>
+          <p class="text-muted mb-4">Nivel {{ opponent.level }}</p>
+          <div class="status-badge" :class="opponentStatus">{{ getStatusText(opponentStatus) }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          loading: true,
+          currentUser: null,
+          myProfile: null,
+          isWaiting: false,
+          waitingPlayers: [],
+          lobbyChannel: null,
+          matchChannel: null,
+          
+          inMatch: false,
+          matchState: 'coding', // coding, finished
+          opponent: null,
+          myStatus: 'coding',
+          opponentStatus: 'coding',
+          winnerId: null,
+        };
+      },
+      async mounted() {
+        this.currentUser = await SupabaseManager.requireAuth('login.html');
+        if (!this.currentUser) return;
+        
+        const { profile } = await SupabaseManager.getProfile();
+        this.myProfile = profile;
+        
+        this.initLobby();
+        this.loading = false;
+      },
+      beforeUnmount() {
+        if (this.lobbyChannel) this.lobbyChannel.unsubscribe();
+        if (this.matchChannel) this.matchChannel.unsubscribe();
+      },
+      methods: {
+        getAvatar(id) {
+          return SupabaseManager.getAvatarById(id).src;
+        },
+        getStatusText(status) {
+          if (status === 'coding') return '👨‍💻 Codificando...';
+          if (status === 'done') return '🔥 ¡Terminó!';
+          return 'Esperando';
+        },
+        initLobby() {
+          const client = SupabaseManager.getClient();
+          // Canal de Presencia para el Lobby
+          this.lobbyChannel = client.channel('code_royale_lobby', {
+            config: { presence: { key: this.currentUser.id } }
+          });
+
+          this.lobbyChannel
+            .on('presence', { event: 'sync' }, () => {
+              const state = this.lobbyChannel.presenceState();
+              const players = [];
+              for (const key in state) {
+                players.push(state[key][0].profile);
+              }
+              this.waitingPlayers = players;
+            })
+            .on('broadcast', { event: 'challenge' }, (payload) => {
+              if (payload.payload.targetId === this.currentUser.id) {
+                // Fui desafiado!
+                if(confirm(`¡${payload.payload.challenger.nickname} te ha desafiado a un Code Royale! ¿Aceptas?`)) {
+                  this.acceptChallenge(payload.payload.challenger, payload.payload.matchId);
+                }
+              }
+            })
+            .subscribe();
+        },
+        async joinLobby() {
+          this.isWaiting = true;
+          await this.lobbyChannel.track({ profile: this.myProfile });
+        },
+        async leaveLobby() {
+          this.isWaiting = false;
+          await this.lobbyChannel.untrack();
+        },
+        challengePlayer(targetProfile) {
+          const matchId = `match_${Date.now()}`;
+          this.lobbyChannel.send({
+            type: 'broadcast',
+            event: 'challenge',
+            payload: {
+              targetId: targetProfile.id,
+              challenger: this.myProfile,
+              matchId: matchId
+            }
+          });
+          // Entrar directo a la arena a esperar
+          this.enterArena(targetProfile, matchId);
+        },
+        acceptChallenge(challengerProfile, matchId) {
+          this.enterArena(challengerProfile, matchId);
+          // Notificar que entré
+          this.matchChannel.send({
+            type: 'broadcast',
+            event: 'status',
+            payload: { userId: this.currentUser.id, status: 'coding' }
+          });
+        },
+        enterArena(opponentProfile, matchId) {
+          this.leaveLobby();
+          this.inMatch = true;
+          this.opponent = opponentProfile;
+          this.matchState = 'coding';
+          this.myStatus = 'coding';
+          this.opponentStatus = 'coding';
+          
+          const client = SupabaseManager.getClient();
+          this.matchChannel = client.channel(matchId);
+          
+          this.matchChannel
+            .on('broadcast', { event: 'status' }, (payload) => {
+              if (payload.payload.userId === this.opponent.id) {
+                this.opponentStatus = payload.payload.status;
+                if (this.opponentStatus === 'done' && this.matchState !== 'finished') {
+                  this.finishMatch(this.opponent.id);
+                }
+              }
+            })
+            .subscribe();
+        },
+        declareVictory() {
+          this.myStatus = 'done';
+          this.matchChannel.send({
+            type: 'broadcast',
+            event: 'status',
+            payload: { userId: this.currentUser.id, status: 'done' }
+          });
+          this.finishMatch(this.currentUser.id);
+        },
+        finishMatch(winnerId) {
+          this.matchState = 'finished';
+          this.winnerId = winnerId;
+          
+          if (winnerId === this.currentUser.id) {
+            // Dar XP (esto debería ir por BD segura, aquí es demo visual)
+            const client = SupabaseManager.getClient();
+            client.rpc('award_xp_and_badge', { target_user: this.currentUser.id, xp_amount: 100 });
+            SupabaseManager.showToast('¡Has ganado 100 XP!', 'success');
+          }
+        },
+        resetMatch() {
+          if(this.matchChannel) this.matchChannel.unsubscribe();
+          this.inMatch = false;
+          this.opponent = null;
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
