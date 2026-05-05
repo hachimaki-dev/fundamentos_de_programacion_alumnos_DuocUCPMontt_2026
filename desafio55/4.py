@@ -10,3 +10,9 @@
 notebook = 1200000
 cuotas = 12
 envio = 15000
+
+valor_cuota = notebook / cuotas
+
+primera_cuota = valor_cuota + envio
+
+print(primera_cuota)
