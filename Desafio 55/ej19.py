@@ -13,7 +13,7 @@ diferencia = abs(mis_puntos - puntos_rival)
 
 if diferencia <= 50:
     print("Partida Perfecta")
-elif diferencia <=100:
+elif diferencia <= 100:
     print("Partida Justa")
 else:
     print("Buscando otro rival...")
