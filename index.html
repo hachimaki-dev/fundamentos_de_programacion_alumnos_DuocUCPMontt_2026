@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🏠 Home — Fundamentos 2026</title>
-  <meta name="description" content="Punto de partida del curso de Fundamentos de Programación 2026 — ejercicios, documentación y recursos organizados semana a semana." />
+  <title>🏠 Home — Academia hachimaki</title>
+  <meta name="description"
+    content="Punto de partida de Academia hachimaki — ejercicios, documentación y recursos organizados semana a semana." />
 
   <!-- Theme Engine (load FIRST to prevent FOUC) -->
   <script src="js/theme-engine.js"></script>
@@ -25,6 +27,7 @@
   <!-- Theme Selector UI -->
   <script src="js/theme-selector.js" defer></script>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
 
   <!-- Background floating shapes -->
@@ -34,12 +37,17 @@
   <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
 
   <!-- Floating Top Buttons -->
-  <div style="position:fixed;top:1.5rem;left:1.5rem;right:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;z-index:1000;pointer-events:none;">
+  <div
+    style="position:fixed;top:1.5rem;left:1.5rem;right:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;z-index:1000;pointer-events:none;">
     <!-- Left: Brand -->
-    <a href="#" style="pointer-events:auto;background:var(--t-glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:2px solid var(--t-glass-border);border-radius:2rem;padding:0.6rem 1.2rem;display:flex;align-items:center;gap:0.5rem;text-decoration:none;box-shadow:0 4px 16px var(--t-shadow);transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px var(--t-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 16px var(--t-shadow)'">
-      💻 <span class="hidden-mobile" style="color:var(--t-accent);font-weight:800;font-size:1.1rem;">Fundamentos 2026</span>
+    <a href="#"
+      style="pointer-events:auto;background:var(--t-glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:2px solid var(--t-glass-border);border-radius:2rem;padding:0.4rem 1.2rem;display:flex;align-items:center;gap:0.5rem;text-decoration:none;box-shadow:0 4px 16px var(--t-shadow);transition:transform 0.2s, box-shadow 0.2s;"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px var(--t-shadow-hover)'"
+      onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 16px var(--t-shadow)'">
+      <img src="assets/logos/icono chica.webp" style="width:24px;height:24px;object-fit:contain;" alt="Logo" />
+      <span class="hidden-mobile" style="color:var(--t-accent);font-weight:800;font-size:1.1rem;">Academia hachimaki</span>
     </a>
-    
+
     <!-- Right: Auth Nav -->
     <div id="auth-nav" style="pointer-events:auto;display:none;align-items:center;gap:0.5rem;"></div>
   </div>
@@ -53,7 +61,9 @@
         🏠 Home
       </h1>
       <p class="text-sm" style="color: var(--t-text-secondary); margin-top: 0.5rem;">
-        Bienvenid@ al punto de partida de <strong>Fundamentos de Programación 2026</strong>. Aquí encontrarás todos los ejercicios, documentación y recursos organizados semana a semana. <span style="font-size: 0.8rem;">¡Explora y aprende a tu ritmo! ✨🐱</span>
+        Bienvenid@ al punto de partida de <strong>Academia hachimaki</strong>. Aquí encontrarás todos los
+        ejercicios, documentación y recursos organizados semana a semana. <span style="font-size: 0.8rem;">¡Explora y
+          aprende a tu ritmo! ✨🐱</span>
       </p>
     </div>
 
@@ -61,42 +71,21 @@
     <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
       <div class="search-input-wrap" style="margin-bottom: 1.5rem; max-width: 100%;">
         <span class="icon">🔍</span>
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Buscar por tema, semana o palabra clave..." 
-          v-model="searchQuery"
-          id="diary-search"
-        />
+        <input type="text" class="search-input" placeholder="Buscar por tema, semana o palabra clave..."
+          v-model="searchQuery" id="diary-search" />
       </div>
       <div class="tag-filters" style="gap: 0.75rem;">
-        <button 
-          class="tag-pill" 
-          :class="{ active: activeFilter === 'all' }" 
-          @click="activeFilter = 'all'"
-        >
+        <button class="tag-pill" :class="{ active: activeFilter === 'all' }" @click="activeFilter = 'all'">
           ✨ Todos
         </button>
-        <button 
-          class="tag-pill" 
-          :class="{ active: activeFilter === 'python' }" 
-          @click="activeFilter = 'python'"
-        >
+        <button class="tag-pill" :class="{ active: activeFilter === 'python' }" @click="activeFilter = 'python'">
           🐍 Python
         </button>
 
-        <button 
-          class="tag-pill" 
-          :class="{ active: activeFilter === 'flow' }" 
-          @click="activeFilter = 'flow'"
-        >
+        <button class="tag-pill" :class="{ active: activeFilter === 'flow' }" @click="activeFilter = 'flow'">
           🔷 Diagramas
         </button>
-        <button 
-          class="tag-pill" 
-          :class="{ active: activeFilter === 'docs' }" 
-          @click="activeFilter = 'docs'"
-        >
+        <button class="tag-pill" :class="{ active: activeFilter === 'docs' }" @click="activeFilter = 'docs'">
           📚 Documentación
         </button>
       </div>
@@ -105,23 +94,21 @@
     <!-- ─── EA2 Section (expanded) ─── -->
     <div v-if="ea2Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
       <div class="unit-section" style="margin-bottom: 0;">
-        <div class="unit-header" @click="ea2Open = !ea2Open" style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
+        <div class="unit-header" @click="ea2Open = !ea2Open"
+          style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
           <span class="unit-chevron" :class="{ open: ea2Open }">▶</span>
           <span class="unit-badge ea2">EA2</span>
           <span class="unit-title">Unidad 2 — Listas y Diccionarios</span>
           <span class="unit-count">{{ ea2Entries.length }} entradas</span>
         </div>
-        <div class="unit-body" :class="ea2Open ? 'expanded' : 'collapsed'" :style="ea2Open ? 'max-height:' + (ea2Entries.length * 250) + 'px' : ''">
+        <div class="unit-body" :class="ea2Open ? 'expanded' : 'collapsed'"
+          :style="ea2Open ? 'max-height:' + (ea2Entries.length * 250) + 'px' : ''">
           <div style="padding: 0 1rem 1rem;">
-            <a 
-              v-for="(entry, idx) in ea2Entries" 
-              :key="entry.id" 
-              :href="entry.page !== '#' ? entry.page : undefined"
-              class="diary-entry fade-in-up" 
+            <a v-for="(entry, idx) in ea2Entries" :key="entry.id" :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up"
               :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
               :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
-              @click="entry.page === '#' && $event.preventDefault()"
-            >
+              @click="entry.page === '#' && $event.preventDefault()">
               <div class="entry-date">{{ formatDate(entry.date) }}</div>
               <div class="entry-title">
                 <span class="entry-emoji">{{ entry.emoji }}</span>
@@ -130,12 +117,7 @@
               </div>
               <div class="entry-desc">{{ entry.description }}</div>
               <div class="entry-tags">
-                <span 
-                  v-for="tag in entry.tags" 
-                  :key="tag" 
-                  class="entry-tag" 
-                  :class="tag"
-                >
+                <span v-for="tag in entry.tags" :key="tag" class="entry-tag" :class="tag">
                   {{ tagLabels[tag] || tag }}
                 </span>
               </div>
@@ -148,23 +130,21 @@
     <!-- ─── EA1 Section (collapsed) ─── -->
     <div v-if="ea1Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
       <div class="unit-section" style="margin-bottom: 0;">
-        <div class="unit-header" @click="ea1Open = !ea1Open" style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
+        <div class="unit-header" @click="ea1Open = !ea1Open"
+          style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
           <span class="unit-chevron" :class="{ open: ea1Open }">▶</span>
           <span class="unit-badge ea1">EA1</span>
           <span class="unit-title">Fundamentos de Programación — Python</span>
           <span class="unit-count">{{ ea1Entries.length }} entradas</span>
         </div>
-        <div class="unit-body" :class="ea1Open ? 'expanded' : 'collapsed'" :style="ea1Open ? 'max-height:' + (ea1Entries.length * 250) + 'px' : ''">
+        <div class="unit-body" :class="ea1Open ? 'expanded' : 'collapsed'"
+          :style="ea1Open ? 'max-height:' + (ea1Entries.length * 250) + 'px' : ''">
           <div style="padding: 0 1rem 1rem;">
-            <a 
-              v-for="(entry, idx) in ea1Entries" 
-              :key="entry.id" 
-              :href="entry.page !== '#' ? entry.page : undefined"
-              class="diary-entry fade-in-up" 
+            <a v-for="(entry, idx) in ea1Entries" :key="entry.id" :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up"
               :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
               :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
-              @click="entry.page === '#' && $event.preventDefault()"
-            >
+              @click="entry.page === '#' && $event.preventDefault()">
               <div class="entry-date">{{ formatDate(entry.date) }}</div>
               <div class="entry-title">
                 <span class="entry-emoji">{{ entry.emoji }}</span>
@@ -173,12 +153,7 @@
               </div>
               <div class="entry-desc">{{ entry.description }}</div>
               <div class="entry-tags">
-                <span 
-                  v-for="tag in entry.tags" 
-                  :key="tag" 
-                  class="entry-tag" 
-                  :class="tag"
-                >
+                <span v-for="tag in entry.tags" :key="tag" class="entry-tag" :class="tag">
                   {{ tagLabels[tag] || tag }}
                 </span>
               </div>
@@ -189,7 +164,8 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0" class="empty-state" style="max-width:700px;margin:0 auto;">
+    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0" class="empty-state"
+      style="max-width:700px;margin:0 auto;">
       <div class="emoji">🔍</div>
       <p>No se encontraron entradas con ese filtro.</p>
       <p class="mt-2 text-sm">Intenta con otra búsqueda o quita los filtros 🌸</p>
@@ -219,14 +195,17 @@
       <div class="flex flex-col items-center justify-center gap-3">
         <div class="flex items-center gap-3 card p-3 rounded-2xl">
           <a href="https://github.com/hachimaki-dev" target="_blank" rel="noopener noreferrer">
-            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev" class="w-12 h-12 rounded-full border-2 shadow-md transition-transform hover:scale-110" style="border-color: var(--t-accent-subtle);" />
+            <img src="https://github.com/hachimaki-dev.png" alt="Avatar de HachiMaki-dev"
+              class="w-12 h-12 rounded-full border-2 shadow-md transition-transform hover:scale-110"
+              style="border-color: var(--t-accent-subtle);" />
           </a>
           <div class="text-left leading-tight">
-            <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
+            <p class="font-bold text-kawaii-deep text-sm">HachiMaki-dev <span
+                class="font-normal text-kawaii-text/70 text-xs">/ Profe Carlitos</span></p>
             <p class="text-xs font-semibold text-kawaii-text/80">Puerto Montt DuocUc 2026</p>
           </div>
         </div>
-        <p class="text-sm text-kawaii-text/60">Hecho con 💖 para Fundamentos de Programación 2026</p>
+        <p class="text-sm" style="color: var(--t-text-secondary); opacity: 0.7;">Hecho con 💖 para Academia hachimaki</p>
       </div>
     </footer>
 
@@ -263,7 +242,7 @@
           }
           if (this.searchQuery.trim()) {
             const q = this.searchQuery.toLowerCase().trim();
-            results = results.filter(e => 
+            results = results.filter(e =>
               e.title.toLowerCase().includes(q) ||
               e.description.toLowerCase().includes(q) ||
               e.tags.some(t => t.toLowerCase().includes(q)) ||
@@ -305,7 +284,7 @@
 
   <!-- Auth Nav Injection -->
   <script>
-    (async function() {
+    (async function () {
       try {
         const user = await SupabaseManager.getUser();
         const nav = document.getElementById('auth-nav');
@@ -316,7 +295,7 @@
             const av = SupabaseManager.getAvatarById(profile.avatar_id);
             nav.innerHTML = `
               <a href="pages/dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">
-                <span class="nav-auth-avatar" style="width:24px;height:24px;"><img src="${av.src.replace('../','')}" alt="Avatar" /></span>
+                <span class="nav-auth-avatar" style="width:24px;height:24px;"><img src="${av.src.replace('../', '')}" alt="Avatar" /></span>
                 Dashboard
               </a>`;
           } else {
@@ -326,11 +305,12 @@
           nav.innerHTML = '<a href="pages/login.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">🔑 Iniciar Sesión</a>';
         }
         nav.style.display = 'flex';
-      } catch(e) {
+      } catch (e) {
         console.log('Auth nav: not available', e);
       }
     })();
   </script>
 
 </body>
+
 </html>

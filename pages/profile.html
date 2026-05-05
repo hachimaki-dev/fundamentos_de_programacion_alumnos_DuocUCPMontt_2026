@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>👤 Perfil Público — Fundamentos 2026</title>
-  
+  <title>👤 Perfil Público — Academia hachimaki</title>
+
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="../css/auth.css" />
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <link rel="stylesheet" href="../css/social-dashboard.css" />
-  
+
   <!-- DOMPurify para evitar ataques XSS con JS, pero permitiremos estilos y html básico -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
 
@@ -29,7 +30,7 @@
       overflow: hidden;
       margin-top: 2rem;
     }
-    
+
     .profile-header {
       display: flex;
       gap: 2rem;
@@ -38,7 +39,7 @@
       z-index: 10;
       position: relative;
     }
-    
+
     .profile-avatar {
       width: 80px;
       height: 80px;
@@ -47,18 +48,21 @@
       object-fit: cover;
       background: var(--t-surface-hover);
     }
-    
+
     .edit-modal {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.8);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 1rem;
     }
-    
+
     .edit-modal-content {
       background: var(--t-surface);
       padding: 2rem;
@@ -69,7 +73,7 @@
       overflow-y: auto;
       border: 1px solid var(--t-border);
     }
-    
+
     .code-editor {
       width: 100%;
       min-height: 200px;
@@ -83,18 +87,23 @@
     }
   </style>
 </head>
+
 <body class="min-h-screen">
 
-  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
-    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+  <nav class="top-nav"
+    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand"
+      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻
+      <span class="hidden-mobile">Academia hachimaki</span></div>
     <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
-      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠
+        Home</a>
       <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
     </div>
   </nav>
 
   <div id="app" class="relative z-10" style="max-width: 900px; margin: 0 auto; padding: 6rem 1rem 4rem;">
-    
+
     <!-- Loading -->
     <div id="loading-screen" v-if="loading">
       <div class="auth-card">
@@ -102,7 +111,7 @@
         <p class="auth-subtitle">Cargando perfil...</p>
       </div>
     </div>
-    
+
     <div v-else-if="!profile" class="card text-center">
       <h2>❌ Perfil no encontrado</h2>
       <p class="text-muted">El hacker que buscas no existe o está oculto en las sombras.</p>
@@ -110,17 +119,22 @@
 
     <div v-else>
       <div class="flex justify-between items-center mb-4">
-        <button class="back-btn m-0" style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;" onclick="history.back()">← Volver</button>
+        <button class="back-btn m-0"
+          style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;"
+          onclick="history.back()">← Volver</button>
         <div class="flex gap-2">
-          <button v-if="!isOwner && !isFollowing" @click="toggleFollow" class="sd-btn-accent" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
+          <button v-if="!isOwner && !isFollowing" @click="toggleFollow" class="sd-btn-accent"
+            style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
             <span v-if="followLoading" class="spinner"></span>
             <span v-else>➕ Seguir</span>
           </button>
-          <button v-if="!isOwner && isFollowing" @click="toggleFollow" class="sd-btn-sm" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
+          <button v-if="!isOwner && isFollowing" @click="toggleFollow" class="sd-btn-sm"
+            style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
             <span v-if="followLoading" class="spinner"></span>
             <span v-else>✅ Siguiendo</span>
           </button>
-          <button v-if="isOwner" @click="showEditModal = true" class="sd-btn-accent" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+          <button v-if="isOwner" @click="showEditModal = true" class="sd-btn-accent"
+            style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
             🎨 Editar MySpace
           </button>
         </div>
@@ -128,10 +142,10 @@
 
       <!-- CONTENEDOR CUSTOM: Aquí se inyecta el HTML y CSS del usuario -->
       <div id="user-custom-myspace" class="myspace-container shadow-md">
-        
+
         <!-- ESTILOS INYECTADOS -->
         <component :is="'style'" v-if="sanitizedCSS" v-html="sanitizedCSS"></component>
-        
+
         <!-- HEADER ESTÁNDAR (Siempre visible para mantener la identidad) -->
         <div class="sd-card profile-header" style="margin-bottom: 2rem; padding: 1.5rem;">
           <img :src="avatarSrc" :alt="profile.nickname" class="profile-avatar" />
@@ -140,19 +154,23 @@
               <h1 class="text-xl font-bold" style="margin:0; color:var(--t-text);">
                 {{ profile.nickname }}
               </h1>
-              <span v-if="profile.title" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:0.7rem;">
+              <span v-if="profile.title" class="sd-pill"
+                style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:0.7rem;">
                 {{ profile.title }}
               </span>
             </div>
-            
+
             <div class="flex items-center gap-2 mb-3">
-              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+              <span class="sd-pill"
+                style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
                 Nivel {{ profile.level }}
               </span>
-              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+              <span class="sd-pill"
+                style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
                 {{ profile.xp }} XP
               </span>
-              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+              <span class="sd-pill"
+                style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
                 {{ factionName }}
               </span>
             </div>
@@ -184,23 +202,28 @@
       <div class="edit-modal-content">
         <h2 class="mb-4">🎨 Personaliza tu MySpace</h2>
         <p class="text-muted mb-4 text-sm">
-          Puedes usar HTML y CSS puro para decorar tu perfil. Por seguridad, el código JavaScript (etiquetas &lt;script&gt;) y eventos (onclick) serán eliminados automáticamente.
+          Puedes usar HTML y CSS puro para decorar tu perfil. Por seguridad, el código JavaScript (etiquetas
+          &lt;script&gt;) y eventos (onclick) serán eliminados automáticamente.
         </p>
 
         <div class="form-group">
           <label class="form-label text-accent">TÍTULO (Badge)</label>
-          <input type="text" v-model="editForm.title" class="form-input" placeholder="Ej: Leyenda del Código" maxlength="30">
+          <input type="text" v-model="editForm.title" class="form-input" placeholder="Ej: Leyenda del Código"
+            maxlength="30">
         </div>
 
         <div class="form-group mt-4">
           <label class="form-label" style="color: #4ade80;">CUSTOM CSS</label>
-          <p class="text-xs text-muted mb-2">Para modificar el fondo de tu perfil usa la clase <code>.myspace-container</code>.</p>
-          <textarea v-model="editForm.css" class="code-editor" placeholder=".myspace-container { background: url('...'); }"></textarea>
+          <p class="text-xs text-muted mb-2">Para modificar el fondo de tu perfil usa la clase
+            <code>.myspace-container</code>.</p>
+          <textarea v-model="editForm.css" class="code-editor"
+            placeholder=".myspace-container { background: url('...'); }"></textarea>
         </div>
 
         <div class="form-group mt-4">
           <label class="form-label" style="color: #60a5fa;">CUSTOM HTML</label>
-          <textarea v-model="editForm.html" class="code-editor" placeholder="<h1>Bienvenidos a mi perfil!</h1><img src='gif_animado.gif'>"></textarea>
+          <textarea v-model="editForm.html" class="code-editor"
+            placeholder="<h1>Bienvenidos a mi perfil!</h1><img src='gif_animado.gif'>"></textarea>
         </div>
 
         <div class="flex gap-3 mt-4 justify-end">
@@ -272,7 +295,7 @@
       },
       async mounted() {
         // Init DOMPurify configs if needed
-        
+
         // Obtenemos el usuario logueado
         this.currentUser = await SupabaseManager.getUser();
 
@@ -296,10 +319,10 @@
         }
 
         const { data, error } = await query.single();
-        
+
         if (data && !error) {
           this.profile = data;
-          
+
           // Intentar obtener la facción por separado para evitar fallos de join si el schema cache no está actualizado
           if (data.faction_id) {
             try {
@@ -309,7 +332,7 @@
           } else {
             this.factionName = data.section || 'Nómada';
           }
-          
+
           this.editForm.title = data.title || '';
           this.editForm.html = data.custom_html || '';
           this.editForm.css = data.custom_css || '';
@@ -325,7 +348,7 @@
             try {
               const { data: followData } = await client.from('follows').select('follower_id').eq('follower_id', this.currentUser.id).eq('following_id', data.id).single();
               if (followData) this.isFollowing = true;
-            } catch(e) { console.error("Error follows", e); }
+            } catch (e) { console.error("Error follows", e); }
           }
         } else {
           console.error("Error cargando perfil:", error);
@@ -341,7 +364,7 @@
           if (!this.currentUser) return;
           this.followLoading = true;
           const client = SupabaseManager.getClient();
-          
+
           if (this.isFollowing) {
             // Dejar de seguir
             await client.from('follows').delete().eq('follower_id', this.currentUser.id).eq('following_id', this.profile.id);
@@ -358,7 +381,7 @@
         },
         async saveCustomizations() {
           this.saving = true;
-          
+
           const { error } = await SupabaseManager.updateProfile({
             title: this.editForm.title.trim(),
             custom_html: this.editForm.html,
@@ -376,7 +399,7 @@
           this.profile.title = this.editForm.title.trim();
           this.profile.custom_html = this.editForm.html;
           this.profile.custom_css = this.editForm.css;
-          
+
           this.showEditModal = false;
           SupabaseManager.showToast('¡MySpace actualizado!', 'success');
         }
@@ -384,4 +407,5 @@
     }).mount('#app');
   </script>
 </body>
+
 </html>

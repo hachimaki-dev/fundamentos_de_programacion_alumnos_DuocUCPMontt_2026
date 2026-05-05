@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>üéÆ Quiz Interactivo: Nivel 2</title>
+  <title>?? Quiz Interactivo: Nivel 2</title>
 <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   
@@ -109,10 +109,10 @@
     <!-- Top Navigation / Header -->
     <header class="flex justify-between items-center mb-8 bg-white/60 backdrop-blur-md p-4 rounded-3xl border border-white/60 shadow-sm relative z-20">
       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
-        <span>‚¨ÖÔ∏è</span> Volver al Diario
+        <span>??</span> Volver al Diario
       </a>
       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
-        <span>üî•</span>
+        <span>??</span>
         <span>Python Repaso Supremo - Nivel 2</span>
       </div>
       <div v-if="state !== 'start' && state !== 'results'" class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep">
@@ -126,20 +126,20 @@
       
       <!-- SCORE INDICATOR (Floating) -->
       <div v-if="state === 'question' || state === 'feedback'" class="absolute -top-6 right-0 bg-yellow-300 text-yellow-900 px-6 py-3 rounded-2xl shadow-lg font-bold text-2xl font-cute transform rotate-2 z-30 border-4 border-white">
-        ‚≠ê {{ score }} pts
+        ? {{ score }} pts
       </div>
 
       <!-- VIEW: START -->
       <transition name="fade" mode="out-in">
         <div v-if="state === 'start'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3rem] shadow-xl border-4 border-white w-full max-w-4xl">
-          <div class="text-8xl mb-6 animate-bounce-[slow]">üß†</div>
-          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Nivel 2 (L√≥gica y Trampas)</h1>
+          <div class="text-8xl mb-6 animate-bounce-[slow]">??</div>
+          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Nivel 2 (LÛgica y Trampas)</h1>
           <p class="text-2xl text-kawaii-text/80 mb-12 max-w-2xl mx-auto">
-            ¬°Sube la temperatura! üî•<br>
-            Pon a prueba tu l√≥gica, el orden de ejecuci√≥n y c√≥mo interact√∫an las estructuras entre s√≠. ¬øEvitar√°s las trampas conceptuales?
+            °Sube la temperatura! ??<br>
+            Pon a prueba tu lÛgica, el orden de ejecuciÛn y cÛmo interact˙an las estructuras entre sÌ. øEvitar·s las trampas conceptuales?
           </p>
           <button @click="startGame" class="pulse-btn bg-kawaii-deep text-white text-4xl font-bold py-6 px-16 rounded-full hover:bg-pink-700 transition-colors shadow-xl">
-            ¬°Aceptar el Desaf√≠o! üöÄ
+            °Aceptar el DesafÌo! ??
           </button>
         </div>
 
@@ -169,7 +169,7 @@
             >
               <div class="flex items-center gap-6 w-full">
                 <span class="w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0" :class="getShapeClass(index)">
-                   {{ ['‚ñ≥','‚óØ','‚óª','‚ô¢'][index % 4] }}
+                   {{ ['?','?','?','?'][index % 4] }}
                 </span>
                 <span v-html="option.text" class="text-left leading-tight w-full"></span>
               </div>
@@ -180,16 +180,16 @@
           <transition name="slide">
             <div v-if="state === 'feedback'" class="absolute bottom-4 left-0 right-0 max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border-4 text-center z-20 flex flex-col md:flex-row items-center justify-between gap-6" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
               <div class="flex items-center gap-4 text-left">
-                <div class="text-6xl shrink-0">{{ isCorrect ? 'üéâ' : '‚ùå' }}</div>
+                <div class="text-6xl shrink-0">{{ isCorrect ? '??' : '?' }}</div>
                 <div>
                   <h3 class="text-3xl font-bold" :class="isCorrect ? 'text-green-600' : 'text-red-600'">
-                    {{ isCorrect ? '¬°Correcto!' : '¬°Incorrecto!' }}
+                    {{ isCorrect ? '°Correcto!' : '°Incorrecto!' }}
                   </h3>
                   <p class="text-lg text-gray-700 mt-1" v-html="currentQuestion.explanation"></p>
                 </div>
               </div>
               <button @click="nextQuestion" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-10 rounded-full hover:bg-pink-700 transition-colors shadow-lg whitespace-nowrap shrink-0">
-                {{ isLastQuestion ? 'Ver Resultados üèÜ' : 'Siguiente ‚û°Ô∏è' }}
+                {{ isLastQuestion ? 'Ver Resultados ??' : 'Siguiente ??' }}
               </button>
             </div>
           </transition>
@@ -198,22 +198,22 @@
 
         <!-- VIEW: RESULTS -->
         <div v-else-if="state === 'results'" class="text-center bg-white/80 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
-           <div class="text-8xl mb-6">üèÜ</div>
-           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¬°Desaf√≠o Completado!</h1>
+           <div class="text-8xl mb-6">??</div>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">°DesafÌo Completado!</h1>
            <p class="text-3xl text-kawaii-text/80 mb-8">Sobreviviste al nivel 2.</p>
            
            <div class="bg-pink-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-pink-200 shadow-inner">
-             <p class="text-2xl font-bold text-pink-800 mb-2">Puntuaci√≥n Final</p>
+             <p class="text-2xl font-bold text-pink-800 mb-2">PuntuaciÛn Final</p>
              <p class="text-7xl font-bold text-kawaii-deep drop-shadow-sm">{{ score }} <span class="text-3xl">/ {{ questions.length * 100 }}</span></p>
              <p class="text-xl mt-4 text-pink-600">Acertaste {{ correctCount }} de {{ questions.length }} preguntas.</p>
            </div>
            
            <div class="flex justify-center gap-6">
              <button @click="startGame" class="bg-white border-4 border-kawaii-deep text-kawaii-deep text-2xl font-bold py-4 px-8 rounded-full hover:bg-kawaii-pink transition-colors">
-               üîÑ Jugar de Nuevo
+               ?? Jugar de Nuevo
              </button>
              <a href="../index.html" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-8 rounded-full hover:bg-pink-700 transition-colors shadow-lg">
-               üè† Volver al Inicio
+               ?? Volver al Inicio
              </a>
            </div>
         </div>
@@ -225,12 +225,12 @@
   </div>
 
   <script>
-    // Quiz questions based on "Desaf√≠o Python: Nivel 2"
+    // Quiz questions based on "DesafÌo Python: Nivel 2"
     const quizQuestions = [
       {
         id: 1,
         topic: 'output-mult',
-        text: '1. El clonador matem√°tico: ¬øQu√© imprimir√° exactamente este c√≥digo en pantalla?',
+        text: '1. El clonador matem·tico: øQuÈ imprimir· exactamente este cÛdigo en pantalla?',
         code: 'texto = "Ja"\nprint(texto * 3 + "!")',
         options: [
           { text: 'Error', correct: false },
@@ -238,25 +238,25 @@
           { text: 'JaJaJa!', correct: true },
           { text: '3Ja!', correct: false }
         ],
-        explanation: 'En Python, puedes multiplicar un texto por un n√∫mero para repetirlo. Como no hay espacios en "Ja", se pega todo junto, y luego se concatena el "!".'
+        explanation: 'En Python, puedes multiplicar un texto por un n˙mero para repetirlo. Como no hay espacios en "Ja", se pega todo junto, y luego se concatena el "!".'
       },
       {
         id: 2,
         topic: 'elif-logic',
-        text: '2. El guardia distra√≠do: Este c√≥digo no tiene errores de sintaxis, pero tiene un grave error de l√≥gica. ¬øQu√© imprime?',
-        code: 'puntaje = 85\nif puntaje > 50:\n    print("Aprobado")\nelif puntaje > 80:\n    print("¬°Excelente!")\nelse:\n    print("Reprobado")',
+        text: '2. El guardia distraÌdo: Este cÛdigo no tiene errores de sintaxis, pero tiene un grave error de lÛgica. øQuÈ imprime?',
+        code: 'puntaje = 85\nif puntaje > 50:\n    print("Aprobado")\nelif puntaje > 80:\n    print("°Excelente!")\nelse:\n    print("Reprobado")',
         options: [
-          { text: 'Imprime "Aprobado", y est√° perfecto.', correct: false },
-          { text: 'Imprime "¬°Excelente!".', correct: false },
-          { text: 'Imprime "Aprobado", pero NUNCA imprimir√° "¬°Excelente!".', correct: true },
+          { text: 'Imprime "Aprobado", y est· perfecto.', correct: false },
+          { text: 'Imprime "°Excelente!".', correct: false },
+          { text: 'Imprime "Aprobado", pero NUNCA imprimir· "°Excelente!".', correct: true },
           { text: 'Da un error.', correct: false }
         ],
-        explanation: 'Python eval√∫a de arriba hacia abajo. Como 85 es mayor que 50, entra al primer bloque (if), imprime "Aprobado" y <strong>salta</strong> el resto. El orden de las condiciones debe ir del m√°s estricto (> 80) al m√°s flexible (> 50).'
+        explanation: 'Python eval˙a de arriba hacia abajo. Como 85 es mayor que 50, entra al primer bloque (if), imprime "Aprobado" y <strong>salta</strong> el resto. El orden de las condiciones debe ir del m·s estricto (> 80) al m·s flexible (> 50).'
       },
       {
         id: 3,
         topic: 'input-types',
-        text: '3. El cajero en p√°nico: El usuario quiere sacar dinero e ingresa <code>50</code>. ¬øQu√© ocurrir√° al llegar al <code>if</code>?',
+        text: '3. El cajero en p·nico: El usuario quiere sacar dinero e ingresa <code>50</code>. øQuÈ ocurrir· al llegar al <code>if</code>?',
         code: 'saldo = 100\nretiro = input("Ingrese monto a retirar: ")\nif saldo - retiro >= 0:\n    print("Retiro exitoso")',
         options: [
           { text: 'Imprime "Retiro exitoso"', correct: false },
@@ -264,23 +264,23 @@
           { text: 'Error de tipo (TypeError)', correct: true },
           { text: 'Imprime 50', correct: false }
         ],
-        explanation: '<code>input()</code> siempre devuelve texto (str). En la condici√≥n, intenta restar a 100 (int) el texto "50". Para repararlo, se necesita <code>int(input(...))</code>.'
+        explanation: '<code>input()</code> siempre devuelve texto (str). En la condiciÛn, intenta restar a 100 (int) el texto "50". Para repararlo, se necesita <code>int(input(...))</code>.'
       },
       {
         id: 4,
         topic: 'for-break',
-        text: '4. El salto mortal: <strong>VERDADERO O FALSO</strong>: Este c√≥digo imprimir√° en pantalla los n√∫meros 1, 2, 4, 5 (salt√°ndose el 3).',
+        text: '4. El salto mortal: <strong>VERDADERO O FALSO</strong>: Este cÛdigo imprimir· en pantalla los n˙meros 1, 2, 4, 5 (salt·ndose el 3).',
         code: 'for numero in [1, 2, 3, 4, 5]:\n    if numero == 3:\n        break\n    print(numero)',
         options: [
           { text: '<strong>Verdadero</strong>', correct: false },
           { text: '<strong>Falso</strong>', correct: true },
         ],
-        explanation: 'Imprimir√° solo 1 y 2. La instrucci√≥n <strong>break</strong> destruye y termina todo el ciclo en ese instante. Para que solo se saltara el 3, habr√≠a que usar <strong>continue</strong>.'
+        explanation: 'Imprimir· solo 1 y 2. La instrucciÛn <strong>break</strong> destruye y termina todo el ciclo en ese instante. Para que solo se saltara el 3, habrÌa que usar <strong>continue</strong>.'
       },
       {
         id: 5,
         topic: 'order-logic',
-        text: '5. Ordena la magia: Queremos crear un programa que revise la lista y <strong>solo imprima los n√∫meros pares</strong>. ¬øCu√°l es el orden correcto de estas l√≠neas?',
+        text: '5. Ordena la magia: Queremos crear un programa que revise la lista y <strong>solo imprima los n˙meros pares</strong>. øCu·l es el orden correcto de estas lÌneas?',
         code: '1) print(n)\n2) for n in numeros:\n3) numeros = [1, 2, 3, 4, 5]\n4) if n % 2 == 0:',
         options: [
           { text: '2, 3, 4, 1', correct: false },
@@ -288,12 +288,12 @@
           { text: '3, 4, 2, 1', correct: false },
           { text: '2, 4, 1, 3', correct: false }
         ],
-        explanation: 'Primero la lista (3), luego iniciamos el ciclo (2), dentro la condici√≥n if (4), y dentro de la condici√≥n la orden print (1). Requiere doble indentaci√≥n.'
+        explanation: 'Primero la lista (3), luego iniciamos el ciclo (2), dentro la condiciÛn if (4), y dentro de la condiciÛn la orden print (1). Requiere doble indentaciÛn.'
       },
       {
         id: 6,
         topic: 'accumulator',
-        text: '6. El acumulador selectivo: Sigue el valor de <code>total</code> mentalmente. ¬øCu√°l ser√° el n√∫mero final impreso?',
+        text: '6. El acumulador selectivo: Sigue el valor de <code>total</code> mentalmente. øCu·l ser· el n˙mero final impreso?',
         code: 'precios = [10, 5, 20]\ntotal = 0\nfor p in precios:\n    if p > 5:\n        total = total + p\nprint(total)',
         options: [
           { text: '35', correct: false },
@@ -306,7 +306,7 @@
       {
         id: 7,
         topic: 'while-order',
-        text: '7. El contador adelantado: ¬øCu√°l ser√° el <strong>√öLTIMO TEXTO</strong> que este programa imprimir√° en pantalla antes de terminar?',
+        text: '7. El contador adelantado: øCu·l ser· el <strong>⁄LTIMO TEXTO</strong> que este programa imprimir· en pantalla antes de terminar?',
         code: 'vidas = 3\nwhile vidas > 0:\n    vidas = vidas - 1\n    print("Tienes", vidas, "vidas")',
         options: [
           { text: 'Tienes 1 vidas', correct: false },
@@ -319,33 +319,33 @@
       {
         id: 8,
         topic: 'while-vs-if',
-        text: '8. La contrase√±a ingenua: Este c√≥digo intenta pedir la clave hasta que el usuario acierte. ¬øCu√°l es el error conceptual?',
+        text: '8. La contraseÒa ingenua: Este cÛdigo intenta pedir la clave hasta que el usuario acierte. øCu·l es el error conceptual?',
         code: 'clave = input("Clave: ")\nif clave != "1234":\n    print("Clave incorrecta")\n    clave = input("Intenta de nuevo: ")\nprint("Acceso concedido")',
         options: [
-          { text: 'Deber√≠a usar == en vez de !=', correct: false },
+          { text: 'DeberÌa usar == en vez de !=', correct: false },
           { text: 'Faltan comillas en Acceso concedido', correct: false },
-          { text: 'Deber√≠a usar un <strong>while</strong> en lugar de un <strong>if</strong>', correct: true },
-          { text: 'No hay ning√∫n error', correct: false }
+          { text: 'DeberÌa usar un <strong>while</strong> en lugar de un <strong>if</strong>', correct: true },
+          { text: 'No hay ning˙n error', correct: false }
         ],
-        explanation: 'Un <strong>if</strong> solo pregunta una vez. Si se equivoca por segunda vez, el programa seguir√° hacia abajo e imprimir√° "Acceso concedido" de todas formas.'
+        explanation: 'Un <strong>if</strong> solo pregunta una vez. Si se equivoca por segunda vez, el programa seguir· hacia abajo e imprimir· "Acceso concedido" de todas formas.'
       },
       {
         id: 9,
         topic: 'variable-scope',
-        text: '9. La variable amn√©sica: ¬øCu√°ntas veces aparecer√° la palabra "Adi√≥s" en pantalla?',
-        code: 'mensaje = "Hola"\nfor i in [1, 2, 3]:\n    mensaje = "Adi√≥s"\nprint(mensaje)',
+        text: '9. La variable amnÈsica: øCu·ntas veces aparecer· la palabra "AdiÛs" en pantalla?',
+        code: 'mensaje = "Hola"\nfor i in [1, 2, 3]:\n    mensaje = "AdiÛs"\nprint(mensaje)',
         options: [
           { text: 'Ninguna', correct: false },
           { text: '1 vez', correct: true },
           { text: '3 veces', correct: false },
-          { text: 'Hola y luego Adi√≥s', correct: false }
+          { text: 'Hola y luego AdiÛs', correct: false }
         ],
-        explanation: 'El print no tiene indentaci√≥n (no est√° dentro del ciclo for), por lo tanto, ocurre solo cuando el ciclo ya termin√≥, imprimiendo el √∫ltimo valor guardado (1 sola vez).'
+        explanation: 'El print no tiene indentaciÛn (no est· dentro del ciclo for), por lo tanto, ocurre solo cuando el ciclo ya terminÛ, imprimiendo el ˙ltimo valor guardado (1 sola vez).'
       },
       {
         id: 10,
         topic: 'boss-level',
-        text: '10. üíÄ BOSS LEVEL: ¬øCu√°l c√≥digo resuelve correctamente la l√≥gica del portero VIP?',
+        text: '10. ?? BOSS LEVEL: øCu·l cÛdigo resuelve correctamente la lÛgica del portero VIP?',
         code: '1. Menor de 18: "No pasas".\n2. Mayor o igual a 18: Preguntar si es VIP.\n3. Si es VIP: "Pase directo".\n4. Sino: "A la fila normal".',
         options: [
           { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>else:<br>&nbsp;&nbsp;vip = input("VIP?")<br>&nbsp;&nbsp;if vip == "si":<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Pase directo")<br>&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("A la fila normal")</code>', correct: true },
@@ -353,7 +353,7 @@
           { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>else:<br>&nbsp;&nbsp;print("A la fila normal")<br>if vip == "si":<br>&nbsp;&nbsp;print("Pase directo")</code>', correct: false },
           { text: '<code>if edad < 18:<br>&nbsp;&nbsp;print("No pasas")<br>vip = input("VIP?")<br>if vip == "si":<br>&nbsp;&nbsp;print("Pase directo")</code>', correct: false }
         ],
-        explanation: 'Pone a prueba condicionales anidados (un if dentro de un else), y el flujo l√≥gico correcto para hacer la segunda pregunta SOLO si pasa la primera condici√≥n.'
+        explanation: 'Pone a prueba condicionales anidados (un if dentro de un else), y el flujo lÛgico correcto para hacer la segunda pregunta SOLO si pasa la primera condiciÛn.'
       }
     ];
 

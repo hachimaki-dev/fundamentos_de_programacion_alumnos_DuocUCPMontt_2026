@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🏠 Dashboard — Fundamentos 2026</title>
-  <meta name="description" content="Tu hub social en la plataforma de Fundamentos de Programación 2026." />
+  <title>🏠 Dashboard — Academia hachimaki</title>
+  <meta name="description" content="Tu hub social en Academia hachimaki." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
@@ -16,6 +17,7 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="../js/theme-selector.js" defer></script>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
@@ -35,9 +37,11 @@
 
       <!-- MOBILE TABS -->
       <div class="sd-mobile-tabs">
-        <button class="sd-mobile-tab" :class="{active: mobileView==='left'}" @click="mobileView='left'">👤 Perfil</button>
+        <button class="sd-mobile-tab" :class="{active: mobileView==='left'}" @click="mobileView='left'">👤
+          Perfil</button>
         <button class="sd-mobile-tab" :class="{active: mobileView==='feed'}" @click="mobileView='feed'">📰 Feed</button>
-        <button class="sd-mobile-tab" :class="{active: mobileView==='right'}" @click="mobileView='right'">🏆 Info</button>
+        <button class="sd-mobile-tab" :class="{active: mobileView==='right'}" @click="mobileView='right'">🏆
+          Info</button>
       </div>
 
       <div class="sd-root">
@@ -51,27 +55,47 @@
               <div class="sd-av" style="width:64px;height:64px">
                 <img :src="avatarSrc" :alt="profile.nickname" />
               </div>
-              <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--t-accent-subtle);border:2px solid var(--t-glass-bg);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--t-accent)">{{ profile.level }}</div>
+              <div
+                style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--t-accent-subtle);border:2px solid var(--t-glass-bg);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--t-accent)">
+                {{ profile.level }}</div>
             </div>
-            <div style="font-size:14px;font-weight:600;color:var(--t-text)">{{ profile.full_name || profile.nickname }}</div>
-            <div style="font-size:11px;color:var(--t-text-muted);margin-top:2px">@{{ profile.nickname }} · {{ profile.section }}</div>
+            <div style="font-size:14px;font-weight:600;color:var(--t-text)">{{ profile.full_name || profile.nickname }}
+            </div>
+            <div style="font-size:11px;color:var(--t-text-muted);margin-top:2px">@{{ profile.nickname }} · {{
+              profile.section }}</div>
             <div style="margin-top:6px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
-              <span class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent)">Lv {{ profile.level }}</span>
-              <span v-if="profile.title" class="sd-pill" style="background:var(--t-tag-cream-bg);color:var(--t-warning-text)">{{ profile.title }}</span>
+              <span class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent)">Lv {{ profile.level
+                }}</span>
+              <span v-if="profile.title" class="sd-pill"
+                style="background:var(--t-tag-cream-bg);color:var(--t-warning-text)">{{ profile.title }}</span>
             </div>
             <!-- XP bar -->
             <div class="sd-xp-wrap">
-              <div class="sd-xp-label"><span>{{ profile.xp || 0 }} XP</span><span>hacia Lv {{ (profile.level||1)+1 }} ({{ nextLevelXp }})</span></div>
-              <div class="sd-xp-bar"><div class="sd-xp-fill" :style="{width: xpPercent + '%'}"></div></div>
+              <div class="sd-xp-label"><span>{{ profile.xp || 0 }} XP</span><span>hacia Lv {{ (profile.level||1)+1 }}
+                  ({{ nextLevelXp }})</span></div>
+              <div class="sd-xp-bar">
+                <div class="sd-xp-fill" :style="{width: xpPercent + '%'}"></div>
+              </div>
             </div>
             <!-- Stats -->
             <div class="sd-stat-row">
-              <div class="sd-stat-box"><div class="sd-stat-num">{{ followersCount }}</div><div class="sd-stat-label">seguidores</div></div>
-              <div class="sd-stat-box"><div class="sd-stat-num">{{ diaryCount }}</div><div class="sd-stat-label">diarios</div></div>
-              <div class="sd-stat-box"><div class="sd-stat-num">{{ compsJoined }}</div><div class="sd-stat-label">comps</div></div>
+              <div class="sd-stat-box">
+                <div class="sd-stat-num">{{ followersCount }}</div>
+                <div class="sd-stat-label">seguidores</div>
+              </div>
+              <div class="sd-stat-box">
+                <div class="sd-stat-num">{{ diaryCount }}</div>
+                <div class="sd-stat-label">diarios</div>
+              </div>
+              <div class="sd-stat-box">
+                <div class="sd-stat-num">{{ compsJoined }}</div>
+                <div class="sd-stat-label">comps</div>
+              </div>
             </div>
             <!-- Title -->
-            <div v-if="profile.title" style="margin-top:8px;font-size:11px;color:var(--t-text-muted);font-style:italic;border-top:1px solid var(--t-glass-border);padding-top:8px">"{{ profile.title }}"</div>
+            <div v-if="profile.title"
+              style="margin-top:8px;font-size:11px;color:var(--t-text-muted);font-style:italic;border-top:1px solid var(--t-glass-border);padding-top:8px">
+              "{{ profile.title }}"</div>
             <a :href="'profile.html?nickname=' + profile.nickname" class="sd-link">Ver mi perfil MySpace</a>
           </div>
 
@@ -79,21 +103,32 @@
           <div v-if="faction" class="sd-card">
             <div class="sd-sec">Tu facción</div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div class="sd-av" style="width:36px;height:36px;background:var(--t-accent);font-size:12px">{{ factionInitials }}</div>
+              <div class="sd-av" style="width:36px;height:36px;background:var(--t-accent);font-size:12px">{{
+                factionInitials }}</div>
               <div>
                 <div style="font-size:12px;font-weight:600;color:var(--t-text)">{{ faction.faction_name }}</div>
                 <div style="font-size:10px;color:var(--t-text-muted)">{{ faction.section_code }}</div>
               </div>
             </div>
             <div class="sd-xp-wrap">
-              <div class="sd-xp-label"><span>XP total</span><span style="font-weight:600;color:var(--t-text)">{{ (faction.total_xp||0).toLocaleString() }}</span></div>
-              <div class="sd-xp-bar"><div class="sd-xp-fill" style="background:var(--t-wrong,#D4537E)" :style="{width: factionXpPercent + '%'}"></div></div>
+              <div class="sd-xp-label"><span>XP total</span><span style="font-weight:600;color:var(--t-text)">{{
+                  (faction.total_xp||0).toLocaleString() }}</span></div>
+              <div class="sd-xp-bar">
+                <div class="sd-xp-fill" style="background:var(--t-wrong,#D4537E)"
+                  :style="{width: factionXpPercent + '%'}"></div>
+              </div>
             </div>
             <div class="sd-faction-rank">
-              <div v-for="(f,i) in factionRanking" :key="f.id" class="sd-faction-row" :class="{you: f.id === faction.id}">
-                <span style="font-weight:600;width:14px" :style="{color: i===0?'#BA7517':i===1?'#888780':'var(--t-text-muted)'}">{{ i+1 }}</span>
-                <span :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-secondary)', fontWeight: f.id===faction.id?'600':'400'}">{{ f.faction_name }}</span>
-                <span style="margin-left:auto" :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-muted)'}">{{ (f.total_xp||0).toLocaleString() }}</span>
+              <div v-for="(f,i) in factionRanking" :key="f.id" class="sd-faction-row"
+                :class="{you: f.id === faction.id}">
+                <span style="font-weight:600;width:14px"
+                  :style="{color: i===0?'#BA7517':i===1?'#888780':'var(--t-text-muted)'}">{{ i+1 }}</span>
+                <span
+                  :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-secondary)', fontWeight: f.id===faction.id?'600':'400'}">{{
+                  f.faction_name }}</span>
+                <span style="margin-left:auto"
+                  :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-muted)'}">{{
+                  (f.total_xp||0).toLocaleString() }}</span>
               </div>
             </div>
           </div>
@@ -102,20 +137,25 @@
           <div class="sd-card">
             <div class="sd-sec">Logros desbloqueados</div>
             <div class="sd-ach-grid">
-              <div v-for="ach in allAchievements" :key="ach.id" class="sd-ach-item" :class="{locked: !ach.unlocked}" :style="{background: ach.unlocked ? 'var(--t-accent-subtle)' : 'var(--t-surface-alt)'}">
+              <div v-for="ach in allAchievements" :key="ach.id" class="sd-ach-item" :class="{locked: !ach.unlocked}"
+                :style="{background: ach.unlocked ? 'var(--t-accent-subtle)' : 'var(--t-surface-alt)'}">
                 <div class="sd-ach-icon">{{ ach.icon_emoji }}</div>
-                <div class="sd-ach-name" :style="{color: ach.unlocked ? 'var(--t-accent)' : 'var(--t-text-muted)'}">{{ ach.title }}</div>
+                <div class="sd-ach-name" :style="{color: ach.unlocked ? 'var(--t-accent)' : 'var(--t-text-muted)'}">{{
+                  ach.title }}</div>
               </div>
             </div>
-            <div style="margin-top:8px;font-size:10px;color:var(--t-text-muted)">{{ unlockedCount }}/{{ allAchievements.length }} logros</div>
+            <div style="margin-top:8px;font-size:10px;color:var(--t-text-muted)">{{ unlockedCount }}/{{
+              allAchievements.length }} logros</div>
           </div>
 
           <!-- STREAK -->
           <div class="sd-card">
             <div class="sd-sec">Racha de actividad</div>
-            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:6px">{{ streakCount }} días seguidos</div>
+            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:6px">{{ streakCount }} días
+              seguidos</div>
             <div class="sd-streak-row">
-              <div v-for="(d,i) in streakDays" :key="i" class="sd-streak-day" :class="{done: d.done, today: d.today}" :title="d.name">{{ d.letter }}</div>
+              <div v-for="(d,i) in streakDays" :key="i" class="sd-streak-day" :class="{done: d.done, today: d.today}"
+                :title="d.name">{{ d.letter }}</div>
             </div>
             <div style="font-size:10px;color:var(--t-text-muted);margin-top:6px">+20 XP por cada entrada diaria</div>
           </div>
@@ -123,10 +163,14 @@
           <!-- NAV -->
           <div class="sd-card" style="padding:8px">
             <div class="sd-nav">
-              <div class="sd-nav-item active" @click="mobileView='feed'"><span style="font-size:13px;color:var(--t-accent);font-weight:600">📰 Feed social</span></div>
+              <div class="sd-nav-item active" @click="mobileView='feed'"><span
+                  style="font-size:13px;color:var(--t-accent);font-weight:600">📰 Feed social</span></div>
               <a href="diary.html" class="sd-nav-item">📖 Mi diario</a>
-              <a href="competitions.html" class="sd-nav-item">🏆 Competencias <span v-if="activeComps>0" class="sd-pill sd-nav-badge" style="background:var(--t-correct-bg);color:var(--t-correct-text)">{{ activeComps }} activa{{ activeComps>1?'s':'' }}</span></a>
-              <a href="factions.html" class="sd-nav-item" style="color: var(--t-wrong, #D4537E); font-weight: 600;">⚔️ Sala de Facciones</a>
+              <a href="competitions.html" class="sd-nav-item">🏆 Competencias <span v-if="activeComps>0"
+                  class="sd-pill sd-nav-badge" style="background:var(--t-correct-bg);color:var(--t-correct-text)">{{
+                  activeComps }} activa{{ activeComps>1?'s':'' }}</span></a>
+              <a href="factions.html" class="sd-nav-item" style="color: var(--t-wrong, #D4537E); font-weight: 600;">⚔️
+                Sala de Facciones</a>
               <a href="../index.html" class="sd-nav-item">🏠 Home</a>
               <a href="profile.html" class="sd-nav-item">👤 Mi perfil</a>
             </div>
@@ -139,10 +183,14 @@
           <!-- TABS -->
           <div class="sd-card" style="padding:6px">
             <div class="sd-feed-tabs">
-              <button class="sd-tab" :class="{active: activeTab==='foryou'}" @click="switchTab('foryou')">Para ti</button>
-              <button class="sd-tab" :class="{active: activeTab==='section'}" @click="switchTab('section')">{{ profile.section }}</button>
-              <button class="sd-tab" :class="{active: activeTab==='blogs'}" @click="switchTab('blogs')">Dev Blogs</button>
-              <button class="sd-tab" :class="{active: activeTab==='comps'}" @click="switchTab('comps')">Competencias</button>
+              <button class="sd-tab" :class="{active: activeTab==='foryou'}" @click="switchTab('foryou')">Para
+                ti</button>
+              <button class="sd-tab" :class="{active: activeTab==='section'}" @click="switchTab('section')">{{
+                profile.section }}</button>
+              <button class="sd-tab" :class="{active: activeTab==='blogs'}" @click="switchTab('blogs')">Dev
+                Blogs</button>
+              <button class="sd-tab" :class="{active: activeTab==='comps'}"
+                @click="switchTab('comps')">Competencias</button>
             </div>
           </div>
 
@@ -151,11 +199,14 @@
             <div class="sd-composer">
               <div class="sd-av" style="width:34px;height:34px"><img :src="avatarSrc" :alt="profile.nickname" /></div>
               <div style="flex:1">
-                <textarea class="sd-composer-input" v-model="newPostContent" placeholder="Comparte un aprendizaje, snippet o reflexión..." rows="2"></textarea>
+                <textarea class="sd-composer-input" v-model="newPostContent"
+                  placeholder="Comparte un aprendizaje, snippet o reflexión..." rows="2"></textarea>
                 <div class="sd-composer-actions">
-                  <button class="sd-btn-sm" @click="newPostContent += '\n```python\n# tu código aquí\n```'">+ código</button>
+                  <button class="sd-btn-sm" @click="newPostContent += '\n```python\n# tu código aquí\n```'">+
+                    código</button>
                   <button class="sd-btn-sm" @click="newPostContent += '\n[link](https://)'">+ link</button>
-                  <button class="sd-btn-accent" style="margin-left:auto" :disabled="!newPostContent.trim() || postingNew" @click="publishQuickPost">
+                  <button class="sd-btn-accent" style="margin-left:auto"
+                    :disabled="!newPostContent.trim() || postingNew" @click="publishQuickPost">
                     <span v-if="postingNew">...</span>
                     <span v-else>Publicar</span>
                   </button>
@@ -171,16 +222,23 @@
               <!-- DIARY POST -->
               <template v-if="item._type === 'diary'">
                 <div class="sd-post-header">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" /></div>
-                  <div class="sd-post-meta">
-                    <div class="sd-post-author">{{ item.profiles?.nickname || '?' }} <span v-if="item.profiles?.level" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:9px;margin-left:4px">Lv {{ item.profiles.level }}</span></div>
-                    <div class="sd-post-time">@{{ item.profiles?.nickname }} · {{ item.profiles?.section || '' }} · {{ formatTimeAgo(item.created_at) }}</div>
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" />
                   </div>
-                  <span class="sd-pill" style="background:var(--t-correct-bg);color:var(--t-correct-text);font-size:9px">Dev Blog</span>
+                  <div class="sd-post-meta">
+                    <div class="sd-post-author">{{ item.profiles?.nickname || '?' }} <span v-if="item.profiles?.level"
+                        class="sd-pill"
+                        style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:9px;margin-left:4px">Lv
+                        {{ item.profiles.level }}</span></div>
+                    <div class="sd-post-time">@{{ item.profiles?.nickname }} · {{ item.profiles?.section || '' }} · {{
+                      formatTimeAgo(item.created_at) }}</div>
+                  </div>
+                  <span class="sd-pill"
+                    style="background:var(--t-correct-bg);color:var(--t-correct-text);font-size:9px">Dev Blog</span>
                 </div>
                 <div class="sd-post-body" v-html="renderMd(item.content)"></div>
                 <div v-if="item.tags && item.tags.length">
-                  <span v-for="tag in item.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent)">{{ tag }}</span>
+                  <span v-for="tag in item.tags" :key="tag" class="sd-tag"
+                    style="background:var(--t-accent-subtle);color:var(--t-accent)">{{ tag }}</span>
                 </div>
                 <hr class="sd-divider">
                 <div class="sd-post-actions">
@@ -190,7 +248,8 @@
                 </div>
                 <!-- Inline comment preview -->
                 <div v-if="item._topComment" class="sd-inline-comment">
-                  <div class="sd-av" style="width:22px;height:22px"><img :src="getAvatar(item._topComment.profiles?.avatar_id)" /></div>
+                  <div class="sd-av" style="width:22px;height:22px"><img
+                      :src="getAvatar(item._topComment.profiles?.avatar_id)" /></div>
                   <div class="sd-comment-bubble">
                     <span class="sd-comment-author">{{ item._topComment.profiles?.nickname }} </span>
                     <span class="sd-comment-text">{{ item._topComment.content }}</span>
@@ -202,17 +261,24 @@
               <template v-if="item._type === 'comp'">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
                   <div>
-                    <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:3px">Resultado de competencia</div>
+                    <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:3px">Resultado de competencia
+                    </div>
                     <div style="font-size:14px;font-weight:600;color:var(--t-text)">{{ item.title }}</div>
-                    <div style="font-size:10px;color:var(--t-text-muted);margin-top:2px">{{ item._participantCount || 0 }} participantes · {{ item.status }}</div>
+                    <div style="font-size:10px;color:var(--t-text-muted);margin-top:2px">{{ item._participantCount || 0
+                      }} participantes · {{ item.status }}</div>
                   </div>
-                  <span class="sd-pill" :style="{background: item.status==='active'?'var(--t-correct-bg)':'var(--t-surface-alt)', color: item.status==='active'?'var(--t-correct-text)':'var(--t-text-muted)'}">{{ item.status === 'active' ? 'Activa' : 'Finalizada' }}</span>
+                  <span class="sd-pill"
+                    :style="{background: item.status==='active'?'var(--t-correct-bg)':'var(--t-surface-alt)', color: item.status==='active'?'var(--t-correct-text)':'var(--t-text-muted)'}">{{
+                    item.status === 'active' ? 'Activa' : 'Finalizada' }}</span>
                 </div>
                 <!-- Mini podium -->
                 <div v-if="item._topSubmitters && item._topSubmitters.length" class="sd-podium">
-                  <div v-for="(s,si) in item._topSubmitters.slice(0,4)" :key="si" class="sd-pod-item" :class="{'sd-pod-you': s.isYou}">
+                  <div v-for="(s,si) in item._topSubmitters.slice(0,4)" :key="si" class="sd-pod-item"
+                    :class="{'sd-pod-you': s.isYou}">
                     <div class="sd-pod-score">{{ s.likes }}</div>
-                    <div class="sd-pod-bar" :style="{height: (15 + s.likes * 4) + 'px', background: si===0?'var(--t-accent)':si===1?'var(--t-accent-subtle)':'var(--t-surface-alt)'}"></div>
+                    <div class="sd-pod-bar"
+                      :style="{height: (15 + s.likes * 4) + 'px', background: si===0?'var(--t-accent)':si===1?'var(--t-accent-subtle)':'var(--t-surface-alt)'}">
+                    </div>
                     <div class="sd-pod-name">{{ s.name }}</div>
                   </div>
                 </div>
@@ -226,14 +292,18 @@
               <!-- GITHUB ACTIVITY -->
               <template v-if="item._type === 'github'">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" /></div>
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" />
+                  </div>
                   <div>
                     <div style="font-size:13px;font-weight:600;color:var(--t-text)">{{ item.profiles?.nickname }}</div>
-                    <div style="font-size:10px;color:var(--t-text-muted)">hizo commits en {{ item.repo_name }} · {{ formatTimeAgo(item.created_at) }}</div>
+                    <div style="font-size:10px;color:var(--t-text-muted)">hizo commits en {{ item.repo_name }} · {{
+                      formatTimeAgo(item.created_at) }}</div>
                   </div>
-                  <span class="sd-pill" style="background:var(--t-surface-alt);color:var(--t-text-muted);margin-left:auto;font-size:9px">GitHub</span>
+                  <span class="sd-pill"
+                    style="background:var(--t-surface-alt);color:var(--t-text-muted);margin-left:auto;font-size:9px">GitHub</span>
                 </div>
-                <div style="font-size:10px;color:var(--t-correct-text);font-weight:600">+{{ item.xp_awarded }} XP ganados por commits</div>
+                <div style="font-size:10px;color:var(--t-correct-text);font-weight:600">+{{ item.xp_awarded }} XP
+                  ganados por commits</div>
               </template>
 
             </div>
@@ -254,10 +324,16 @@
           <!-- ACTIVE COMPETITION -->
           <div v-if="activeCompData" class="sd-card sd-comp-active">
             <div class="sd-sec" style="color:var(--t-correct-text)">Competencia activa</div>
-            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:4px">{{ activeCompData.title }}</div>
-            <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:8px">deadline: {{ formatTimeAgo(activeCompData.deadline) }}</div>
-            <div class="sd-xp-bar" style="margin-bottom:8px"><div class="sd-xp-fill" style="background:var(--t-correct,#1D9E75)" :style="{width: compDeadlinePercent + '%'}"></div></div>
-            <a href="competitions.html" class="sd-btn-cta" style="display:block;text-align:center;text-decoration:none">Participar ahora</a>
+            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:4px">{{ activeCompData.title }}
+            </div>
+            <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:8px">deadline: {{
+              formatTimeAgo(activeCompData.deadline) }}</div>
+            <div class="sd-xp-bar" style="margin-bottom:8px">
+              <div class="sd-xp-fill" style="background:var(--t-correct,#1D9E75)"
+                :style="{width: compDeadlinePercent + '%'}"></div>
+            </div>
+            <a href="competitions.html" class="sd-btn-cta"
+              style="display:block;text-align:center;text-decoration:none">Participar ahora</a>
           </div>
 
           <!-- NOTIFICATIONS -->
@@ -279,7 +355,8 @@
           <div class="sd-card">
             <div class="sd-sec">Top de tu sección</div>
             <div style="display:flex;flex-direction:column;gap:4px">
-              <div v-for="(p,i) in leaderboard" :key="p.id" class="sd-lb-row" :class="{'sd-lb-you': p.id === profile.id}">
+              <div v-for="(p,i) in leaderboard" :key="p.id" class="sd-lb-row"
+                :class="{'sd-lb-you': p.id === profile.id}">
                 <span class="sd-lb-rank" :class="{gold:i===0,silver:i===1,bronze:i===2}">{{ i+1 }}</span>
                 <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p.avatar_id)" /></div>
                 <span class="sd-lb-name">{{ p.id === profile.id ? 'Tú' : p.nickname }}</span>
@@ -298,7 +375,8 @@
                   <div class="sd-follow-name">{{ s.nickname }}</div>
                   <div class="sd-follow-sub">{{ (s.xp||0) }} XP · Lv {{ s.level||1 }}</div>
                 </div>
-                <button class="sd-follow-btn" :class="{following: s._followed}" @click="toggleFollowSuggestion(s)">{{ s._followed ? '✓' : '+' }}</button>
+                <button class="sd-follow-btn" :class="{following: s._followed}" @click="toggleFollowSuggestion(s)">{{
+                  s._followed ? '✓' : '+' }}</button>
               </div>
             </div>
           </div>
@@ -306,10 +384,16 @@
           <!-- GITHUB SYNC -->
           <div class="sd-card">
             <div class="sd-sec">GitHub sync</div>
-            <div style="font-size:11px;color:var(--t-text-muted);margin-bottom:8px;line-height:1.5">Conecta tus commits en repos "fundamentos-*" para ganar XP.</div>
-            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span style="color:var(--t-text-muted)">GitHub user</span><span style="color:var(--t-text)">{{ profile.github_username || 'No configurado' }}</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:8px"><span style="color:var(--t-text-muted)">XP de GitHub</span><span style="color:var(--t-correct-text);font-weight:600">{{ githubXp }} xp</span></div>
-            <button class="sd-signout" @click="syncGitHub" :disabled="syncingGithub" style="background:var(--t-surface-alt)">
+            <div style="font-size:11px;color:var(--t-text-muted);margin-bottom:8px;line-height:1.5">Conecta tus commits
+              en repos "fundamentos-*" para ganar XP.</div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span
+                style="color:var(--t-text-muted)">GitHub user</span><span style="color:var(--t-text)">{{
+                profile.github_username || 'No configurado' }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:8px"><span
+                style="color:var(--t-text-muted)">XP de GitHub</span><span
+                style="color:var(--t-correct-text);font-weight:600">{{ githubXp }} xp</span></div>
+            <button class="sd-signout" @click="syncGitHub" :disabled="syncingGithub"
+              style="background:var(--t-surface-alt)">
               <span v-if="syncingGithub">Sincronizando...</span>
               <span v-else>🔄 Sync XP ahora</span>
             </button>
@@ -328,23 +412,27 @@
             <div class="sd-banner-icon">🏆</div>
             <div class="sd-banner-info">
               <div class="sd-banner-title">{{ comp.title }}</div>
-              <div class="sd-banner-meta">Creado por @{{ comp.profiles?.nickname || '?' }} · Termina en <span style="color:var(--t-warning-text);font-weight:600">{{ comp._timeLeft }}</span></div>
+              <div class="sd-banner-meta">Creado por @{{ comp.profiles?.nickname || '?' }} · Termina en <span
+                  style="color:var(--t-warning-text);font-weight:600">{{ comp._timeLeft }}</span></div>
             </div>
             <div v-if="comp._submitters && comp._submitters.length" class="sd-banner-avatars">
-               <div v-for="(avId, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av" :style="{ zIndex: 5 - i }">
-                  <img :src="getAvatar(avId)" />
-               </div>
-               <div v-if="comp._submitters.length >= 5" class="sd-banner-av-more">+</div>
+              <div v-for="(avId, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av"
+                :style="{ zIndex: 5 - i }">
+                <img :src="getAvatar(avId)" />
+              </div>
+              <div v-if="comp._submitters.length >= 5" class="sd-banner-av-more">+</div>
             </div>
-            <a :href="'competitions.html?id=' + comp.id" class="sd-btn-accent sd-banner-btn" style="text-decoration:none">Participar</a>
+            <a :href="'competitions.html?id=' + comp.id" class="sd-btn-accent sd-banner-btn"
+              style="text-decoration:none">Participar</a>
           </div>
         </div>
       </div>
-      <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+      <footer class="site-footer">Hecho con 💖 para Academia hachimaki</footer>
     </template>
   </div>
 
   <script src="../js/supabase-client.js"></script>
   <script src="../js/dashboard-app.js"></script>
 </body>
+
 </html>

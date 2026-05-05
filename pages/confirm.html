@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>✅ Cuenta Confirmada — Fundamentos 2026</title>
+  <title>✅ Cuenta Confirmada — Academia hachimaki</title>
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
@@ -19,7 +19,7 @@
   <div id="app" class="auth-page relative z-10">
     <div class="auth-card text-center">
       <div v-if="status === 'verifying'">
-        <div class="auth-logo">🔄</div>
+        <img src="../assets/logos/icono chica.webp" style="width: 48px; height: auto; margin: 0 auto 0.5rem; display: block;" alt="Logo" />
         <h1 class="auth-title">Verificando...</h1>
         <p class="auth-subtitle">Confirmando tu cuenta, espera un momento.</p>
         <div class="flex justify-center mt-4">
@@ -28,7 +28,7 @@
       </div>
 
       <div v-else-if="status === 'success'">
-        <div class="auth-logo">🎉</div>
+        <img src="../assets/logos/icono chica.webp" style="width: 64px; height: auto; margin: 0 auto 1rem; display: block;" alt="Logo" />
         <h1 class="auth-title">¡Cuenta Activada!</h1>
         <p class="auth-subtitle">Tu cuenta ha sido confirmada exitosamente. Ahora completa tu perfil para comenzar.</p>
         <a href="setup-profile.html" class="btn-primary mt-4" style="display:inline-flex; width:auto; padding:0.85rem 2rem;">
@@ -37,7 +37,7 @@
       </div>
 
       <div v-else>
-        <div class="auth-logo">⚠️</div>
+        <img src="../assets/logos/icono chica.webp" style="width: 48px; height: auto; margin: 0 auto 0.5rem; display: block;" alt="Logo" />
         <h1 class="auth-title">Error de Verificación</h1>
         <p class="auth-subtitle">{{ errorMsg }}</p>
         <a href="login.html" class="btn-secondary mt-4" style="display:inline-flex; width:auto; padding:0.75rem 1.5rem;">

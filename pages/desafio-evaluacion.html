@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>🔥 Modo Desafío: Evaluación 1</title>
+  <title>?? Modo Desaf�o: Evaluaci�n 1</title>
 <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   
@@ -136,15 +136,15 @@
     <!-- Top Navigation / Header -->
     <header class="flex justify-between items-center mb-8 glass-panel p-4 z-20 sticky top-4">
        <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
-        <span>⬅️</span> Volver al Diario
+        <span>??</span> Volver al Diario
        </a>
        <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
-        <span>🔥</span>
-        <span>Modo Desafío</span>
+        <span>??</span>
+        <span>Modo Desaf�o</span>
        </div>
        <div class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep flex gap-2">
          <span v-for="i in 6" :key="i">
-            {{ completedChallenges.includes(i) ? '⭐' : '⬛' }}
+            {{ completedChallenges.includes(i) ? '?' : '?' }}
          </span>
        </div>
     </header>
@@ -156,12 +156,12 @@
       <transition name="fade" mode="out-in">
         <div v-if="state === 'map'" class="w-full flex flex-col items-center px-4 max-w-5xl">
           <div class="text-center mb-10 mt-4">
-             <div class="text-6xl mb-4 animate-bounce-[slow]">🗺️</div>
+             <div class="text-6xl mb-4 animate-bounce-[slow]">???</div>
              <h1 class="text-5xl font-bold text-kawaii-deep mb-4 drop-shadow-sm">Mapa de Misiones</h1>
              <p class="text-xl text-kawaii-text/80 max-w-2xl mx-auto glass-panel p-4">
-               Aquí no hay respuestas correctas dadas en bandeja. 
+               Aqu� no hay respuestas correctas dadas en bandeja. 
                Debes intentar, equivocarte y leer las pistas para avanzar. 
-               ¡Gana las 6 estrellas para estar listo para la evaluación!
+               �Gana las 6 estrellas para estar listo para la evaluaci�n!
              </p>
           </div>
 
@@ -179,8 +179,8 @@
              >
                 <div class="text-5xl mb-3 relative">
                    {{ challenge.emoji }}
-                   <div v-if="completedChallenges.includes(challenge.id)" class="absolute -top-3 -right-3 text-3xl">⭐</div>
-                   <div v-if="!isUnlocked(challenge.id)" class="absolute inset-0 flex items-center justify-center bg-white/50 rounded-full text-4xl">🔒</div>
+                   <div v-if="completedChallenges.includes(challenge.id)" class="absolute -top-3 -right-3 text-3xl">?</div>
+                   <div v-if="!isUnlocked(challenge.id)" class="absolute inset-0 flex items-center justify-center bg-white/50 rounded-full text-4xl">??</div>
                 </div>
                 <h3 class="text-2xl font-bold" :class="isUnlocked(challenge.id) ? 'text-kawaii-deep' : 'text-gray-500'">
                   {{ challenge.title }}
@@ -192,7 +192,7 @@
                   v-if="isUnlocked(challenge.id) && !completedChallenges.includes(challenge.id)" 
                   class="mt-4 bg-kawaii-deep text-white font-bold py-2 px-6 rounded-full hover:bg-pink-700 transition"
                 >
-                  Jugar 🚀
+                  Jugar ??
                 </button>
              </div>
           </div>
@@ -210,7 +210,7 @@
               <!-- Attempts indicator -->
               <div class="mt-4 flex justify-center gap-2">
                  <span class="text-sm font-bold text-gray-500 mr-2">Vidas:</span>
-                 <span v-for="i in 3" :key="i" class="text-xl transition-all" :class="i <= (3 - attempts) ? 'opacity-100 scale-100 text-red-500' : 'opacity-30 scale-75 grayscale'">❤️</span>
+                 <span v-for="i in 3" :key="i" class="text-xl transition-all" :class="i <= (3 - attempts) ? 'opacity-100 scale-100 text-red-500' : 'opacity-30 scale-75 grayscale'">??</span>
               </div>
            </div>
 
@@ -220,12 +220,12 @@
 
               <!-- Type 1: Reorder (Drag/drop replacement using Vue sortable pattern or simple buttons) -->
               <div v-if="currentChallenge.type === 'reorder'" class="flex flex-col gap-3">
-                 <p class="text-sm text-center text-gray-500 mb-2">Haz clic para mover la línea hacia arriba o abajo</p>
+                 <p class="text-sm text-center text-gray-500 mb-2">Haz clic para mover la l�nea hacia arriba o abajo</p>
                  <div v-for="(line, idx) in userWorkspace" :key="idx" class="flex items-center gap-2 bg-gray-800 text-green-400 p-3 rounded-lg font-code shadow-sm">
                     <span class="text-gray-500 w-6 font-mono">{{ idx + 1 }}</span>
                     <pre class="m-0 p-0 bg-transparent border-0 text-[1rem] flex-grow leading-none" style="box-shadow:none;"><code class="language-python !text-[1rem]">{{ line }}</code></pre>
-                    <button @click="moveLine(idx, -1)" :disabled="idx === 0" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">⬆️</button>
-                    <button @click="moveLine(idx, 1)" :disabled="idx === userWorkspace.length - 1" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">⬇️</button>
+                    <button @click="moveLine(idx, -1)" :disabled="idx === 0" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">??</button>
+                    <button @click="moveLine(idx, 1)" :disabled="idx === userWorkspace.length - 1" class="bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded text-white disabled:opacity-30">??</button>
                  </div>
               </div>
 
@@ -305,7 +305,7 @@
                    v-model="userCodeInput" 
                    rows="8" 
                    class="w-full bg-gray-900 text-green-400 font-code p-4 rounded-xl outline-none focus:ring-4 ring-kawaii-rose resize-none"
-                   placeholder="# Escribe tu código aquí..."
+                   placeholder="# Escribe tu c�digo aqu�..."
                    spellcheck="false"
                  ></textarea>
               </div>
@@ -317,7 +317,7 @@
               <!-- Non-click submit button (for text inputs) -->
               <div v-if="['reorder', 'fillgaps', 'tracetable', 'writecode'].includes(currentChallenge.type)" class="flex justify-center mb-6">
                  <button @click="verifyAnswer" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-12 rounded-full hover:bg-pink-700 transition shadow-xl pulse-btn">
-                    Verificar ✅
+                    Verificar ?
                  </button>
               </div>
 
@@ -326,11 +326,11 @@
                  <div v-if="feedbackMsg" class="p-6 rounded-2xl shadow-md border-l-8 text-lg font-medium flex items-center justify-between"
                       :class="isFeedbackCorrect ? 'bg-green-50 border-green-500 text-green-800' : 'bg-red-50 border-red-500 text-red-800'">
                     <div class="flex items-center gap-4">
-                       <span class="text-4xl">{{ isFeedbackCorrect ? '🎉' : '❌' }}</span>
+                       <span class="text-4xl">{{ isFeedbackCorrect ? '??' : '?' }}</span>
                        <span v-html="feedbackMsg"></span>
                     </div>
                     <button v-if="isFeedbackCorrect" @click="nextExercise" class="bg-green-600 text-white font-bold py-2 px-6 rounded-full hover:bg-green-700 shadow flex-shrink-0 ml-4">
-                       Continuar ➡️
+                       Continuar ??
                     </button>
                  </div>
               </transition>
@@ -339,23 +339,23 @@
 
         <!-- VIEW: RESULTS -->
         <div v-else-if="state === 'results'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
-           <div class="text-8xl mb-6">🏆</div>
-           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Felicitaciones!</h1>
-           <p class="text-3xl text-kawaii-text/80 mb-8">Has completado todos los desafíos.</p>
+           <div class="text-8xl mb-6">??</div>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">�Felicitaciones!</h1>
+           <p class="text-3xl text-kawaii-text/80 mb-8">Has completado todos los desaf�os.</p>
            
            <div class="bg-green-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-green-200 shadow-inner">
-             <p class="text-2xl font-bold text-green-800 mb-4">Estás lista/o para la evaluación. ¡Confía en lo que aprendiste!</p>
+             <p class="text-2xl font-bold text-green-800 mb-4">Est�s lista/o para la evaluaci�n. �Conf�a en lo que aprendiste!</p>
              <div class="flex justify-center gap-2 text-5xl">
-                ⭐⭐⭐⭐⭐⭐
+                ??????
              </div>
            </div>
            
            <div class="flex justify-center gap-6">
              <button @click="resetProgress" class="bg-white border-4 border-kawaii-deep text-kawaii-deep text-2xl font-bold py-4 px-8 rounded-full hover:bg-kawaii-pink transition-colors">
-               🔄 Reiniciar Todo
+               ?? Reiniciar Todo
              </button>
              <a href="../index.html" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-8 rounded-full hover:bg-pink-700 transition-colors shadow-lg">
-               🏠 Volver al Inicio
+               ?? Volver al Inicio
              </a>
            </div>
         </div>
@@ -395,7 +395,7 @@
       },
       methods: {
         isUnlocked(id) {
-          // Desbloquea secuencial: el id 1 siempre disponible, los demás si el id-1 está completado.
+          // Desbloquea secuencial: el id 1 siempre disponible, los dem�s si el id-1 est� completado.
           if (id === 1) return true;
           return this.completedChallenges.includes(id - 1);
         },
@@ -462,8 +462,8 @@
               let allCorrect = true;
               this.activeExercise.gaps.forEach(g => {
                  let v = (this.userAnswers[g.id] || '').trim();
-                 // Reemplazar comillas inteligentes por estándar
-                 v = v.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+                 // Reemplazar comillas inteligentes por est�ndar
+                 v = v.replace(/[��]/g, '"').replace(/[��]/g, "'");
 
                  let correct = false;
                  if (v === g.answer) correct = true;
@@ -494,7 +494,7 @@
 
            else if (this.currentChallenge.type === 'writecode') {
               let code = this.userCodeInput.toLowerCase();
-              code = code.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
+              code = code.replace(/[��]/g, '"').replace(/[��]/g, "'");
               let isCorrect = true;
               this.activeExercise.mustContain.forEach(w => {
                  if (!code.includes(w)) isCorrect = false;
@@ -508,7 +508,7 @@
            this.attempts++;
            if (userInput === expected) {
               this.isFeedbackCorrect = true;
-              this.feedbackMsg = '¡Correcto! Excelente deducción.';
+              this.feedbackMsg = '�Correcto! Excelente deducci�n.';
               confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 }, colors: ['#4CAF50'] });
            } else {
               this.isFeedbackCorrect = false;
@@ -516,7 +516,7 @@
               const hintList = this.activeExercise.hints || this.currentChallenge.hints;
               
               if (this.attempts >= 3) {
-                 this.feedbackMsg = `Ups, no es correcto. Intenta analizar esto: ${hintList[hintList.length - 1] || 'Sigue intentándolo'}`;
+                 this.feedbackMsg = `Ups, no es correcto. Intenta analizar esto: ${hintList[hintList.length - 1] || 'Sigue intent�ndolo'}`;
               } else {
                  this.feedbackMsg = hintList[hintIdx] || 'No es correcto, intenta nuevamente.';
               }

@@ -393,6 +393,55 @@ const SupabaseManager = (() => {
   }
 
   // ═══════════════════════════════════════════
+  //  COMPETITION WALL (MURO SOCIAL) HELPERS
+  // ═══════════════════════════════════════════
+
+  /** Post a message to a competition's wall */
+  async function postToCompetitionWall(competitionId, content) {
+    const user = await getUser();
+    if (!user) return { data: null, error: 'Not authenticated' };
+
+    const client = getClient();
+    return await client.from('competition_wall_posts')
+      .insert({ competition_id: competitionId, user_id: user.id, content })
+      .select('*, profiles(nickname, avatar_id, github_username, level, section)')
+      .single();
+  }
+
+  /** Delete own wall post */
+  async function deleteWallPost(postId) {
+    const client = getClient();
+    return await client.from('competition_wall_posts')
+      .delete()
+      .eq('id', postId);
+  }
+
+  /** Toggle like on a wall post (insert or delete) */
+  async function toggleWallLike(postId) {
+    const user = await getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const client = getClient();
+    // Check if already liked
+    const { data: existing } = await client.from('competition_wall_likes')
+      .select('id')
+      .eq('post_id', postId)
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (existing) {
+      // Remove like
+      return await client.from('competition_wall_likes')
+        .delete()
+        .eq('id', existing.id);
+    } else {
+      // Add like
+      return await client.from('competition_wall_likes')
+        .insert({ post_id: postId, user_id: user.id });
+    }
+  }
+
+  // ═══════════════════════════════════════════
   //  PUBLIC API
   // ═══════════════════════════════════════════
 
@@ -419,6 +468,10 @@ const SupabaseManager = (() => {
     uploadSolutionFile,
     getSolutionDownloadUrl,
     voteOnSubmission,
+    // Competition Wall
+    postToCompetitionWall,
+    deleteWallPost,
+    toggleWallLike,
     // Data
     getAvatarCatalog,
     getAvatarById,

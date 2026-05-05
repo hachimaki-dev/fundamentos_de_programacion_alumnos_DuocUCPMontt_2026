@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🏆 Competencias — Fundamentos 2026</title>
+  <title>🏆 Competencias — Academia hachimaki</title>
   <meta name="description" content="Competencias de código estilo Codewars." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
@@ -15,16 +16,106 @@
   <script src="../js/theme-selector.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="../css/social-dashboard.css" />
+  <style>
+    .dojo-commit-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--t-surface-alt);
+      border-radius: 0.75rem;
+      margin-bottom: 4px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .dojo-commit-row:hover {
+      background: var(--t-surface-hover);
+      border-color: var(--t-glass-border);
+    }
+    .dojo-commit-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+      background: var(--t-surface);
+      border: 1px solid var(--t-glass-border);
+    }
+    .dojo-commit-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .dojo-commit-nick {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--t-text);
+      cursor: pointer;
+    }
+    .dojo-github-link {
+      color: var(--t-text-muted);
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      opacity: 0.7;
+    }
+    .dojo-github-link:hover {
+      color: var(--t-accent);
+      opacity: 1;
+    }
+    .dojo-level-badge {
+      font-size: 0.65rem;
+      background: var(--t-accent-subtle);
+      color: var(--t-accent);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dojo-commit-spacer {
+      flex: 1;
+    }
+    .dojo-file-pill {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      background: var(--t-surface);
+      border: 1px solid var(--t-glass-border);
+      border-radius: 20px;
+      color: var(--t-text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Fira Code', monospace;
+    }
+    .dojo-file-pill:hover {
+      border-color: var(--t-accent);
+      color: var(--t-accent);
+      background: var(--t-accent-subtle);
+    }
+    .dojo-commit-time {
+      font-size: 0.7rem;
+      color: var(--t-text-muted);
+      min-width: 80px;
+      text-align: right;
+      font-weight: 500;
+    }
+  </style>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
   <!-- Top Nav Bar -->
-  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
-    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+  <nav class="top-nav"
+    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand"
+      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻
+      <span class="hidden-mobile">Academia hachimaki</span></div>
     <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
-      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠
+        Home</a>
       <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
     </div>
   </nav>
@@ -43,7 +134,9 @@
       <!-- HEADER -->
       <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
         <div class="flex items-center gap-2 mb-2" v-if="currentView !== 'list'">
-          <button @click="goToList" class="back-btn m-0" style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;">← Volver a competencias</button>
+          <button @click="goToList" class="back-btn m-0"
+            style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;">← Volver a
+            competencias</button>
         </div>
         <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem;">
           {{ currentView === 'list' ? '🏆 Competencias' : '🏆 ' + viewComp.title }}
@@ -62,27 +155,36 @@
           </div>
           <div class="search-input-wrap" style="margin:0; max-width: 250px;">
             <span class="icon">🎟️</span>
-            <input type="text" class="search-input" placeholder="Código inv." v-model="inviteCodeInput" @keyup.enter="joinByCode" />
-            <button class="sd-btn-accent" style="position:absolute;right:4px;top:4px;padding:0.4rem 0.8rem;border-radius:0.5rem;width:auto;font-size:0.8rem;" @click="joinByCode">Unirse</button>
+            <input type="text" class="search-input" placeholder="Código inv." v-model="inviteCodeInput"
+              @keyup.enter="joinByCode" />
+            <button class="sd-btn-accent"
+              style="position:absolute;right:4px;top:4px;padding:0.4rem 0.8rem;border-radius:0.5rem;width:auto;font-size:0.8rem;"
+              @click="joinByCode">Unirse</button>
           </div>
         </div>
 
         <!-- Filtros -->
         <div class="tag-filters mb-4">
           <button class="tag-pill" :class="{ active: filter === 'all' }" @click="filter = 'all'">✨ Todas</button>
-          <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢 Activas</button>
-          <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅ Finalizadas</button>
-          <button class="tag-pill" :class="{ active: filter === 'my' }" @click="filter = 'my'">👤 Mis Competencias</button>
+          <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢
+            Activas</button>
+          <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅
+            Finalizadas</button>
+          <button class="tag-pill" :class="{ active: filter === 'my' }" @click="filter = 'my'">👤 Mis
+            Competencias</button>
         </div>
 
         <!-- Lista -->
         <div v-if="filteredComps.length" style="display:flex;flex-direction:column;gap:1rem;">
-          <div v-for="(comp, idx) in filteredComps" :key="comp.id" class="sd-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
+          <div v-for="(comp, idx) in filteredComps" :key="comp.id" class="sd-card fade-in-up"
+            :style="{ animationDelay: (idx * 0.05) + 's' }">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <span class="comp-status" :class="comp.status">{{ statusLabel(comp.status) }}</span>
                 <h3 class="text-lg font-bold mt-2" style="color:var(--t-accent);">{{ comp.title }}</h3>
-                <p class="text-sm mt-1" style="color:var(--t-text-secondary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ comp.description }}</p>
+                <p class="text-sm mt-1"
+                  style="color:var(--t-text-secondary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                  {{ comp.description }}</p>
                 <div class="flex gap-3 mt-3 text-xs" style="color:var(--t-text-muted);">
                   <span>⏰ Cierra: {{ formatDate(comp.deadline) }}</span>
                   <span v-if="comp.created_by === profile.id">👑 Creada por ti</span>
@@ -90,8 +192,10 @@
               </div>
             </div>
             <div class="flex gap-3 mt-4">
-              <button v-if="comp.status === 'active' && !hasJoined(comp.id) && comp.created_by !== profile.id" class="sd-btn-accent" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">¡Unirme! 🚀</button>
-              <button class="sd-btn-sm" style="flex:1;padding:0.6rem;" @click="openComp(comp)">{{ hasJoined(comp.id) || comp.created_by === profile.id ? 'Entrar al dojo 🥋' : 'Ver detalles 👁️' }}</button>
+              <button v-if="comp.status === 'active' && !hasJoined(comp.id) && comp.created_by !== profile.id"
+                class="sd-btn-accent" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">¡Unirme! 🚀</button>
+              <button class="sd-btn-sm" style="flex:1;padding:0.6rem;" @click="openComp(comp)">{{ hasJoined(comp.id) ||
+                comp.created_by === profile.id ? 'Entrar al dojo 🥋' : 'Ver detalles 👁️' }}</button>
             </div>
           </div>
         </div>
@@ -111,13 +215,14 @@
            VIEW: DETALLE DE COMPETENCIA
            ============================================== -->
       <div v-else-if="currentView === 'detail' && viewComp" class="fade-in-up">
-        
+
         <!-- SECTION: PROGRESS & HORIZONTAL INFO -->
         <div class="mb-6">
           <div class="sd-progress-card mb-3">
             <div class="sd-progress-info">
               <div class="sd-progress-title">Progreso del Desafío</div>
-              <div class="sd-progress-value" style="font-size: 1.1rem;">{{ solvedCount }} / {{ compProblems.length }} <small style="font-size: 0.7em; opacity: 0.7;">EJERCICIOS</small></div>
+              <div class="sd-progress-value" style="font-size: 1.1rem;">{{ solvedCount }} / {{ compProblems.length }}
+                <small style="font-size: 0.7em; opacity: 0.7;">EJERCICIOS</small></div>
             </div>
             <div class="sd-progress-bar-wrap">
               <div class="sd-progress-bar-fill" :style="{ width: overallProgress + '%' }"></div>
@@ -129,23 +234,30 @@
           <div class="sd-card flex flex-col md:flex-row gap-6 items-stretch mb-8" style="padding: 1.5rem;">
             <div style="flex: 2;">
               <h3 class="sd-sec" style="font-size: 0.75rem; opacity: 0.8; margin-bottom: 0.75rem;">📝 DESCRIPCIÓN</h3>
-              <div class="text-sm" v-html="renderMd(viewComp.description)" style="line-height: 1.6; color: var(--t-text-secondary);"></div>
+              <div class="text-sm" v-html="renderMd(viewComp.description)"
+                style="line-height: 1.6; color: var(--t-text-secondary);"></div>
             </div>
-            
-            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; justify-content: center; background: var(--t-surface-alt); border-radius: 1rem; padding: 1.25rem; border: 1px solid var(--t-glass-border); position: relative; overflow: hidden;">
+
+            <div
+              style="flex: 1; min-width: 200px; display: flex; flex-direction: column; justify-content: center; background: var(--t-surface-alt); border-radius: 1rem; padding: 1.25rem; border: 1px solid var(--t-glass-border); position: relative; overflow: hidden;">
               <!-- Subtle decorative element -->
-              <div style="position: absolute; top: -10px; right: -10px; font-size: 3rem; opacity: 0.05; transform: rotate(15deg);">🔑</div>
-              
+              <div
+                style="position: absolute; top: -10px; right: -10px; font-size: 3rem; opacity: 0.05; transform: rotate(15deg);">
+                🔑</div>
+
               <h3 class="sd-sec" style="font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 1rem;">🔑 ACCESO</h3>
               <div class="flex flex-col gap-3">
                 <div class="flex items-center justify-between">
                   <span class="text-xs font-bold" style="color: var(--t-text-muted);">Estado</span>
-                  <span class="comp-status" :class="viewComp.status" style="padding: 2px 8px; font-size: 9px; margin: 0;">{{ statusLabel(viewComp.status) }}</span>
+                  <span class="comp-status" :class="viewComp.status"
+                    style="padding: 2px 8px; font-size: 9px; margin: 0;">{{ statusLabel(viewComp.status) }}</span>
                 </div>
                 <div v-if="viewComp.created_by === profile.id || hasJoined(viewComp.id)">
-                  <p class="text-[10px] uppercase font-bold mb-1" style="color: var(--t-accent); opacity: 0.8;">Código de Invitación</p>
-                  <div class="invite-code-badge w-full text-center group cursor-pointer" @click="copyCode(viewComp.invite_code)" title="Clic para copiar" 
-                       style="font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; padding: 0.75rem; background: var(--t-surface); border: 1px dashed var(--t-accent); color: var(--t-text); transition: all 0.2s;">
+                  <p class="text-[10px] uppercase font-bold mb-1" style="color: var(--t-accent); opacity: 0.8;">Código
+                    de Invitación</p>
+                  <div class="invite-code-badge w-full text-center group cursor-pointer"
+                    @click="copyCode(viewComp.invite_code)" title="Clic para copiar"
+                    style="font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; padding: 0.75rem; background: var(--t-surface); border: 1px dashed var(--t-accent); color: var(--t-text); transition: all 0.2s;">
                     {{ viewComp.invite_code }}
                     <span style="font-size: 0.8rem; margin-left: 0.5rem; opacity: 0.5;">📋</span>
                   </div>
@@ -154,37 +266,47 @@
             </div>
 
             <div style="flex: 2; padding-left: 0.5rem;" v-if="viewComp.rules">
-              <h3 class="sd-sec" style="font-size: 0.75rem; color: var(--t-accent); opacity: 0.8; margin-bottom: 0.75rem;">⚖️ REGLAS DEL DOJO</h3>
-              <div class="text-xs" style="color: var(--t-text-secondary); line-height: 1.5;" v-html="renderMd(viewComp.rules)"></div>
+              <h3 class="sd-sec"
+                style="font-size: 0.75rem; color: var(--t-accent); opacity: 0.8; margin-bottom: 0.75rem;">⚖️ REGLAS DEL
+                DOJO</h3>
+              <div class="text-xs" style="color: var(--t-text-secondary); line-height: 1.5;"
+                v-html="renderMd(viewComp.rules)"></div>
             </div>
           </div>
         </div>
 
         <!-- MAIN GRID: 2-COLUMN LAYOUT -->
         <div class="sd-master-detail-alt">
-          
+
           <!-- LEFT: CONTENT CARD -->
           <div class="sd-col">
             <div class="sd-card" style="padding: 0; overflow: hidden;">
               <div class="sd-tabs-header">
-                <button class="sd-tab-btn" :class="{ active: detailTab === 'problems' }" @click="detailTab = 'problems'">📝 Problemas</button>
-                <button class="sd-tab-btn" :class="{ active: detailTab === 'submissions' }" @click="detailTab = 'submissions'">📂 Soluciones</button>
-                <button class="sd-tab-btn" :class="{ active: detailTab === 'ranking' }" @click="detailTab = 'ranking'">🏆 Ranking</button>
-                <button class="sd-tab-btn" :class="{ active: detailTab === 'muro' }" @click="detailTab = 'muro'">💬 Muro Social</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'problems' }"
+                  @click="detailTab = 'problems'">📝 Problemas</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'submissions' }"
+                  @click="detailTab = 'submissions'">📂 Soluciones</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'ranking' }"
+                  @click="detailTab = 'ranking'">🏆 Ranking</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'muro' }" @click="detailTab = 'muro'">💬 Muro
+                  Social</button>
               </div>
 
               <div style="padding: 1.25rem;">
-                
+
                 <!-- TAB: PROBLEMAS -->
                 <div v-if="detailTab === 'problems'">
-                  <div v-if="compProblems.length === 0" class="text-center py-8 text-sm" style="color:var(--t-text-muted);">
+                  <div v-if="compProblems.length === 0" class="text-center py-8 text-sm"
+                    style="color:var(--t-text-muted);">
                     Esta competencia aún no tiene problemas.
                   </div>
                   <div v-else class="sd-master-detail">
                     <div class="sd-problem-nav">
                       <h4 class="sd-sec">📍 Mapa de Desafíos</h4>
                       <div class="sd-nav-grid">
-                        <button v-for="p in compProblems" :key="p.id" class="sd-nav-item-btn" :class="{ active: selectedProblemId === p.id, solved: isSolved(p.id) }" @click="selectedProblemId = p.id">
+                        <button v-for="p in compProblems" :key="p.id" class="sd-nav-item-btn"
+                          :class="{ active: selectedProblemId === p.id, solved: isSolved(p.id) }"
+                          @click="selectedProblemId = p.id">
                           {{ p.order_index }}
                         </button>
                       </div>
@@ -193,41 +315,53 @@
                     <div class="sd-problem-detail" v-if="selectedProblem">
                       <div class="sd-problem-header">
                         <div>
-                          <h2 class="sd-problem-title">Ejercicio {{ selectedProblem.order_index }}: {{ selectedProblem.title }}</h2>
-                          <span class="sd-pill mt-2" :class="selectedProblem.difficulty">{{ selectedProblem.difficulty.toUpperCase() }}</span>
+                          <h2 class="sd-problem-title">Ejercicio {{ selectedProblem.order_index }}: {{
+                            selectedProblem.title }}</h2>
+                          <span class="sd-pill mt-2" :class="selectedProblem.difficulty">{{
+                            selectedProblem.difficulty.toUpperCase() }}</span>
                         </div>
                       </div>
-                      <div class="mt-4" style="color: var(--t-text-secondary); line-height: 1.6; font-size: 0.95rem;" v-html="renderMd(selectedProblem.description)"></div>
-                      
+                      <div class="mt-4" style="color: var(--t-text-secondary); line-height: 1.6; font-size: 0.95rem;"
+                        v-html="renderMd(selectedProblem.description)"></div>
+
                       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                        <div v-if="selectedProblem.example_input && selectedProblem.example_input !== 'N/A'" class="sd-console-box">
+                        <div v-if="selectedProblem.example_input && selectedProblem.example_input !== 'N/A'"
+                          class="sd-console-box">
                           <span class="sd-console-label">Input Esperado</span>
                           <pre class="sd-console-content">{{ selectedProblem.example_input }}</pre>
-                          <button class="sd-console-copy" @click="copyToClipboard(selectedProblem.example_input)">Copiar</button>
+                          <button class="sd-console-copy"
+                            @click="copyToClipboard(selectedProblem.example_input)">Copiar</button>
                         </div>
                         <div v-if="selectedProblem.example_output" class="sd-console-box">
                           <span class="sd-console-label">Output Esperado</span>
                           <pre class="sd-console-content">{{ selectedProblem.example_output }}</pre>
-                          <button class="sd-console-copy" @click="copyToClipboard(selectedProblem.example_output)">Copiar</button>
+                          <button class="sd-console-copy"
+                            @click="copyToClipboard(selectedProblem.example_output)">Copiar</button>
                         </div>
                       </div>
 
-                      <div v-if="viewComp.status === 'active' && hasJoined(viewComp.id)" class="mt-8 pt-6 border-t" style="border-color:var(--t-glass-border);">
-                        <div v-if="getMySubmission(selectedProblem.id)" class="sd-card" style="background:var(--t-accent-subtle); border-color:var(--t-accent); padding: 1rem;">
+                      <div v-if="viewComp.status === 'active' && hasJoined(viewComp.id)" class="mt-8 pt-6 border-t"
+                        style="border-color:var(--t-glass-border);">
+                        <div v-if="getMySubmission(selectedProblem.id)" class="sd-card"
+                          style="background:var(--t-accent-subtle); border-color:var(--t-accent); padding: 1rem;">
                           <div class="flex justify-between items-center">
                             <div>
                               <p class="font-bold text-sm" style="color:var(--t-accent);">✅ Solución entregada</p>
-                              <p class="text-xs" style="color:var(--t-correct-text);">Archivo: {{ getMySubmission(selectedProblem.id).file_name }}</p>
+                              <p class="text-xs" style="color:var(--t-correct-text);">Archivo: {{
+                                getMySubmission(selectedProblem.id).file_name }}</p>
                             </div>
-                            <button class="sd-btn-accent" style="width:auto; padding: 0.5rem 1rem;" @click="triggerUpload(selectedProblem.id)">Re-enviar 🔄</button>
+                            <button class="sd-btn-accent" style="width:auto; padding: 0.5rem 1rem;"
+                              @click="triggerUpload(selectedProblem.id)">Re-enviar 🔄</button>
                           </div>
                         </div>
                         <div v-else class="upload-zone" @click="triggerUpload(selectedProblem.id)">
                           <div class="text-3xl mb-2">🐍</div>
                           <p class="font-bold text-sm" style="color:var(--t-accent);">Subir solución (.py)</p>
-                          <p class="text-xs mt-1" style="color: var(--t-text-muted);">Haz clic aquí para buscar tu archivo.</p>
+                          <p class="text-xs mt-1" style="color: var(--t-text-muted);">Haz clic aquí para buscar tu
+                            archivo.</p>
                         </div>
-                        <input :id="'file-' + selectedProblem.id" type="file" accept=".py" @change="handleFileSelect($event, selectedProblem.id)" style="display:none;" />
+                        <input :id="'file-' + selectedProblem.id" type="file" accept=".py"
+                          @change="handleFileSelect($event, selectedProblem.id)" style="display:none;" />
                       </div>
                     </div>
                   </div>
@@ -241,20 +375,188 @@
                     <p class="text-sm text-secondary px-8">Las soluciones se revelarán al finalizar la competencia.</p>
                   </div>
                   <div v-else>
-                    <div v-if="compSubmissions.length === 0" class="text-center py-8 text-sm" style="color:var(--t-text-muted);">Aún no hay soluciones.</div>
-                    <div v-for="prob in compProblems" :key="'sub-'+prob.id" class="mb-6">
-                      <h4 class="sd-sec" style="color:var(--t-accent);">{{ prob.title }}</h4>
-                      <div v-for="sub in getSubmissionsForProblem(prob.id)" :key="sub.id" class="sd-card mb-3 flex flex-col sm:flex-row items-center gap-4 justify-between" style="padding:1rem; background: var(--t-surface-alt);">
-                        <div class="flex items-center gap-3">
-                          <div class="nav-auth-avatar" style="width:36px;height:36px;"><img :src="getAvatar(sub.profiles?.avatar_id)" /></div>
-                          <div>
-                            <p class="font-bold text-sm" style="color:var(--t-text);">{{ sub.profiles?.nickname }}</p>
-                            <p class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(sub.submitted_at) }}</p>
+                    <div v-if="compSubmissions.length === 0" class="sd-empty">
+                      <div class="sd-empty-icon">📂</div>
+                      <div class="sd-empty-text">Aún no hay soluciones enviadas.</div>
+                    </div>
+                    <template v-else>
+                      <!-- Toggle: Por Ejercicio / Por Persona -->
+                      <div class="flex items-center gap-2 mb-4">
+                        <div class="sd-feed-tabs" style="flex:1;">
+                          <button class="sd-tab" :class="{ active: subView === 'byExercise' }"
+                            @click="subView = 'byExercise'">📝 Por Ejercicio</button>
+                          <button class="sd-tab" :class="{ active: subView === 'byPerson' }"
+                            @click="subView = 'byPerson'">👥 Por Persona</button>
+                        </div>
+                        <span class="text-xs" style="color:var(--t-text-muted);">{{ compSubmissions.length }}
+                          soluciones</span>
+                      </div>
+
+                      <!-- Vista: Por Ejercicio -->
+                      <div v-if="subView === 'byExercise'">
+                        <div v-for="prob in compProblems" :key="'sub-'+prob.id" class="mb-4">
+                          <div class="dojo-commit-row cursor-pointer"
+                            @click="toggleSubGroup('ex-'+prob.id)" style="user-select:none;">
+                            <span class="text-xs" style="color:var(--t-accent); min-width: 15px;">{{ expandedSubGroups['ex-'+prob.id] ?
+                              '▼' : '▶' }}</span>
+                            <span class="sd-sec m-0" style="color:var(--t-accent); font-size: 0.85rem; text-transform: none; letter-spacing: normal;">{{ prob.title }}</span>
+                            <span class="dojo-commit-spacer"></span>
+                            <span class="sd-pill"
+                              style="background:var(--t-surface-alt);color:var(--t-text-muted);font-size:9px;">{{
+                              getSubmissionsForProblem(prob.id).length }} soluciones</span>
+                          </div>
+                          <div v-if="expandedSubGroups['ex-'+prob.id]"
+                            style="display:flex;flex-direction:column;gap:2px; padding-left: 1.5rem;">
+                            <div v-for="sub in getSubmissionsForProblem(prob.id)" :key="sub.id" class="flex flex-col mb-1">
+                              <div class="dojo-commit-row">
+                                <div class="dojo-commit-avatar" @click="goToProfile(sub.user_id)">
+                                  <img :src="getAvatar(sub.profiles?.avatar_id)" />
+                                </div>
+                                <span class="dojo-commit-nick" @click="goToProfile(sub.user_id)">{{
+                                  sub.profiles?.nickname
+                                  }}</span>
+                                <a v-if="sub.profiles?.github_username"
+                                  :href="'https://github.com/'+sub.profiles.github_username" target="_blank"
+                                  class="dojo-github-link" title="Ver GitHub">
+                                  <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                    <path
+                                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                                  </svg>
+                                </a>
+                                <span v-if="sub.profiles?.level" class="dojo-level-badge">Lv.{{ sub.profiles.level
+                                  }}</span>
+                                <span class="dojo-commit-spacer"></span>
+                                <button class="dojo-file-pill" @click="downloadSolution(sub)">⬇ {{ sub.file_name
+                                  }}</button>
+
+                                <div class="flex items-center gap-1 ml-2 mr-1">
+                                  <button class="sd-action" :class="{ liked: hasVoted(sub.id) === 1 }"
+                                    @click.stop="castVote(sub.id, 1)" title="¡Me gusta!">
+                                    👍 <small>{{ sub.likes_count || 0 }}</small>
+                                  </button>
+                                  <button class="sd-action" @click.stop="toggleComments(sub.id)"
+                                    :class="{ active: expandedComments === sub.id }" title="Comentarios">
+                                    💬 <small>{{ getSubComments(sub.id).length }}</small>
+                                  </button>
+                                </div>
+
+                                <span class="dojo-commit-time">{{ timeAgo(sub.submitted_at) }}</span>
+                              </div>
+
+                              <!-- Comentarios Solución -->
+                              <div v-if="expandedComments === sub.id" class="fade-in"
+                                style="padding-left: 3rem; margin-top: 4px; margin-bottom: 12px; border-left: 2px solid var(--t-glass-border); margin-left: 14px;">
+                                <div v-for="c in getSubComments(sub.id)" :key="c.id" class="sd-inline-comment mb-2">
+                                  <div class="sd-av" style="width:24px;height:24px;"><img
+                                      :src="getAvatar(c.profiles?.avatar_id)" /></div>
+                                  <div class="sd-comment-bubble" style="padding: 6px 12px;">
+                                    <div class="sd-comment-author"
+                                      style="font-size: 10px; font-weight: 800; color: var(--t-accent);">{{
+                                      c.profiles?.nickname }}</div>
+                                    <div class="sd-comment-text" style="font-size: 11px;">{{ c.content }}</div>
+                                  </div>
+                                </div>
+                                <div class="sd-inline-comment mt-2">
+                                  <div class="sd-av" style="width:24px;height:24px;"><img
+                                      :src="getAvatar(profile.avatar_id)" /></div>
+                                  <div class="flex-1 flex gap-2">
+                                    <input type="text" class="sd-composer-input" v-model="newSubComments[sub.id]"
+                                      placeholder="Escribe un comentario..." @keyup.enter="postSubComment(sub.id)"
+                                      style="font-size: 11px; padding: 6px 10px; height: 32px;" />
+                                    <button class="sd-btn-accent"
+                                      style="width:auto; padding: 0 10px; height: 32px; font-size: 10px;"
+                                      @click="postSubComment(sub.id)" :disabled="postingSubComment === sub.id">
+                                      {{ postingSubComment === sub.id ? '...' : 'Post' }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <button class="sd-btn-sm" style="width:auto; padding:0.4rem 0.8rem;" @click="downloadSolution(sub)">⬇ {{ sub.file_name }}</button>
                       </div>
-                    </div>
+
+                      <!-- Vista: Por Persona -->
+                      <div v-if="subView === 'byPerson'">
+                        <div v-for="person in submissionsByPerson" :key="person.user_id" class="mb-4">
+                          <div class="dojo-commit-row cursor-pointer"
+                            @click="toggleSubGroup('usr-'+person.user_id)" style="user-select:none;">
+                            <span class="text-xs" style="color:var(--t-accent); min-width: 15px;">{{
+                              expandedSubGroups['usr-'+person.user_id] ? '▼' : '▶' }}</span>
+                            <div class="dojo-commit-avatar" @click.stop="goToProfile(person.user_id)">
+                              <img :src="getAvatar(person.avatar_id)" />
+                            </div>
+                            <span class="dojo-commit-nick">{{ person.nickname }}</span>
+                            <a v-if="person.github_username" :href="'https://github.com/'+person.github_username"
+                              target="_blank" class="dojo-github-link" @click.stop title="Ver GitHub">
+                              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                                <path
+                                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                              </svg>
+                            </a>
+                            <span v-if="person.level" class="dojo-level-badge">Lv.{{ person.level }}</span>
+                            <span class="dojo-commit-spacer"></span>
+                            <span class="sd-pill"
+                              style="background:var(--t-surface-alt);color:var(--t-text-muted);font-size:9px;">{{
+                              person.subs.length }} soluciones</span>
+                          </div>
+                          <div v-if="expandedSubGroups['usr-'+person.user_id]"
+                            style="display:flex;flex-direction:column;gap:2px;padding-left:1.5rem;">
+                            <div v-for="sub in person.subs" :key="sub.id" class="flex flex-col mb-1">
+                              <div class="dojo-commit-row">
+                                <span class="dojo-commit-nick" style="color:var(--t-text-secondary);font-weight:500;">{{
+                                  getProblemTitle(sub.problem_id) }}</span>
+                                <span class="dojo-commit-spacer"></span>
+                                <button class="dojo-file-pill" @click="downloadSolution(sub)">⬇ {{ sub.file_name
+                                  }}</button>
+
+                                <div class="flex items-center gap-1 ml-2 mr-1">
+                                  <button class="sd-action" :class="{ liked: hasVoted(sub.id) === 1 }"
+                                    @click.stop="castVote(sub.id, 1)" title="¡Me gusta!">
+                                    👍 <small>{{ sub.likes_count || 0 }}</small>
+                                  </button>
+                                  <button class="sd-action" @click.stop="toggleComments(sub.id)"
+                                    :class="{ active: expandedComments === sub.id }" title="Comentarios">
+                                    💬 <small>{{ getSubComments(sub.id).length }}</small>
+                                  </button>
+                                </div>
+
+                                <span class="dojo-commit-time">{{ timeAgo(sub.submitted_at) }}</span>
+                              </div>
+
+                              <!-- Comentarios Solución -->
+                              <div v-if="expandedComments === sub.id" class="fade-in"
+                                style="padding-left: 3rem; margin-top: 4px; margin-bottom: 12px; border-left: 2px solid var(--t-glass-border); margin-left: 14px;">
+                                <div v-for="c in getSubComments(sub.id)" :key="c.id" class="sd-inline-comment mb-2">
+                                  <div class="sd-av" style="width:24px;height:24px;"><img
+                                      :src="getAvatar(c.profiles?.avatar_id)" /></div>
+                                  <div class="sd-comment-bubble" style="padding: 6px 12px;">
+                                    <div class="sd-comment-author"
+                                      style="font-size: 10px; font-weight: 800; color: var(--t-accent);">{{
+                                      c.profiles?.nickname }}</div>
+                                    <div class="sd-comment-text" style="font-size: 11px;">{{ c.content }}</div>
+                                  </div>
+                                </div>
+                                <div class="sd-inline-comment mt-2">
+                                  <div class="sd-av" style="width:24px;height:24px;"><img
+                                      :src="getAvatar(profile.avatar_id)" /></div>
+                                  <div class="flex-1 flex gap-2">
+                                    <input type="text" class="sd-composer-input" v-model="newSubComments[sub.id]"
+                                      placeholder="Escribe un comentario..." @keyup.enter="postSubComment(sub.id)"
+                                      style="font-size: 11px; padding: 6px 10px; height: 32px;" />
+                                    <button class="sd-btn-accent"
+                                      style="width:auto; padding: 0 10px; height: 32px; font-size: 10px;"
+                                      @click="postSubComment(sub.id)" :disabled="postingSubComment === sub.id">
+                                      {{ postingSubComment === sub.id ? '...' : 'Post' }}
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
                   </div>
                 </div>
 
@@ -263,11 +565,14 @@
                   <div class="max-w-md mx-auto py-4">
                     <h3 class="sd-sec text-center mb-6">🏆 Ranking de Honor</h3>
                     <div v-if="leaderboard.length">
-                      <div v-for="(entry, idx) in leaderboard" :key="entry.user_id" class="flex items-center gap-3 p-3 mb-2 rounded-xl border border-dashed" style="border-color: var(--t-glass-border); background: var(--t-surface-alt);">
+                      <div v-for="(entry, idx) in leaderboard" :key="entry.user_id"
+                        class="flex items-center gap-3 p-3 mb-2 rounded-xl border border-dashed"
+                        style="border-color: var(--t-glass-border); background: var(--t-surface-alt);">
                         <span class="font-bold w-8 text-center" style="color:var(--t-accent);">#{{ idx + 1 }}</span>
                         <img :src="getAvatar(entry.avatar_id)" style="width:28px;height:28px;border-radius:50%;" />
                         <span class="flex-1 font-semibold" style="color:var(--t-text);">{{ entry.nickname }}</span>
-                        <span class="font-black" style="color:var(--t-accent);">{{ entry.score }} <small>PTS</small></span>
+                        <span class="font-black" style="color:var(--t-accent);">{{ entry.score }}
+                          <small>PTS</small></span>
                       </div>
                     </div>
                   </div>
@@ -275,17 +580,21 @@
 
                 <!-- TAB: MURO SOCIAL -->
                 <div v-if="detailTab === 'muro'">
-                  <div class="sd-composer mb-6" style="background: var(--t-surface-alt); padding: 1rem; border-radius: 12px;">
-                    <textarea class="sd-composer-input" v-model="newWallPost" placeholder="Escribe algo en el muro..." rows="2"></textarea>
+                  <div class="sd-composer mb-6"
+                    style="background: var(--t-surface-alt); padding: 1rem; border-radius: 12px;">
+                    <textarea class="sd-composer-input" v-model="newWallPost" placeholder="Escribe algo en el muro..."
+                      rows="2"></textarea>
                     <div class="flex justify-end mt-2">
-                      <button class="sd-btn-accent" style="width:auto; padding: 0.5rem 1.5rem;" @click="postToWall">Publicar 🚀</button>
+                      <button class="sd-btn-accent" style="width:auto; padding: 0.5rem 1.5rem;"
+                        @click="postToWall">Publicar 🚀</button>
                     </div>
                   </div>
-                  <div v-for="post in muroPosts" :key="post.id" class="sd-card mb-3 border-dashed" style="background: var(--t-surface-alt);">
+                  <div v-for="post in muroPosts" :key="post.id" class="sd-card mb-3 border-dashed"
+                    style="background: var(--t-surface-alt);">
                     <div class="flex gap-3 mb-2">
-                      <div class="sd-av" style="width:32px;height:32px;"><img :src="getAvatar(post.avatar_id)" /></div>
+                      <div class="sd-av" style="width:32px;height:32px;"><img :src="getAvatar(post.profiles?.avatar_id)" /></div>
                       <div>
-                        <div class="font-bold text-sm" style="color:var(--t-text);">{{ post.nickname }}</div>
+                        <div class="font-bold text-sm" style="color:var(--t-text);">{{ post.profiles?.nickname }}</div>
                         <div class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(post.created_at) }}</div>
                       </div>
                     </div>
@@ -324,7 +633,8 @@
             <div class="sd-card">
               <h3 class="sd-sec">👥 Participantes</h3>
               <div class="flex flex-wrap gap-2 mt-2">
-                <div v-for="part in uniqueParticipants" :key="part.user_id" class="nav-auth-avatar" style="width:32px;height:32px;" :title="part.profiles?.nickname">
+                <div v-for="part in uniqueParticipants" :key="part.user_id" class="nav-auth-avatar"
+                  style="width:32px;height:32px;" :title="part.profiles?.nickname">
                   <img :src="getAvatar(part.avatar_id)" />
                 </div>
               </div>
@@ -333,7 +643,8 @@
             <div class="sd-card">
               <h3 class="sd-sec">🔥 Actividad</h3>
               <div class="sd-activity-feed mt-2">
-                <div v-for="(act, i) in activityFeed" :key="i" class="sd-activity-item" style="background:transparent; border:none; padding: 4px 0; border-bottom: 1px solid var(--t-glass-border);">
+                <div v-for="(act, i) in activityFeed" :key="i" class="sd-activity-item"
+                  style="background:transparent; border:none; padding: 4px 0; border-bottom: 1px solid var(--t-glass-border);">
                   <div class="sd-activity-text" style="font-size: 11px;">
                     <strong>{{ act.nickname }}</strong> {{ act.action }}
                   </div>
@@ -366,11 +677,13 @@
             </div>
             <div class="form-group">
               <label class="form-label">Descripción (Markdown)</label>
-              <textarea class="form-input" v-model="createForm.description" rows="3" placeholder="Describe el objetivo general..."></textarea>
+              <textarea class="form-input" v-model="createForm.description" rows="3"
+                placeholder="Describe el objetivo general..."></textarea>
             </div>
             <div class="form-group">
               <label class="form-label">Reglas (opcional, Markdown)</label>
-              <textarea class="form-input" v-model="createForm.rules" rows="2" placeholder="Ej: No usar librerías externas..."></textarea>
+              <textarea class="form-input" v-model="createForm.rules" rows="2"
+                placeholder="Ej: No usar librerías externas..."></textarea>
             </div>
             <div class="form-group">
               <label class="form-label">Fecha y Hora Límite</label>
@@ -378,24 +691,33 @@
             </div>
           </div>
 
-          <div style="background:var(--t-surface-alt); padding:1rem; border-radius:0.75rem; border:1px solid var(--t-glass-border);">
-            <div class="flex justify-between items-center mb-3 border-b pb-2" style="border-color:var(--t-glass-border);">
+          <div
+            style="background:var(--t-surface-alt); padding:1rem; border-radius:0.75rem; border:1px solid var(--t-glass-border);">
+            <div class="flex justify-between items-center mb-3 border-b pb-2"
+              style="border-color:var(--t-glass-border);">
               <h3 class="font-bold text-sm" style="color:var(--t-text);">Carga Masiva (JSON)</h3>
               <div class="flex gap-2">
-                <button class="sd-btn-sm" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;" @click="downloadJsonTemplate">📥 Plantilla</button>
-                <button class="sd-btn-accent" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;" @click="triggerJsonUpload">📤 Subir JSON</button>
+                <button class="sd-btn-sm" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;"
+                  @click="downloadJsonTemplate">📥 Plantilla</button>
+                <button class="sd-btn-accent" style="padding:0.3rem 0.6rem; font-size:0.75rem; width:auto;"
+                  @click="triggerJsonUpload">📤 Subir JSON</button>
                 <input type="file" id="json-upload" accept=".json" style="display:none;" @change="handleJsonUpload" />
               </div>
             </div>
-            
+
             <div class="flex justify-between items-center mb-3">
-              <h3 class="font-bold text-sm" style="color:var(--t-text);">Problemas ({{ createForm.problems.length }})</h3>
-              <button class="tag-pill" style="padding:0.2rem 0.6rem; font-size:0.75rem;" @click="addProblemFields">+ Añadir</button>
+              <h3 class="font-bold text-sm" style="color:var(--t-text);">Problemas ({{ createForm.problems.length }})
+              </h3>
+              <button class="tag-pill" style="padding:0.2rem 0.6rem; font-size:0.75rem;" @click="addProblemFields">+
+                Añadir</button>
             </div>
-            
+
             <div style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem;">
-              <div v-for="(p, i) in createForm.problems" :key="i" class="mb-4 p-3 border rounded relative" style="border-color:var(--t-glass-border); background:var(--t-surface);">
-                <button v-if="createForm.problems.length > 1" class="absolute top-2 right-2 text-xs" style="color:var(--t-wrong-text);background:transparent;border:none;cursor:pointer;" @click="removeProblemFields(i)">✕</button>
+              <div v-for="(p, i) in createForm.problems" :key="i" class="mb-4 p-3 border rounded relative"
+                style="border-color:var(--t-glass-border); background:var(--t-surface);">
+                <button v-if="createForm.problems.length > 1" class="absolute top-2 right-2 text-xs"
+                  style="color:var(--t-wrong-text);background:transparent;border:none;cursor:pointer;"
+                  @click="removeProblemFields(i)">✕</button>
                 <div class="form-group mb-2">
                   <label class="form-label" style="font-size:0.7rem;">Título del Problema {{ i+1 }}</label>
                   <input type="text" class="form-input p-2 text-sm" v-model="p.title" placeholder="Ej: Suma de Pares" />
@@ -448,14 +770,14 @@
           loading: true,
           profile: null,
           currentView: 'list', // 'list' | 'detail'
-          
+
           // Listado
           competitions: [],
           myParticipants: [], // [{competition_id}]
           searchQuery: '',
           filter: 'active',
           inviteCodeInput: '',
-          
+
           // Detalle
           viewComp: null,
           detailTab: 'problems', // 'problems' | 'submissions' | 'ranking'
@@ -468,7 +790,11 @@
           expandedComments: null,
           newSubComments: {},
           postingSubComment: null,
-          
+
+          // Soluciones View State
+          subView: 'byExercise', // 'byExercise' | 'byPerson'
+          expandedSubGroups: {}, // { 'ex-123': true, 'usr-456': false }
+
           // Muro Social (Local State Mock for now)
           muroPosts: [],
           newWallPost: '',
@@ -486,7 +812,7 @@
           if (this.filter === 'active') list = list.filter(c => c.status === 'active');
           if (this.filter === 'finished') list = list.filter(c => c.status === 'finished');
           if (this.filter === 'my') list = list.filter(c => c.created_by === this.profile.id || this.hasJoined(c.id));
-          
+
           if (this.searchQuery.trim()) {
             const q = this.searchQuery.toLowerCase();
             list = list.filter(c => c.title.toLowerCase().includes(q) || (c.description || '').toLowerCase().includes(q));
@@ -507,7 +833,7 @@
             // time bonus: max(0, 500 - minutos)
             const minutesSinceStart = Math.max(0, (new Date(sub.submitted_at).getTime() - compStart) / 60000);
             const timeBonus = Math.max(0, 500 - Math.floor(minutesSinceStart));
-            
+
             scores[sub.user_id].score += (likesNetos * 100) + timeBonus;
           });
 
@@ -541,6 +867,24 @@
         selectedProblem() {
           if (!this.selectedProblemId) return this.compProblems[0];
           return this.compProblems.find(p => p.id === this.selectedProblemId) || this.compProblems[0];
+        },
+        submissionsByPerson() {
+          const map = {};
+          this.compSubmissions.forEach(sub => {
+            const uid = sub.user_id;
+            if (!map[uid]) {
+              map[uid] = {
+                user_id: uid,
+                nickname: sub.profiles?.nickname || 'Usuario',
+                avatar_id: sub.profiles?.avatar_id || 'default',
+                github_username: sub.profiles?.github_username,
+                level: sub.profiles?.level,
+                subs: []
+              };
+            }
+            map[uid].subs.push(sub);
+          });
+          return Object.values(map).sort((a, b) => b.subs.length - a.subs.length);
         }
       },
       async mounted() {
@@ -565,7 +909,7 @@
           const client = SupabaseManager.getClient();
           const { data: comps } = await client.from('competitions').select('*').order('created_at', { ascending: false });
           this.competitions = comps || [];
-          
+
           const { data: parts } = await client.from('competition_participants').select('competition_id').eq('user_id', this.profile.id);
           this.myParticipants = parts || [];
         },
@@ -581,7 +925,7 @@
         formatDate(dateStr) {
           if (!dateStr) return 'Sin límite';
           const d = new Date(dateStr);
-          return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+          return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
         },
         renderMd(text) {
           return text ? marked.parse(text) : '';
@@ -589,7 +933,7 @@
         getAvatar(id) {
           return SupabaseManager.getAvatarById(id).src;
         },
-        
+
         // Acciones Listado
         async joinComp(comp) {
           const client = SupabaseManager.getClient();
@@ -620,13 +964,13 @@
           this.viewComp = comp;
           this.detailTab = 'problems';
           const client = SupabaseManager.getClient();
-          
+
           // Cargar problemas
-          const { data: probs } = await client.from('competition_problems').select('*').eq('competition_id', comp.id).order('sort_order', {ascending: true});
+          const { data: probs } = await client.from('competition_problems').select('*').eq('competition_id', comp.id).order('sort_order', { ascending: true });
           this.compProblems = probs || [];
-          
+
           // Cargar entregas (con joins manuales o automaticos)
-          const { data: subs } = await client.from('competition_submissions').select('*, profiles(nickname, avatar_id)').eq('competition_id', comp.id);
+          const { data: subs } = await client.from('competition_submissions').select('*, profiles(nickname, avatar_id, github_username, level)').eq('competition_id', comp.id);
           this.compSubmissions = subs || [];
 
           // Cargar mis votos
@@ -640,10 +984,9 @@
             this.submissionComments = comments || [];
           }
 
-          // Mock data for Muro if empty
-          this.muroPosts = [
-            { id: 1, avatar_id: 'default', nickname: 'Sensei', content: '¡Bienvenidos al dojo! Recuerden leer bien las reglas antes de subir sus soluciones.', created_at: new Date().toISOString(), likes: 3 }
-          ];
+          // Cargar Muro Social
+          const { data: posts } = await client.from('competition_wall_posts').select('*, profiles(nickname, avatar_id)').eq('competition_id', comp.id).order('created_at', { ascending: false });
+          this.muroPosts = posts || [];
 
           this.activityFeed = [
             { id: 1, nickname: 'Hachi', action: 'resolvió el desafío 1', time: 'hace 5 min' },
@@ -673,13 +1016,13 @@
           navigator.clipboard.writeText(code);
           SupabaseManager.showToast('Código copiado', 'info');
         },
-        
+
         // Soluciones
         getMySubmission(probId) {
           return this.compSubmissions.find(s => s.problem_id === probId && s.user_id === this.profile.id);
         },
         getSubmissionsForProblem(probId) {
-          return this.compSubmissions.filter(s => s.problem_id === probId).sort((a,b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+          return this.compSubmissions.filter(s => s.problem_id === probId).sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
         },
         triggerUpload(probId) {
           document.getElementById('file-' + probId).click();
@@ -745,7 +1088,7 @@
             // Actualizar local
             if (existing) {
               const idx = this.compSubmissions.findIndex(s => s.id === existing.id);
-              if(idx >= 0) this.compSubmissions[idx] = dbRes.data;
+              if (idx >= 0) this.compSubmissions[idx] = dbRes.data;
             } else {
               this.compSubmissions.push(dbRes.data);
             }
@@ -761,6 +1104,31 @@
             window.open(res.data.signedUrl, '_blank');
           }
         },
+        toggleSubGroup(id) {
+          this.expandedSubGroups[id] = !this.expandedSubGroups[id];
+        },
+        getProblemTitle(probId) {
+          const p = this.compProblems.find(x => x.id === probId);
+          return p ? p.title : 'Desconocido';
+        },
+        timeAgo(dateStr) {
+          if (!dateStr) return '';
+          const seconds = Math.floor((new Date() - new Date(dateStr)) / 1000);
+          let interval = seconds / 31536000;
+          if (interval > 1) return 'hace ' + Math.floor(interval) + ' años';
+          interval = seconds / 2592000;
+          if (interval > 1) return 'hace ' + Math.floor(interval) + ' meses';
+          interval = seconds / 86400;
+          if (interval > 1) return 'hace ' + Math.floor(interval) + ' días';
+          interval = seconds / 3600;
+          if (interval > 1) return 'hace ' + Math.floor(interval) + ' h';
+          interval = seconds / 60;
+          if (interval > 1) return 'hace ' + Math.floor(interval) + ' min';
+          return 'hace unos segundos';
+        },
+        goToProfile(userId) {
+          window.location.href = `profile.html?id=${userId}`;
+        },
 
         // Votos
         hasVoted(subId) {
@@ -770,7 +1138,7 @@
         async castVote(subId, val) {
           const current = this.hasVoted(subId);
           const newVal = current === val ? 0 : val; // toggle
-          
+
           // Optimistic UI update
           const sub = this.compSubmissions.find(s => s.id === subId);
           if (sub) {
@@ -832,21 +1200,18 @@
         },
 
         // Muro Social
-        postToWall() {
+        async postToWall() {
           const content = this.newWallPost.trim();
           if (!content) return;
-          
-          this.muroPosts.unshift({
-            id: Date.now(),
-            avatar_id: this.profile.avatar_id,
-            nickname: this.profile.nickname,
-            content: content,
-            created_at: new Date().toISOString(),
-            likes: 0
-          });
-          
-          this.newWallPost = '';
-          SupabaseManager.showToast('Publicación enviada 🚀', 'success');
+
+          const res = await SupabaseManager.postToCompetitionWall(this.viewComp.id, content);
+          if (res.error) {
+            SupabaseManager.showToast('Error publicando: ' + res.error.message, 'error');
+          } else {
+            this.muroPosts.unshift(res.data);
+            this.newWallPost = '';
+            SupabaseManager.showToast('Publicación enviada 🚀', 'success');
+          }
         },
 
         // Crear & Carga Masiva
@@ -854,7 +1219,7 @@
           const dl = new Date();
           dl.setDate(dl.getDate() + 7);
           const dlStr = new Date(dl.getTime() - (dl.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
-          
+
           const template = {
             "_instruction_for_ai": "IMPORTANTE: Este es un archivo de configuración para una competencia de programación. Todas las claves que empiezan con '_' son comentarios y guías, no las modifiques ni las elimines. Rellena los valores reales.",
             "title": "Reto Algoritmos 1",
@@ -878,7 +1243,7 @@
               }
             ]
           };
-          
+
           const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 2));
           const el = document.createElement('a');
           el.setAttribute("href", dataStr);
@@ -893,17 +1258,17 @@
         handleJsonUpload(e) {
           const file = e.target.files[0];
           if (!file) return;
-          
+
           const reader = new FileReader();
           reader.onload = (ev) => {
             try {
               const data = JSON.parse(ev.target.result);
-              
+
               if (data.title) this.createForm.title = data.title;
               if (data.description) this.createForm.description = data.description;
               if (data.rules !== undefined) this.createForm.rules = data.rules;
               if (data.deadline) this.createForm.deadline = data.deadline;
-              
+
               if (data.problems && Array.isArray(data.problems)) {
                 // Limpiar guías y rellenar defaults
                 this.createForm.problems = data.problems.map(p => ({
@@ -977,4 +1342,5 @@
     }).mount('#app');
   </script>
 </body>
+
 </html>

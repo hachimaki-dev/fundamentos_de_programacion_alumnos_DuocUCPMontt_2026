@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>üõí Banco de Ejercicios ‚Äî Modo Selecci√≥n</title>
+  <title>?? Banco de Ejercicios ó Modo SelecciÛn</title>
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 
   <style>
@@ -60,7 +60,7 @@
     }
     
     /* Tag Colors */
-    .diff-F√°cil { background: #e8f5e9; color: #2e7d32; }
+    .diff-F·cil { background: #e8f5e9; color: #2e7d32; }
     .diff-Medio { background: #fff3e0; color: #ef6c00; }
     .diff-Intermedio { background: #fff3e0; color: #ef6c00; }
     .diff-Avanzado { background: #ffebee; color: #c62828; }
@@ -96,10 +96,10 @@
     <!-- Top Navigation / Header -->
     <header class="flex justify-between items-center mb-8 glass-panel p-4 z-20 sticky top-4">
        <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
-        <span>‚¨ÖÔ∏è</span> Volver al Diario
+        <span>??</span> Volver al Diario
        </a>
        <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
-        <span>üõí</span>
+        <span>??</span>
         <span>Mochila de Misiones</span>
        </div>
     </header>
@@ -111,10 +111,10 @@
       <transition name="fade" mode="out-in">
         <div v-if="state === 'select'" class="w-full flex flex-col items-center">
           <div class="text-center mb-10 mt-4 glass-panel p-8 w-full max-w-4xl">
-             <div class="text-6xl mb-4">üìö</div>
+             <div class="text-6xl mb-4">??</div>
              <h1 class="text-5xl font-bold text-kawaii-deep mb-4 drop-shadow-sm">Banco de Ejercicios</h1>
              <p class="text-xl text-kawaii-text/80 max-w-2xl mx-auto mb-2">
-               T√∫ eres el due√±o de tu aprendizaje. Revisa estos 15 desaf√≠os tem√°ticos.
+               T˙ eres el dueÒo de tu aprendizaje. Revisa estos 15 desafÌos tem·ticos.
              </p>
              <p class="text-2xl font-bold text-kawaii-purple bg-kawaii-pink inline-block px-6 py-2 rounded-full shadow-inner border border-kawaii-rose">
                Escoge de 3 a 5 misiones para tu clase de hoy.
@@ -132,7 +132,7 @@
              >
                 <!-- Check badge if selected -->
                 <div v-if="isSelected(ej)" class="absolute -top-4 -right-4 bg-kawaii-deep text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold shadow-lg z-20">
-                  ‚úì
+                  ?
                 </div>
 
                 <div class="flex justify-between items-start mb-3">
@@ -148,7 +148,7 @@
                 
                 <div class="mt-4 pt-4 border-t border-gray-200 text-center">
                   <span v-if="!isSelected(ej)" class="text-sm font-bold text-gray-400">Click para seleccionar</span>
-                  <span v-else class="text-sm font-bold text-kawaii-deep">¬°Seleccionada!</span>
+                  <span v-else class="text-sm font-bold text-kawaii-deep">°Seleccionada!</span>
                 </div>
              </div>
           </div>
@@ -162,7 +162,7 @@
                  <p class="text-lg text-gray-600 mt-1">Abre tu IDE (Thonny, VS Code) y resuelve estas misiones.</p>
               </div>
               <button @click="backToSelect" class="bg-gray-200 hover:bg-gray-300 px-6 py-2 rounded-full font-bold text-gray-700 shadow-sm border border-gray-300">
-                ‚úèÔ∏è Editar mochila
+                ?? Editar mochila
               </button>
            </div>
 
@@ -175,7 +175,7 @@
                  <div class="flex gap-4 items-center border-b-2 border-gray-100 pb-4 mb-4">
                     <span class="text-5xl">{{ ej.emoji }}</span>
                     <div>
-                       <span class="text-sm font-bold text-gray-500 uppercase">Misi√≥n #{{ index + 1 }} | {{ ej.theme }}</span>
+                       <span class="text-sm font-bold text-gray-500 uppercase">MisiÛn #{{ index + 1 }} | {{ ej.theme }}</span>
                        <h3 class="text-3xl font-bold text-kawaii-deep">{{ ej.title }}</h3>
                     </div>
                  </div>
@@ -196,11 +196,11 @@
 
     <!-- FLOATING CART / MOCHILA WIDGET -->
     <transition name="slide">
-		<!-- Mostrar widget s√≥lo en modo select, siempre que se escoja algo o haya cargado -->
+		<!-- Mostrar widget sÛlo en modo select, siempre que se escoja algo o haya cargado -->
        <div v-if="state === 'select'" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-lg">
           <div class="bg-white rounded-full shadow-2xl border-4 border-kawaii-deep p-3 flex justify-between items-center px-6 cart-float card-hover">
              <div class="flex items-center gap-3">
-                <span class="text-3xl">üéí</span>
+                <span class="text-3xl">??</span>
                 <div>
                    <p class="font-bold text-kawaii-deep text-lg leading-tight">Mochila</p>
                    <p class="text-sm font-semibold" :class="canStart ? 'text-green-600' : 'text-orange-500'">
@@ -216,7 +216,7 @@
                   class="bg-kawaii-deep text-white font-bold py-3 px-8 rounded-full shadow-md text-lg transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
                   :disabled="!canStart"
                 >
-                  {{ canStart ? '¬°Empezar a programar!' : 'Elige al menos 3' }}
+                  {{ canStart ? '°Empezar a programar!' : 'Elige al menos 3' }}
                 </button>
              </div>
           </div>
@@ -255,7 +255,7 @@
                  this.selected.push(ej);
               } else {
                  // Flash limit reached effect? (CSS shake)
-                 alert("¬°Mochila llena! M√°ximo 5 misiones. Si quieres esta, deselecciona otra.");
+                 alert("°Mochila llena! M·ximo 5 misiones. Si quieres esta, deselecciona otra.");
               }
            }
         },

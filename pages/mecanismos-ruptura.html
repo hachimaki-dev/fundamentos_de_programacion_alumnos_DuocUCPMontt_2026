@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,8 +10,8 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>🚀 Taller: Mecanismos de Ruptura y Menús — Python</title>
-  <meta name="description" content="Taller interactivo de Mecanismos de Ruptura (break, continue) y Menús en Python" />
+  <title>?? Taller: Mecanismos de Ruptura y Men�s � Python</title>
+  <meta name="description" content="Taller interactivo de Mecanismos de Ruptura (break, continue) y Men�s en Python" />
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -61,11 +61,11 @@
     <!-- Header -->
     <div class="page-container" style="padding-bottom:0;">
       <div class="page-header">
-        <a href="../index.html" class="back-btn mb-4">← Volver al diario</a>
-        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🚀 Mecanismos de Ruptura y Menús</h1>
+        <a href="../index.html" class="back-btn mb-4">? Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">?? Mecanismos de Ruptura y Men�s</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          ¡Aprende a controlar el flujo del código como un pro! 🎮 Aprenderemos cómo usar `break` y `continue` para detener o saltar iteraciones.
-          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia 📖, y al final atrévete con los retos temáticos (Minecraft, K-Pop, LoL) ⚔️. ¡Let's go!</span>
+          �Aprende a controlar el flujo del c�digo como un pro! ?? Aprenderemos c�mo usar `break` y `continue` para detener o saltar iteraciones.
+          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia ??, y al final atr�vete con los retos tem�ticos (Minecraft, K-Pop, LoL) ??. �Let's go!</span>
         </p>
       </div>
     </div>
@@ -73,29 +73,29 @@
     <!-- Section Navigation -->
     <div class="max-w-3xl mx-auto px-4 mt-4">
       <div class="section-nav">
-        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">📖 Referencia</button>
-        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">🎯 Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">✅ V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">🔗 Unir <span class="pill-count">{{ matchData.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">🐛 Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">✍️ Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">🐍 Trazar <span class="pill-count">{{ traceData.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'retos' }" @click="goToSection('retos')">⚔️ Retos Finales</button>
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">?? Referencia</button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? Selecci�n <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">? V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">?? Unir <span class="pill-count">{{ matchData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">?? Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">?? Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">?? Trazar <span class="pill-count">{{ traceData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'retos' }" @click="goToSection('retos')">?? Retos Finales</button>
       </div>
     </div>
 
-    <!-- ═══ REFERENCIA ═══ -->
+    <!-- --- REFERENCIA --- -->
     <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
       <div class="doc-section">
-        <h2>📖 Controlando el flujo: break y continue</h2>
-        <p>A veces no basta con que el ciclo while termine "normalmente". Si en un videojuego tu vida llega a 0 en la mitad de la partida, ¡el juego termina *ahí mismo*! Para esto usamos los mecanismos de ruptura.</p>
+        <h2>?? Controlando el flujo: break y continue</h2>
+        <p>A veces no basta con que el ciclo while termine "normalmente". Si en un videojuego tu vida llega a 0 en la mitad de la partida, �el juego termina *ah� mismo*! Para esto usamos los mecanismos de ruptura.</p>
       </div>
 
       <div class="doc-section">
-        <h2>🔹 <code>break</code>: El freno de emergencia</h2>
-        <p>Rompe el ciclo inmediatamente. Ya no importa si la condición del while sigue siendo True, el programa salta fuera del bucle y continúa ejecutando lo que haya después.</p>
+        <h2>?? <code>break</code>: El freno de emergencia</h2>
+        <p>Rompe el ciclo inmediatamente. Ya no importa si la condici�n del while sigue siendo True, el programa salta fuera del bucle y contin�a ejecutando lo que haya despu�s.</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Ejemplo con Break</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Ejemplo con Break</span></div>
           <pre class="!mt-0"><code class="language-python">while True:
     palabra = input("Escribe una palabra (salir para terminar): ")
     if palabra == "salir":
@@ -105,33 +105,33 @@
       </div>
 
       <div class="doc-section">
-        <h2>🔹 <code>continue</code>: Saltar el turno</h2>
-        <p>A diferencia de break, <code>continue</code> NO termina el ciclo. Solo interrumpe la iteración *actual*, ignora las instrucciones que queden abajo y regresa arriba para hacer la validación y seguir iterando.</p>
+        <h2>?? <code>continue</code>: Saltar el turno</h2>
+        <p>A diferencia de break, <code>continue</code> NO termina el ciclo. Solo interrumpe la iteraci�n *actual*, ignora las instrucciones que queden abajo y regresa arriba para hacer la validaci�n y seguir iterando.</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Ejemplo con Continue</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Ejemplo con Continue</span></div>
           <pre class="!mt-0"><code class="language-python">while True:
-    numero = int(input("Ingresa un número (0 para salir): "))
+    numero = int(input("Ingresa un n�mero (0 para salir): "))
     if numero == 0:
         break
     if numero % 2 == 0:
         continue # <--- Si es par, se lo salta y NO imprime
-    print("Número impar válido:", numero)</code></pre>
+    print("N�mero impar v�lido:", numero)</code></pre>
         </div>
       </div>
 
       <div class="doc-section" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2>🎯 ¡Pon a prueba tu mente!</h2>
-        <p>Encuentra los botones de arriba para hacer las actividades interactivas. Al finalizar, dirígete a los Retos Finales.</p>
+        <h2>?? �Pon a prueba tu mente!</h2>
+        <p>Encuentra los botones de arriba para hacer las actividades interactivas. Al finalizar, dir�gete a los Retos Finales.</p>
       </div>
     </div>
 
-    <!-- ═══ SELECCIÓN MÚLTIPLE ═══ -->
+    <!-- --- SELECCI�N M�LTIPLE --- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🎯</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple</h2>
+        <p class="text-3xl mb-2">??</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selecci�n M�ltiple</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #f48fb1, #ce93d8)' }"></div>
           </div>
@@ -146,23 +146,23 @@
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('choiceExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ VERDADERO O FALSO ═══ -->
+    <!-- --- VERDADERO O FALSO --- -->
     <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">✅❌</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ tfScore }} / {{ tfExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #66bb6a, #26a69a)' }"></div>
           </div>
@@ -175,39 +175,39 @@
         </div>
         <p class="text-kawaii-text mb-4 leading-relaxed" v-html="ex.statement"></p>
         <div class="flex gap-3 justify-center">
-          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">✅ Verdadero</button>
-          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">❌ Falso</button>
+          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">? Verdadero</button>
+          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">? Falso</button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 ¡Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? �Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ UNIR CONCEPTOS ═══ -->
+    <!-- --- UNIR CONCEPTOS --- -->
     <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🔗</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Unir Conceptos</h2>
       </div>
       <div v-for="(ex, exIdx) in matchData" :key="'match-'+exIdx" class="card p-6 fade-in-up" :style="{ animationDelay: (exIdx*0.1)+'s' }">
         <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
         <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
           <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:var(--t-correct);background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:var(--t-purple); background:var(--t-tag-lilac-bg);box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
-          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">✓</span><span v-else>→</span></div>
+          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">?</span><span v-else>?</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
-        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">🎉 ¡Perfecto!</span></div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? �Perfecto!</span></div>
       </div>
     </div>
 
-    <!-- ═══ ENCONTRAR EL ERROR ═══ -->
+    <!-- --- ENCONTRAR EL ERROR --- -->
     <div v-show="currentSection === 'error'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🐛</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Encuentra el Error</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ errorScore }} / {{ errorExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ errorScore }} / {{ errorExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: errorProgress + '%', background: 'linear-gradient(90deg, #ef5350, #ff7043)' }"></div>
           </div>
@@ -219,30 +219,30 @@
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>¿Dónde está el bug?</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>�D�nde est� el bug?</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('errorExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ COMPLETAR CÓDIGO ═══ -->
+    <!-- --- COMPLETAR C�DIGO --- -->
     <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">✍️</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
+        <p class="text-3xl mb-2">??</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el C�digo</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ completeScore }} / {{ completeExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ completeScore }} / {{ completeExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: completeProgress + '%', background: 'linear-gradient(90deg, #42a5f5, #7e57c2)' }"></div>
           </div>
@@ -254,31 +254,31 @@
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>✍️</span><span>Rellena los espacios _____</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Rellena los espacios _____</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('completeExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ TRAZAR CÓDIGO ═══ -->
+    <!-- --- TRAZAR C�DIGO --- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🐍</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Recorrido Mentales</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el código línea por línea en tu cabeza y deduce el resultado.</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el c�digo l�nea por l�nea en tu cabeza y deduce el resultado.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #ffa726, #ef5350)' }"></div>
           </div>
@@ -290,91 +290,91 @@
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Trazabilidad</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Trazabilidad</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('traceData',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ RETOS FINALES ═══ -->
+    <!-- --- RETOS FINALES --- -->
     <div v-show="currentSection === 'retos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-4xl mb-2">⚔️</p>
-        <h2 class="text-2xl font-bold text-kawaii-deep">Retos de Programación</h2>
-        <p class="text-kawaii-text/70 mt-2">Abre tu IDE (Thonny, Pycharm o VSCode) y resuelve estos desafíos de creación de menús con temáticas de la cultura pop.</p>
+        <p class="text-4xl mb-2">??</p>
+        <h2 class="text-2xl font-bold text-kawaii-deep">Retos de Programaci�n</h2>
+        <p class="text-kawaii-text/70 mt-2">Abre tu IDE (Thonny, Pycharm o VSCode) y resuelve estos desaf�os de creaci�n de men�s con tem�ticas de la cultura pop.</p>
       </div>
 
       <!-- Reto 1: Minecraft -->
       <div class="reto-card">
-        <h3 class="text-xl font-bold text-kawaii-deep mb-2">💎 Reto 1: Minecraft - Menú de Crafteo</h3>
+        <h3 class="text-xl font-bold text-kawaii-deep mb-2">?? Reto 1: Minecraft - Men� de Crafteo</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Desarrolla un programa que simule una mesa de crafteo mediante un menú interactivo. El sistema debe solicitar continuamente una opción numérica al jugador entre las siguientes:
+          Desarrolla un programa que simule una mesa de crafteo mediante un men� interactivo. El sistema debe solicitar continuamente una opci�n num�rica al jugador entre las siguientes:
           <br>1. Craftear Espada de Diamante
           <br>2. Craftear Pico
           <br>3. Salir de la Mesa de Crafteo
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Implementa un ciclo <code>while True:</code> que mantenga el menú constantemente activo, esperando la entrada del jugador.</li>
-          <li>Si el jugador selecciona la opción 1, el programa debe imprimir "¡Espada crafteada!". Si selecciona la opción 2, "¡Pico listo!".</li>
-          <li>Agrega una validación para controlar entradas inválidas: si ingresa un número distinto a 1, 2 o 3, imprime "Receta desconocida. Intenta nuevamente." y permite que el menú vuelva a solicitar una entrada válida en la siguiente iteración.</li>
-          <li>Utiliza la sentencia <code>break</code> para finalizar la ejecución del bucle <strong>única y estrictamente</strong> cuando el usuario seleccione la opción 3 ('Salir de la Mesa de Crafteo').</li>
+          <li>Implementa un ciclo <code>while True:</code> que mantenga el men� constantemente activo, esperando la entrada del jugador.</li>
+          <li>Si el jugador selecciona la opci�n 1, el programa debe imprimir "�Espada crafteada!". Si selecciona la opci�n 2, "�Pico listo!".</li>
+          <li>Agrega una validaci�n para controlar entradas inv�lidas: si ingresa un n�mero distinto a 1, 2 o 3, imprime "Receta desconocida. Intenta nuevamente." y permite que el men� vuelva a solicitar una entrada v�lida en la siguiente iteraci�n.</li>
+          <li>Utiliza la sentencia <code>break</code> para finalizar la ejecuci�n del bucle <strong>�nica y estrictamente</strong> cuando el usuario seleccione la opci�n 3 ('Salir de la Mesa de Crafteo').</li>
         </ul>
       </div>
 
       <!-- Reto 2: K-Pop -->
       <div class="reto-card">
-        <h3 class="text-xl font-bold text-[#ad1457] mb-2">🎤 Reto 2: Bias K-Pop Validator</h3>
+        <h3 class="text-xl font-bold text-[#ad1457] mb-2">?? Reto 2: Bias K-Pop Validator</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Desarrolla un sistema de validación de acceso que solicite mediante texto a qué grupo de K-Pop pertenece el usuario. El programa actuará como un guardia de seguridad y solo permitirá el paso a miembros de grupos autorizados.
+          Desarrolla un sistema de validaci�n de acceso que solicite mediante texto a qu� grupo de K-Pop pertenece el usuario. El programa actuar� como un guardia de seguridad y solo permitir� el paso a miembros de grupos autorizados.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea un bucle de validación donde el usuario deba ingresar el nombre de su grupo favorito usando un <code>input()</code>.</li>
-          <li>Utiliza la estructura <code>while</code> combinando lógicas múltiples (con <code>and</code> y el comparador <code>!=</code>) para evaluar si el ingreso resulta no ser autorizado. Es decir, que el ciclo siga solicitando datos <strong>mientras no sea</strong> "BTS", <strong>tampoco sea</strong> "BLACKPINK", <strong>ni sea</strong> "Stray Kids".</li>
-          <li>Si el usuario ingresa cualquier otro valor erróneo, deberá quedar atrapado pidiéndoselo nuevamente en la misma consola de ingreso general dentro de la limitante cíclica temporal sin excepción permitiendo salida lógica a las restantes ejecuciones programadas fuera de las llaves del bucle.</li>
-          <li>Una vez que se ingrese exitosamente una de las tres opciones válidas y finalice el ciclo general, procede a imprimir un "¡Acceso Concedido! Bienvenido al Fandom." de manera exitosa para informar que validó el programa.</li>
+          <li>Crea un bucle de validaci�n donde el usuario deba ingresar el nombre de su grupo favorito usando un <code>input()</code>.</li>
+          <li>Utiliza la estructura <code>while</code> combinando l�gicas m�ltiples (con <code>and</code> y el comparador <code>!=</code>) para evaluar si el ingreso resulta no ser autorizado. Es decir, que el ciclo siga solicitando datos <strong>mientras no sea</strong> "BTS", <strong>tampoco sea</strong> "BLACKPINK", <strong>ni sea</strong> "Stray Kids".</li>
+          <li>Si el usuario ingresa cualquier otro valor err�neo, deber� quedar atrapado pidi�ndoselo nuevamente en la misma consola de ingreso general dentro de la limitante c�clica temporal sin excepci�n permitiendo salida l�gica a las restantes ejecuciones programadas fuera de las llaves del bucle.</li>
+          <li>Una vez que se ingrese exitosamente una de las tres opciones v�lidas y finalice el ciclo general, procede a imprimir un "�Acceso Concedido! Bienvenido al Fandom." de manera exitosa para informar que valid� el programa.</li>
         </ul>
       </div>
 
       <!-- Reto 3: Valorant -->
       <div class="reto-card">
-        <h3 class="text-xl font-bold text-red-600 mb-2">🎯 Reto 3: Armería de Valorant - Omitiendo objetos</h3>
+        <h3 class="text-xl font-bold text-red-600 mb-2">?? Reto 3: Armer�a de Valorant - Omitiendo objetos</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Simula la visualización de una tienda de armas numeradas secuencialmente del 1 al 5. El programa debe iterar a través de cada número, pero debido a que el 'Arma 4' está actualmente agotada, se requiere omitir lógicamente su proceso de compra usando una instrucción de salto.
+          Simula la visualizaci�n de una tienda de armas numeradas secuencialmente del 1 al 5. El programa debe iterar a trav�s de cada n�mero, pero debido a que el 'Arma 4' est� actualmente agotada, se requiere omitir l�gicamente su proceso de compra usando una instrucci�n de salto.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
           <li>Inicializa una variable contador en cero (ejemplo: <code>arma = 0</code>) y utiliza un ciclo <code>while</code> configurado para iterar hasta procesar las 5 armas.</li>
-          <li>Asegúrate de realizar obligatoriamente el incremento de la variable de control de iteración (<code>arma += 1</code>) en la <strong>primera línea dentro del bucle</strong> antes de evaluarlo. Modificar esto mal causaría un loop sin avance infinito en las etapas donde logres hacer bypass temporal por medio excepcional con su evaluadas líneas interrumpiendo bloque de evaluación en ejecución.</li>
-          <li>Verifica con condicionales el número actual del objeto: si el valor iterado es exactamente igual a 4, el programa deberá únicamente imprimir en pantalla "Arma 4: Notificación - Agotada" y utilizar la sentencia <code>continue</code> al final de ese pequeño if para interrumpir el flujo inferior provocando que ignore y obvie directamente procesar simulaciones de compra inferiores brincando al punto pre evaluación y logrando comenzar ciclo del siguiente armamento iterado.</li>
-          <li>En cualquier caso del código restante y ajeno a ese filtro inferior que proceda a visualizar el resto de numeración habilitada deberás simplemente ejecutar el imprimir del mensaje indicativo exitoso iterando valor: "Comprando exitosamente el arma número [X]".</li>
+          <li>Aseg�rate de realizar obligatoriamente el incremento de la variable de control de iteraci�n (<code>arma += 1</code>) en la <strong>primera l�nea dentro del bucle</strong> antes de evaluarlo. Modificar esto mal causar�a un loop sin avance infinito en las etapas donde logres hacer bypass temporal por medio excepcional con su evaluadas l�neas interrumpiendo bloque de evaluaci�n en ejecuci�n.</li>
+          <li>Verifica con condicionales el n�mero actual del objeto: si el valor iterado es exactamente igual a 4, el programa deber� �nicamente imprimir en pantalla "Arma 4: Notificaci�n - Agotada" y utilizar la sentencia <code>continue</code> al final de ese peque�o if para interrumpir el flujo inferior provocando que ignore y obvie directamente procesar simulaciones de compra inferiores brincando al punto pre evaluaci�n y logrando comenzar ciclo del siguiente armamento iterado.</li>
+          <li>En cualquier caso del c�digo restante y ajeno a ese filtro inferior que proceda a visualizar el resto de numeraci�n habilitada deber�s simplemente ejecutar el imprimir del mensaje indicativo exitoso iterando valor: "Comprando exitosamente el arma n�mero [X]".</li>
         </ul>
       </div>
     </div>
 
-    <!-- ═══ RESUMEN FINAL ═══ -->
+    <!-- --- RESUMEN FINAL --- -->
     <div v-if="currentSection !== 'ref' && currentSection !== 'match' && currentSection !== 'retos' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
       <div class="score-summary fade-in-up">
-        <p class="text-4xl mb-2">🌟</p>
-        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="text-4xl mb-2">??</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta secci�n</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
       </div>
     </div>
 
-    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+    <footer class="site-footer">Hecho con ?? para Academia hachimaki</footer>
   </div>
 
   <script src="../data/mecanismos-ruptura-exercises.js"></script>
@@ -425,11 +425,11 @@
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '🌟 ¡Perfecto! ¡Eres un crack! 🌟';
-          if (pct >= 0.8) return '¡Excelente! ¡Casi perfecto! 🎉';
-          if (pct >= 0.6) return '¡Bien! Sigue practicando para mejorar 💪';
-          if (pct >= 0.4) return 'Vas por buen camino. ¡Revisa la referencia! 📖';
-          return 'No te preocupes, ¡la práctica hace al maestro! 📖';
+          if (pct === 1) return '?? �Perfecto! �Eres un crack! ??';
+          if (pct >= 0.8) return '�Excelente! �Casi perfecto! ??';
+          if (pct >= 0.6) return '�Bien! Sigue practicando para mejorar ??';
+          if (pct >= 0.4) return 'Vas por buen camino. �Revisa la referencia! ??';
+          return 'No te preocupes, �la pr�ctica hace al maestro! ??';
         },
       },
       methods: {

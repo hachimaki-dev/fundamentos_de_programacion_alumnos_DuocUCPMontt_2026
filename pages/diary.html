@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>📖 Mi Diario de Clase — Fundamentos 2026</title>
+  <title>📖 Mi Diario de Clase — Academia hachimaki</title>
   <meta name="description" content="Diario personal de clase para registrar aprendizajes diarios." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
@@ -20,15 +21,20 @@
   <!-- Marked for MD rendering -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
   <!-- Top Nav Bar -->
-  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
-    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+  <nav class="top-nav"
+    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand"
+      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻
+      <span class="hidden-mobile">Academia hachimaki</span></div>
     <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
-      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠
+        Home</a>
       <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
     </div>
   </nav>
@@ -46,19 +52,20 @@
     <template v-else>
       <!-- Header / Search -->
       <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
-        <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+        <h1 class="text-xl font-bold"
+          style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
           📖 Mi Diario
         </h1>
         <div class="search-input-wrap" style="margin-bottom:1rem; max-width:100%;">
           <span class="icon">🔍</span>
-          <input type="text" class="search-input" placeholder="Buscar en tu diario..."
-            v-model="searchQuery" id="diary-search-input" />
+          <input type="text" class="search-input" placeholder="Buscar en tu diario..." v-model="searchQuery"
+            id="diary-search-input" />
         </div>
         <!-- Tag filters -->
         <div class="tag-filters">
           <button class="tag-pill" :class="{ active: activeTag === '' }" @click="activeTag = ''">✨ Todas</button>
-          <button v-for="tag in availableTags" :key="tag" class="tag-pill"
-            :class="{ active: activeTag === tag }" @click="activeTag = tag">
+          <button v-for="tag in availableTags" :key="tag" class="tag-pill" :class="{ active: activeTag === tag }"
+            @click="activeTag = tag">
             {{ tagEmoji(tag) }} {{ tag }}
           </button>
         </div>
@@ -66,11 +73,9 @@
 
       <!-- Entries list -->
       <div v-if="filteredEntries.length" style="display:flex;flex-direction:column;gap:1rem;">
-        <div v-for="(entry, idx) in filteredEntries" :key="entry.id"
-          class="sd-card fade-in-up" style="cursor:pointer;"
-          :style="{ animationDelay: (idx * 0.05) + 's' }"
-          @click="viewEntry(entry)">
-          
+        <div v-for="(entry, idx) in filteredEntries" :key="entry.id" class="sd-card fade-in-up" style="cursor:pointer;"
+          :style="{ animationDelay: (idx * 0.05) + 's' }" @click="viewEntry(entry)">
+
           <div class="sd-post-header">
             <div class="sd-post-meta">
               <div class="sd-post-author">
@@ -79,23 +84,27 @@
               </div>
               <div class="sd-post-time">{{ formatDate(entry.created_at) }}</div>
             </div>
-            <span v-if="entry.is_public" class="sd-pill" style="background:var(--t-correct-bg);color:var(--t-correct-text);">🌐 Público</span>
+            <span v-if="entry.is_public" class="sd-pill"
+              style="background:var(--t-correct-bg);color:var(--t-correct-text);">🌐 Público</span>
           </div>
-          
-          <div class="sd-post-body" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t-text-secondary);">
+
+          <div class="sd-post-body"
+            style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t-text-secondary);">
             {{ stripMd(entry.content) }}
           </div>
-          
+
           <div v-if="entry.tags && entry.tags.length">
-            <span v-for="tag in entry.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
+            <span v-for="tag in entry.tags" :key="tag" class="sd-tag"
+              style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
           </div>
-          
+
           <hr class="sd-divider">
-          
+
           <!-- Actions -->
           <div class="sd-post-actions" @click.stop>
             <button class="sd-action" @click="editEntry(entry)">✏️ Editar</button>
-            <button class="sd-action" style="color:var(--t-wrong-text);" @click="confirmDelete(entry)">🗑️ Eliminar</button>
+            <button class="sd-action" style="color:var(--t-wrong-text);" @click="confirmDelete(entry)">🗑️
+              Eliminar</button>
           </div>
         </div>
       </div>
@@ -138,18 +147,20 @@
           <div class="form-group">
             <label class="form-label">Tags</label>
             <div class="flex gap-2 flex-wrap mb-3">
-              <button v-for="tag in defaultTags" :key="tag"
-                class="tag-pill" :class="{ active: editorTags.includes(tag) }"
-                @click="toggleTag(tag)" type="button" style="font-size:0.78rem;">
+              <button v-for="tag in defaultTags" :key="tag" class="tag-pill"
+                :class="{ active: editorTags.includes(tag) }" @click="toggleTag(tag)" type="button"
+                style="font-size:0.78rem;">
                 {{ tagEmoji(tag) }} {{ tag }}
               </button>
             </div>
-            
-            <label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:15px;padding:10px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
+
+            <label class="form-label"
+              style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:15px;padding:10px;background:rgba(16,185,129,0.1);border-radius:8px;border:1px solid rgba(16,185,129,0.2);">
               <input type="checkbox" v-model="editorIsPublic" style="width:18px;height:18px;accent-color:#10b981;" />
               <div>
                 <span style="color:#10b981;font-weight:bold;">Hacer Público (Dev Blog)</span>
-                <div style="font-size:0.75rem;color:var(--t-text-muted);font-weight:normal;">Otros desarrolladores podrán leerlo y comentarlo en el Feed Global.</div>
+                <div style="font-size:0.75rem;color:var(--t-text-muted);font-weight:normal;">Otros desarrolladores
+                  podrán leerlo y comentarlo en el Feed Global.</div>
               </div>
             </label>
           </div>
@@ -187,7 +198,8 @@
           <p class="text-sm mb-4" style="color:var(--t-text-muted);">{{ deletingEntry.title }}</p>
           <div class="flex gap-3">
             <button class="sd-btn-sm" @click="deletingEntry = null" style="flex:1;padding:0.6rem;">Cancelar</button>
-            <button class="sd-btn-accent" @click="deleteEntry" style="flex:1;padding:0.6rem;background:var(--t-wrong);border-color:var(--t-wrong);">Eliminar</button>
+            <button class="sd-btn-accent" @click="deleteEntry"
+              style="flex:1;padding:0.6rem;background:var(--t-wrong);border-color:var(--t-wrong);">Eliminar</button>
           </div>
         </div>
       </div>
@@ -258,11 +270,11 @@
         },
         formatDate(dateStr) {
           const d = new Date(dateStr);
-          const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()} — ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+          const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()} — ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
         },
         tagEmoji(tag) {
-          const map = { Python:'🐍', Git:'🐙', Proyecto:'💻', Clase:'📚', Bug:'🐛', Logro:'🏆', Recurso:'🔗' };
+          const map = { Python: '🐍', Git: '🐙', Proyecto: '💻', Clase: '📚', Bug: '🐛', Logro: '🏆', Recurso: '🔗' };
           return map[tag] || '🏷️';
         },
         stripMd(text) {
@@ -295,7 +307,7 @@
                 spellChecker: false,
                 status: false,
                 minHeight: '200px',
-                toolbar: ['bold','italic','heading','|','code','quote','|','unordered-list','ordered-list','|','link','image','|','preview','guide'],
+                toolbar: ['bold', 'italic', 'heading', '|', 'code', 'quote', '|', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', 'guide'],
                 initialValue: entry ? entry.content : '',
               });
             } else if (this.mdeInstance) {
@@ -364,4 +376,5 @@
     }).mount('#app');
   </script>
 </body>
+
 </html>

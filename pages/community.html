@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌐 Comunidad Dev — Fundamentos 2026</title>
+  <title>🌐 Comunidad Dev — Academia hachimaki</title>
   <meta name="description" content="Feed global de la comunidad de desarrolladores." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
@@ -16,15 +17,20 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="../css/social-dashboard.css" />
 </head>
+
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
   <!-- Top Nav Bar -->
-  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
-    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+  <nav class="top-nav"
+    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand"
+      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻
+      <span class="hidden-mobile">Academia hachimaki</span></div>
     <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
-      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠
+        Home</a>
       <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
     </div>
   </nav>
@@ -45,13 +51,15 @@
         <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem;">
           🌐 Dev Feed
         </h1>
-        <p class="text-sm" style="color:var(--t-text-secondary); margin-top: 0.5rem;">Aquí puedes ver los Dev Blogs públicos de tus compañeros. Lee, aprende y comenta constructivamente.</p>
+        <p class="text-sm" style="color:var(--t-text-secondary); margin-top: 0.5rem;">Aquí puedes ver los Dev Blogs
+          públicos de tus compañeros. Lee, aprende y comenta constructivamente.</p>
       </div>
 
       <!-- Feed List -->
       <div v-if="publicEntries.length" class="flex flex-col gap-4">
-        <div v-for="(entry, idx) in publicEntries" :key="entry.id" class="sd-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
-          
+        <div v-for="(entry, idx) in publicEntries" :key="entry.id" class="sd-card fade-in-up"
+          :style="{ animationDelay: (idx * 0.05) + 's' }">
+
           <!-- Post Header -->
           <div class="sd-post-header">
             <div class="sd-post-meta">
@@ -59,7 +67,9 @@
               <div>
                 <div class="sd-post-author">
                   {{ entry.profiles?.nickname || 'Usuario Desconocido' }}
-                  <span v-if="entry.profiles?.level" class="sd-pill" style="background:var(--t-surface-alt);border:1px solid var(--t-glass-border);color:var(--t-text-secondary);font-size:0.7rem;">Lvl {{ entry.profiles.level }}</span>
+                  <span v-if="entry.profiles?.level" class="sd-pill"
+                    style="background:var(--t-surface-alt);border:1px solid var(--t-glass-border);color:var(--t-text-secondary);font-size:0.7rem;">Lvl
+                    {{ entry.profiles.level }}</span>
                 </div>
                 <div class="sd-post-time">
                   Sección {{ entry.profiles?.section || 'N/A' }} • {{ formatDate(entry.created_at) }}
@@ -68,14 +78,21 @@
             </div>
             <!-- Botón de Compartir -->
             <div style="position:relative;">
-              <button class="sd-btn-sm" style="padding:0.4rem;font-size:0.8rem;width:auto;background:transparent;border:none;" @click="toggleShareMenu(entry.id)">
+              <button class="sd-btn-sm"
+                style="padding:0.4rem;font-size:0.8rem;width:auto;background:transparent;border:none;"
+                @click="toggleShareMenu(entry.id)">
                 🔗
               </button>
-              <div v-if="activeShareMenu === entry.id" class="sd-card" style="position:absolute;right:0;top:100%;z-index:100;min-width:180px;display:flex;flex-direction:column;gap:5px;padding:0.5rem;">
-                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('twitter', entry)">🐦 Twitter / X</button>
-                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('linkedin', entry)">💼 LinkedIn</button>
-                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('instagram', entry)">📸 Instagram</button>
-                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('tiktok', entry)">🎵 TikTok</button>
+              <div v-if="activeShareMenu === entry.id" class="sd-card"
+                style="position:absolute;right:0;top:100%;z-index:100;min-width:180px;display:flex;flex-direction:column;gap:5px;padding:0.5rem;">
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;"
+                  @click="shareTo('twitter', entry)">🐦 Twitter / X</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;"
+                  @click="shareTo('linkedin', entry)">💼 LinkedIn</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;"
+                  @click="shareTo('instagram', entry)">📸 Instagram</button>
+                <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;"
+                  @click="shareTo('tiktok', entry)">🎵 TikTok</button>
               </div>
             </div>
           </div>
@@ -83,7 +100,8 @@
           <!-- Post Content -->
           <h2 class="text-lg font-bold mb-2" style="color:var(--t-accent);">{{ entry.title }}</h2>
           <div v-if="entry.tags && entry.tags.length" style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
-            <span v-for="tag in entry.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
+            <span v-for="tag in entry.tags" :key="tag" class="sd-tag"
+              style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
           </div>
           <div class="sd-post-body" v-html="renderMd(entry.content)"></div>
 
@@ -93,16 +111,18 @@
             <div class="sd-sec" style="margin-bottom:0.5rem;font-size:0.8rem;">
               Comentarios ({{ getCommentsForEntry(entry.id).length }})
             </div>
-            
+
             <div v-if="getCommentsForEntry(entry.id).length > 0" class="flex flex-col gap-2 mb-3">
-              <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm" style="padding:0.5rem; background:var(--t-surface-alt); border-radius:var(--t-radius, 12px);">
+              <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm"
+                style="padding:0.5rem; background:var(--t-surface-alt); border-radius:var(--t-radius, 12px);">
                 <img :src="getAvatar(comment.profiles?.avatar_id)" class="sd-av" style="width:24px;height:24px;" />
                 <div class="flex-1">
                   <div class="flex justify-between items-baseline mb-1">
                     <span class="font-bold text-xs" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
                     <span class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(comment.created_at) }}</span>
                   </div>
-                  <p style="color:var(--t-text-secondary); word-break: break-word; margin:0; font-size:0.8rem;">{{ comment.content }}</p>
+                  <p style="color:var(--t-text-secondary); word-break: break-word; margin:0; font-size:0.8rem;">{{
+                    comment.content }}</p>
                 </div>
               </div>
             </div>
@@ -110,8 +130,10 @@
 
             <!-- Add Comment -->
             <div class="flex gap-2">
-              <input type="text" class="form-input text-sm m-0" placeholder="Escribe un comentario..." v-model="newComments[entry.id]" @keyup.enter="postComment(entry.id)" />
-              <button class="sd-btn-accent" style="padding:0.4rem 1rem; width:auto;" :disabled="postingComment === entry.id" @click="postComment(entry.id)">
+              <input type="text" class="form-input text-sm m-0" placeholder="Escribe un comentario..."
+                v-model="newComments[entry.id]" @keyup.enter="postComment(entry.id)" />
+              <button class="sd-btn-accent" style="padding:0.4rem 1rem; width:auto;"
+                :disabled="postingComment === entry.id" @click="postComment(entry.id)">
                 <span v-if="postingComment === entry.id" class="spinner" style="width:14px;height:14px;"></span>
                 <span v-else>Enviar</span>
               </button>
@@ -126,7 +148,8 @@
           <div class="sd-empty-icon">🌐</div>
           <div class="sd-empty-text">
             Aún no hay publicaciones en el feed global.<br>
-            <span style="font-size:0.8rem;color:var(--t-text-muted);">Ve a tu Diario y marca una entrada como Pública para aparecer aquí.</span>
+            <span style="font-size:0.8rem;color:var(--t-text-muted);">Ve a tu Diario y marca una entrada como Pública
+              para aparecer aquí.</span>
           </div>
         </div>
       </div>
@@ -159,17 +182,17 @@
       methods: {
         async loadFeed() {
           const client = SupabaseManager.getClient();
-          
+
           // Load public entries with user profile
           const { data: entries, error } = await client
             .from('diary_entries')
             .select('*, profiles(nickname, avatar_id, level, section)')
             .eq('is_public', true)
             .order('created_at', { ascending: false });
-            
+
           if (!error && entries) {
             this.publicEntries = entries;
-            
+
             // Load comments for these entries
             const entryIds = entries.map(e => e.id);
             if (entryIds.length > 0) {
@@ -178,7 +201,7 @@
                 .select('*, profiles(nickname, avatar_id)')
                 .in('entry_id', entryIds)
                 .order('created_at', { ascending: true });
-                
+
               this.comments = commentsData || [];
             }
           }
@@ -188,8 +211,8 @@
         },
         formatDate(dateStr) {
           const d = new Date(dateStr);
-          const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+          const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
         },
         renderMd(text) {
           if (typeof marked !== 'undefined') return marked.parse(text || '');
@@ -202,10 +225,10 @@
         async postComment(entryId) {
           const content = (this.newComments[entryId] || '').trim();
           if (!content) return;
-          
+
           this.postingComment = entryId;
           const client = SupabaseManager.getClient();
-          
+
           const { data, error } = await client
             .from('diary_comments')
             .insert({
@@ -215,7 +238,7 @@
             })
             .select('*, profiles(nickname, avatar_id)')
             .single();
-            
+
           if (error) {
             SupabaseManager.showToast('Error publicando: ' + error.message, 'error');
           } else {
@@ -230,8 +253,8 @@
         },
         shareTo(network, entry) {
           const url = window.location.href; // O una URL directa si tuvieras rutas dinámicas
-          const text = encodeURIComponent(`Acabo de publicar "${entry.title}" en mi Dev Blog de Fundamentos 2026. ¡Léelo aquí! 🚀💻`);
-          
+          const text = encodeURIComponent(`Acabo de publicar "${entry.title}" en mi Dev Blog de Academia hachimaki. ¡Léelo aquí! 🚀💻`);
+
           if (network === 'twitter') {
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
           } else if (network === 'linkedin') {
@@ -247,4 +270,5 @@
     }).mount('#app');
   </script>
 </body>
+
 </html>

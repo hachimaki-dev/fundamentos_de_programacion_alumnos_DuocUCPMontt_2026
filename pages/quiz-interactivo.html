@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>ğŸ® Quiz Interactivo: Repaso Python</title>
+  <title>?? Quiz Interactivo: Repaso Python</title>
 <!-- Vue 3 CDN -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   
@@ -110,10 +110,10 @@
     <!-- Top Navigation / Header -->
     <header class="flex justify-between items-center mb-8 bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/60 shadow-sm relative z-20">
       <a href="../index.html" class="flex items-center gap-2 text-kawaii-deep font-bold hover:scale-105 transition-transform bg-white px-4 py-2 rounded-full shadow-sm">
-        <span>â¬…ï¸</span> Volver al Diario
+        <span>??</span> Volver al Diario
       </a>
       <div class="text-xl font-bold font-cute tracking-wide flex items-center gap-2 text-kawaii-deep">
-        <span>ğŸ®</span>
+        <span>??</span>
         <span>Python Repaso Supremo</span>
       </div>
       <div v-if="state !== 'start' && state !== 'results'" class="font-bold bg-white px-5 py-2 rounded-full shadow-sm text-lg text-kawaii-deep">
@@ -127,20 +127,20 @@
       
       <!-- SCORE INDICATOR (Floating) -->
       <div v-if="state === 'question' || state === 'feedback'" class="absolute -top-6 right-0 bg-yellow-300 text-yellow-900 px-6 py-3 rounded-2xl shadow-lg font-bold text-2xl font-cute transform rotate-2 z-30 border-4 border-white">
-        â­ {{ score }} pts
+        ? {{ score }} pts
       </div>
 
       <!-- VIEW: START -->
       <transition name="fade" mode="out-in">
         <div v-if="state === 'start'" class="text-center bg-white/60 backdrop-blur-lg p-12 rounded-[3rem] shadow-xl border-4 border-white w-full max-w-4xl">
-          <div class="text-8xl mb-6 animate-bounce-[slow]">ğŸ”¥</div>
-          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>ValidaciÃ³n de Conocimientos</h1>
+          <div class="text-8xl mb-6 animate-bounce-[slow]">??</div>
+          <h1 class="text-6xl font-bold text-kawaii-deep mb-6 leading-tight drop-shadow-sm">Juego Interactivo:<br>Validación de Conocimientos</h1>
           <p class="text-2xl text-kawaii-text/80 mb-12 max-w-2xl mx-auto">
-            Â¡Demuestra lo que has aprendido!<br>
+            ¡Demuestra lo que has aprendido!<br>
             Repasaremos variables, input/output, tipos de datos (str, int, bool), if y ciclos while.
           </p>
           <button @click="startGame" class="pulse-btn bg-kawaii-deep text-white text-4xl font-bold py-6 px-16 rounded-full hover:bg-pink-700 transition-colors shadow-xl">
-            Â¡Empezar a Jugar! ğŸš€
+            ¡Empezar a Jugar! ??
           </button>
         </div>
 
@@ -170,7 +170,7 @@
             >
               <div class="flex items-center gap-6 w-full">
                 <span class="w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-inner shrink-0" :class="getShapeClass(index)">
-                   {{ ['â–³','â—¯','â—»','â™¢'][index % 4] }}
+                   {{ ['?','?','?','?'][index % 4] }}
                 </span>
                 <span v-html="option.text" class="text-left leading-tight w-full"></span>
               </div>
@@ -181,16 +181,16 @@
           <transition name="slide">
             <div v-if="state === 'feedback'" class="absolute bottom-4 left-0 right-0 max-w-4xl mx-auto bg-white p-6 rounded-3xl shadow-2xl border-4 text-center z-20 flex flex-col md:flex-row items-center justify-between gap-6" :class="isCorrect ? 'border-green-500' : 'border-red-500'">
               <div class="flex items-center gap-4 text-left">
-                <div class="text-6xl">{{ isCorrect ? 'ğŸ‰' : 'âŒ' }}</div>
+                <div class="text-6xl">{{ isCorrect ? '??' : '?' }}</div>
                 <div>
                   <h3 class="text-3xl font-bold" :class="isCorrect ? 'text-green-600' : 'text-red-600'">
-                    {{ isCorrect ? 'Â¡Correcto!' : 'Â¡Incorrecto!' }}
+                    {{ isCorrect ? '¡Correcto!' : '¡Incorrecto!' }}
                   </h3>
                   <p class="text-xl text-gray-600 mt-1" v-html="currentQuestion.explanation"></p>
                 </div>
               </div>
               <button @click="nextQuestion" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-10 rounded-full hover:bg-pink-700 transition-colors shadow-lg whitespace-nowrap">
-                {{ isLastQuestion ? 'Ver Resultados ğŸ†' : 'Siguiente â¡ï¸' }}
+                {{ isLastQuestion ? 'Ver Resultados ??' : 'Siguiente ??' }}
               </button>
             </div>
           </transition>
@@ -199,22 +199,22 @@
 
         <!-- VIEW: RESULTS -->
         <div v-else-if="state === 'results'" class="text-center bg-white/70 backdrop-blur-lg p-12 rounded-[3xl] shadow-2xl border-4 border-kawaii-rose w-full max-w-4xl">
-           <div class="text-8xl mb-6">ğŸ†</div>
-           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">Â¡Completado!</h1>
+           <div class="text-8xl mb-6">??</div>
+           <h1 class="text-6xl font-bold text-kawaii-deep mb-2">¡Completado!</h1>
            <p class="text-3xl text-kawaii-text/80 mb-8">Has terminado el repaso interactivo.</p>
            
            <div class="bg-blue-50 py-8 px-12 rounded-3xl inline-block mb-10 border-4 border-blue-200 shadow-inner">
-             <p class="text-2xl font-bold text-blue-800 mb-2">PuntuaciÃ³n Final</p>
+             <p class="text-2xl font-bold text-blue-800 mb-2">Puntuación Final</p>
              <p class="text-7xl font-bold text-kawaii-deep drop-shadow-sm">{{ score }} <span class="text-3xl">/ {{ questions.length * 100 }}</span></p>
              <p class="text-xl mt-4 text-blue-600">Acertaste {{ correctCount }} de {{ questions.length }} preguntas.</p>
            </div>
            
            <div class="flex justify-center gap-6">
              <button @click="startGame" class="bg-white border-4 border-kawaii-deep text-kawaii-deep text-2xl font-bold py-4 px-8 rounded-full hover:bg-kawaii-pink transition-colors">
-               ğŸ”„ Jugar de Nuevo
+               ?? Jugar de Nuevo
              </button>
              <a href="../index.html" class="bg-kawaii-deep text-white text-2xl font-bold py-4 px-8 rounded-full hover:bg-pink-700 transition-colors shadow-lg">
-               ğŸ  Volver al Inicio
+               ?? Volver al Inicio
              </a>
            </div>
         </div>
@@ -231,19 +231,19 @@
       {
         id: 1,
         topic: 'output',
-        text: 'Â¿CÃ³mo mostramos un mensaje por pantalla en Python?',
+        text: '¿Cómo mostramos un mensaje por pantalla en Python?',
         options: [
           { text: '<code>echo "Hola"</code>', correct: false },
           { text: '<code>console.log("Hola")</code>', correct: false },
           { text: '<code>print("Hola")</code>', correct: true },
           { text: '<code>mostrar("Hola")</code>', correct: false }
         ],
-        explanation: 'En Python, usamos la funciÃ³n <strong>print()</strong> para mostrar informaciÃ³n en la consola/pantalla.'
+        explanation: 'En Python, usamos la función <strong>print()</strong> para mostrar información en la consola/pantalla.'
       },
       {
         id: 2,
         topic: 'variables',
-        text: 'Â¿CuÃ¡l serÃ¡ el valor de "z" al final?',
+        text: '¿Cuál será el valor de "z" al final?',
         code: 'z = 10\nz = z + 5\nz = z * 2',
         options: [
           { text: '15', correct: false },
@@ -256,19 +256,19 @@
       {
         id: 3,
         topic: 'input',
-        text: 'Â¿QuÃ© tipo de dato devuelve la funciÃ³n <code>input()</code> por defecto?',
+        text: '¿Qué tipo de dato devuelve la función <code>input()</code> por defecto?',
         options: [
           { text: '<strong>int</strong> (entero)', correct: false },
           { text: '<strong>bool</strong> (booleano)', correct: false },
           { text: '<strong>str</strong> (texto)', correct: true },
-          { text: 'Depende de quÃ© escribas', correct: false }
+          { text: 'Depende de qué escribas', correct: false }
         ],
-        explanation: '<strong>input()</strong> SIEMPRE devuelve un string (texto). Â¡Por eso necesitamos int() para convertirlo si queremos sumar nÃºmeros!'
+        explanation: '<strong>input()</strong> SIEMPRE devuelve un string (texto). ¡Por eso necesitamos int() para convertirlo si queremos sumar números!'
       },
       {
         id: 4,
         topic: 'str',
-        text: 'Â¿QuÃ© imprimirÃ¡ el siguiente cÃ³digo?',
+        text: '¿Qué imprimirá el siguiente código?',
         code: 'a = "Aba"\nb = "caba"\nprint(a + b)',
         options: [
           { text: '"Aba caba"', correct: false },
@@ -281,19 +281,19 @@
       {
         id: 5,
         topic: 'bool',
-        text: 'Â¿CuÃ¡l de las siguientes es una expresiÃ³n booleana vÃ¡lida en Python?',
+        text: '¿Cuál de las siguientes es una expresión booleana válida en Python?',
         options: [
           { text: '<code>verdadero</code>', correct: false },
           { text: '<code>True</code>', correct: true },
           { text: '<code>TRUE</code>', correct: false },
           { text: '<code>true</code>', correct: false }
         ],
-        explanation: 'En Python los booleanos siempre van con mayÃºscula inicial: <strong>True</strong> o <strong>False</strong>.'
+        explanation: 'En Python los booleanos siempre van con mayúscula inicial: <strong>True</strong> o <strong>False</strong>.'
       },
       {
         id: 6,
         topic: 'if',
-        text: 'Â¿QuÃ© mostrarÃ¡ esto en pantalla?',
+        text: '¿Qué mostrará esto en pantalla?',
         code: 'x = 8\nif x < 5:\n    print("Gato")\nelse:\n    print("Perro")',
         options: [
           { text: 'Gato', correct: false },
@@ -301,12 +301,12 @@
           { text: 'Gato y Perro', correct: false },
           { text: 'Nada', correct: false }
         ],
-        explanation: 'Como 8 NO es menor que 5, la condiciÃ³n es False, asÃ­ que entra en bloque <strong>else</strong> e imprime "Perro".'
+        explanation: 'Como 8 NO es menor que 5, la condición es False, así que entra en bloque <strong>else</strong> e imprime "Perro".'
       },
       {
         id: 7,
         topic: 'while',
-        text: 'Â¿CuÃ¡ntas veces se imprimirÃ¡ la palabra "Hola"?',
+        text: '¿Cuántas veces se imprimirá la palabra "Hola"?',
         code: 'contador = 0\nwhile contador < 3:\n    print("Hola")\n    contador += 1',
         options: [
           { text: '2 veces', correct: false },
@@ -314,19 +314,19 @@
           { text: '4 veces', correct: false },
           { text: 'Infinitas veces', correct: false }
         ],
-        explanation: 'Se ejecuta cuando contador vale 0, 1 y 2. Cuando llega a 3, la condiciÃ³n 3 < 3 es falsa y se detiene. Son 3 veces.'
+        explanation: 'Se ejecuta cuando contador vale 0, 1 y 2. Cuando llega a 3, la condición 3 < 3 es falsa y se detiene. Son 3 veces.'
       },
       {
         id: 8,
         topic: 'if-else',
-        text: 'Â¿CuÃ¡l es la palabra reservada en Python equivalente a "Sino si"?',
+        text: '¿Cuál es la palabra reservada en Python equivalente a "Sino si"?',
         options: [
           { text: '<code>else if</code>', correct: false },
           { text: '<code>elseif</code>', correct: false },
           { text: '<code>elif</code>', correct: true },
           { text: '<code>then</code>', correct: false }
         ],
-        explanation: 'En Python se usa <strong>elif</strong> para encadenar mÃºltiples condiciones.'
+        explanation: 'En Python se usa <strong>elif</strong> para encadenar múltiples condiciones.'
       }
     ];
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -10,8 +10,8 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>🔄 Taller: Ciclo for — Python</title>
-  <meta name="description" content="Taller interactivo del ciclo for en Python: referencia, selección múltiple, verdadero/falso, unir conceptos, encontrar errores, completar código y trazar código." />
+  <title>?? Taller: Ciclo for � Python</title>
+  <meta name="description" content="Taller interactivo del ciclo for en Python: referencia, selecci�n m�ltiple, verdadero/falso, unir conceptos, encontrar errores, completar c�digo y trazar c�digo." />
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -59,11 +59,11 @@
     <!-- Header -->
     <div class="page-container" style="padding-bottom:0;">
       <div class="page-header">
-        <a href="../index.html" class="back-btn mb-4">← Volver al diario</a>
-        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🔄 Ciclo for en Python</h1>
+        <a href="../index.html" class="back-btn mb-4">? Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">?? Ciclo for en Python</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          ¡Bienvenid@ al taller del ciclo <strong>for</strong>! 🎉 Aprende a recorrer secuencias, usar acumuladores, controlar el flujo con break/continue y recorrer strings.
-          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia 📖, luego resuelve los ejercicios a tu ritmo. ¡Tú puedes! 💪🌸</span>
+          �Bienvenid@ al taller del ciclo <strong>for</strong>! ?? Aprende a recorrer secuencias, usar acumuladores, controlar el flujo con break/continue y recorrer strings.
+          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia ??, luego resuelve los ejercicios a tu ritmo. �T� puedes! ????</span>
         </p>
       </div>
     </div>
@@ -71,35 +71,35 @@
     <!-- Section Navigation -->
     <div class="max-w-3xl mx-auto px-4 mt-4">
       <div class="section-nav">
-        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">📖 Referencia</button>
-        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">🎯 Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">✅ V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">🔗 Unir <span class="pill-count">{{ matchData.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">🐛 Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">✍️ Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
-        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">🐍 Trazar <span class="pill-count">{{ traceData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">?? Referencia</button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? Selecci�n <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">? V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">?? Unir <span class="pill-count">{{ matchData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">?? Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">?? Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">?? Trazar <span class="pill-count">{{ traceData.length }}</span></button>
       </div>
     </div>
 
-    <!-- ═══ REFERENCIA ═══ -->
+    <!-- --- REFERENCIA --- -->
     <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
       <div class="doc-section">
-        <h2>📖 ¿Qué es un ciclo for?</h2>
-        <p>Un <strong>for</strong> recorre una <strong>secuencia de valores que Python le entrega</strong>, uno por uno. Es como una cinta transportadora 🏭: Python pone valores en la cinta, y el for los toma uno a uno.</p>
-        <div class="tip-box">💡 <strong>No es</strong> "repetir X veces" (eso es una consecuencia). <strong>Es</strong> "recorrer una secuencia". Cuando vean listas después, dirán "¡ah, es lo mismo!"</div>
+        <h2>?? �Qu� es un ciclo for?</h2>
+        <p>Un <strong>for</strong> recorre una <strong>secuencia de valores que Python le entrega</strong>, uno por uno. Es como una cinta transportadora ??: Python pone valores en la cinta, y el for los toma uno a uno.</p>
+        <div class="tip-box">?? <strong>No es</strong> "repetir X veces" (eso es una consecuencia). <strong>Es</strong> "recorrer una secuencia". Cuando vean listas despu�s, dir�n "�ah, es lo mismo!"</div>
       </div>
 
       <div class="doc-section">
-        <h2>🔹 for con range() — Lo básico</h2>
-        <p>La función <code>range()</code> (rango) genera una secuencia de números. Puede usarse de 3 formas distintas dependiendo de los datos que le entregues:</p>
+        <h2>?? for con range() � Lo b�sico</h2>
+        <p>La funci�n <code>range()</code> (rango) genera una secuencia de n�meros. Puede usarse de 3 formas distintas dependiendo de los datos que le entregues:</p>
         <ul class="list-disc pl-5 mb-5 space-y-2 text-kawaii-text">
             <li><strong>1 dato <code>range(fin)</code>:</strong> Empieza en 0, avanza de 1 en 1, y termina ANTES de llegar al <code>fin</code>.</li>
             <li><strong>2 datos <code>range(inicio, fin)</code>:</strong> Empieza en <code>inicio</code>, avanza de 1 en 1, y termina ANTES de llegar al <code>fin</code>.</li>
-            <li><strong>3 datos <code>range(inicio, fin, paso)</code>:</strong> Empieza en <code>inicio</code>, avanza según el tamaño exacto del <code>paso</code> (salto), y termina ANTES de llegar al <code>fin</code>. Un salto negativo va hacia atrás.</li>
+            <li><strong>3 datos <code>range(inicio, fin, paso)</code>:</strong> Empieza en <code>inicio</code>, avanza seg�n el tama�o exacto del <code>paso</code> (salto), y termina ANTES de llegar al <code>fin</code>. Un salto negativo va hacia atr�s.</li>
         </ul>
         
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — range con 1 dato</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � range con 1 dato</span></div>
           <pre class="!mt-0"><code class="language-python">for i in range(5):
     print(i)
 
@@ -108,27 +108,27 @@
 
         <div class="overflow-x-auto mb-4">
           <table class="doc-table w-full">
-            <tr><th>Forma</th><th>Genera</th><th>¿Por qué? (Explicación)</th></tr>
+            <tr><th>Forma</th><th>Genera</th><th>�Por qu�? (Explicaci�n)</th></tr>
             <tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td><td>Empieza en 0 (defecto), no incluye al 5.</td></tr>
             <tr><td><code>range(2, 8)</code></td><td>2, 3, 4, 5, 6, 7</td><td>Empieza en 2, no incluye al 8.</td></tr>
             <tr><td><code>range(1, 10, 2)</code></td><td>1, 3, 5, 7, 9</td><td>Empieza en 1, salta de 2 en 2, no incluye al 10.</td></tr>
-            <tr><td><code>range(10, 0, -1)</code></td><td>10, 9, 8, ..., 1</td><td>Empieza en 10, salta hacia atrás (-1), no incluye el 0.</td></tr>
+            <tr><td><code>range(10, 0, -1)</code></td><td>10, 9, 8, ..., 1</td><td>Empieza en 10, salta hacia atr�s (-1), no incluye el 0.</td></tr>
           </table>
         </div>
-        <div class="deep-box mt-4">🧠 <strong>Regla de oro:</strong> El valor <code>fin</code> <strong>NUNCA</strong> se incluye en la secuencia generada por range.</div>
+        <div class="deep-box mt-4">?? <strong>Regla de oro:</strong> El valor <code>fin</code> <strong>NUNCA</strong> se incluye en la secuencia generada por range.</div>
       </div>
 
       <div class="doc-section">
-        <h2>🔹 Acumuladores</h2>
+        <h2>?? Acumuladores</h2>
         <p>Una variable que <strong>guarda y actualiza</strong> un valor a lo largo del ciclo:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — Acumuladores</span></div>
-          <pre class="!mt-0"><code class="language-python">suma = 0  # ← inicializar ANTES
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � Acumuladores</span></div>
+          <pre class="!mt-0"><code class="language-python">suma = 0  # ? inicializar ANTES
 
 for i in range(1, 6):
-    suma += i  # ← actualizar DENTRO
+    suma += i  # ? actualizar DENTRO
 
-print(suma)  # ← usar DESPUÉS → 15</code></pre>
+print(suma)  # ? usar DESPU�S ? 15</code></pre>
         </div>
         <table class="doc-table">
           <tr><th>Tipo</th><th>Inicializar</th><th>Operador</th></tr>
@@ -137,14 +137,14 @@ print(suma)  # ← usar DESPUÉS → 15</code></pre>
           <tr><td>Producto</td><td><code>variable = 1</code></td><td><code>*=</code></td></tr>
           <tr><td>String</td><td><code>variable = ""</code></td><td><code>+=</code></td></tr>
         </table>
-        <div class="tip-box">⚠️ <strong>Error #1:</strong> Inicializar el acumulador DENTRO del for. Hacerlo ahí lo reinicia en cada vuelta.</div>
+        <div class="tip-box">?? <strong>Error #1:</strong> Inicializar el acumulador DENTRO del for. Hacerlo ah� lo reinicia en cada vuelta.</div>
       </div>
 
       <div class="doc-section">
-        <h2>🔹 Condicionales dentro del for</h2>
+        <h2>?? Condicionales dentro del for</h2>
         <p>Se puede usar <code>if</code> dentro del <code>for</code> para <strong>filtrar, clasificar o decidir</strong>:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — Filtrando datos</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � Filtrando datos</span></div>
           <pre class="!mt-0"><code class="language-python">for i in range(1, 11):
     if i % 2 == 0:
         print(f"{i} es par")
@@ -154,15 +154,15 @@ print(suma)  # ← usar DESPUÉS → 15</code></pre>
       </div>
 
       <div class="doc-section">
-        <h2>🔹 break y continue</h2>
+        <h2>?? break y continue</h2>
         <table class="doc-table">
-          <tr><th>Palabra</th><th>Qué hace</th><th>Metáfora</th></tr>
-          <tr><td><code>break</code></td><td>Detiene el ciclo completo</td><td>Salir de la tienda 🚪</td></tr>
-          <tr><td><code>continue</code></td><td>Salta a la siguiente vuelta</td><td>Saltarse una canción ⏭️</td></tr>
+          <tr><th>Palabra</th><th>Qu� hace</th><th>Met�fora</th></tr>
+          <tr><td><code>break</code></td><td>Detiene el ciclo completo</td><td>Salir de la tienda ??</td></tr>
+          <tr><td><code>continue</code></td><td>Salta a la siguiente vuelta</td><td>Saltarse una canci�n ??</td></tr>
         </table>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div class="rounded-xl overflow-hidden shadow-sm">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — break</span></div>
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � break</span></div>
             <pre class="!mt-0 h-full"><code class="language-python"># break: se detiene al encontrar el 5
 for i in range(10):
     if i == 5:
@@ -170,7 +170,7 @@ for i in range(10):
     print(i)  # Imprime: 0,1,2,3,4</code></pre>
           </div>
           <div class="rounded-xl overflow-hidden shadow-sm">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — continue</span></div>
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � continue</span></div>
             <pre class="!mt-0 h-full"><code class="language-python"># continue: salta los pares
 for i in range(6):
     if i % 2 == 0:
@@ -181,38 +181,38 @@ for i in range(6):
       </div>
 
       <div class="doc-section">
-        <h2>🔹 for con strings</h2>
+        <h2>?? for con strings</h2>
         <p>Un string es una <strong>secuencia de caracteres</strong>. El <code>for</code> los recorre uno por uno:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — Strings</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � Strings</span></div>
           <pre class="!mt-0"><code class="language-python">for letra in "python":
     print(letra)
 
 # Imprime: p, y, t, h, o, n</code></pre>
         </div>
         <table class="doc-table">
-          <tr><th>Método</th><th>Pregunta</th><th>Ejemplo</th></tr>
-          <tr><td><code>.isdigit()</code></td><td>¿Es un número?</td><td><code>"5".isdigit() → True</code></td></tr>
-          <tr><td><code>.isalpha()</code></td><td>¿Es una letra?</td><td><code>"a".isalpha() → True</code></td></tr>
-          <tr><td><code>.isupper()</code></td><td>¿Es mayúscula?</td><td><code>"A".isupper() → True</code></td></tr>
-          <tr><td><code>.islower()</code></td><td>¿Es minúscula?</td><td><code>"a".islower() → True</code></td></tr>
+          <tr><th>M�todo</th><th>Pregunta</th><th>Ejemplo</th></tr>
+          <tr><td><code>.isdigit()</code></td><td>�Es un n�mero?</td><td><code>"5".isdigit() ? True</code></td></tr>
+          <tr><td><code>.isalpha()</code></td><td>�Es una letra?</td><td><code>"a".isalpha() ? True</code></td></tr>
+          <tr><td><code>.isupper()</code></td><td>�Es may�scula?</td><td><code>"A".isupper() ? True</code></td></tr>
+          <tr><td><code>.islower()</code></td><td>�Es min�scula?</td><td><code>"a".islower() ? True</code></td></tr>
         </table>
       </div>
 
       <div class="doc-section" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2>🎯 ¡Estás list@! ¡A practicar!</h2>
-        <p>Usa los botones de arriba para navegar. Recomendación: Selección → V o F → Unir → Errores → Completar → Trazar 🚀</p>
+        <h2>?? �Est�s list@! �A practicar!</h2>
+        <p>Usa los botones de arriba para navegar. Recomendaci�n: Selecci�n ? V o F ? Unir ? Errores ? Completar ? Trazar ??</p>
       </div>
     </div>
 
-    <!-- ═══ SELECCIÓN MÚLTIPLE ═══ -->
+    <!-- --- SELECCI�N M�LTIPLE --- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🎯</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple — Conceptos del for</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. ¡Lee bien cada opción!</p>
+        <p class="text-3xl mb-2">??</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selecci�n M�ltiple � Conceptos del for</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. �Lee bien cada opci�n!</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #f48fb1, #ce93d8)' }"></div>
           </div>
@@ -227,24 +227,24 @@ for i in range(6):
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('choiceExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ VERDADERO O FALSO ═══ -->
+    <!-- --- VERDADERO O FALSO --- -->
     <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">✅❌</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmación y decide: ¿es verdadera o falsa?</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmaci�n y decide: �es verdadera o falsa?</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ tfScore }} / {{ tfExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #66bb6a, #26a69a)' }"></div>
           </div>
@@ -257,19 +257,19 @@ for i in range(6):
         </div>
         <p class="text-kawaii-text mb-4 leading-relaxed" v-html="ex.statement"></p>
         <div class="flex gap-3 justify-center">
-          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">✅ Verdadero</button>
-          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">❌ Falso</button>
+          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">? Verdadero</button>
+          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">? Falso</button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 ¡Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? �Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ UNIR CONCEPTOS ═══ -->
+    <!-- --- UNIR CONCEPTOS --- -->
     <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🔗</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Unir Conceptos</h2>
         <p class="text-kawaii-text/60 text-sm mt-1">Haz clic en un elemento de la izquierda y luego en su pareja correcta de la derecha.</p>
       </div>
@@ -277,21 +277,21 @@ for i in range(6):
         <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
         <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
           <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:var(--t-correct);background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:var(--t-purple); background:var(--t-tag-lilac-bg);box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
-          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">✓</span><span v-else>→</span></div>
+          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">?</span><span v-else>?</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
-        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">🎉 ¡Perfecto! ¡Todos los pares correctos!</span></div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? �Perfecto! �Todos los pares correctos!</span></div>
       </div>
     </div>
 
-    <!-- ═══ ENCONTRAR EL ERROR ═══ -->
+    <!-- --- ENCONTRAR EL ERROR --- -->
     <div v-show="currentSection === 'error'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🐛</p>
+        <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Encuentra el Error</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Cada código tiene un error. ¿Puedes encontrarlo?</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Cada c�digo tiene un error. �Puedes encontrarlo?</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ errorScore }} / {{ errorExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ errorScore }} / {{ errorExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: errorProgress + '%', background: 'linear-gradient(90deg, #ef5350, #ff7043)' }"></div>
           </div>
@@ -303,31 +303,31 @@ for i in range(6):
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3><p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python — ¿Dónde está el error?</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python � �D�nde est� el error?</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('errorExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ COMPLETAR CÓDIGO ═══ -->
+    <!-- --- COMPLETAR C�DIGO --- -->
     <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">✍️</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Elige la opción que completa correctamente los espacios en blanco.</p>
+        <p class="text-3xl mb-2">??</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el C�digo</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la opci�n que completa correctamente los espacios en blanco.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ completeScore }} / {{ completeExercises.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ completeScore }} / {{ completeExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: completeProgress + '%', background: 'linear-gradient(90deg, #42a5f5, #7e57c2)' }"></div>
           </div>
@@ -339,31 +339,31 @@ for i in range(6):
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3><p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>✍️</span><span>Completa los _____</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Completa los _____</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('completeExercises',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ TRAZAR CÓDIGO ═══ -->
+    <!-- --- TRAZAR C�DIGO --- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
-        <p class="text-3xl mb-2">🐍</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Trazar Código Python</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee el código, trázalo paso a paso y elige la salida correcta.</p>
+        <p class="text-3xl mb-2">??</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Trazar C�digo Python</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee el c�digo, tr�zalo paso a paso y elige la salida correcta.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
-          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
             <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #ffa726, #ef5350)' }"></div>
           </div>
@@ -375,35 +375,35 @@ for i in range(6):
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3><p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Python</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
-        <div v-if="ex.inputHint" class="mb-4 bg-kawaii-cream rounded-lg px-4 py-2 text-sm border border-yellow-200">📥 <strong>Entrada:</strong> {{ ex.inputHint }}</div>
+        <div v-if="ex.inputHint" class="mb-4 bg-kawaii-cream rounded-lg px-4 py-2 text-sm border border-yellow-200">?? <strong>Entrada:</strong> {{ ex.inputHint }}</div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
         <div class="space-y-2">
           <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn" :class="{ 'correct':ex.answered&&oi===ex.correct, 'wrong':ex.answered&&ex.selected===oi&&oi!==ex.correct, 'reveal-correct':ex.answered&&oi===ex.correct&&ex.selected!==oi, 'disabled':ex.answered }" @click="answerQuiz('traceData',idx,oi)" :disabled="ex.answered">
             <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
-            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">✅</span>
-            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">❌</span>
+            <span v-if="ex.answered&&oi===ex.correct" class="float-right bounce">?</span>
+            <span v-if="ex.answered&&ex.selected===oi&&oi!==ex.correct" class="float-right bounce">?</span>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">🎉 ¡Correcto! </span><span v-else class="font-bold text-red-700">😿 Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? �Correcto! </span><span v-else class="font-bold text-red-700">?? Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- ═══ RESUMEN FINAL ═══ -->
+    <!-- --- RESUMEN FINAL --- -->
     <div v-if="currentSection !== 'ref' && currentSection !== 'match' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
       <div class="score-summary fade-in-up">
-        <p class="text-4xl mb-2">🌟</p>
-        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="text-4xl mb-2">??</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta secci�n</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
       </div>
     </div>
 
-    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
+    <footer class="site-footer">Hecho con ?? para Academia hachimaki</footer>
   </div>
 
   <script src="../data/for-exercises.js"></script>
@@ -454,11 +454,11 @@ for i in range(6):
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '🌟 ¡Perfecto! ¡Eres un crack! 🌟';
-          if (pct >= 0.8) return '¡Excelente! ¡Casi perfecto! 🎉';
-          if (pct >= 0.6) return '¡Bien! Sigue practicando para mejorar 💪';
-          if (pct >= 0.4) return 'Vas por buen camino. ¡Revisa la referencia! 📖';
-          return 'No te preocupes, ¡la práctica hace al maestro! 📖';
+          if (pct === 1) return '?? �Perfecto! �Eres un crack! ??';
+          if (pct >= 0.8) return '�Excelente! �Casi perfecto! ??';
+          if (pct >= 0.6) return '�Bien! Sigue practicando para mejorar ??';
+          if (pct >= 0.4) return 'Vas por buen camino. �Revisa la referencia! ??';
+          return 'No te preocupes, �la pr�ctica hace al maestro! ??';
         },
       },
       methods: {
