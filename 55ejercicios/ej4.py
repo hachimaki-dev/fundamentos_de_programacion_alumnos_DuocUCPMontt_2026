@@ -1,4 +1,4 @@
-# Ejercicio 4: Calculadora de Cuotas (MercadoLibre) 
+# Ejercicio 4: Calculadora de Cuotas (MercadoLibre)
 
 print("============================================================")
 print("Mercado Libre, la mejor App de compra y Envios de todo Chile")
