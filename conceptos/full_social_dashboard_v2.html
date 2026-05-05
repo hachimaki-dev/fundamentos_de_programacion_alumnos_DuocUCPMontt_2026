@@ -1,0 +1,404 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.root{font-family:var(--font-sans);display:grid;grid-template-columns:240px minmax(0,1fr) 200px;gap:12px;padding:12px 0;align-items:start}
+.col{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px}
+.sec{font-size:10px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;color:white;flex-shrink:0}
+.pill{display:inline-flex;align-items:center;border-radius:20px;font-size:10px;padding:2px 8px;font-weight:500}
+.btn-sm{font-size:10px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.btn-accent{font-size:11px;padding:4px 14px;border-radius:20px;border:0.5px solid #7F77DD;background:#7F77DD;color:white;cursor:pointer}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:8px 0}
+.tag{display:inline-block;border-radius:20px;padding:2px 7px;font-size:10px;margin-right:3px;margin-top:4px}
+</style>
+
+<h2 class="sr-only">Nuevo dashboard social completo para Fundamentos de Programación 2026</h2>
+
+<div class="root">
+
+<!-- ═══════════════════════ SIDEBAR LEFT ═══════════════════════ -->
+<div class="col">
+
+  <!-- PROFILE CARD -->
+  <div class="card" style="text-align:center;padding:16px 14px">
+    <div style="position:relative;width:64px;height:64px;margin:0 auto 10px">
+      <div class="av" style="width:64px;height:64px;background:#7F77DD;font-size:22px">CO</div>
+      <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:#EEEDFE;border:2px solid var(--color-background-primary);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#534AB7">1</div>
+    </div>
+    <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">Carlos Orellana</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">@Profe_Carlitos · 001D</div>
+    <div style="margin-top:6px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
+      <span class="pill" style="background:#EEEDFE;color:#534AB7">Lv 1</span>
+      <span class="pill" style="background:#FAEEDA;color:#854F0B">Script Kiddie</span>
+    </div>
+    <!-- XP bar -->
+    <div style="margin-top:10px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary);margin-bottom:3px"><span>340 XP</span><span>hacia Lv 2 (1000)</span></div>
+      <div style="height:5px;background:var(--color-background-secondary);border-radius:999px;overflow:hidden"><div style="width:34%;height:100%;background:#7F77DD;border-radius:999px"></div></div>
+    </div>
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px;text-align:center">
+        <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">12</div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">seguidores</div>
+      </div>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px;text-align:center">
+        <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">7</div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">diarios</div>
+      </div>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 4px;text-align:center">
+        <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">3</div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">comps</div>
+      </div>
+    </div>
+    <!-- Title personalizable (profiles.title) -->
+    <div style="margin-top:8px;font-size:11px;color:var(--color-text-secondary);font-style:italic;border-top:0.5px solid var(--color-border-tertiary);padding-top:8px">"Aprendiendo a no cagarla en producción"</div>
+    <a href="#" style="font-size:10px;color:#7F77DD;text-decoration:none;display:block;margin-top:6px">Ver mi perfil MySpace</a>
+  </div>
+
+  <!-- FACCION (factions table) -->
+  <div class="card">
+    <div class="sec">Tu facción</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="av" style="width:36px;height:36px;background:#D4537E;font-size:14px">AF</div>
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary)">Algoritmos de Fuego</div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">Sección 001D</div>
+      </div>
+    </div>
+    <div style="margin-top:8px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary);margin-bottom:3px"><span>XP total</span><span style="font-weight:500;color:var(--color-text-primary)">8,240</span></div>
+      <div style="height:4px;background:var(--color-background-secondary);border-radius:999px;overflow:hidden"><div style="width:68%;height:100%;background:#D4537E;border-radius:999px"></div></div>
+    </div>
+    <!-- Ranking facciones mini -->
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+        <span style="color:#BA7517;font-weight:500;width:14px">1</span>
+        <span style="color:var(--color-text-primary)">Los Bits Valientes</span>
+        <span style="margin-left:auto;color:var(--color-text-secondary)">9,100</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;background:#EEEDFE;border-radius:6px;padding:2px 4px">
+        <span style="color:#534AB7;font-weight:500;width:14px">2</span>
+        <span style="color:#534AB7;font-weight:500">Algoritmos de Fuego</span>
+        <span style="margin-left:auto;color:#7F77DD">8,240</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+        <span style="color:var(--color-text-secondary);width:14px">3</span>
+        <span style="color:var(--color-text-secondary)">Debug Squad</span>
+        <span style="margin-left:auto;color:var(--color-text-secondary)">7,890</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGROS (achievements_catalog) -->
+  <div class="card">
+    <div class="sec">Logros desbloqueados</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <div style="background:#EEEDFE;border-radius:var(--border-radius-md);padding:8px;text-align:center">
+        <div style="font-size:18px">🩸</div>
+        <div style="font-size:9px;color:#534AB7;font-weight:500;margin-top:2px">First Blood</div>
+      </div>
+      <div style="background:#EAF3DE;border-radius:var(--border-radius-md);padding:8px;text-align:center">
+        <div style="font-size:18px">📖</div>
+        <div style="font-size:9px;color:#3B6D11;font-weight:500;margin-top:2px">Querido Diario</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px;text-align:center;opacity:0.45">
+        <div style="font-size:18px">🦋</div>
+        <div style="font-size:9px;color:var(--color-text-secondary);font-weight:500;margin-top:2px">Social Butterfly</div>
+      </div>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px;text-align:center;opacity:0.45">
+        <div style="font-size:18px">🥷</div>
+        <div style="font-size:9px;color:var(--color-text-secondary);font-weight:500;margin-top:2px">Code Ninja</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:10px;color:var(--color-text-secondary)">2/5 logros · 70 XP ganados</div>
+  </div>
+
+  <!-- RACHA -->
+  <div class="card">
+    <div class="sec">Racha de actividad</div>
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px">4 dias seguidos</div>
+    <div style="display:flex;gap:3px">
+      <div style="width:24px;height:24px;border-radius:4px;background:#7F77DD;display:flex;align-items:center;justify-content:center;font-size:9px;color:white">L</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:#7F77DD;display:flex;align-items:center;justify-content:center;font-size:9px;color:white">M</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:#7F77DD;display:flex;align-items:center;justify-content:center;font-size:9px;color:white">M</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:#7F77DD;display:flex;align-items:center;justify-content:center;font-size:9px;color:white">J</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:#D4537E;display:flex;align-items:center;justify-content:center;font-size:9px;color:white">V</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--color-text-secondary)">S</div>
+      <div style="width:24px;height:24px;border-radius:4px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--color-text-secondary)">D</div>
+    </div>
+    <div style="font-size:10px;color:var(--color-text-secondary);margin-top:6px">+20 XP por cada entrada diaria</div>
+  </div>
+
+  <!-- NAV -->
+  <div class="card" style="padding:8px">
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;background:#EEEDFE;cursor:pointer"><span style="font-size:13px;color:#534AB7;font-weight:500">Feed social</span></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer"><span style="font-size:13px;color:var(--color-text-primary)">Mi diario</span></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer"><span style="font-size:13px;color:var(--color-text-primary)">Competencias</span><span class="pill" style="background:#EAF3DE;color:#3B6D11;margin-left:auto">3 activas</span></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer"><span style="font-size:13px;color:var(--color-text-primary)">Ejercicios</span></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer"><span style="font-size:13px;color:var(--color-text-primary)">Mi perfil</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════ FEED CENTER ═══════════════════════ -->
+<div class="col">
+
+  <!-- TABS -->
+  <div class="card" style="padding:6px">
+    <div style="display:flex;gap:3px;background:var(--color-background-secondary);border-radius:8px;padding:3px">
+      <div style="flex:1;text-align:center;padding:5px;font-size:11px;border-radius:6px;background:var(--color-background-primary);font-weight:500;color:var(--color-text-primary);border:0.5px solid var(--color-border-tertiary)">Para ti</div>
+      <div style="flex:1;text-align:center;padding:5px;font-size:11px;border-radius:6px;color:var(--color-text-secondary)">Sección 001D</div>
+      <div style="flex:1;text-align:center;padding:5px;font-size:11px;border-radius:6px;color:var(--color-text-secondary)">Dev Blogs</div>
+      <div style="flex:1;text-align:center;padding:5px;font-size:11px;border-radius:6px;color:var(--color-text-secondary)">Competencias</div>
+    </div>
+  </div>
+
+  <!-- QUICK POST (diary_entries + is_public) -->
+  <div class="card" style="display:flex;gap:10px;align-items:flex-start">
+    <div class="av" style="width:34px;height:34px;background:#7F77DD;font-size:13px">CO</div>
+    <div style="flex:1">
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary)">Comparte un aprendizaje, snippet o reflexion...</div>
+      <div style="display:flex;gap:6px;margin-top:8px;align-items:center">
+        <button class="btn-sm">+ codigo</button>
+        <button class="btn-sm">+ link</button>
+        <button class="btn-sm">entrada de diario</button>
+        <button class="btn-accent" style="margin-left:auto">Publicar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST 1 — diary entry publica (diary_entries + diary_comments) -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div class="av" style="width:34px;height:34px;background:#D4537E;font-size:13px">MV</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Matias Vera <span class="pill" style="background:#EEEDFE;color:#534AB7;font-size:9px;margin-left:4px">Lv 3</span></div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">@matias_vera · 001D · hace 23 min</div>
+      </div>
+      <span class="pill" style="background:#EAF3DE;color:#3B6D11;font-size:9px">Dev Blog</span>
+    </div>
+    <div style="font-size:13px;color:var(--color-text-primary);line-height:1.6;margin-bottom:8px">Clase 8: Por fin entendi las listas por comprension. La key fue pensar en ellas como un bucle comprimido. Aqui mi momento "eureka":</div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary);border-left:3px solid #7F77DD;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0">
+      pares = [x for x in range(20) if x % 2 == 0]<br>
+      <span style="color:var(--color-text-secondary)"># antes: bucle de 4 lineas. Ahora: esto.</span>
+    </div>
+    <div><span class="tag" style="background:#EEEDFE;color:#534AB7">Python</span><span class="tag" style="background:#EAF3DE;color:#3B6D11">listas</span><span class="tag" style="background:#FAEEDA;color:#854F0B">clase 8</span></div>
+    <hr class="divider">
+    <div style="display:flex;gap:14px">
+      <span style="font-size:11px;color:#D4537E;cursor:pointer">♥ 14</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">💬 3 comentarios</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">🔖 guardar</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">🔁 ver diario</span>
+    </div>
+    <!-- comentario inline (diary_comments) -->
+    <div style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--color-border-tertiary);display:flex;gap:8px;align-items:flex-start">
+      <div class="av" style="width:22px;height:22px;background:#1D9E75;font-size:9px">AR</div>
+      <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 10px;flex:1">
+        <span style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Antonia R. </span>
+        <span style="font-size:11px;color:var(--color-text-secondary)">A mi me ayudo dibujar el stack primero en papel!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST 2 — competition result + votes (competition_submissions + votes) -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:3px">Resultado de competencia</div>
+        <div style="font-size:14px;font-weight:500;color:var(--color-text-primary)">Challenge: Fibonacci Recursivo</div>
+        <div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">Seccion 001D · 18 participantes · deadline vencido</div>
+      </div>
+      <span class="pill" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Finalizada</span>
+    </div>
+    <!-- podium (competition_submissions ordenado por likes_count) -->
+    <div style="display:flex;align-items:flex-end;gap:5px;height:70px;margin-top:4px">
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:10px;font-weight:500;color:var(--color-text-primary)">92</div>
+        <div style="width:100%;height:45px;background:#AFA9EC;border-radius:4px 4px 0 0"></div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">Renata L.</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:10px;font-weight:500;color:var(--color-text-primary)">100</div>
+        <div style="width:100%;height:65px;background:#7F77DD;border-radius:4px 4px 0 0"></div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">Antonia R.</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:10px;font-weight:500;color:var(--color-text-primary)">88</div>
+        <div style="width:100%;height:35px;background:#CECBF6;border-radius:4px 4px 0 0"></div>
+        <div style="font-size:9px;color:var(--color-text-secondary)">Matias V.</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+        <div style="font-size:10px;font-weight:500;color:#D4537E">75</div>
+        <div style="width:100%;height:22px;background:#F4C0D1;border-radius:4px 4px 0 0"></div>
+        <div style="font-size:9px;color:#D4537E;font-weight:500">Tu</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div style="display:flex;gap:14px">
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">🔁 ver soluciones</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">💬 code review</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">📊 mi codigo</span>
+    </div>
+  </div>
+
+  <!-- POST 3 — submission_comment (code review inline) -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div class="av" style="width:34px;height:34px;background:#1D9E75;font-size:13px">AR</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Antonia Rios</div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">@toni_dev · code review en solucion de @renata_l</div>
+      </div>
+      <span class="pill" style="background:#FAEEDA;color:#854F0B;font-size:9px">Code Review</span>
+    </div>
+    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);overflow:hidden">
+      <div style="background:#EEEDFE;padding:4px 10px;font-size:10px;color:#534AB7;display:flex;gap:8px"><span>fibonacci.py</span><span style="opacity:.6">linea 7</span></div>
+      <div style="padding:8px 12px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-primary)">  if n <= 1: return n<br>  return fib(n-1) + fib(n-2)</div>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--color-text-primary);line-height:1.6">Ojo que esto es O(2^n). Considera memoizacion con un diccionario para no recalcular los mismos subproblemas!</div>
+    <hr class="divider">
+    <div style="display:flex;gap:14px">
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">♥ 5</span>
+      <span style="font-size:11px;color:var(--color-text-secondary);cursor:pointer">💬 2 respuestas</span>
+    </div>
+  </div>
+
+  <!-- POST 4 — github sync activity -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div class="av" style="width:34px;height:34px;background:#2C2C2A;font-size:14px">MV</div>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--color-text-primary)">Matias Vera</div>
+        <div style="font-size:10px;color:var(--color-text-secondary)">hizo 3 commits en fundamentos-2026 · hace 1 h</div>
+      </div>
+      <span class="pill" style="background:#F1EFE8;color:#444441;margin-left:auto;font-size:9px">GitHub</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="font-size:11px;color:var(--color-text-primary);padding:5px 8px;background:var(--color-background-secondary);border-radius:6px;display:flex;gap:6px"><span style="color:var(--color-text-secondary)">a3f9b2</span> Agrega ejercicio 4: listas por comprension</div>
+      <div style="font-size:11px;color:var(--color-text-primary);padding:5px 8px;background:var(--color-background-secondary);border-radius:6px;display:flex;gap:6px"><span style="color:var(--color-text-secondary)">c71de0</span> Fix: corrige indentacion en funcion fibonacci</div>
+    </div>
+    <div style="margin-top:6px;font-size:10px;color:#3B6D11;font-weight:500">+150 XP ganados por commits</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════ SIDEBAR RIGHT ═══════════════════════ -->
+<div class="col">
+
+  <!-- COMPETENCIA ACTIVA -->
+  <div class="card" style="border:0.5px solid #9FE1CB">
+    <div class="sec" style="color:#0F6E56">Competencia activa</div>
+    <div style="font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px">Strings y Slices</div>
+    <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:8px">2 problemas · deadline en 31 h</div>
+    <!-- deadline countdown bar -->
+    <div style="height:4px;background:var(--color-background-secondary);border-radius:999px;overflow:hidden;margin-bottom:8px"><div style="width:35%;height:100%;background:#1D9E75;border-radius:999px"></div></div>
+    <div style="font-size:10px;color:var(--color-text-secondary);margin-bottom:8px">23 participantes · tu posicion: sin envio</div>
+    <button style="width:100%;padding:7px;background:#1D9E75;color:white;border:none;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;cursor:pointer">Participar ahora</button>
+  </div>
+
+  <!-- NOTIFICACIONES (follows + votes + diary_comments) -->
+  <div class="card">
+    <div class="sec">Notificaciones</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="width:7px;height:7px;border-radius:50%;background:#7F77DD;margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;color:var(--color-text-primary);line-height:1.5"><span style="font-weight:500">Matias V.</span> comento en tu diario</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">hace 10 min</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="width:7px;height:7px;border-radius:50%;background:#7F77DD;margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;color:var(--color-text-primary);line-height:1.5">Nueva comp: <span style="font-weight:500">Strings y Slices</span> — 31 h</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">hace 1 h</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--color-background-secondary);margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">Ganaste <span style="font-weight:500;color:#3B6D11">+50 XP</span> por tu commit</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">hace 3 h</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="width:7px;height:7px;border-radius:50%;background:var(--color-background-secondary);margin-top:4px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5"><span style="font-weight:500">Renata L.</span> te empezo a seguir</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">ayer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERBOARD SECCION (profiles ordenados por xp) -->
+  <div class="card">
+    <div class="sec">Top de tu seccion</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#BA7517;font-weight:500;width:12px">1</span>
+        <div class="av" style="width:24px;height:24px;background:#1D9E75;font-size:10px">AR</div>
+        <span style="font-size:11px;color:var(--color-text-primary);flex:1">Antonia R.</span>
+        <span style="font-size:10px;color:var(--color-text-secondary)">1,240 xp</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#888780;font-weight:500;width:12px">2</span>
+        <div class="av" style="width:24px;height:24px;background:#D4537E;font-size:10px">MV</div>
+        <span style="font-size:11px;color:var(--color-text-primary);flex:1">Matias V.</span>
+        <span style="font-size:10px;color:var(--color-text-secondary)">980 xp</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:#EEEDFE;border-radius:6px;padding:2px 4px">
+        <span style="font-size:10px;color:#534AB7;font-weight:500;width:12px">7</span>
+        <div class="av" style="width:24px;height:24px;background:#7F77DD;font-size:10px">CO</div>
+        <span style="font-size:11px;color:#534AB7;font-weight:500;flex:1">Tu</span>
+        <span style="font-size:10px;color:#7F77DD">340 xp</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:10px;color:#888780;font-weight:500;width:12px">8</span>
+        <div class="av" style="width:24px;height:24px;background:#EF9F27;font-size:10px">JL</div>
+        <span style="font-size:11px;color:var(--color-text-primary);flex:1">Jorge L.</span>
+        <span style="font-size:10px;color:var(--color-text-secondary)">310 xp</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGERIDOS (follows table) -->
+  <div class="card">
+    <div class="sec">Sugeridos para seguir</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="av" style="width:28px;height:28px;background:#D4537E;font-size:11px">RL</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Renata L.</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">12 commits esta semana</div>
+        </div>
+        <button class="btn-sm" style="border-color:#7F77DD;color:#7F77DD">+</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="av" style="width:28px;height:28px;background:#1D9E75;font-size:11px">AR</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Antonia R.</div>
+          <div style="font-size:9px;color:var(--color-text-secondary)">Top 1 ultima comp</div>
+        </div>
+        <button class="btn-sm" style="border-color:#7F77DD;color:#7F77DD">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GITHUB SYNC -->
+  <div class="card">
+    <div class="sec">GitHub sync</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;line-height:1.5">Conecta tus commits en repos "fundamentos-*" para ganar XP automaticamente.</div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span style="color:var(--color-text-secondary)">Ultimo sync</span><span style="color:var(--color-text-primary)">hace 3 h</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:8px"><span style="color:var(--color-text-secondary)">XP de GitHub</span><span style="color:#3B6D11;font-weight:500">150 xp</span></div>
+    <button style="width:100%;padding:6px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:11px;color:var(--color-text-primary);cursor:pointer">Sync XP ahora</button>
+  </div>
+
+</div>
+</div>

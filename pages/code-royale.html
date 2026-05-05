@@ -97,8 +97,11 @@
     <p class="text-center text-muted mb-8">La arena de combate en vivo. El primero en resolver, se lleva el XP.</p>
 
     <!-- LOADING -->
-    <div v-if="loading" class="text-center">
-      <div class="spinner"></div>
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
+        <p class="auth-subtitle">Cargando Code Royale...</p>
+      </div>
     </div>
 
     <!-- LOBBY -->

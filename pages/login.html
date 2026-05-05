@@ -34,11 +34,10 @@
   <div id="app" class="auth-page relative z-10">
 
     <!-- Loading state -->
-    <div v-if="loading" class="auth-card text-center">
-      <div class="auth-logo">🔄</div>
-      <p class="auth-subtitle">Verificando sesión...</p>
-      <div class="flex justify-center mt-4">
-        <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
+        <p class="auth-subtitle">Verificando sesión...</p>
       </div>
     </div>
 

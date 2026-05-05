@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="../js/theme-selector.js" defer></script>
   <!-- Marked for MD rendering -->
@@ -23,76 +24,91 @@
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
-  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+  <!-- Top Nav Bar -->
+  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
+    </div>
+  </nav>
+
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:6rem 1rem 4rem;">
 
     <!-- Loading -->
-    <div v-if="loading" class="auth-page">
-      <div class="auth-card text-center">
-        <div class="auth-logo">📖</div>
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
         <p class="auth-subtitle">Cargando tu diario...</p>
-        <div class="flex justify-center mt-4">
-          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
-        </div>
       </div>
     </div>
 
     <template v-else>
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-4 fade-in-up">
-        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
-        <h1 class="text-xl font-bold" style="color: var(--t-accent);">📖 Mi Diario</h1>
-      </div>
-
-      <!-- Search -->
-      <div class="search-bar mb-4 fade-in-up" style="max-width:100%;padding:0;">
-        <div class="search-input-wrap" style="margin-bottom:0.5rem;">
+      <!-- Header / Search -->
+      <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
+        <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+          📖 Mi Diario
+        </h1>
+        <div class="search-input-wrap" style="margin-bottom:1rem; max-width:100%;">
           <span class="icon">🔍</span>
           <input type="text" class="search-input" placeholder="Buscar en tu diario..."
             v-model="searchQuery" id="diary-search-input" />
         </div>
-      </div>
-
-      <!-- Tag filters -->
-      <div class="tag-filters mb-4 fade-in-up" style="animation-delay:0.05s;">
-        <button class="tag-pill" :class="{ active: activeTag === '' }" @click="activeTag = ''">✨ Todas</button>
-        <button v-for="tag in availableTags" :key="tag" class="tag-pill"
-          :class="{ active: activeTag === tag }" @click="activeTag = tag">
-          {{ tagEmoji(tag) }} {{ tag }}
-        </button>
+        <!-- Tag filters -->
+        <div class="tag-filters">
+          <button class="tag-pill" :class="{ active: activeTag === '' }" @click="activeTag = ''">✨ Todas</button>
+          <button v-for="tag in availableTags" :key="tag" class="tag-pill"
+            :class="{ active: activeTag === tag }" @click="activeTag = tag">
+            {{ tagEmoji(tag) }} {{ tag }}
+          </button>
+        </div>
       </div>
 
       <!-- Entries list -->
-      <div v-if="filteredEntries.length" class="timeline" style="max-width:100%;padding:0 0 2rem;">
+      <div v-if="filteredEntries.length" style="display:flex;flex-direction:column;gap:1rem;">
         <div v-for="(entry, idx) in filteredEntries" :key="entry.id"
-          class="diary-entry fade-in-up" style="margin-left:0;cursor:pointer;"
+          class="sd-card fade-in-up" style="cursor:pointer;"
           :style="{ animationDelay: (idx * 0.05) + 's' }"
           @click="viewEntry(entry)">
-          <div class="entry-date">{{ formatDate(entry.created_at) }}</div>
-          <div class="entry-title">
-            <span class="entry-emoji">📝</span>
-            {{ entry.title }}
+          
+          <div class="sd-post-header">
+            <div class="sd-post-meta">
+              <div class="sd-post-author">
+                <span class="entry-emoji" style="margin-right:0.3rem;">📝</span>
+                {{ entry.title }}
+              </div>
+              <div class="sd-post-time">{{ formatDate(entry.created_at) }}</div>
+            </div>
+            <span v-if="entry.is_public" class="sd-pill" style="background:var(--t-correct-bg);color:var(--t-correct-text);">🌐 Público</span>
           </div>
-          <div class="entry-desc" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          
+          <div class="sd-post-body" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t-text-secondary);">
             {{ stripMd(entry.content) }}
           </div>
-          <div class="entry-tags" v-if="entry.tags && entry.tags.length">
-            <span v-for="tag in entry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
-            <span v-if="entry.is_public" class="entry-tag" style="background:#10b981;color:white;">🌐 Público</span>
+          
+          <div v-if="entry.tags && entry.tags.length">
+            <span v-for="tag in entry.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
           </div>
+          
+          <hr class="sd-divider">
+          
           <!-- Actions -->
-          <div class="flex gap-2 mt-2" @click.stop>
-            <button class="tag-pill" style="font-size:0.72rem;padding:0.2rem 0.6rem;" @click="editEntry(entry)">✏️ Editar</button>
-            <button class="tag-pill" style="font-size:0.72rem;padding:0.2rem 0.6rem;color:var(--t-wrong-text);" @click="confirmDelete(entry)">🗑️</button>
+          <div class="sd-post-actions" @click.stop>
+            <button class="sd-action" @click="editEntry(entry)">✏️ Editar</button>
+            <button class="sd-action" style="color:var(--t-wrong-text);" @click="confirmDelete(entry)">🗑️ Eliminar</button>
           </div>
         </div>
       </div>
 
       <!-- Empty state -->
-      <div v-else class="empty-state fade-in-up">
-        <div class="emoji">📖</div>
-        <p v-if="searchQuery || activeTag">No se encontraron entradas con ese filtro.</p>
-        <p v-else>¡Tu diario está vacío! Crea tu primera entrada.</p>
-        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Pulsa el botón + para comenzar 🌟</p>
+      <div v-else class="sd-card fade-in-up">
+        <div class="sd-empty">
+          <div class="sd-empty-icon">📖</div>
+          <div class="sd-empty-text">
+            <span v-if="searchQuery || activeTag">No se encontraron entradas con ese filtro.</span>
+            <span v-else>¡Tu diario está vacío! Crea tu primera entrada.</span>
+          </div>
+        </div>
       </div>
 
       <!-- FAB -->
@@ -139,8 +155,8 @@
           </div>
 
           <div class="flex gap-3">
-            <button class="btn-secondary" @click="cancelEditor" style="flex:1;">Cancelar</button>
-            <button class="btn-primary" :disabled="saving" @click="saveEntry" style="flex:2;">
+            <button class="sd-btn-sm" style="flex:1;padding:0.6rem;" @click="cancelEditor">Cancelar</button>
+            <button class="sd-btn-accent" :disabled="saving" @click="saveEntry" style="flex:2;padding:0.6rem;">
               <span v-if="saving" class="spinner"></span>
               <span v-else>{{ editingEntry ? 'Guardar' : 'Crear' }} 💾</span>
             </button>
@@ -170,8 +186,8 @@
           <p class="font-bold mb-2" style="color:var(--t-text);">¿Eliminar esta entrada?</p>
           <p class="text-sm mb-4" style="color:var(--t-text-muted);">{{ deletingEntry.title }}</p>
           <div class="flex gap-3">
-            <button class="btn-secondary" @click="deletingEntry = null" style="flex:1;">Cancelar</button>
-            <button class="btn-primary" @click="deleteEntry" style="flex:1;background:var(--t-wrong);">Eliminar</button>
+            <button class="sd-btn-sm" @click="deletingEntry = null" style="flex:1;padding:0.6rem;">Cancelar</button>
+            <button class="sd-btn-accent" @click="deleteEntry" style="flex:1;padding:0.6rem;background:var(--t-wrong);border-color:var(--t-wrong);">Eliminar</button>
           </div>
         </div>
       </div>

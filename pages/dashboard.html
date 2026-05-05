@@ -4,14 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🏠 Dashboard — Fundamentos 2026</title>
-  <meta name="description" content="Tu hub personal en la plataforma de Fundamentos de Programación 2026." />
+  <meta name="description" content="Tu hub social en la plataforma de Fundamentos de Programación 2026." />
   <script src="../js/theme-engine.js"></script>
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="../css/auth.css" />
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="../js/theme-selector.js" defer></script>
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
@@ -19,325 +21,330 @@
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
   <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
 
-  <div id="app" class="relative z-10" style="max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 4rem;">
+  <div id="app" class="relative z-10" style="padding: 1rem 1rem 3rem;">
 
     <!-- Loading -->
-    <div v-if="loading" class="auth-page">
-      <div class="auth-card text-center">
-        <div class="auth-logo">🔄</div>
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
         <p class="auth-subtitle">Cargando dashboard...</p>
-        <div class="flex justify-center mt-4">
-          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
-        </div>
       </div>
     </div>
 
     <template v-else>
-      <!-- Header -->
-      <div class="dash-header fade-in-up">
-        <div class="dash-avatar">
-          <img :src="avatarSrc" :alt="profile.nickname" />
-        </div>
-        <div class="dash-user-info">
-          <div class="dash-user-name">
-            {{ profile.full_name }} 
-            <span v-if="profile.level" class="badge" style="background:var(--t-accent);color:white;font-size:0.7rem;padding:2px 6px;border-radius:10px;vertical-align:middle;margin-left:5px;">Lvl {{ profile.level }}</span>
+
+      <!-- MOBILE TABS -->
+      <div class="sd-mobile-tabs">
+        <button class="sd-mobile-tab" :class="{active: mobileView==='left'}" @click="mobileView='left'">👤 Perfil</button>
+        <button class="sd-mobile-tab" :class="{active: mobileView==='feed'}" @click="mobileView='feed'">📰 Feed</button>
+        <button class="sd-mobile-tab" :class="{active: mobileView==='right'}" @click="mobileView='right'">🏆 Info</button>
+      </div>
+
+      <div class="sd-root">
+
+        <!-- ═══ SIDEBAR LEFT ═══ -->
+        <div class="sd-col" :class="{'sd-mobile-show': mobileView==='left'}" id="sd-left">
+
+          <!-- PROFILE CARD -->
+          <div class="sd-card" style="text-align:center;padding:16px 14px">
+            <div style="position:relative;width:64px;height:64px;margin:0 auto 10px">
+              <div class="sd-av" style="width:64px;height:64px">
+                <img :src="avatarSrc" :alt="profile.nickname" />
+              </div>
+              <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--t-accent-subtle);border:2px solid var(--t-glass-bg);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--t-accent)">{{ profile.level }}</div>
+            </div>
+            <div style="font-size:14px;font-weight:600;color:var(--t-text)">{{ profile.full_name || profile.nickname }}</div>
+            <div style="font-size:11px;color:var(--t-text-muted);margin-top:2px">@{{ profile.nickname }} · {{ profile.section }}</div>
+            <div style="margin-top:6px;display:flex;gap:4px;justify-content:center;flex-wrap:wrap">
+              <span class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent)">Lv {{ profile.level }}</span>
+              <span v-if="profile.title" class="sd-pill" style="background:var(--t-tag-cream-bg);color:var(--t-warning-text)">{{ profile.title }}</span>
+            </div>
+            <!-- XP bar -->
+            <div class="sd-xp-wrap">
+              <div class="sd-xp-label"><span>{{ profile.xp || 0 }} XP</span><span>hacia Lv {{ (profile.level||1)+1 }} ({{ nextLevelXp }})</span></div>
+              <div class="sd-xp-bar"><div class="sd-xp-fill" :style="{width: xpPercent + '%'}"></div></div>
+            </div>
+            <!-- Stats -->
+            <div class="sd-stat-row">
+              <div class="sd-stat-box"><div class="sd-stat-num">{{ followersCount }}</div><div class="sd-stat-label">seguidores</div></div>
+              <div class="sd-stat-box"><div class="sd-stat-num">{{ diaryCount }}</div><div class="sd-stat-label">diarios</div></div>
+              <div class="sd-stat-box"><div class="sd-stat-num">{{ compsJoined }}</div><div class="sd-stat-label">comps</div></div>
+            </div>
+            <!-- Title -->
+            <div v-if="profile.title" style="margin-top:8px;font-size:11px;color:var(--t-text-muted);font-style:italic;border-top:1px solid var(--t-glass-border);padding-top:8px">"{{ profile.title }}"</div>
+            <a :href="'profile.html?nickname=' + profile.nickname" class="sd-link">Ver mi perfil MySpace</a>
           </div>
-          <div class="dash-user-meta">
-            @{{ profile.nickname }} · {{ profile.section }} ·
-            <a :href="'https://github.com/' + profile.github_username" target="_blank" rel="noopener"
-              style="color: var(--t-accent); text-decoration: none;">
-              🐙 {{ profile.github_username }}
-            </a>
-            <button @click="syncGitHub" class="btn-secondary" style="padding: 2px 8px; font-size: 0.7rem; margin-left: 8px; border-radius: 4px; border: 1px solid var(--t-accent); color: var(--t-accent);" :disabled="syncingGithub">
+
+          <!-- FACTION -->
+          <div v-if="faction" class="sd-card">
+            <div class="sd-sec">Tu facción</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="sd-av" style="width:36px;height:36px;background:var(--t-accent);font-size:12px">{{ factionInitials }}</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--t-text)">{{ faction.faction_name }}</div>
+                <div style="font-size:10px;color:var(--t-text-muted)">{{ faction.section_code }}</div>
+              </div>
+            </div>
+            <div class="sd-xp-wrap">
+              <div class="sd-xp-label"><span>XP total</span><span style="font-weight:600;color:var(--t-text)">{{ (faction.total_xp||0).toLocaleString() }}</span></div>
+              <div class="sd-xp-bar"><div class="sd-xp-fill" style="background:var(--t-wrong,#D4537E)" :style="{width: factionXpPercent + '%'}"></div></div>
+            </div>
+            <div class="sd-faction-rank">
+              <div v-for="(f,i) in factionRanking" :key="f.id" class="sd-faction-row" :class="{you: f.id === faction.id}">
+                <span style="font-weight:600;width:14px" :style="{color: i===0?'#BA7517':i===1?'#888780':'var(--t-text-muted)'}">{{ i+1 }}</span>
+                <span :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-secondary)', fontWeight: f.id===faction.id?'600':'400'}">{{ f.faction_name }}</span>
+                <span style="margin-left:auto" :style="{color: f.id===faction.id?'var(--t-accent)':'var(--t-text-muted)'}">{{ (f.total_xp||0).toLocaleString() }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACHIEVEMENTS -->
+          <div class="sd-card">
+            <div class="sd-sec">Logros desbloqueados</div>
+            <div class="sd-ach-grid">
+              <div v-for="ach in allAchievements" :key="ach.id" class="sd-ach-item" :class="{locked: !ach.unlocked}" :style="{background: ach.unlocked ? 'var(--t-accent-subtle)' : 'var(--t-surface-alt)'}">
+                <div class="sd-ach-icon">{{ ach.icon_emoji }}</div>
+                <div class="sd-ach-name" :style="{color: ach.unlocked ? 'var(--t-accent)' : 'var(--t-text-muted)'}">{{ ach.title }}</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;font-size:10px;color:var(--t-text-muted)">{{ unlockedCount }}/{{ allAchievements.length }} logros</div>
+          </div>
+
+          <!-- STREAK -->
+          <div class="sd-card">
+            <div class="sd-sec">Racha de actividad</div>
+            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:6px">{{ streakCount }} días seguidos</div>
+            <div class="sd-streak-row">
+              <div v-for="(d,i) in streakDays" :key="i" class="sd-streak-day" :class="{done: d.done, today: d.today}" :title="d.name">{{ d.letter }}</div>
+            </div>
+            <div style="font-size:10px;color:var(--t-text-muted);margin-top:6px">+20 XP por cada entrada diaria</div>
+          </div>
+
+          <!-- NAV -->
+          <div class="sd-card" style="padding:8px">
+            <div class="sd-nav">
+              <div class="sd-nav-item active" @click="mobileView='feed'"><span style="font-size:13px;color:var(--t-accent);font-weight:600">📰 Feed social</span></div>
+              <a href="diary.html" class="sd-nav-item">📖 Mi diario</a>
+              <a href="competitions.html" class="sd-nav-item">🏆 Competencias <span v-if="activeComps>0" class="sd-pill sd-nav-badge" style="background:var(--t-correct-bg);color:var(--t-correct-text)">{{ activeComps }} activa{{ activeComps>1?'s':'' }}</span></a>
+              <a href="factions.html" class="sd-nav-item" style="color: var(--t-wrong, #D4537E); font-weight: 600;">⚔️ Sala de Facciones</a>
+              <a href="../index.html" class="sd-nav-item">🏠 Home</a>
+              <a href="profile.html" class="sd-nav-item">👤 Mi perfil</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ FEED CENTER ═══ -->
+        <div class="sd-col" :class="{'sd-mobile-show': mobileView==='feed'}" id="sd-feed">
+
+          <!-- TABS -->
+          <div class="sd-card" style="padding:6px">
+            <div class="sd-feed-tabs">
+              <button class="sd-tab" :class="{active: activeTab==='foryou'}" @click="switchTab('foryou')">Para ti</button>
+              <button class="sd-tab" :class="{active: activeTab==='section'}" @click="switchTab('section')">{{ profile.section }}</button>
+              <button class="sd-tab" :class="{active: activeTab==='blogs'}" @click="switchTab('blogs')">Dev Blogs</button>
+              <button class="sd-tab" :class="{active: activeTab==='comps'}" @click="switchTab('comps')">Competencias</button>
+            </div>
+          </div>
+
+          <!-- QUICK POST -->
+          <div class="sd-card">
+            <div class="sd-composer">
+              <div class="sd-av" style="width:34px;height:34px"><img :src="avatarSrc" :alt="profile.nickname" /></div>
+              <div style="flex:1">
+                <textarea class="sd-composer-input" v-model="newPostContent" placeholder="Comparte un aprendizaje, snippet o reflexión..." rows="2"></textarea>
+                <div class="sd-composer-actions">
+                  <button class="sd-btn-sm" @click="newPostContent += '\n```python\n# tu código aquí\n```'">+ código</button>
+                  <button class="sd-btn-sm" @click="newPostContent += '\n[link](https://)'">+ link</button>
+                  <button class="sd-btn-accent" style="margin-left:auto" :disabled="!newPostContent.trim() || postingNew" @click="publishQuickPost">
+                    <span v-if="postingNew">...</span>
+                    <span v-else>Publicar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEED ITEMS -->
+          <template v-if="feedItems.length">
+            <div v-for="item in feedItems" :key="item._key" class="sd-card">
+
+              <!-- DIARY POST -->
+              <template v-if="item._type === 'diary'">
+                <div class="sd-post-header">
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" /></div>
+                  <div class="sd-post-meta">
+                    <div class="sd-post-author">{{ item.profiles?.nickname || '?' }} <span v-if="item.profiles?.level" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:9px;margin-left:4px">Lv {{ item.profiles.level }}</span></div>
+                    <div class="sd-post-time">@{{ item.profiles?.nickname }} · {{ item.profiles?.section || '' }} · {{ formatTimeAgo(item.created_at) }}</div>
+                  </div>
+                  <span class="sd-pill" style="background:var(--t-correct-bg);color:var(--t-correct-text);font-size:9px">Dev Blog</span>
+                </div>
+                <div class="sd-post-body" v-html="renderMd(item.content)"></div>
+                <div v-if="item.tags && item.tags.length">
+                  <span v-for="tag in item.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent)">{{ tag }}</span>
+                </div>
+                <hr class="sd-divider">
+                <div class="sd-post-actions">
+                  <button class="sd-action" :class="{liked: item._liked}">♥ {{ item.likes_count || 0 }}</button>
+                  <button class="sd-action">💬 {{ item._commentsCount || 0 }} comentarios</button>
+                  <a :href="'diary.html'" class="sd-action">🔁 ver diario</a>
+                </div>
+                <!-- Inline comment preview -->
+                <div v-if="item._topComment" class="sd-inline-comment">
+                  <div class="sd-av" style="width:22px;height:22px"><img :src="getAvatar(item._topComment.profiles?.avatar_id)" /></div>
+                  <div class="sd-comment-bubble">
+                    <span class="sd-comment-author">{{ item._topComment.profiles?.nickname }} </span>
+                    <span class="sd-comment-text">{{ item._topComment.content }}</span>
+                  </div>
+                </div>
+              </template>
+
+              <!-- COMPETITION RESULT -->
+              <template v-if="item._type === 'comp'">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+                  <div>
+                    <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:3px">Resultado de competencia</div>
+                    <div style="font-size:14px;font-weight:600;color:var(--t-text)">{{ item.title }}</div>
+                    <div style="font-size:10px;color:var(--t-text-muted);margin-top:2px">{{ item._participantCount || 0 }} participantes · {{ item.status }}</div>
+                  </div>
+                  <span class="sd-pill" :style="{background: item.status==='active'?'var(--t-correct-bg)':'var(--t-surface-alt)', color: item.status==='active'?'var(--t-correct-text)':'var(--t-text-muted)'}">{{ item.status === 'active' ? 'Activa' : 'Finalizada' }}</span>
+                </div>
+                <!-- Mini podium -->
+                <div v-if="item._topSubmitters && item._topSubmitters.length" class="sd-podium">
+                  <div v-for="(s,si) in item._topSubmitters.slice(0,4)" :key="si" class="sd-pod-item" :class="{'sd-pod-you': s.isYou}">
+                    <div class="sd-pod-score">{{ s.likes }}</div>
+                    <div class="sd-pod-bar" :style="{height: (15 + s.likes * 4) + 'px', background: si===0?'var(--t-accent)':si===1?'var(--t-accent-subtle)':'var(--t-surface-alt)'}"></div>
+                    <div class="sd-pod-name">{{ s.name }}</div>
+                  </div>
+                </div>
+                <hr class="sd-divider">
+                <div class="sd-post-actions">
+                  <a :href="'competitions.html'" class="sd-action">🔁 ver soluciones</a>
+                  <a :href="'competitions.html'" class="sd-action">📊 detalles</a>
+                </div>
+              </template>
+
+              <!-- GITHUB ACTIVITY -->
+              <template v-if="item._type === 'github'">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" /></div>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:var(--t-text)">{{ item.profiles?.nickname }}</div>
+                    <div style="font-size:10px;color:var(--t-text-muted)">hizo commits en {{ item.repo_name }} · {{ formatTimeAgo(item.created_at) }}</div>
+                  </div>
+                  <span class="sd-pill" style="background:var(--t-surface-alt);color:var(--t-text-muted);margin-left:auto;font-size:9px">GitHub</span>
+                </div>
+                <div style="font-size:10px;color:var(--t-correct-text);font-weight:600">+{{ item.xp_awarded }} XP ganados por commits</div>
+              </template>
+
+            </div>
+          </template>
+
+          <!-- Empty feed -->
+          <div v-else class="sd-card">
+            <div class="sd-empty">
+              <div class="sd-empty-icon">📰</div>
+              <div class="sd-empty-text">Aún no hay publicaciones. ¡Sé el primero en compartir!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ SIDEBAR RIGHT ═══ -->
+        <div class="sd-col" :class="{'sd-mobile-show': mobileView==='right'}" id="sd-right">
+
+          <!-- ACTIVE COMPETITION -->
+          <div v-if="activeCompData" class="sd-card sd-comp-active">
+            <div class="sd-sec" style="color:var(--t-correct-text)">Competencia activa</div>
+            <div style="font-size:13px;font-weight:600;color:var(--t-text);margin-bottom:4px">{{ activeCompData.title }}</div>
+            <div style="font-size:10px;color:var(--t-text-muted);margin-bottom:8px">deadline: {{ formatTimeAgo(activeCompData.deadline) }}</div>
+            <div class="sd-xp-bar" style="margin-bottom:8px"><div class="sd-xp-fill" style="background:var(--t-correct,#1D9E75)" :style="{width: compDeadlinePercent + '%'}"></div></div>
+            <a href="competitions.html" class="sd-btn-cta" style="display:block;text-align:center;text-decoration:none">Participar ahora</a>
+          </div>
+
+          <!-- NOTIFICATIONS -->
+          <div class="sd-card">
+            <div class="sd-sec">Notificaciones</div>
+            <div v-if="notifications.length" class="sd-notif-list">
+              <div v-for="n in notifications" :key="n._key" class="sd-notif-item">
+                <div class="sd-notif-dot" :class="{read: n.read}"></div>
+                <div>
+                  <div class="sd-notif-text" v-html="n.html"></div>
+                  <div class="sd-notif-time">{{ formatTimeAgo(n.date) }}</div>
+                </div>
+              </div>
+            </div>
+            <div v-else style="font-size:11px;color:var(--t-text-muted)">Sin notificaciones nuevas</div>
+          </div>
+
+          <!-- LEADERBOARD -->
+          <div class="sd-card">
+            <div class="sd-sec">Top de tu sección</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div v-for="(p,i) in leaderboard" :key="p.id" class="sd-lb-row" :class="{'sd-lb-you': p.id === profile.id}">
+                <span class="sd-lb-rank" :class="{gold:i===0,silver:i===1,bronze:i===2}">{{ i+1 }}</span>
+                <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p.avatar_id)" /></div>
+                <span class="sd-lb-name">{{ p.id === profile.id ? 'Tú' : p.nickname }}</span>
+                <span class="sd-lb-xp">{{ (p.xp||0).toLocaleString() }} xp</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUGGESTIONS -->
+          <div v-if="suggestions.length" class="sd-card">
+            <div class="sd-sec">Sugeridos para seguir</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div v-for="s in suggestions" :key="s.id" class="sd-follow-row">
+                <div class="sd-av" style="width:28px;height:28px"><img :src="getAvatar(s.avatar_id)" /></div>
+                <div class="sd-follow-info">
+                  <div class="sd-follow-name">{{ s.nickname }}</div>
+                  <div class="sd-follow-sub">{{ (s.xp||0) }} XP · Lv {{ s.level||1 }}</div>
+                </div>
+                <button class="sd-follow-btn" :class="{following: s._followed}" @click="toggleFollowSuggestion(s)">{{ s._followed ? '✓' : '+' }}</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- GITHUB SYNC -->
+          <div class="sd-card">
+            <div class="sd-sec">GitHub sync</div>
+            <div style="font-size:11px;color:var(--t-text-muted);margin-bottom:8px;line-height:1.5">Conecta tus commits en repos "fundamentos-*" para ganar XP.</div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px"><span style="color:var(--t-text-muted)">GitHub user</span><span style="color:var(--t-text)">{{ profile.github_username || 'No configurado' }}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:8px"><span style="color:var(--t-text-muted)">XP de GitHub</span><span style="color:var(--t-correct-text);font-weight:600">{{ githubXp }} xp</span></div>
+            <button class="sd-signout" @click="syncGitHub" :disabled="syncingGithub" style="background:var(--t-surface-alt)">
               <span v-if="syncingGithub">Sincronizando...</span>
-              <span v-else>🔄 Sync XP</span>
+              <span v-else>🔄 Sync XP ahora</span>
             </button>
           </div>
-          <div v-if="profile.xp !== undefined" style="font-size: 0.8rem; color: var(--t-text-muted); margin-top: 4px;">
-            🌟 {{ profile.xp }} XP
-          </div>
+
+          <!-- SIGN OUT -->
+          <button class="sd-signout" @click="handleSignOut">🚪 Cerrar sesión</button>
         </div>
-        <button @click="handleSignOut" class="btn-secondary" style="width:auto; padding: 0.5rem 1rem; font-size: 0.82rem;"
-          title="Cerrar sesión">
-          🚪 Salir
-        </button>
-      </div>
 
-      <!-- Dashboard Grid -->
-      <div class="dash-grid fade-in-up" style="animation-delay: 0.1s;">
+      </div><!-- /sd-root -->
 
-        <!-- Diario de Clase -->
-        <a href="diary.html" class="dash-card">
-          <div class="dash-card-icon">📖</div>
-          <div class="dash-card-title">Mi Diario de Clase</div>
-          <div class="dash-card-desc">
-            Registra tus aprendizajes, enlaces, código y reflexiones de cada clase.
-          </div>
-          <div v-if="diaryCount > 0" class="mt-3">
-            <span class="entry-tag python">{{ diaryCount }} {{ diaryCount === 1 ? 'entrada' : 'entradas' }}</span>
-          </div>
-        </a>
-
-        <!-- Ejercicios -->
-        <a href="../index.html" class="dash-card">
-          <div class="dash-card-icon">📚</div>
-          <div class="dash-card-title">Ejercicios y Tutoriales</div>
-          <div class="dash-card-desc">
-            Accede a todos los ejercicios, quizzes, documentación y desafíos del curso.
-          </div>
-        </a>
-
-        <!-- Competencias -->
-        <a href="competitions.html" class="dash-card">
-          <div class="dash-card-icon">🏆</div>
-          <div class="dash-card-title">Competencias de Código</div>
-          <div class="dash-card-desc">
-            Compite contra tus compañeros en desafíos cronometrados de Python.
-          </div>
-          <div v-if="activeComps > 0" class="mt-3">
-            <span class="comp-status active">{{ activeComps }} activa{{ activeComps > 1 ? 's' : '' }}</span>
-          </div>
-        </a>
-
-        <!-- Comunidad Dev Feed -->
-        <a href="community.html" class="dash-card">
-          <div class="dash-card-icon">🌐</div>
-          <div class="dash-card-title">Comunidad Dev</div>
-          <div class="dash-card-desc">
-            Lee los Dev Blogs de tus compañeros, aprende de ellos y comenta.
-          </div>
-        </a>
-
-        <!-- Mi Perfil (MySpace) -->
-        <a href="profile.html" class="dash-card">
-          <div class="dash-card-icon">👤</div>
-          <div class="dash-card-title">Mi Perfil (MySpace)</div>
-          <div class="dash-card-desc">
-            Inyecta tu propio HTML/CSS, muestra tus logros y personaliza tu rincón en la red.
-          </div>
-        </a>
-      </div>
-
-      <!-- Quick Stats -->
-      <div class="card p-5 text-center mt-6 fade-in-up" style="animation-delay: 0.2s;">
-        <p class="text-sm mb-2" style="color: var(--t-text-muted);">📊 Tu Actividad</p>
-        <div class="flex justify-center gap-6">
-          <div>
-            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ diaryCount }}</p>
-            <p class="text-xs" style="color: var(--t-text-muted);">entradas diario</p>
-          </div>
-          <div>
-            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ compsJoined }}</p>
-            <p class="text-xs" style="color: var(--t-text-muted);">competencias</p>
-          </div>
-          <div>
-            <p class="text-2xl font-bold" style="color: var(--t-accent);">{{ daysSinceJoin }}</p>
-            <p class="text-xs" style="color: var(--t-text-muted);">días en la plataforma</p>
+      <!-- FLOATING BANNER FOR ACTIVE COMPETITIONS -->
+      <div v-if="activeCompetitionsList && activeCompetitionsList.length > 0" class="sd-floating-banner">
+        <div class="sd-marquee-track">
+          <div v-for="comp in activeCompetitionsList" :key="comp.id" class="sd-banner-item">
+            <div class="sd-banner-icon">🏆</div>
+            <div class="sd-banner-info">
+              <div class="sd-banner-title">{{ comp.title }}</div>
+              <div class="sd-banner-meta">Creado por @{{ comp.profiles?.nickname || '?' }} · Termina en <span style="color:var(--t-warning-text);font-weight:600">{{ comp._timeLeft }}</span></div>
+            </div>
+            <div v-if="comp._submitters && comp._submitters.length" class="sd-banner-avatars">
+               <div v-for="(avId, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av" :style="{ zIndex: 5 - i }">
+                  <img :src="getAvatar(avId)" />
+               </div>
+               <div v-if="comp._submitters.length >= 5" class="sd-banner-av-more">+</div>
+            </div>
+            <a :href="'competitions.html?id=' + comp.id" class="sd-btn-accent sd-banner-btn" style="text-decoration:none">Participar</a>
           </div>
         </div>
       </div>
-
-      <!-- Achievements Section -->
-      <div v-if="profile && profile.achievements && profile.achievements.length > 0" class="card p-5 mt-6 fade-in-up" style="animation-delay: 0.3s;">
-        <h3 class="text-md font-bold mb-3" style="color: var(--t-accent);">🏅 Tus Logros</h3>
-        <div class="flex gap-4 flex-wrap">
-          <div v-for="badge in profile.achievements" :key="badge" class="text-center" style="width: 70px;">
-            <img :src="'../assets/achievements/' + badge + '.svg'" :alt="badge" style="width: 50px; height: 50px; margin: 0 auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Profile Edit Modal -->
-      <div v-if="showProfileModal" class="diary-modal-overlay" @click.self="showProfileModal = false">
-        <div class="diary-modal" style="max-width:500px;">
-          <div class="diary-modal-header">
-            <h2 class="text-lg font-bold" style="color: var(--t-accent);">Editar Perfil</h2>
-            <button class="diary-modal-close" @click="showProfileModal = false">✕</button>
-          </div>
-          <div class="avatar-preview">
-            <img :src="editAvatarSrc" alt="Avatar" />
-          </div>
-          <div class="category-pills mb-3">
-            <button class="category-pill" :class="{ active: editAvatarCat === 'all' }" @click="editAvatarCat = 'all'">✨</button>
-            <button v-for="cat in avatarCategories" :key="cat.id"
-              class="category-pill" :class="{ active: editAvatarCat === cat.id }"
-              @click="editAvatarCat = cat.id">{{ cat.icon }}</button>
-          </div>
-          <div class="avatar-grid mb-4">
-            <button v-for="av in editFilteredAvatars" :key="av.id"
-              class="avatar-option" :class="{ selected: editForm.avatar_id === av.id }"
-              @click="editForm.avatar_id = av.id">
-              <img :src="av.src" :alt="av.label" loading="lazy" />
-            </button>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nickname</label>
-            <input type="text" class="form-input" v-model="editForm.nickname" maxlength="20" />
-          </div>
-          <button class="btn-primary" :disabled="editSaving" @click="saveEditProfile">
-            <span v-if="editSaving" class="spinner"></span>
-            <span v-else>Guardar Cambios</span>
-          </button>
-        </div>
-      </div>
+      <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
     </template>
-
-    <footer class="site-footer">Hecho con 💖 para Fundamentos de Programación 2026</footer>
   </div>
 
   <script src="../js/supabase-client.js"></script>
-  <script>
-    const { createApp } = Vue;
-    createApp({
-      data() {
-        return {
-          loading: true,
-          profile: null,
-          diaryCount: 0,
-          activeComps: 0,
-          compsJoined: 0,
-          showProfileModal: false,
-          editSaving: false,
-          syncingGithub: false,
-          editAvatarCat: 'all',
-          editForm: { avatar_id: '', nickname: '' },
-          avatarCatalog: SupabaseManager.getAvatarCatalog(),
-          avatarCategories: SupabaseManager.getAvatarCategories(),
-        };
-      },
-      computed: {
-        avatarSrc() {
-          if (!this.profile) return '';
-          const av = SupabaseManager.getAvatarById(this.profile.avatar_id);
-          return av.src;
-        },
-        editAvatarSrc() {
-          const av = this.avatarCatalog.find(a => a.id === this.editForm.avatar_id);
-          return av ? av.src : this.avatarCatalog[0].src;
-        },
-        editFilteredAvatars() {
-          if (this.editAvatarCat === 'all') return this.avatarCatalog;
-          return this.avatarCatalog.filter(a => a.category === this.editAvatarCat);
-        },
-        daysSinceJoin() {
-          if (!this.profile) return 0;
-          const created = new Date(this.profile.created_at);
-          const now = new Date();
-          return Math.floor((now - created) / (1000 * 60 * 60 * 24));
-        },
-      },
-      async mounted() {
-        const profile = await SupabaseManager.requireProfile('setup-profile.html');
-        if (!profile) return;
-        this.profile = profile;
-        this.editForm.avatar_id = profile.avatar_id;
-        this.editForm.nickname = profile.nickname;
-
-        // Load diary count
-        try {
-          const client = SupabaseManager.getClient();
-          const { count } = await client.from('diary_entries').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
-          this.diaryCount = count || 0;
-        } catch (e) { /* table may not exist yet */ }
-
-        // Load competition stats
-        try {
-          const client = SupabaseManager.getClient();
-          const { count } = await client.from('competition_entries').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
-          this.compsJoined = count || 0;
-          const { count: activeCount } = await client.from('competitions').select('*', { count: 'exact', head: true }).eq('status', 'active');
-          this.activeComps = activeCount || 0;
-        } catch (e) { /* tables may not exist yet */ }
-
-        this.loading = false;
-      },
-      methods: {
-        async handleSignOut() {
-          await SupabaseManager.signOut();
-          window.location.href = 'login.html';
-        },
-        async saveEditProfile() {
-          this.editSaving = true;
-          const { error } = await SupabaseManager.updateProfile({
-            avatar_id: this.editForm.avatar_id,
-            nickname: this.editForm.nickname.trim(),
-          });
-          this.editSaving = false;
-          if (error) {
-            SupabaseManager.showToast('Error al guardar: ' + error.message, 'error');
-            return;
-          }
-          this.profile.avatar_id = this.editForm.avatar_id;
-          this.profile.nickname = this.editForm.nickname.trim();
-          this.showProfileModal = false;
-          SupabaseManager.showToast('Perfil actualizado ✅', 'success');
-        },
-        async syncGitHub() {
-          if (!this.profile.github_username) {
-            SupabaseManager.showToast('No tienes GitHub configurado en tu perfil', 'warning');
-            return;
-          }
-          this.syncingGithub = true;
-          try {
-            const res = await fetch(`https://api.github.com/users/${this.profile.github_username}/events/public`);
-            if (!res.ok) throw new Error('Error al conectar con GitHub. Verifica tu username.');
-            const events = await res.json();
-            
-            // Buscar eventos push a repos de fundamentos
-            const targetEvents = events.filter(e => 
-              e.type === 'PushEvent' && 
-              e.repo && e.repo.name.toLowerCase().includes('fundamentos')
-            );
-
-            if (targetEvents.length === 0) {
-              SupabaseManager.showToast('No tienes commits recientes en repositorios "fundamentos..."', 'info');
-              this.syncingGithub = false;
-              return;
-            }
-
-            const client = SupabaseManager.getClient();
-            let newXpAwarded = 0;
-
-            for (const event of targetEvents) {
-              const { data: existing } = await client.from('github_sync_history')
-                .select('id').eq('github_event_id', event.id).single();
-              
-              if (!existing) {
-                await client.from('github_sync_history').insert({
-                  user_id: this.profile.id,
-                  github_event_id: event.id,
-                  event_type: event.type,
-                  repo_name: event.repo.name,
-                  xp_awarded: 50
-                });
-                newXpAwarded += 50;
-              }
-            }
-
-            if (newXpAwarded > 0) {
-              // Llamar a la función RPC que creamos internamente
-              const { error } = await client.rpc('award_xp_and_badge', {
-                target_user: this.profile.id,
-                xp_amount: newXpAwarded
-              });
-              
-              if (!error) {
-                 this.profile.xp = (this.profile.xp || 0) + newXpAwarded;
-                 SupabaseManager.showToast(`¡Ganaste +${newXpAwarded} XP por tus commits en GitHub! 🐙🔥`, 'success', 5000);
-              } else {
-                SupabaseManager.showToast('Error al otorgar XP: ' + error.message, 'error');
-              }
-            } else {
-              SupabaseManager.showToast('Tus commits recientes ya fueron sincronizados.', 'info');
-            }
-          } catch(e) {
-            SupabaseManager.showToast(e.message, 'error');
-          }
-          this.syncingGithub = false;
-        },
-      },
-    }).mount('#app');
-  </script>
+  <script src="../js/dashboard-app.js"></script>
 </body>
 </html>

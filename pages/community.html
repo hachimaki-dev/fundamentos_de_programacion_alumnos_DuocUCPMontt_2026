@@ -14,58 +14,64 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="../js/theme-selector.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
 </head>
 <body class="min-h-screen relative overflow-x-hidden">
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
-  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:1.5rem 1rem 4rem;">
+  <!-- Top Nav Bar -->
+  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
+    </div>
+  </nav>
+
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:6rem 1rem 4rem;">
 
     <!-- Loading -->
-    <div v-if="loading" class="auth-page">
-      <div class="auth-card text-center">
-        <div class="auth-logo">🌐</div>
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
         <p class="auth-subtitle">Cargando la comunidad...</p>
-        <div class="flex justify-center mt-4">
-          <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent;"></div>
-        </div>
       </div>
     </div>
 
     <template v-else>
       <!-- Header -->
-      <div class="flex items-center justify-between mb-6 fade-in-up">
-        <a href="dashboard.html" class="back-btn m-0">← Dashboard</a>
-        <h1 class="text-xl font-bold" style="color: var(--t-accent);">🌐 Dev Feed</h1>
-      </div>
-
-      <div class="card p-4 text-center mb-6 fade-in-up" style="background:var(--t-surface-alt); border:1px solid var(--t-accent);">
-        <p class="text-sm font-bold" style="color:var(--t-text);">¡Bienvenido al Feed Global!</p>
-        <p class="text-xs mt-1" style="color:var(--t-text-muted);">Aquí puedes ver los Dev Blogs públicos de tus compañeros. Lee, aprende y comenta constructivamente.</p>
+      <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
+        <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem;">
+          🌐 Dev Feed
+        </h1>
+        <p class="text-sm" style="color:var(--t-text-secondary); margin-top: 0.5rem;">Aquí puedes ver los Dev Blogs públicos de tus compañeros. Lee, aprende y comenta constructivamente.</p>
       </div>
 
       <!-- Feed List -->
-      <div v-if="publicEntries.length" class="flex flex-col gap-5">
-        <div v-for="(entry, idx) in publicEntries" :key="entry.id" class="card p-5 fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
+      <div v-if="publicEntries.length" class="flex flex-col gap-4">
+        <div v-for="(entry, idx) in publicEntries" :key="entry.id" class="sd-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
           
           <!-- Post Header -->
-          <div class="flex items-center gap-3 mb-4 border-b pb-3" style="border-color:var(--t-glass-border);">
-            <img :src="getAvatar(entry.profiles?.avatar_id)" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--t-accent);" />
-            <div class="flex-1">
-              <p class="font-bold text-sm" style="color:var(--t-text);">
-                {{ entry.profiles?.nickname || 'Usuario Desconocido' }}
-                <span v-if="entry.profiles?.level" class="badge" style="background:var(--t-accent);color:white;font-size:0.6rem;padding:2px 5px;border-radius:8px;">Lvl {{ entry.profiles.level }}</span>
-              </p>
-              <p class="text-xs" style="color:var(--t-text-muted);">
-                Sección {{ entry.profiles?.section || 'N/A' }} • {{ formatDate(entry.created_at) }}
-              </p>
+          <div class="sd-post-header">
+            <div class="sd-post-meta">
+              <img :src="getAvatar(entry.profiles?.avatar_id)" class="sd-av" />
+              <div>
+                <div class="sd-post-author">
+                  {{ entry.profiles?.nickname || 'Usuario Desconocido' }}
+                  <span v-if="entry.profiles?.level" class="sd-pill" style="background:var(--t-surface-alt);border:1px solid var(--t-glass-border);color:var(--t-text-secondary);font-size:0.7rem;">Lvl {{ entry.profiles.level }}</span>
+                </div>
+                <div class="sd-post-time">
+                  Sección {{ entry.profiles?.section || 'N/A' }} • {{ formatDate(entry.created_at) }}
+                </div>
+              </div>
             </div>
             <!-- Botón de Compartir -->
             <div style="position:relative;">
-              <button class="btn-secondary" style="padding:0.4rem;font-size:0.8rem;width:auto;border:none;background:transparent;" @click="toggleShareMenu(entry.id)">
-                🔗 Compartir
+              <button class="sd-btn-sm" style="padding:0.4rem;font-size:0.8rem;width:auto;background:transparent;border:none;" @click="toggleShareMenu(entry.id)">
+                🔗
               </button>
-              <div v-if="activeShareMenu === entry.id" class="card p-2" style="position:absolute;right:0;top:100%;z-index:100;min-width:180px;display:flex;flex-direction:column;gap:5px;">
+              <div v-if="activeShareMenu === entry.id" class="sd-card" style="position:absolute;right:0;top:100%;z-index:100;min-width:180px;display:flex;flex-direction:column;gap:5px;padding:0.5rem;">
                 <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('twitter', entry)">🐦 Twitter / X</button>
                 <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('linkedin', entry)">💼 LinkedIn</button>
                 <button class="option-btn" style="padding:0.4rem 0.8rem;font-size:0.8rem;border:none;" @click="shareTo('instagram', entry)">📸 Instagram</button>
@@ -76,35 +82,36 @@
 
           <!-- Post Content -->
           <h2 class="text-lg font-bold mb-2" style="color:var(--t-accent);">{{ entry.title }}</h2>
-          <div class="entry-tags mb-3" v-if="entry.tags && entry.tags.length">
-            <span v-for="tag in entry.tags" :key="tag" class="entry-tag python">{{ tag }}</span>
+          <div v-if="entry.tags && entry.tags.length" style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+            <span v-for="tag in entry.tags" :key="tag" class="sd-tag" style="background:var(--t-accent-subtle);color:var(--t-accent);">{{ tag }}</span>
           </div>
-          <div class="doc-section text-sm mb-4" v-html="renderMd(entry.content)"></div>
+          <div class="sd-post-body" v-html="renderMd(entry.content)"></div>
 
           <!-- Comments Section -->
-          <div class="mt-4 pt-4 border-t" style="border-color:var(--t-glass-border);">
-            <h3 class="text-sm font-bold mb-3 flex items-center gap-2" style="color:var(--t-text);">
-              💬 Comentarios ({{ getCommentsForEntry(entry.id).length }})
-            </h3>
+          <hr class="sd-divider">
+          <div class="mt-2">
+            <div class="sd-sec" style="margin-bottom:0.5rem;font-size:0.8rem;">
+              Comentarios ({{ getCommentsForEntry(entry.id).length }})
+            </div>
             
-            <div v-if="getCommentsForEntry(entry.id).length > 0" class="flex flex-col gap-3 mb-4">
-              <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm p-3 rounded" style="background:var(--t-surface-alt);">
-                <img :src="getAvatar(comment.profiles?.avatar_id)" style="width:24px;height:24px;border-radius:50%;" />
+            <div v-if="getCommentsForEntry(entry.id).length > 0" class="flex flex-col gap-2 mb-3">
+              <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm" style="padding:0.5rem; background:var(--t-surface-alt); border-radius:var(--t-radius, 12px);">
+                <img :src="getAvatar(comment.profiles?.avatar_id)" class="sd-av" style="width:24px;height:24px;" />
                 <div class="flex-1">
                   <div class="flex justify-between items-baseline mb-1">
-                    <span class="font-bold" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
+                    <span class="font-bold text-xs" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
                     <span class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(comment.created_at) }}</span>
                   </div>
-                  <p style="color:var(--t-text-secondary); word-break: break-word;">{{ comment.content }}</p>
+                  <p style="color:var(--t-text-secondary); word-break: break-word; margin:0; font-size:0.8rem;">{{ comment.content }}</p>
                 </div>
               </div>
             </div>
-            <div v-else class="text-xs mb-4" style="color:var(--t-text-muted);">Sé el primero en comentar...</div>
+            <div v-else class="text-xs mb-3" style="color:var(--t-text-muted);">Sé el primero en comentar...</div>
 
             <!-- Add Comment -->
             <div class="flex gap-2">
-              <input type="text" class="form-input text-sm m-0" placeholder="Escribe un comentario constructivo..." v-model="newComments[entry.id]" @keyup.enter="postComment(entry.id)" />
-              <button class="btn-primary" style="padding:0.4rem 1rem; width:auto;" :disabled="postingComment === entry.id" @click="postComment(entry.id)">
+              <input type="text" class="form-input text-sm m-0" placeholder="Escribe un comentario..." v-model="newComments[entry.id]" @keyup.enter="postComment(entry.id)" />
+              <button class="sd-btn-accent" style="padding:0.4rem 1rem; width:auto;" :disabled="postingComment === entry.id" @click="postComment(entry.id)">
                 <span v-if="postingComment === entry.id" class="spinner" style="width:14px;height:14px;"></span>
                 <span v-else>Enviar</span>
               </button>
@@ -114,10 +121,14 @@
       </div>
 
       <!-- Empty state -->
-      <div v-else class="empty-state fade-in-up">
-        <div class="emoji">🌐</div>
-        <p>Aún no hay publicaciones en el feed global.</p>
-        <p class="mt-2 text-sm" style="color:var(--t-text-muted);">Ve a tu Diario y marca una entrada como Pública para aparecer aquí.</p>
+      <div v-else class="sd-card fade-in-up">
+        <div class="sd-empty">
+          <div class="sd-empty-icon">🌐</div>
+          <div class="sd-empty-text">
+            Aún no hay publicaciones en el feed global.<br>
+            <span style="font-size:0.8rem;color:var(--t-text-muted);">Ve a tu Diario y marca una entrada como Pública para aparecer aquí.</span>
+          </div>
+        </div>
       </div>
     </template>
   </div>

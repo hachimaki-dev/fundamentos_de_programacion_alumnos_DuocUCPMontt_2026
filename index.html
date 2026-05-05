@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌸 Diario de Fundamentos de Programación 2026</title>
-  <meta name="description" content="Bitácora del curso de Fundamentos de Programación 2026 — ejercicios, documentación y recursos organizados semana a semana." />
+  <title>🏠 Home — Fundamentos 2026</title>
+  <meta name="description" content="Punto de partida del curso de Fundamentos de Programación 2026 — ejercicios, documentación y recursos organizados semana a semana." />
 
   <!-- Theme Engine (load FIRST to prevent FOUC) -->
   <script src="js/theme-engine.js"></script>
@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/utilities.css" />
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="css/social-dashboard.css" />
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -32,26 +33,33 @@
   <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
   <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
 
-  <!-- Auth Nav Bar -->
-  <div id="auth-nav" class="nav-auth-bar" style="display:none;"></div>
+  <!-- Floating Top Buttons -->
+  <div style="position:fixed;top:1.5rem;left:1.5rem;right:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;z-index:1000;pointer-events:none;">
+    <!-- Left: Brand -->
+    <a href="#" style="pointer-events:auto;background:var(--t-glass-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:2px solid var(--t-glass-border);border-radius:2rem;padding:0.6rem 1.2rem;display:flex;align-items:center;gap:0.5rem;text-decoration:none;box-shadow:0 4px 16px var(--t-shadow);transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px var(--t-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 16px var(--t-shadow)'">
+      💻 <span class="hidden-mobile" style="color:var(--t-accent);font-weight:800;font-size:1.1rem;">Fundamentos 2026</span>
+    </a>
+    
+    <!-- Right: Auth Nav -->
+    <div id="auth-nav" style="pointer-events:auto;display:none;align-items:center;gap:0.5rem;"></div>
+  </div>
 
   <!-- Vue App -->
-  <div id="app" class="relative z-10">
+  <div id="app" class="relative z-10" style="max-width:800px;margin:0 auto;padding:6.5rem 1rem 4rem;">
 
     <!-- ─── Header ─── -->
-    <header class="diary-header">
-      <p class="text-5xl mb-3">📖</p>
-      <h1>Diario de Clase</h1>
-      <p class="subtitle">
-        Bienvenid@ al diario de <strong>Fundamentos de Programación 2026</strong>. 
-        Aquí encontrarás todos los ejercicios, documentación y recursos organizados semana a semana. 
-        <span class="text-sm">¡Explora y aprende a tu ritmo! ✨🐱</span>
+    <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
+      <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem;">
+        🏠 Home
+      </h1>
+      <p class="text-sm" style="color: var(--t-text-secondary); margin-top: 0.5rem;">
+        Bienvenid@ al punto de partida de <strong>Fundamentos de Programación 2026</strong>. Aquí encontrarás todos los ejercicios, documentación y recursos organizados semana a semana. <span style="font-size: 0.8rem;">¡Explora y aprende a tu ritmo! ✨🐱</span>
       </p>
-    </header>
+    </div>
 
     <!-- ─── Search & Filters ─── -->
-    <div class="search-bar">
-      <div class="search-input-wrap">
+    <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
+      <div class="search-input-wrap" style="margin-bottom: 1.5rem; max-width: 100%;">
         <span class="icon">🔍</span>
         <input 
           type="text" 
@@ -61,7 +69,7 @@
           id="diary-search"
         />
       </div>
-      <div class="tag-filters">
+      <div class="tag-filters" style="gap: 0.75rem;">
         <button 
           class="tag-pill" 
           :class="{ active: activeFilter === 'all' }" 
@@ -95,83 +103,87 @@
     </div>
 
     <!-- ─── EA2 Section (expanded) ─── -->
-    <div class="timeline" v-if="ea2Entries.length > 0">
-      <div class="unit-section">
-        <div class="unit-header" @click="ea2Open = !ea2Open">
+    <div v-if="ea2Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
+      <div class="unit-section" style="margin-bottom: 0;">
+        <div class="unit-header" @click="ea2Open = !ea2Open" style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
           <span class="unit-chevron" :class="{ open: ea2Open }">▶</span>
           <span class="unit-badge ea2">EA2</span>
           <span class="unit-title">Unidad 2 — Listas y Diccionarios</span>
           <span class="unit-count">{{ ea2Entries.length }} entradas</span>
         </div>
         <div class="unit-body" :class="ea2Open ? 'expanded' : 'collapsed'" :style="ea2Open ? 'max-height:' + (ea2Entries.length * 250) + 'px' : ''">
-          <a 
-            v-for="(entry, idx) in ea2Entries" 
-            :key="entry.id" 
-            :href="entry.page !== '#' ? entry.page : undefined"
-            class="diary-entry fade-in-up" 
-            :style="{ animationDelay: (idx * 0.08) + 's' }"
-            :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
-            @click="entry.page === '#' && $event.preventDefault()"
-          >
-            <div class="entry-date">{{ formatDate(entry.date) }}</div>
-            <div class="entry-title">
-              <span class="entry-emoji">{{ entry.emoji }}</span>
-              {{ entry.title }}
-              <span v-if="entry.page === '#'" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
-            </div>
-            <div class="entry-desc">{{ entry.description }}</div>
-            <div class="entry-tags">
-              <span 
-                v-for="tag in entry.tags" 
-                :key="tag" 
-                class="entry-tag" 
-                :class="tag"
-              >
-                {{ tagLabels[tag] || tag }}
-              </span>
-            </div>
-          </a>
+          <div style="padding: 0 1rem 1rem;">
+            <a 
+              v-for="(entry, idx) in ea2Entries" 
+              :key="entry.id" 
+              :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up" 
+              :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
+              :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+              @click="entry.page === '#' && $event.preventDefault()"
+            >
+              <div class="entry-date">{{ formatDate(entry.date) }}</div>
+              <div class="entry-title">
+                <span class="entry-emoji">{{ entry.emoji }}</span>
+                {{ entry.title }}
+                <span v-if="entry.page === '#'" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+              </div>
+              <div class="entry-desc">{{ entry.description }}</div>
+              <div class="entry-tags">
+                <span 
+                  v-for="tag in entry.tags" 
+                  :key="tag" 
+                  class="entry-tag" 
+                  :class="tag"
+                >
+                  {{ tagLabels[tag] || tag }}
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- ─── EA1 Section (collapsed) ─── -->
-    <div class="timeline" v-if="ea1Entries.length > 0">
-      <div class="unit-section">
-        <div class="unit-header" @click="ea1Open = !ea1Open">
+    <div v-if="ea1Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
+      <div class="unit-section" style="margin-bottom: 0;">
+        <div class="unit-header" @click="ea1Open = !ea1Open" style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
           <span class="unit-chevron" :class="{ open: ea1Open }">▶</span>
           <span class="unit-badge ea1">EA1</span>
           <span class="unit-title">Fundamentos de Programación — Python</span>
           <span class="unit-count">{{ ea1Entries.length }} entradas</span>
         </div>
         <div class="unit-body" :class="ea1Open ? 'expanded' : 'collapsed'" :style="ea1Open ? 'max-height:' + (ea1Entries.length * 250) + 'px' : ''">
-          <a 
-            v-for="(entry, idx) in ea1Entries" 
-            :key="entry.id" 
-            :href="entry.page !== '#' ? entry.page : undefined"
-            class="diary-entry fade-in-up" 
-            :style="{ animationDelay: (idx * 0.08) + 's' }"
-            :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
-            @click="entry.page === '#' && $event.preventDefault()"
-          >
-            <div class="entry-date">{{ formatDate(entry.date) }}</div>
-            <div class="entry-title">
-              <span class="entry-emoji">{{ entry.emoji }}</span>
-              {{ entry.title }}
-              <span v-if="entry.isNew" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
-            </div>
-            <div class="entry-desc">{{ entry.description }}</div>
-            <div class="entry-tags">
-              <span 
-                v-for="tag in entry.tags" 
-                :key="tag" 
-                class="entry-tag" 
-                :class="tag"
-              >
-                {{ tagLabels[tag] || tag }}
-              </span>
-            </div>
-          </a>
+          <div style="padding: 0 1rem 1rem;">
+            <a 
+              v-for="(entry, idx) in ea1Entries" 
+              :key="entry.id" 
+              :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up" 
+              :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
+              :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+              @click="entry.page === '#' && $event.preventDefault()"
+            >
+              <div class="entry-date">{{ formatDate(entry.date) }}</div>
+              <div class="entry-title">
+                <span class="entry-emoji">{{ entry.emoji }}</span>
+                {{ entry.title }}
+                <span v-if="entry.isNew" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+              </div>
+              <div class="entry-desc">{{ entry.description }}</div>
+              <div class="entry-tags">
+                <span 
+                  v-for="tag in entry.tags" 
+                  :key="tag" 
+                  class="entry-tag" 
+                  :class="tag"
+                >
+                  {{ tagLabels[tag] || tag }}
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -184,22 +196,20 @@
     </div>
 
     <!-- ─── Stats Section ─── -->
-    <div class="max-w-md mx-auto px-4 mb-8">
-      <div class="card p-5 text-center">
-        <p class="text-sm text-kawaii-text/50 mb-2">📊 Resumen del curso</p>
-        <div class="flex justify-center gap-6">
-          <div>
-            <p class="text-2xl font-bold text-kawaii-deep">{{ totalEntries }}</p>
-            <p class="text-xs text-kawaii-text/50">entradas</p>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-kawaii-deep">{{ availableEntries }}</p>
-            <p class="text-xs text-kawaii-text/50">disponibles</p>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-kawaii-deep">{{ comingSoonEntries }}</p>
-            <p class="text-xs text-kawaii-text/50">próximamente</p>
-          </div>
+    <div class="sd-card mb-8">
+      <div class="sd-sec" style="text-align: center;">📊 Resumen del curso</div>
+      <div class="sd-stat-row" style="margin-top: 0.5rem;">
+        <div class="sd-stat-box">
+          <div class="sd-stat-num">{{ totalEntries }}</div>
+          <div class="sd-stat-label">entradas</div>
+        </div>
+        <div class="sd-stat-box">
+          <div class="sd-stat-num">{{ availableEntries }}</div>
+          <div class="sd-stat-label">disponibles</div>
+        </div>
+        <div class="sd-stat-box">
+          <div class="sd-stat-num">{{ comingSoonEntries }}</div>
+          <div class="sd-stat-label">próximamente</div>
         </div>
       </div>
     </div>
@@ -305,15 +315,15 @@
           if (profile && profile.profile_completed) {
             const av = SupabaseManager.getAvatarById(profile.avatar_id);
             nav.innerHTML = `
-              <a href="pages/dashboard.html" class="nav-auth-btn">
-                <span class="nav-auth-avatar"><img src="${av.src.replace('../','')}" alt="Avatar" /></span>
-                Mi Dashboard
+              <a href="pages/dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">
+                <span class="nav-auth-avatar" style="width:24px;height:24px;"><img src="${av.src.replace('../','')}" alt="Avatar" /></span>
+                Dashboard
               </a>`;
           } else {
-            nav.innerHTML = '<a href="pages/setup-profile.html" class="nav-auth-btn">✨ Completar Perfil</a>';
+            nav.innerHTML = '<a href="pages/setup-profile.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">✨ Completar Perfil</a>';
           }
         } else {
-          nav.innerHTML = '<a href="pages/login.html" class="nav-auth-btn">🔑 Iniciar Sesión</a>';
+          nav.innerHTML = '<a href="pages/login.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">🔑 Iniciar Sesión</a>';
         }
         nav.style.display = 'flex';
       } catch(e) {

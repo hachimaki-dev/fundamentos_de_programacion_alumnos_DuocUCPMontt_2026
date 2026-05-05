@@ -190,9 +190,12 @@
     </div>
 
     <!-- POSTERS WANTED -->
-    <div v-if="loading" class="text-center my-12">
-      <div class="spinner"></div>
-      <p class="mt-4 text-muted">Buscando recompensas...</p>
+    <!-- LOADING -->
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
+        <p class="auth-subtitle">Buscando recompensas...</p>
+      </div>
     </div>
 
     <div v-else class="wanted-board">

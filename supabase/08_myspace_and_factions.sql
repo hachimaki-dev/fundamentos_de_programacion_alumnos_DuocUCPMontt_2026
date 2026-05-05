@@ -51,6 +51,11 @@ CREATE POLICY "Users can view their own github history"
   ON public.github_sync_history FOR SELECT TO authenticated
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert their own github history" ON public.github_sync_history;
+CREATE POLICY "Users can insert their own github history"
+  ON public.github_sync_history FOR INSERT TO authenticated
+  WITH CHECK (auth.uid() = user_id);
+
 -- 6. Trigger o Función para actualizar XP de facción (opcional)
 CREATE OR REPLACE FUNCTION update_faction_xp()
 RETURNS TRIGGER AS $$

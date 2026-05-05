@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚔️ Sala de Facciones — Fundamentos 2026</title>
+  <meta name="description" content="Salón de la fama y guerra de facciones." />
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="../js/theme-selector.js" defer></script>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+
+  <div id="app" class="relative z-10" style="padding: 1rem 1rem 3rem;">
+
+    <!-- Loading -->
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
+        <p class="auth-subtitle">Cargando Sala de Facciones...</p>
+      </div>
+    </div>
+
+    <template v-else>
+      <div class="sd-root" style="grid-template-columns: 240px minmax(0, 1fr);">
+        
+        <!-- SIDEBAR -->
+        <div class="sd-col">
+          <div class="sd-card" style="padding:8px">
+            <div class="sd-nav">
+              <a href="dashboard.html" class="sd-nav-item">⬅ Volver al Dashboard</a>
+              <a href="factions.html" class="sd-nav-item active" style="color:var(--t-wrong, #D4537E);">⚔️ Sala de Facciones</a>
+            </div>
+          </div>
+          
+          <div class="sd-card" v-if="myFaction">
+            <div class="sd-sec">Tu Facción</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <img :src="getFactionBadge(myFaction.faction_name)" style="width:36px;height:36px;object-fit:contain" />
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--t-text)">{{ myFaction.faction_name }}</div>
+                <div style="font-size:10px;color:var(--t-text-muted)">{{ myFaction.section_code }}</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;font-size:11px;color:var(--t-text-secondary);">
+              <b>Ranking Global:</b> #{{ getFactionRank(myFaction.id) }} <br/>
+              <b>XP Total:</b> {{ myFaction.total_xp.toLocaleString() }}
+            </div>
+          </div>
+
+          <div class="sd-card">
+            <div class="sd-sec">Últimas Victorias</div>
+            <div v-if="recentVictories.length === 0" style="font-size:11px;color:var(--t-text-muted)">No hay actividad reciente.</div>
+            <div v-for="vic in recentVictories" :key="vic.id" style="margin-bottom:8px;font-size:11px;color:var(--t-text);">
+              <div><strong :style="{color: getFactionColorByName(vic.factionName)}">{{ vic.factionName }}</strong> ganó <strong style="color:var(--t-correct-text)">+{{ vic.xp }} XP</strong></div>
+              <div style="font-size:9px;color:var(--t-text-muted)">por {{ vic.reason }} (hace {{ vic.timeAgo }})</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN HALL -->
+        <div class="sd-col">
+          <div class="fh-header">
+            <h1 class="fh-title">Sala de Facciones</h1>
+            <p class="fh-subtitle">La batalla por la supremacía del código. Solo una facción dominará el servidor.</p>
+          </div>
+
+          <!-- GLOBAL CHART -->
+          <div class="fh-global-chart">
+            <div class="sd-sec" style="margin-bottom:0">Global Leaderboard (XP Total)</div>
+            <div v-for="(f, idx) in factions" :key="f.id" class="fh-bar-row">
+              <div class="fh-bar-label">
+                #{{ idx + 1 }} {{ f.faction_name }}
+              </div>
+              <div class="fh-bar-wrap">
+                <div class="fh-bar-fill" :style="{ width: getXpPercent(f.total_xp) + '%', background: getFactionColorByName(f.faction_name) }">
+                  {{ (f.total_xp || 0).toLocaleString() }} XP
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FACTIONS GRID -->
+          <div class="fh-grid">
+            <div v-for="f in factions" :key="f.id" class="fh-card" :style="{ '--fh-color': getFactionColorByName(f.faction_name) }">
+              <div class="fh-card-header">
+                <img :src="getFactionBadge(f.faction_name)" class="fh-badge" />
+                <div>
+                  <div class="fh-card-title">{{ f.faction_name }}</div>
+                  <div class="fh-card-stats">
+                    <div class="fh-card-stat">👨‍💻 <strong>{{ f.members.length }}</strong> miembros</div>
+                    <div class="fh-card-stat">⚡ <strong>{{ Math.round((f.total_xp||0) / Math.max(f.members.length, 1)).toLocaleString() }}</strong> XP prom.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="fh-members-title">Fuerzas Activas (Nivel y Github)</div>
+              <div class="fh-members-grid">
+                <div v-for="m in f.members" :key="m.id" class="fh-member">
+                  <img :src="getAvatar(m.avatar_id)" />
+                  <div class="fh-member-lvl">{{ m.level || 1 }}</div>
+                  <div class="fh-member-tooltip">
+                    <b>@{{ m.nickname }}</b><br/>
+                    {{ (m.xp||0).toLocaleString() }} XP<br/>
+                    <a v-if="m.github_username" :href="'https://github.com/' + m.github_username" target="_blank" class="fh-github-btn">🐙 {{ m.github_username }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/factions-app.js"></script>
+</body>
+</html>

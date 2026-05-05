@@ -13,6 +13,7 @@
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
   
   <!-- DOMPurify para evitar ataques XSS con JS, pero permitiremos estilos y html básico -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
@@ -39,10 +40,10 @@
     }
     
     .profile-avatar {
-      width: 120px;
-      height: 120px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      border: 4px solid var(--t-accent);
+      border: 3px solid var(--t-accent);
       object-fit: cover;
       background: var(--t-surface-hover);
     }
@@ -84,19 +85,22 @@
 </head>
 <body class="min-h-screen">
 
-  <nav class="top-nav">
-    <div class="nav-brand">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
-    <div class="nav-links">
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="wanted.html" class="nav-link" style="color: var(--t-accent);">🏴‍☠️ WANTED</a>
+  <nav class="top-nav" style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand" style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻 <span class="hidden-mobile">Fundamentos 2026</span></div>
+    <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
+      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠 Home</a>
+      <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
     </div>
   </nav>
 
-  <div id="app" class="container relative z-10" style="max-width: 900px; margin: 0 auto; padding: 5rem 1rem 4rem;">
+  <div id="app" class="relative z-10" style="max-width: 900px; margin: 0 auto; padding: 6rem 1rem 4rem;">
     
-    <div v-if="loading" class="text-center">
-      <div class="spinner"></div>
-      <p class="mt-2 text-muted">Cargando perfil...</p>
+    <!-- Loading -->
+    <div id="loading-screen" v-if="loading">
+      <div class="auth-card">
+        <div class="spinner"></div>
+        <p class="auth-subtitle">Cargando perfil...</p>
+      </div>
     </div>
     
     <div v-else-if="!profile" class="card text-center">
@@ -106,18 +110,18 @@
 
     <div v-else>
       <div class="flex justify-between items-center mb-4">
-        <button class="btn-secondary" style="width: auto;" onclick="history.back()">← Volver</button>
+        <button class="back-btn m-0" style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;" onclick="history.back()">← Volver</button>
         <div class="flex gap-2">
-          <button v-if="!isOwner && !isFollowing" @click="toggleFollow" class="btn-primary" style="width: auto;" :disabled="followLoading">
+          <button v-if="!isOwner && !isFollowing" @click="toggleFollow" class="sd-btn-accent" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
             <span v-if="followLoading" class="spinner"></span>
             <span v-else>➕ Seguir</span>
           </button>
-          <button v-if="!isOwner && isFollowing" @click="toggleFollow" class="btn-secondary" style="width: auto;" :disabled="followLoading">
+          <button v-if="!isOwner && isFollowing" @click="toggleFollow" class="sd-btn-sm" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" :disabled="followLoading">
             <span v-if="followLoading" class="spinner"></span>
             <span v-else>✅ Siguiendo</span>
           </button>
-          <button v-if="isOwner" @click="showEditModal = true" class="btn-primary" style="width: auto;">
-            🎨 Editar mi "MySpace"
+          <button v-if="isOwner" @click="showEditModal = true" class="sd-btn-accent" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            🎨 Editar MySpace
           </button>
         </div>
       </div>
@@ -129,24 +133,39 @@
         <component :is="'style'" v-if="sanitizedCSS" v-html="sanitizedCSS"></component>
         
         <!-- HEADER ESTÁNDAR (Siempre visible para mantener la identidad) -->
-        <div class="profile-header">
+        <div class="sd-card profile-header" style="margin-bottom: 2rem; padding: 1.5rem;">
           <img :src="avatarSrc" :alt="profile.nickname" class="profile-avatar" />
-          <div>
-            <h1 class="text-2xl font-bold" style="margin:0;">
-              {{ profile.nickname }}
-              <span v-if="profile.title" class="text-sm" style="color:var(--t-accent); margin-left: 0.5rem;">
-                [{{ profile.title }}]
+          <div style="flex: 1;">
+            <div class="flex items-center gap-2 mb-1">
+              <h1 class="text-xl font-bold" style="margin:0; color:var(--t-text);">
+                {{ profile.nickname }}
+              </h1>
+              <span v-if="profile.title" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:0.7rem;">
+                {{ profile.title }}
               </span>
-            </h1>
-            <p class="text-muted" style="margin: 0.25rem 0;">
-              Nivel {{ profile.level }} • {{ profile.xp }} XP
-            </p>
-            <p class="text-sm" style="margin: 0;">
-              Facción: <strong>{{ factionName }}</strong>
-            </p>
-            <div class="flex gap-4 mt-2 text-sm text-muted">
-              <span><strong>{{ followersCount }}</strong> Seguidores</span>
-              <span><strong>{{ followingCount }}</strong> Siguiendo</span>
+            </div>
+            
+            <div class="flex items-center gap-2 mb-3">
+              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+                Nivel {{ profile.level }}
+              </span>
+              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+                {{ profile.xp }} XP
+              </span>
+              <span class="sd-pill" style="background:var(--t-surface-alt); border:1px solid var(--t-glass-border); color:var(--t-text-secondary); font-size:0.75rem;">
+                {{ factionName }}
+              </span>
+            </div>
+
+            <div class="sd-stat-row" style="justify-content: flex-start; gap: 1rem;">
+              <div class="sd-stat-box" style="padding: 0.5rem; min-width: auto; background: transparent; border: none;">
+                <div class="sd-stat-num" style="font-size: 1.2rem;">{{ followersCount }}</div>
+                <div class="sd-stat-label">Seguidores</div>
+              </div>
+              <div class="sd-stat-box" style="padding: 0.5rem; min-width: auto; background: transparent; border: none;">
+                <div class="sd-stat-num" style="font-size: 1.2rem;">{{ followingCount }}</div>
+                <div class="sd-stat-label">Siguiendo</div>
+              </div>
             </div>
           </div>
         </div>
@@ -185,8 +204,8 @@
         </div>
 
         <div class="flex gap-3 mt-4 justify-end">
-          <button @click="showEditModal = false" class="btn-secondary" :disabled="saving">Cancelar</button>
-          <button @click="saveCustomizations" class="btn-primary" :disabled="saving">
+          <button @click="showEditModal = false" class="sd-btn-sm" :disabled="saving">Cancelar</button>
+          <button @click="saveCustomizations" class="sd-btn-accent" :disabled="saving">
             <span v-if="saving" class="spinner"></span>
             <span v-else>💾 Guardar Cambios</span>
           </button>

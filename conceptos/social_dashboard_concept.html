@@ -1,0 +1,279 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: transparent; }
+  .layout { display: grid; grid-template-columns: 260px 1fr; gap: 16px; padding: 16px 0; align-items: start; }
+  .sidebar { display: flex; flex-direction: column; gap: 12px; }
+  .feed-col { display: flex; flex-direction: column; gap: 12px; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #7F77DD, #D4537E); display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; margin: 0 auto 8px; }
+  .username { font-size: 15px; font-weight: 500; color: var(--color-text-primary); text-align: center; }
+  .handle { font-size: 12px; color: var(--color-text-secondary); text-align: center; margin-top: 2px; }
+  .badge-row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  .badge { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 20px; padding: 3px 10px; font-size: 11px; color: var(--color-text-secondary); }
+  .badge.accent { background: #EEEDFE; color: #534AB7; border-color: #AFA9EC; }
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .stat-box { text-align: center; background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 4px; }
+  .stat-num { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+  .stat-label { font-size: 10px; color: var(--color-text-secondary); margin-top: 2px; }
+  .xp-bar-wrap { margin-top: 12px; }
+  .xp-label { font-size: 11px; color: var(--color-text-secondary); display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .xp-bar { height: 6px; background: var(--color-background-secondary); border-radius: 999px; overflow: hidden; }
+  .xp-fill { height: 100%; width: 34%; background: #7F77DD; border-radius: 999px; }
+  .section-title { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .mini-nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--border-radius-md); font-size: 13px; color: var(--color-text-primary); cursor: pointer; transition: background 0.15s; }
+  .nav-item:hover { background: var(--color-background-secondary); }
+  .nav-item.active { background: #EEEDFE; color: #534AB7; }
+  .nav-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .feed-tabs { display: flex; gap: 4px; padding: 4px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+  .tab { flex: 1; text-align: center; padding: 6px; font-size: 12px; border-radius: 6px; cursor: pointer; color: var(--color-text-secondary); }
+  .tab.active { background: var(--color-background-primary); color: var(--color-text-primary); font-weight: 500; border: 0.5px solid var(--color-border-tertiary); }
+  .post-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .mini-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; flex-shrink: 0; }
+  .post-meta { flex: 1; }
+  .post-author { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .post-time { font-size: 11px; color: var(--color-text-secondary); }
+  .post-body { font-size: 13px; color: var(--color-text-primary); line-height: 1.6; }
+  .code-block { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; margin-top: 8px; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-primary); border-left: 3px solid #7F77DD; }
+  .post-actions { display: flex; gap: 16px; margin-top: 12px; padding-top: 10px; border-top: 0.5px solid var(--color-border-tertiary); }
+  .action { font-size: 12px; color: var(--color-text-secondary); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .action:hover { color: #7F77DD; }
+  .action.liked { color: #D4537E; }
+  .tag { display: inline-block; background: #EEEDFE; color: #534AB7; border-radius: 20px; padding: 2px 8px; font-size: 10px; margin-top: 6px; margin-right: 4px; }
+  .tag.py { background: #EAF3DE; color: #3B6D11; }
+  .tag.tip { background: #FAEEDA; color: #854F0B; }
+  .comp-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .comp-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .comp-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .comp-status { font-size: 10px; padding: 3px 8px; border-radius: 20px; background: #EAF3DE; color: #3B6D11; font-weight: 500; }
+  .comp-status.ended { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+  .podium { display: flex; align-items: flex-end; gap: 6px; margin-top: 12px; height: 60px; }
+  .pod-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .pod-bar { width: 100%; border-radius: 4px 4px 0 0; }
+  .pod-name { font-size: 9px; color: var(--color-text-secondary); text-align: center; }
+  .pod-score { font-size: 10px; font-weight: 500; color: var(--color-text-primary); }
+  .notif-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .notif-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #7F77DD; margin-top: 4px; flex-shrink: 0; }
+  .notif-dot.read { background: var(--color-background-secondary); }
+  .notif-text { font-size: 12px; color: var(--color-text-primary); line-height: 1.5; }
+  .notif-time { font-size: 10px; color: var(--color-text-secondary); }
+  .streak { display: flex; gap: 4px; margin-top: 6px; }
+  .streak-day { width: 20px; height: 20px; border-radius: 4px; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--color-text-secondary); }
+  .streak-day.done { background: #7F77DD; color: white; }
+  .streak-day.today { background: #D4537E; color: white; }
+  .follow-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .follow-row:last-child { border-bottom: none; }
+  .follow-av { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; flex-shrink: 0; }
+  .follow-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+  .follow-btn { font-size: 10px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid #7F77DD; color: #7F77DD; background: transparent; cursor: pointer; }
+</style>
+
+<h2 class="sr-only">Concepto de dashboard social para Fundamentos de Programación 2026</h2>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- Profile card -->
+    <div class="card" style="text-align:center; padding: 1.25rem 1rem;">
+      <div class="avatar">🐱</div>
+      <div class="username">Carlos Orellana Soto</div>
+      <div class="handle">@Profe_Carlitos · Sección 001D</div>
+      <div class="badge-row">
+        <span class="badge accent">Lv 1</span>
+        <span class="badge">🌟 340 XP</span>
+        <span class="badge">🐙 HachiMaki-dev</span>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>XP al nivel 2</span><span>340 / 1000</span></div>
+        <div class="xp-bar"><div class="xp-fill"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-num">7</div><div class="stat-label">entradas</div></div>
+        <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">comps</div></div>
+        <div class="stat-box"><div class="stat-num">12</div><div class="stat-label">seguidores</div></div>
+      </div>
+    </div>
+
+    <!-- Racha semanal -->
+    <div class="card">
+      <div class="section-title">Racha semanal</div>
+      <div style="font-size:13px; color: var(--color-text-primary); margin-bottom:6px;">🔥 4 días seguidos</div>
+      <div class="streak">
+        <div class="streak-day done" title="Lunes">L</div>
+        <div class="streak-day done" title="Martes">M</div>
+        <div class="streak-day done" title="Miércoles">M</div>
+        <div class="streak-day done" title="Jueves">J</div>
+        <div class="streak-day today" title="Hoy">V</div>
+        <div class="streak-day" title="Sábado">S</div>
+        <div class="streak-day" title="Domingo">D</div>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <div class="card" style="padding: 0.75rem;">
+      <div class="mini-nav">
+        <div class="nav-item active"><div class="nav-dot">📰</div> Feed</div>
+        <div class="nav-item"><div class="nav-dot">📖</div> Mi Diario</div>
+        <div class="nav-item"><div class="nav-dot">🏆</div> Competencias</div>
+        <div class="nav-item"><div class="nav-dot">👤</div> Mi Perfil</div>
+        <div class="nav-item"><div class="nav-dot">🌐</div> Comunidad</div>
+        <div class="nav-item"><div class="nav-dot">📚</div> Ejercicios</div>
+      </div>
+    </div>
+
+    <!-- Sugerencias de seguir -->
+    <div class="card">
+      <div class="section-title">Sugeridos de tu sección</div>
+      <div class="follow-row">
+        <div class="follow-av" style="background:#7F77DD;">R</div>
+        <div><div class="follow-name">Renata López</div><div style="font-size:10px;color:var(--color-text-secondary);">12 commits esta semana</div></div>
+        <button class="follow-btn">+ Seguir</button>
+      </div>
+      <div class="follow-row">
+        <div class="follow-av" style="background:#D4537E;">M</div>
+        <div><div class="follow-name">Matías Vera</div><div style="font-size:10px;color:var(--color-text-secondary);">Top 3 en última comp</div></div>
+        <button class="follow-btn">+ Seguir</button>
+      </div>
+      <div class="follow-row">
+        <div class="follow-av" style="background:#1D9E75;">A</div>
+        <div><div class="follow-name">Antonia Ríos</div><div style="font-size:10px;color:var(--color-text-secondary);">7 entradas de diario</div></div>
+        <button class="follow-btn">+ Seguir</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FEED -->
+  <div class="feed-col">
+
+    <!-- Tabs -->
+    <div class="card" style="padding: 0.5rem;">
+      <div class="feed-tabs">
+        <div class="tab active">Para ti</div>
+        <div class="tab">Tu sección</div>
+        <div class="tab">Dev Blogs</div>
+        <div class="tab">Competencias</div>
+      </div>
+    </div>
+
+    <!-- Create post -->
+    <div class="card" style="display:flex; gap:10px; align-items:flex-start;">
+      <div class="mini-avatar" style="background:#7F77DD;">🐱</div>
+      <div style="flex:1;">
+        <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; font-size:13px; color: var(--color-text-secondary); cursor:text;">¿Qué aprendiste hoy? Comparte un snippet, reflexión o link...</div>
+        <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end;">
+          <button style="font-size:11px; padding:4px 10px; border-radius:20px; border:0.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-secondary); cursor:pointer;">código</button>
+          <button style="font-size:11px; padding:4px 10px; border-radius:20px; border:0.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-secondary); cursor:pointer;">link</button>
+          <button style="font-size:11px; padding:4px 14px; border-radius:20px; border:0.5px solid #7F77DD; background:#7F77DD; color:white; cursor:pointer; font-weight:500;">Publicar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post 1 — code snippet -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="mini-avatar" style="background:#D4537E;">M</div>
+        <div class="post-meta">
+          <div class="post-author">Matías Vera <span style="font-size:10px; background:#EEEDFE; color:#534AB7; border-radius:20px; padding:1px 6px; margin-left:4px;">Lv 3</span></div>
+          <div class="post-time">@matias_vera · 001D · hace 23 min</div>
+        </div>
+      </div>
+      <div class="post-body">Finalmente entendí las listas por comprensión. Aquí mi solución al ejercicio 4:</div>
+      <div class="code-block">pares = [x for x in range(20) if x % 2 == 0]<br>print(pares)  # [0,2,4,...,18]</div>
+      <div><span class="tag py">Python</span><span class="tag">listas</span></div>
+      <div class="post-actions">
+        <span class="action liked">♥ 14</span>
+        <span class="action">💬 3 comentarios</span>
+        <span class="action">🔖 guardar</span>
+        <span class="action" style="margin-left:auto;">⚑ reportar</span>
+      </div>
+    </div>
+
+    <!-- Post 2 — comp result -->
+    <div class="comp-card">
+      <div class="comp-header">
+        <div>
+          <div style="font-size:10px; color:var(--color-text-secondary); margin-bottom:3px;">Resultado de competencia</div>
+          <div class="comp-title">Challenge: Fibonacci Recursivo</div>
+        </div>
+        <div class="comp-status ended">Finalizada</div>
+      </div>
+      <div style="font-size:12px; color:var(--color-text-secondary); margin-top:4px;">Sección 001D · 18 participantes · 12 min promedio</div>
+      <div class="podium">
+        <div class="pod-item">
+          <div class="pod-score">92 pts</div>
+          <div class="pod-bar" style="height:40px; background:#AFA9EC;"></div>
+          <div class="pod-name">Renata L.</div>
+        </div>
+        <div class="pod-item">
+          <div class="pod-score">100 pts</div>
+          <div class="pod-bar" style="height:60px; background:#7F77DD;"></div>
+          <div class="pod-name">Antonia R.</div>
+        </div>
+        <div class="pod-item">
+          <div class="pod-score">88 pts</div>
+          <div class="pod-bar" style="height:30px; background:#CECBF6;"></div>
+          <div class="pod-name">Matías V.</div>
+        </div>
+        <div class="pod-item">
+          <div class="pod-score">75 pts</div>
+          <div class="pod-bar" style="height:20px; background:#EEEDFE;"></div>
+          <div class="pod-name">Tú</div>
+        </div>
+      </div>
+      <div class="post-actions">
+        <span class="action">🔁 Ver soluciones</span>
+        <span class="action">📊 Mi código</span>
+      </div>
+    </div>
+
+    <!-- Post 3 — diary entry preview -->
+    <div class="post-card">
+      <div class="post-header">
+        <div class="mini-avatar" style="background:#1D9E75;">A</div>
+        <div class="post-meta">
+          <div class="post-author">Antonia Ríos</div>
+          <div class="post-time">@toni_dev · 001D · hace 2 h</div>
+        </div>
+      </div>
+      <div class="post-body">Entrada del diario — Clase 8: Recursión 🤯 Hoy explotó mi cabeza, pero creo que empiezo a entenderlo. La clave para mí fue visualizar la pila de llamadas con papel y lápiz...</div>
+      <div><span class="tag tip">Reflexión</span><span class="tag">recursión</span></div>
+      <div style="margin-top:8px; padding:8px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); font-size:11px; color:var(--color-text-secondary); display:flex; gap:8px; align-items:center;">
+        <span>📖 Dev Blog · 3 min de lectura</span>
+        <span style="margin-left:auto; color:#534AB7; cursor:pointer;">Leer más →</span>
+      </div>
+      <div class="post-actions">
+        <span class="action">♥ 8</span>
+        <span class="action liked">💬 7 comentarios</span>
+        <span class="action">🔖 guardar</span>
+      </div>
+    </div>
+
+    <!-- Notification panel -->
+    <div class="card">
+      <div class="section-title">Notificaciones recientes</div>
+      <div class="notif-item">
+        <div class="notif-dot"></div>
+        <div><div class="notif-text"><b>Matías Vera</b> comentó en tu diario de la clase 7</div><div class="notif-time">hace 10 min</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot"></div>
+        <div><div class="notif-text">Nueva competencia activa: <b>Strings y Slices</b> — ¡tienes 48 h!</div><div class="notif-time">hace 1 h</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot read"></div>
+        <div><div class="notif-text">Ganaste <b>+50 XP</b> por tu commit en fundamentos-2026</div><div class="notif-time">hace 3 h</div></div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-dot read"></div>
+        <div><div class="notif-text"><b>Renata López</b> te empezó a seguir</div><div class="notif-time">ayer</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
