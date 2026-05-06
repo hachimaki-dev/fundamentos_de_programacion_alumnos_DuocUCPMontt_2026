@@ -1,0 +1,10 @@
+tipo_vehiculo = "camion"
+velocidad = 95
+
+if tipo_vehiculo == "auto" and velocidad > 120:
+    print("multa gravisima")
+elif tipo_vehiculo == "camion" and velocidad > 80:
+    print("multa grave camion")
+else:
+    print("sin multa")
+    
