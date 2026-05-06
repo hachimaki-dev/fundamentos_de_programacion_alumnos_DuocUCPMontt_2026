@@ -10,3 +10,5 @@ sueldo_empleado_descuento = sueldo_base - descuento_afp - descuento_salud
 sueldo_empleado_total = sueldo_empleado_descuento + bono_colacion + bono_movilizacion
 
 print (sueldo_empleado_total)
+
+#a
