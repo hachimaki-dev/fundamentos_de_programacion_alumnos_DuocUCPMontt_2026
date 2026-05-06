@@ -1,5 +1,6 @@
 # Cuenta Regresiva Básica (SpaceX)
-
-
-for i in range(10, 0, -1):
-    print(i)
+contador = 10
+while contador > 0:
+    print(contador)
+    contador -= 1
+print('Despegue')    
