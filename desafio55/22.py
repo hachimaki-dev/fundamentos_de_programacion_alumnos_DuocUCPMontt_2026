@@ -8,3 +8,4 @@ while alcancia <= precio_consola:
     contador_de_meses += 1
     if alcancia >= precio_consola:
         print(contador_de_meses)
+ 
