@@ -22,7 +22,7 @@ cargo_extra_cada_gb = 1000
 if tipo_de_cliente == "postpago":
     if gasto_cliente_gb > plan_cliente_gb:
         cargo_extra = (gasto_cliente_gb - plan_cliente_gb)*1000
-        print(f"ercago final de ${cargo_extra}")
+        print(f"rercago final de ${cargo_extra}")
 
 else:
     print("sin saldo")
