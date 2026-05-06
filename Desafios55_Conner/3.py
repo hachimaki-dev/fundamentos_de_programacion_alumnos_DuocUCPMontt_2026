@@ -13,5 +13,6 @@ personas=5
 valor_pichanga=15000
 valor_schops=3500
 
-cuenta=[valor_pichanga*2 + valor_schops*5 + *0.1]
+cuenta=(valor_pichanga*2 + valor_schops*5)*1.1//personas
+
 print(cuenta)
