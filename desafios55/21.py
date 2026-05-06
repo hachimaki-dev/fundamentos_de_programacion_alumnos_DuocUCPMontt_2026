@@ -5,7 +5,7 @@ while cuenta_regresiva > 0:
     cuenta_regresiva -= 1
     
     if cuenta_regresiva == 0:
-        print("despegue")
+        print("despegue🚀")
     
     
     
