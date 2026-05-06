@@ -1,0 +1,8 @@
+cantidad_btc = 0.05
+precio_compra_btc = 50000
+precio_actual_btc = 62000
+dolar_a_peso = 900
+ganancia_por_btc = precio_actual_btc - precio_compra_btc
+ganancia_total_dolares = ganancia_por_btc * cantidad_btc
+ganancia_total_pesos = ganancia_total_dolares * dolar_a_peso
+print(ganancia_total_pesos)

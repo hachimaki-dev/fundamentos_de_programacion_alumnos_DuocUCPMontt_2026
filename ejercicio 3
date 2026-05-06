@@ -1,0 +1,9 @@
+pichanga_precio = 15000
+schop_precio = 3500
+pichanga_cantidad = 2
+schop_cantidad = 5
+consumo_total = (pichanga_precio * pichanga_cantidad) + (schop_precio * schop_cantidad)
+propina = consumo_total * 0.10
+monto_final = consumo_total + propina
+pago_por_persona = monto_final / 5
+print(pago_por_persona)

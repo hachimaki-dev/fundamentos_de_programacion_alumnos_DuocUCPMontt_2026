@@ -1,0 +1,8 @@
+ahorro = 0
+costo_consola = 450000
+ahorro_mensual = 80000
+meses = 0
+while ahorro < costo_consola:
+    ahorro += ahorro_mensual
+    meses += 1
+print(meses)

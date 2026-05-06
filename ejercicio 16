@@ -1,0 +1,11 @@
+
+tipo_cliente = "Postpago"
+gigas_plan = 15
+gigas_usadas = 18
+if tipo_cliente == "Postpago":
+    if gigas_usadas > gigas_plan:
+        gigas_extra = gigas_usadas - gigas_plan
+        recargo = gigas_extra * 1000
+        print(recargo)
+    elif tipo_cliente == "Prepago":
+        print("Sin saldo")

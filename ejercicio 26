@@ -1,0 +1,17 @@
+hojas = 5
+documentos = ["TEXTO", "FOTO", "TEXTO", "FOTO"]
+for doc in documentos:
+    if doc == "TEXTO":
+        if hojas >= 1:
+            print(f"Imprimiendo{doc}")
+            hojas -= 1
+        else:
+            print("Sin papel")
+            break
+    elif doc == "FOTO":
+        if hojas >= 3:
+            print(f"Imprimiendo{doc}")
+            hojas -= 3
+        else:
+            print("Sin papel")
+            break

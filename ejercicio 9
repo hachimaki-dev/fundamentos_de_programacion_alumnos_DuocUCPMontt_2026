@@ -1,0 +1,10 @@
+
+precio_venta = 15000
+costo_tela = 4000
+costo_estampado = 2500
+costo_empaque = 500
+cantidad_vendida = 50
+costo_total = costo_tela + costo_estampado + costo_empaque
+ganancia_por_unidad = precio_venta - costo_total
+ganancia_mensual = ganancia_por_unidad * cantidad_vendida
+print(ganancia_mensual)

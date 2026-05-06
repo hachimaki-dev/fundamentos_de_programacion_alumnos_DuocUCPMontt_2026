@@ -1,0 +1,13 @@
+
+
+# datos inciales
+intentos_fallidos = 0
+clave_ingresada = "admin123"
+# clave correcta
+clave_correcta = "secreto"
+# reglas 
+if clave_ingresada == clave_correcta:
+    print("has ingresado correctamente")
+else:
+    intentos_fallidos += 1
+    print("Intentos fallidos: " + str(intentos_fallidos))

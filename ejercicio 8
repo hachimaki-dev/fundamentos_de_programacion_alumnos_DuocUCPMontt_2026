@@ -1,0 +1,8 @@
+
+total_ram_gb = 16
+sistema_ram_gb = 2.5
+programa_ram_gb = 1.2
+consumo_total_gb = sistema_ram_gb + (programa_ram_gb * 4)
+ram_libre_gb = total_ram_gb - consumo_total_gb
+ram_libre_mb = ram_libre_gb * 1024
+print(ram_libre_mb)

@@ -1,0 +1,15 @@
+contador_intentos = 0
+clave_correcta = "1234" 
+while True:
+    clave_ingresada = input("Ingresa tu clave: ")
+    if clave_ingresada == clave_correcta:
+        print("Acceso concedido.")
+        break 
+    else:
+        contador_intentos += 1
+        print("Clave incorrecta. intentos fallidos:", contador_intentos)
+        if contador_intentos < 3:
+            print("Intentalo de nuevo.")
+        else:
+            print("Bloqueo de tarjeta.")
+            break

@@ -1,0 +1,6 @@
+
+costo_primera_hora = 1200
+costo_media_hora_extra = 500
+horas_estacionado = 3
+costo_total = costo_primera_hora + ((horas_estacionado - 1) * 2) * costo_media_hora_extra
+print(costo_total)

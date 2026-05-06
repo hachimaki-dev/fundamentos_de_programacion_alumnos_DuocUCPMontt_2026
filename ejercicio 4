@@ -1,0 +1,7 @@
+
+precio_notebook = 1200000
+cuotas = 12
+costo_envio = 15000
+valor_cuota = precio_notebook / cuotas
+total_primer_mes = valor_cuota + costo_envio
+print(total_primer_mes)

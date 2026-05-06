@@ -1,0 +1,8 @@
+mensajes = ["hola", "noob", "genial", "manco"]
+# Recorremos la lista de mensajes
+for mensaje in mensajes:
+    # Verificamos si el mensaje es una palabra prohibida
+    if mensaje in ["noob", "manco"]:
+        print("[CENSURADO]")
+    else:
+        print(mensaje)
