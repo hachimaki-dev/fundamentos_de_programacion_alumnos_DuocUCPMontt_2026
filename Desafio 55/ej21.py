@@ -7,12 +7,10 @@
 
 #Restricciones: No hagas trampa escribiendo diez `prints`. Tienes que usar un ciclo `while` para hacerlo de forma automática.
 
-cronometro = 11
+cronometro = 11 #Parte en 11 porque posteriormente restaremos 1 :D
 
 while cronometro > 0:
     cronometro -= 1
-    print(f"n{cronometro}")
+    print(cronometro)
     if cronometro == 0:
         print("Despegue🚀")
-        
-
