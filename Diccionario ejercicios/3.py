@@ -111,8 +111,16 @@ while True:
 Responde por escrito:
 
 1. ¿Cuál es la diferencia entre una lista y un diccionario?
+    Que una lista se usa por posicion ej. [0,1,2,3..] 
+    y un diccionario se usa por etiqueta (clave:, "nombre", "edad"..)
 2. ¿Qué es una clave?
+    Es el nombre de la etiqueta del diccionario, sin el nombre no puedes acceder al valor 
+    y no puedes darle un contexto
 3. ¿Qué ocurre si intentas acceder a una clave que no existe?
+    Se termina el programa, pero si utilizamos el .get() en el programa al ejecutarlo te devolvera un
+    `None` y asi evitamos que se rompa el programa
 4. ¿Cuándo conviene usar un diccionario en vez de una lista?
+    Cuando los datos estan agrupados y quieres acceder a ellos por el nombre en lugar de la posicion
 5. ¿Por qué `items()` es útil cuando recorres diccionarios?
+    Porque cuando no sabes la clave y/0 valor es util ya que al usarlo te muestra clave y valor
 """
