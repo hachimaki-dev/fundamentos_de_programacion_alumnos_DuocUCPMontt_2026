@@ -12,4 +12,4 @@ propina = consumo * 0.10
 monto_final = consumo + propina
 pago_por_persona = monto_final / personas
 
-print("Cada persona debe pagar:", pago_por_persona)
+print(pago_por_persona)
