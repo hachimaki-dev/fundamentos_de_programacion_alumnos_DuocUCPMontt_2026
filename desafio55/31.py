@@ -1,0 +1,4 @@
+playlist = ["B","C"]
+playlist.append("D")
+playlist.insert(0,"A")
+print(playlist)
