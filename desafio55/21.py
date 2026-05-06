@@ -12,7 +12,7 @@
 
 
 cronometro = 11
-reloj = 0
+reloj = 1
 
 while cronometro > 0:
     reloj =  cronometro + 1
