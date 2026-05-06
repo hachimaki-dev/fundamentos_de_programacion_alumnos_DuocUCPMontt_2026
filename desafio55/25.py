@@ -1,6 +1,7 @@
 mensajes = ["hola","noob","genial","manco"] 
+contador = 0
 for i in mensajes:
-    if "noob" and "manco":
-        mensajes[1] = "censurar"
-        mensajes[3] = "censurar"
+    if "noob" or "manco":
+        mensajes[contador] = "censurado"
+    contador += 1
 print(mensajes)
