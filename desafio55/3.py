@@ -32,4 +32,4 @@ operacion4 = operacion3 + total_cuentas #52.250
 operacion5 = operacion4 / personas_total
 total_5 = operacion5
 
-print(f"El monto final para cada persona es de: {total_5}")
+print(f"El monto final para cada persona es de: ${total_5}")

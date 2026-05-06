@@ -20,4 +20,4 @@ total_a_ahorrar = valor_auto - ahorro_inicial
 
 total_cuotas = total_a_ahorrar // ahorro_mensual
 
-print(f"El total de cuotas a pagar es: {total_cuotas}")
+print(f"El total de cuotas a pagar es: ${total_cuotas}")

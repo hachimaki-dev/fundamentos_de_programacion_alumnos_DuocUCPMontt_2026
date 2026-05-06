@@ -25,4 +25,4 @@ descuento_afp = sueldo_base * descuento_afp
 
 sueldo_liquido = sueldo_base + bono_colacion + bono_movilización - descuento_salud - descuento_afp
 
-print(f"El sueldo a pagar es: {sueldo_liquido}")
+print(f"El sueldo a pagar es: ${sueldo_liquido}")
