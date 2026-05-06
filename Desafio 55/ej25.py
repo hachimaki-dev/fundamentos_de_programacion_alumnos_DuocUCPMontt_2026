@@ -7,10 +7,11 @@
 
 #Restricciones: Recorre la lista con un `for`. Adentro, usa un `if` para revisar si la palabra es mala e imprimir la censura, sino, imprime la palabra original.
 
-palabras_baneadas = ['hola', 'noob', 'genial', 'manco']
+mensaje = ['hola', 'noob', 'genial', 'manco']
+bann = ['noob', 'manco']
 
-for palabra in palabras_baneadas:
-    if palabra == 'noob' or palabra == 'manco':
+for palabra in mensaje:
+    if palabra in bann:
         print("[CENSURADO]")
     else:
         print(palabra)
