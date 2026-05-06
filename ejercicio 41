@@ -1,0 +1,5 @@
+jugador ={
+    "nombre": "john",
+    "nivel": 1}
+print(jugador["nombre"])
+
