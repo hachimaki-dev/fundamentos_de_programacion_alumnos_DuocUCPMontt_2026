@@ -10,4 +10,4 @@ while intentos_fallidos < 3:
         print("Clave incorrecta, intenta de nuevo")
         intentos_fallidos += 1
 
-print("Bloqueando tarjeta")
+print("Haz superado el limite de intentos, Bloqueando tarjeta")
