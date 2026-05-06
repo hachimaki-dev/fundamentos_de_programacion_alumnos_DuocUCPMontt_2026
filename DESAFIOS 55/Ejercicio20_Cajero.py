@@ -6,7 +6,7 @@ if retiro > limitediario:
     print ('Excede límite diario')
 elif retiro > saldo:
     print ('Saldo Insuficiente')
-elif retiro % 5000 > 0:
+elif abs(retiro % 5000) > 0:
     print ('Monto Invalido')
 else:
     print('Retiro exitoso')
