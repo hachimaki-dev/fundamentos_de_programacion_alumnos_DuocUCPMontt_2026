@@ -13,3 +13,14 @@ for hojas in impresora:
         break
     elif hojas == "TEXTO":
         print("impresora gasto 2 hojas")
+#hojas_disponbiles = 5
+#cola_impresion = ["TEXTO" , "FOTO" , "TEXTO" , "FOTO"]
+#for documento in cola_impresion:
+    #if documento == "TEXTO" and hojas_disponbiles >= 1:
+    #hoja_disponibles = hojas_disponibles - 1
+    #print(imprimiento texto)
+    #elif documento == "FOTO" and hojas_disponbibles >= 3:
+    #hojas_disponibles = hojas_disponible - 3
+    #print("imprimiendo foto")
+    #else:
+        #print("sin hojas")
