@@ -5,4 +5,4 @@ libro = {
     "editorial": "",
 }
 
-print(libro["titulo"])
+print(libro["autor"])
