@@ -12,7 +12,7 @@ ahorro_mensual = 80000
 precio_consola = 450000
 contador_meses = 0
 
-while alcancia < 450000:
+while alcancia < precio_consola:
     alcancia += ahorro_mensual
     contador_meses += 1
 
