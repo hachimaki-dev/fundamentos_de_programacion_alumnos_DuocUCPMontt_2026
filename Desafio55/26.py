@@ -5,13 +5,14 @@
 foto = 3
 texto = 1
 hojas = 5
-while True:
-    if hojas >= 1:
-        print("imprimiendo: Texto")
-        hojas -= 1
-    if hojas >= 3:
-        print("imprimiendo: Foto")
-        hojas -= 3
+cola = ["Texto", "Foto", "Texto", "Foto"]
+for i in cola:
     if hojas <= 0:
         print("Sin Papel")
         break
+    if i == "Texto" and hojas >= 1:
+        print(f"imprimiendo: {i}")
+        hojas -= 1
+    if i == "Foto"and hojas >= 3:
+        print(f"imprimiendo: {i}")
+        hojas -= 3
