@@ -1,6 +1,8 @@
 # Ejercicio 26: Procesar Cola de Impresión
 
-print("================================")
+print("=================================")
+print("Bienbenido a Sistema de impresora")
+print("=================================")
 
 hojas_disponibles = 5
 cola_de_impresion = ['TEXTO', 'FOTO', 'TEXTO', 'FOTO']
