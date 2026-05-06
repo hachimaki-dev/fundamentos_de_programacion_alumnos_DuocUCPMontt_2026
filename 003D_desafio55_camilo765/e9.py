@@ -1,9 +1,11 @@
-primera_hora = 1200
-media_hora = 500
-horas_totales = 3
+precio_venta = 15000
+costo_tela = 4000
+costo_estampado = 2500
+costo_empaque = 500
+cantidad = 50
 
-horas_extra = horas_totales - 1 
-bloques_media_hora = horas_extra * 2
+costo_total = costo_tela + costo_estampado + costo_empaque
+ganancia_unitaria = precio_venta - costo_total
+ganancia_mensual = ganancia_unitaria * cantidad
 
-total = primera_hora + (bloques_media_hora * media_hora)
-print(total)
+print(ganancia_mensual)
