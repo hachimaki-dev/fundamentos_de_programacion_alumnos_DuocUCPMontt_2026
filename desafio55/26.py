@@ -1,17 +1,16 @@
 impresion = ['TEXTO', 'FOTO', 'TEXTO', 'FOTO']
 hojas = 5
 for i in impresion:
-    if i in ["TEXTO"]:
+    if i == "TEXTO":
+        print("IMPRIMIENDO TEXTO")
         hojas -= 1
-        if hojas > 0:
-            print("TEXTO")
-        else:
+        if hojas <= 0:
             print("SIN PAPEL")
             break
-    if i in ["FOTO"]:
+    
+    elif i == "FOTO":
+        print("IMPRIMIENDO FOTO")
         hojas -= 3
-        if hojas > 0:
-            print("FOTO")
-        else:
+        if hojas <= 0:
             print("SIN PAPEL")
             break
