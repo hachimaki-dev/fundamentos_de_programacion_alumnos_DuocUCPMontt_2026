@@ -46,6 +46,13 @@ createApp({
   computed: {
     avatarSrc() {
       if (!this.profile) return '';
+      
+      // Priorizar avatar personalizado si existe
+      if (this.profile.avatar_source === 'custom' && this.profile.avatar_custom_url) {
+        return this.profile.avatar_custom_url;
+      }
+      
+      // Fallback al catálogo de avatares
       return this.getAvatar(this.profile.avatar_id);
     },
     nextLevelXp() {
@@ -232,7 +239,7 @@ createApp({
       if (this.activeTab === 'foryou' || this.activeTab === 'blogs') {
         // Public diary entries
         let q = client.from('diary_entries')
-          .select('*, profiles(nickname, avatar_id, level, section)')
+          .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, level, section)')
           .eq('is_public', true)
           .order('created_at', { ascending: false })
           .limit(20);
@@ -250,7 +257,7 @@ createApp({
             if (ids.length) {
               try {
                 const { data: comments } = await client.from('diary_comments')
-                  .select('*, profiles(nickname, avatar_id)')
+                  .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)')
                   .in('entry_id', ids)
                   .order('created_at', { ascending: false });
                 if (comments) {
@@ -283,7 +290,7 @@ createApp({
         if (this.activeTab === 'section' && profile.section) {
           try {
             const { data } = await client.from('diary_entries')
-              .select('*, profiles!inner(nickname, avatar_id, level, section)')
+              .select('*, profiles!inner(nickname, avatar_id, avatar_source, avatar_custom_url, level, section)')
               .eq('is_public', true)
               .eq('profiles.section', profile.section)
               .order('created_at', { ascending: false })
@@ -359,7 +366,7 @@ createApp({
       if (this.activeTab === 'foryou') {
         try {
           const { data } = await client.from('github_sync_history')
-            .select('*, profiles(nickname, avatar_id)')
+            .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)')
             .order('created_at', { ascending: false })
             .limit(5);
           if (data) {
@@ -396,7 +403,7 @@ createApp({
       // Leaderboard
       try {
         const { data } = await client.from('profiles')
-          .select('id, nickname, avatar_id, xp, level')
+          .select('id, nickname, avatar_id, avatar_source, avatar_custom_url, xp, level')
           .eq('section', profile.section)
           .order('xp', { ascending: false })
           .limit(10);
@@ -413,7 +420,7 @@ createApp({
         followingIds.push(profile.id); // exclude self
 
         const { data: candidates } = await client.from('profiles')
-          .select('id, nickname, avatar_id, xp, level')
+          .select('id, nickname, avatar_id, avatar_source, avatar_custom_url, xp, level')
           .eq('section', profile.section)
           .order('xp', { ascending: false })
           .limit(20);
@@ -471,7 +478,7 @@ createApp({
       // Recent follows
       try {
         const { data: follows } = await client.from('follows')
-          .select('*, profiles:follower_id(nickname)')
+          .select('*, profiles:follower_id(nickname, avatar_id, avatar_source, avatar_custom_url)')
           .eq('following_id', profile.id)
           .order('created_at', { ascending: false })
           .limit(3);
@@ -523,12 +530,19 @@ createApp({
         if (comps && comps.length > 0) {
           for (let comp of comps) {
              const { data: subs } = await client.from('competition_submissions')
-               .select('user_id, profiles!user_id(avatar_id)')
+               .select('user_id, profiles!user_id(avatar_id, avatar_source, avatar_custom_url)')
                .eq('competition_id', comp.id);
                
              if (subs) {
-               const uniqueAvatars = [...new Set(subs.map(s => s.profiles?.avatar_id).filter(id => id))];
-               comp._submitters = uniqueAvatars;
+                const uniqueProfiles = [];
+                const seenIds = new Set();
+                subs.forEach(s => {
+                  if (s.profiles && !seenIds.has(s.user_id)) {
+                    seenIds.add(s.user_id);
+                    uniqueProfiles.push(s.profiles);
+                  }
+                });
+                comp._submitters = uniqueProfiles;
              } else {
                comp._submitters = [];
              }
@@ -561,7 +575,7 @@ createApp({
           content: content,
           is_public: true,
           tags: ['quick-post'],
-        }).select('*, profiles(nickname, avatar_id, level, section)').single();
+        }).select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, level, section)').single();
 
         if (error) {
           SupabaseManager.showToast('Error al publicar: ' + error.message, 'error');
@@ -683,8 +697,18 @@ createApp({
     },
 
     // ─── Helpers ───
-    getAvatar(id) {
-      const av = this.avatarCatalog.find(a => a.id === id);
+    getAvatar(avatarParam) {
+      // Si es un objeto de perfil, verificar avatar personalizado
+      if (typeof avatarParam === 'object' && avatarParam !== null) {
+        if (avatarParam.avatar_source === 'custom' && avatarParam.avatar_custom_url) {
+          return avatarParam.avatar_custom_url;
+        }
+        // Usar avatar_id del perfil
+        avatarParam = avatarParam.avatar_id;
+      }
+      
+      // Fallback al catálogo por ID
+      const av = this.avatarCatalog.find(a => a.id === avatarParam);
       return av ? av.src : this.avatarCatalog[0].src;
     },
 

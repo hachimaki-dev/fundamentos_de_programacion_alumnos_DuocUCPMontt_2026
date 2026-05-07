@@ -115,7 +115,7 @@
               <div class="fh-members-title">Fuerzas Activas (Nivel y Github)</div>
               <div class="fh-members-grid">
                 <div v-for="m in f.members" :key="m.id" class="fh-member">
-                  <img :src="getAvatar(m.avatar_id)" />
+                  <img :src="getAvatar(m)" />
                   <div class="fh-member-lvl">{{ m.level || 1 }}</div>
                   <div class="fh-member-tooltip">
                     <b>@{{ m.nickname }}</b><br />

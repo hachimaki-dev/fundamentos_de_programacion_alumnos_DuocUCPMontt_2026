@@ -63,7 +63,7 @@
           <!-- Post Header -->
           <div class="sd-post-header">
             <div class="sd-post-meta">
-              <img :src="getAvatar(entry.profiles?.avatar_id)" class="sd-av" />
+              <img :src="getAvatar(entry.profiles)" class="sd-av" />
               <div>
                 <div class="sd-post-author">
                   {{ entry.profiles?.nickname || 'Usuario Desconocido' }}
@@ -115,7 +115,7 @@
             <div v-if="getCommentsForEntry(entry.id).length > 0" class="flex flex-col gap-2 mb-3">
               <div v-for="comment in getCommentsForEntry(entry.id)" :key="comment.id" class="flex gap-2 text-sm"
                 style="padding:0.5rem; background:var(--t-surface-alt); border-radius:var(--t-radius, 12px);">
-                <img :src="getAvatar(comment.profiles?.avatar_id)" class="sd-av" style="width:24px;height:24px;" />
+                <img :src="getAvatar(comment.profiles)" class="sd-av" style="width:24px;height:24px;" />
                 <div class="flex-1">
                   <div class="flex justify-between items-baseline mb-1">
                     <span class="font-bold text-xs" style="color:var(--t-text);">{{ comment.profiles?.nickname }}</span>
@@ -186,7 +186,7 @@
           // Load public entries with user profile
           const { data: entries, error } = await client
             .from('diary_entries')
-            .select('*, profiles(nickname, avatar_id, level, section)')
+            .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, level, section)')
             .eq('is_public', true)
             .order('created_at', { ascending: false });
 
@@ -198,7 +198,7 @@
             if (entryIds.length > 0) {
               const { data: commentsData } = await client
                 .from('diary_comments')
-                .select('*, profiles(nickname, avatar_id)')
+                .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)')
                 .in('entry_id', entryIds)
                 .order('created_at', { ascending: true });
 
@@ -218,9 +218,16 @@
           if (typeof marked !== 'undefined') return marked.parse(text || '');
           return (text || '').replace(/\n/g, '<br>');
         },
-        getAvatar(id) {
-          const av = this.avatarCatalog.find(a => a.id === id);
-          return av ? av.src : this.avatarCatalog[0].src;
+        getAvatar(profileOrId) {
+          if (typeof profileOrId === 'object' && profileOrId !== null) {
+            if (profileOrId.avatar_source === 'custom' && profileOrId.avatar_custom_url) {
+              return profileOrId.avatar_custom_url;
+            }
+            profileOrId = profileOrId.avatar_id;
+          }
+          const catalog = this.avatarCatalog || SupabaseManager.getAvatarCatalog();
+          const av = catalog.find(a => a.id === profileOrId);
+          return av ? av.src : catalog[0].src;
         },
         async postComment(entryId) {
           const content = (this.newComments[entryId] || '').trim();
@@ -236,7 +243,7 @@
               user_id: this.profile.id,
               content: content
             })
-            .select('*, profiles(nickname, avatar_id)')
+            .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)')
             .single();
 
           if (error) {

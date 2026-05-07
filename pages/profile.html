@@ -185,6 +185,19 @@
                 <div class="sd-stat-label">Siguiendo</div>
               </div>
             </div>
+
+            <!-- Bio -->
+            <div v-if="profile.bio" style="margin-top:1rem;padding:0.8rem;background:var(--t-surface-hover);border-radius:6px;font-size:0.9rem;color:var(--t-text-secondary);">
+              "{{ profile.bio }}"
+            </div>
+
+            <!-- Social Links -->
+            <div v-if="hasSocialLinks" style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+              <a v-if="profile.social_links?.github" :href="'https://github.com/' + profile.social_links.github" target="_blank" rel="noopener" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);text-decoration:none;cursor:pointer;">🐙 GitHub</a>
+              <a v-if="profile.social_links?.twitter" :href="'https://twitter.com/' + profile.social_links.twitter" target="_blank" rel="noopener" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);text-decoration:none;cursor:pointer;">𝕏 Twitter</a>
+              <a v-if="profile.social_links?.youtube" :href="profile.social_links.youtube" target="_blank" rel="noopener" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);text-decoration:none;cursor:pointer;">▶️ YouTube</a>
+              <a v-if="profile.social_links?.portfolio" :href="profile.social_links.portfolio" target="_blank" rel="noopener" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);text-decoration:none;cursor:pointer;">🌐 Web</a>
+            </div>
           </div>
         </div>
 
@@ -268,6 +281,13 @@
         },
         avatarSrc() {
           if (!this.profile) return '';
+          
+          // Priorizar avatar personalizado si existe
+          if (this.profile.avatar_source === 'custom' && this.profile.avatar_custom_url) {
+            return this.profile.avatar_custom_url;
+          }
+          
+          // Fallback al catálogo de avatares
           const catalog = SupabaseManager.getAvatarCatalog();
           const av = catalog.find(a => a.id === this.profile.avatar_id);
           return av ? av.src : catalog[0].src;
@@ -291,6 +311,11 @@
           css = css.replace(/javascript:/gi, '');
           css = css.replace(/<script/gi, '');
           return css;
+        },
+        hasSocialLinks() {
+          if (!this.profile || !this.profile.social_links) return false;
+          const { github, twitter, youtube, portfolio } = this.profile.social_links;
+          return !!github || !!twitter || !!youtube || !!portfolio;
         }
       },
       async mounted() {
@@ -304,6 +329,16 @@
         let queryNickname = urlParams.get('nickname');
         let queryId = urlParams.get('id');
 
+        // Si no hay parámetros, cargar el perfil del usuario actual
+        if (!queryNickname && !queryId) {
+          if (this.currentUser) {
+            queryId = this.currentUser.id;
+          } else {
+            this.loading = false;
+            return;
+          }
+        }
+
         const client = SupabaseManager.getClient();
         let query = client.from('profiles').select('*');
 
@@ -311,19 +346,33 @@
           query = query.eq('nickname', queryNickname);
         } else if (queryId) {
           query = query.eq('id', queryId);
-        } else if (this.currentUser) {
-          query = query.eq('id', this.currentUser.id);
-        } else {
-          this.loading = false;
-          return;
         }
 
         const { data, error } = await query.single();
 
         if (data && !error) {
+          // Verificar privacidad del perfil
+          if (!this.isOwner && data.visibility === 'private') {
+            this.profile = null;
+            SupabaseManager.showToast('Este perfil es privado', 'info');
+            this.loading = false;
+            return;
+          }
+
+          if (!this.isOwner && data.visibility === 'followers_only') {
+            // Verificar si el usuario actual es seguidor
+            const isFollower = await SupabaseManager.isFollowing(this.currentUser?.id, data.id);
+            if (!isFollower) {
+              this.profile = null;
+              SupabaseManager.showToast('Debes seguir este perfil para verlo', 'info');
+              this.loading = false;
+              return;
+            }
+          }
+
           this.profile = data;
 
-          // Intentar obtener la facción por separado para evitar fallos de join si el schema cache no está actualizado
+          // Intentar obtener la facción
           if (data.faction_id) {
             try {
               const { data: fData } = await client.from('factions').select('faction_name').eq('id', data.faction_id).single();
@@ -337,46 +386,59 @@
           this.editForm.html = data.custom_html || '';
           this.editForm.css = data.custom_css || '';
 
-          // Cargar seguidores
-          const { count: fCount } = await client.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', data.id);
-          const { count: flCount } = await client.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', data.id);
-          this.followersCount = fCount || 0;
-          this.followingCount = flCount || 0;
+          // Cargar follower/following counts usando las nuevas funciones
+          this.followersCount = await SupabaseManager.getFollowerCount(data.id);
+          this.followingCount = await SupabaseManager.getFollowingCount(data.id);
 
-          // Ver si lo sigo
+          // Ver si lo sigo (si es otro usuario)
           if (this.currentUser && !this.isOwner) {
-            try {
-              const { data: followData } = await client.from('follows').select('follower_id').eq('follower_id', this.currentUser.id).eq('following_id', data.id).single();
-              if (followData) this.isFollowing = true;
-            } catch (e) { console.error("Error follows", e); }
+            const following = await SupabaseManager.isFollowing(this.currentUser.id, data.id);
+            this.isFollowing = following;
           }
         } else {
           console.error("Error cargando perfil:", error);
-          if (error && error.message.includes('factions')) {
-            SupabaseManager.showToast('Error de esquema: Falta crear la tabla factions', 'error');
-          }
         }
 
         this.loading = false;
       },
       methods: {
         async toggleFollow() {
-          if (!this.currentUser) return;
-          this.followLoading = true;
-          const client = SupabaseManager.getClient();
-
-          if (this.isFollowing) {
-            // Dejar de seguir
-            await client.from('follows').delete().eq('follower_id', this.currentUser.id).eq('following_id', this.profile.id);
-            this.isFollowing = false;
-            this.followersCount--;
-          } else {
-            // Seguir
-            await client.from('follows').insert({ follower_id: this.currentUser.id, following_id: this.profile.id });
-            this.isFollowing = true;
-            this.followersCount++;
-            SupabaseManager.showToast(`Ahora sigues a ${this.profile.nickname}`, 'success');
+          if (!this.currentUser) {
+            SupabaseManager.showToast('Debes estar logueado para seguir', 'info');
+            return;
           }
+          
+          this.followLoading = true;
+
+          try {
+            if (this.isFollowing) {
+              // Dejar de seguir
+              const { error } = await SupabaseManager.unfollowUser(this.profile.id);
+              if (error) {
+                SupabaseManager.showToast('Error al dejar de seguir', 'error');
+                this.followLoading = false;
+                return;
+              }
+              this.isFollowing = false;
+              this.followersCount--;
+              SupabaseManager.showToast(`Dejaste de seguir a ${this.profile.nickname}`, 'success');
+            } else {
+              // Seguir
+              const { error } = await SupabaseManager.followUser(this.profile.id);
+              if (error) {
+                SupabaseManager.showToast('Error al seguir', 'error');
+                this.followLoading = false;
+                return;
+              }
+              this.isFollowing = true;
+              this.followersCount++;
+              SupabaseManager.showToast(`Ahora sigues a ${this.profile.nickname}`, 'success');
+            }
+          } catch (err) {
+            console.error('Error toggling follow:', err);
+            SupabaseManager.showToast('Error inesperado', 'error');
+          }
+
           this.followLoading = false;
         },
         async saveCustomizations() {
