@@ -1,11 +1,9 @@
 intentos_fallidos = 0
-clave = 'Admin123'
-clave_real = 'secreto'
+clave_ingresada = 'Admin123'
+clave_correcta = 'secreto'
 
-input("ingresa la clave: ")
-
-if clave_real != clave:
-    intentos_fallidos = (intentos_fallidos + 1)
-    print(f"Intentos fallidos: {intentos_fallidos}")
+if clave_ingresada == clave_correcta:
+    print('Entraste')
 else:
-    print("desbloqueado")
+    intentos_fallidos += 1
+    print('Intentos fallidos:', intentos_fallidos)
