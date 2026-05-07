@@ -10,6 +10,3 @@ for i in impresion:
     elif i == "foto":
         hojas -= 3
         print("imprimiendo foto")
-    elif hojas <= 0:
-        print("sin papel")
-        break
