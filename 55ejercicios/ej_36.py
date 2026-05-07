@@ -1,0 +1,14 @@
+# Ejercicio 36: Fusión de Servidores (Clústeres)
+
+print("=========================================")
+print("Iniciando sistema de fusión de servidores")
+print("=========================================")
+
+servidor1 = ['U1', 'U2']
+servidor2 = ['U2', 'U3']
+
+for usuario in servidor2:
+    if usuario not in servidor1:
+        servidor1.append(usuario)
+
+print(servidor1)
