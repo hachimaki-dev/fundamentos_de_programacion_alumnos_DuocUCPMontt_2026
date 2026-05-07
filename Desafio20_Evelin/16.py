@@ -6,7 +6,6 @@ for voto in votos:
     if voto in resultados:
         resultados[voto] += 1
     else:
-        resultados[voto] += 1
+        resultados[voto] = 1
 
 print(resultados)
-#arreglar
