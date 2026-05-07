@@ -11,4 +11,7 @@
 cronometro=10
 while cronometro>0:
     print(cronometro)
-    print(cronometro-1)
+    cronometro=cronometro-1
+
+else:
+    print("Despegue🚀")
