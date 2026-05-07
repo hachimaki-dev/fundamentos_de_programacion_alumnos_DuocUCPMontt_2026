@@ -6,5 +6,5 @@
 
 #Restricciones: No hagas ciclos manuales complicados. Python tiene dos herramientas que hacen esto por ti: `max()` y `min()`. Úsalas e imprime ambas notas separadas por un guion.
 notas_finales = [3.5, 6.2, 5.0, 2.1, 7.0]
-print(max(notas_finales))
-print(min(notas_finales))
+print(f"{max(notas_finales)} - {min(notas_finales)} ")
+
