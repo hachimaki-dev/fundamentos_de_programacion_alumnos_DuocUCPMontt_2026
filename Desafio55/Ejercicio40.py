@@ -1,0 +1,32 @@
+"""Ejercicio 40: Gestión de Inventario (Minecraft)
+El Mini-Boss: Haz que el jugador no pueda recoger más cosas si su mochila está llena.
+
+Datos Iniciales: Tu mochila ya tiene `['mapa', 'espada']`. Solo puedes llevar 4 cosas máximo. En el piso encontraste `['madera', 'piedra', 'oro']`.
+
+Reglas de Negocio: El juego intenta recoger las cosas del piso una por una. Pero si en algún momento la mochila llega a 4 objetos, se llena, 
+salta la alerta 'Lleno' y no puedes seguir recogiendo NADA MÁS del piso.
+
+Restricciones: Recorre las cosas del piso con un `for`. Agrégalas a tu mochila. 
+
+Justo después de agregar, revisa si el largo (`len()`) de tu mochila es igual a 4. Si es así, imprime 'Lleno' y corta el ciclo con `break`. Al final, 
+imprime cómo quedó tu mochila."""
+X = 0
+
+Mochila = ["Mapa", "Espada"]
+
+Items_encontrados_en_minecraft = ["Madera", "Piedra", "Oro"]
+print("Vas caminando en minecraft y te encuentras con:")
+for items_calle in Items_encontrados_en_minecraft:
+    input()
+    print(items_calle)
+print("Asi que vas a recoger uno por uno")
+
+while len(Mochila) < 4:
+    Mochila.append(Items_encontrados_en_minecraft[X])
+    X += 1
+print("Tu mochila se encuentra llena")
+input()
+print("Solo pudiste recolectar:")
+for Items in Mochila:
+    input()
+    print(Items)
