@@ -1,11 +1,12 @@
-nombres_sucios = ['Juan', None, '', 'Ana', '']
+nombres_sucios = ['Juan', None, '', 'Ana ', '']
 contador = 0
+nombres_limpios = []
 for i in nombres_sucios:
-    if i is not None and i.strip() != "":
+    if i is None:
+        continue
+    elif len(i) == 0:
         continue
     else:
-        nombres_sucios.pop(contador)
-    contador += 1
-print(nombres_sucios)
+        nombres_limpios.append(i.strip())
     
-        
+print(nombres_limpios)
