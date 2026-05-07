@@ -1,0 +1,9 @@
+ventas = {"localA": 150, "localB": 300, "localC": 100}
+
+total = 0
+
+
+for dinero in ventas.values():
+    total = total + dinero
+
+print(total)
