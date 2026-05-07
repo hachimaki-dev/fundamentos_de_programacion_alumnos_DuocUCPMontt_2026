@@ -8,4 +8,6 @@ for i in Trasnferecnias_del_dia:
         importantes.append(i)
 
 print (importantes)
+
+
     
