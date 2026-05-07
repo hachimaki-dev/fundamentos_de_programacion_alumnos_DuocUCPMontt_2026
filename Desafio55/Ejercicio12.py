@@ -1,0 +1,22 @@
+"""Ejercicio 12: Aprobación de Crédito (AND simple)
+Revisa si un cliente cumple los requisitos del banco para pedir un crédito.
+
+Datos Iniciales: El cliente tiene un sueldo de 550000 y tiene 1 deuda activa.
+
+Reglas de Negocio: El banco exige DOS cosas a la vez: que el sueldo sea mayor a 500000 Y que la cantidad de deudas sea exactamente 0.
+
+Restricciones: Usa la palabra reservada `and` dentro de un `if` para revisar ambas cosas en la misma línea. Imprime `'Aprobado'` o `'Rechazado'`."""
+
+Sueldo_Cliente = 550000
+
+Deudas_Activas = 1
+
+Respuesta = input("Quieres sacar un prestamo?")
+if Respuesta == "Si":
+    if Sueldo_Cliente > 500000 and Deudas_Activas == 0:
+        print("Sacaste un prestamo")
+    if Sueldo_Cliente > 500000 and Deudas_Activas > 0:
+        print("No puede sacar un prestamo")
+elif Respuesta == "No":
+    print("")
+    
