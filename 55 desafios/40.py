@@ -5,7 +5,7 @@ print(f"Objetos en la mochila: {mochila}")
 print(f"Objetos en el piso: {cosas_piso}")
 
 for cosa in cosas_piso:
-    print(f"Recoger {cosa}")
+    print(f"Recoger {cosas_piso[0]}")
     mochila.append(cosas_piso[0])
     cosas_piso.pop(0)
     print(f"El inventario tiene {len(mochila)} objetos")
