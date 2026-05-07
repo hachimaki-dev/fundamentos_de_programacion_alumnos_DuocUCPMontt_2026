@@ -1,0 +1,10 @@
+comentario_cliente = "buen servicio mal precio buen ambiente"
+freq = {"buen": 0, "mal": 0}
+palabras = comentario_cliente.split()
+
+for palabra in palabras:
+    if palabra in freq:
+        freq[palabra] += 1
+
+print(freq)
+
