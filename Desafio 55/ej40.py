@@ -14,7 +14,7 @@ maximo_objetos = 4
 for material in piso:
     mochila.append(material)
     
-    if len(mochila) == 4:
+    if len(mochila) == maximo_objetos:
         print("Lleno")
         break
 
