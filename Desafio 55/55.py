@@ -5,7 +5,7 @@ billetes_entregados = {20000 : 0,
                        5000 : 0,
                        1000 : 0}
 
-for key, value in billetes_entregados.items() :
+for key in billetes_entregados.keys() :
     cantidad_billete = dinero_a_retirar // key
     dinero_a_retirar -= key
 
