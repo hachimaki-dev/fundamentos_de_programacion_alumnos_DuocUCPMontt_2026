@@ -9,10 +9,8 @@
 #Restricciones: Usa un ciclo for con la herramienta range(). Recuerda que en Python, el range se detiene un número ANTES del final, así que ajusta el límite para que llegue a 5. Imprime los nombres generados en cada vuelta.[cite: 2]
 
 base_usuario = "user_"
-numero_usuario = 0
-for usuarios in base_usuario :
-    base_usuario = "user_"
-    numero_usuario = numero_usuario + 1
-    base_usuario = base_usuario + str(numero_usuario)
-    print(base_usuario)
+for i in range(1, 6):
+    user_completo = base_usuario + str(i)
+    print(user_completo)
+
 
