@@ -563,17 +563,33 @@
                 <!-- TAB: RANKING -->
                 <div v-if="detailTab === 'ranking'">
                   <div class="max-w-md mx-auto py-4">
-                    <h3 class="sd-sec text-center mb-6">🏆 Ranking de Honor</h3>
+                    <h3 class="sd-sec text-center mb-6">🏆 Ranking del Dojo</h3>
+                    <p class="text-center text-xs mb-4" style="color:var(--t-text-muted);">Solo cuenta actividad dentro de este dojo. Puntos externos no aplican.</p>
                     <div v-if="leaderboard.length">
                       <div v-for="(entry, idx) in leaderboard" :key="entry.user_id"
-                        class="flex items-center gap-3 p-3 mb-2 rounded-xl border border-dashed"
-                        style="border-color: var(--t-glass-border); background: var(--t-surface-alt);">
-                        <span class="font-bold w-8 text-center" style="color:var(--t-accent);">#{{ idx + 1 }}</span>
+                        class="flex items-center gap-3 p-3 mb-2 rounded-xl border"
+                        :style="idx === 0 ? 'border-color: var(--t-accent); background: var(--t-surface-alt); box-shadow: 0 0 12px rgba(var(--t-accent-rgb),0.15);' : 'border-color: var(--t-glass-border); background: var(--t-surface-alt);'">
+                        <span class="font-bold w-8 text-center" style="color:var(--t-accent);">{{ idx === 0 ? '👑' : '#' + (idx + 1) }}</span>
                         <img :src="getAvatar(entry.avatar_id)" style="width:28px;height:28px;border-radius:50%;" />
-                        <span class="flex-1 font-semibold" style="color:var(--t-text);">{{ entry.nickname }}</span>
-                        <span class="font-black" style="color:var(--t-accent);">{{ entry.score }}
-                          <small>PTS</small></span>
+                        <div class="flex-1">
+                          <div class="font-semibold" style="color:var(--t-text);">
+                            {{ entry.nickname }}
+                            <span v-if="idx === 0" class="text-xs ml-1" style="color:var(--t-accent); font-weight:800;">LÍDER</span>
+                          </div>
+                          <div class="flex gap-3 text-xs mt-1" style="color:var(--t-text-muted);">
+                            <span>📁 {{ entry.submissions }} soluciones</span>
+                            <span>👍 {{ entry.likes }} likes</span>
+                            <span>💬 {{ entry.wallPosts }} posts</span>
+                          </div>
+                        </div>
+                        <div class="text-right">
+                          <span class="font-black" style="color:var(--t-accent);">{{ entry.dojoScore }}<small> PTS</small></span>
+                          <div class="text-xs" style="color:var(--t-text-muted);">dojo XP: {{ entry.dojoXp || 0 }}</div>
+                        </div>
                       </div>
+                    </div>
+                    <div v-else class="text-center py-8" style="color:var(--t-text-muted);">
+                      Aún no hay actividad en este dojo.
                     </div>
                   </div>
                 </div>
@@ -786,6 +802,7 @@
           compSubmissions: [],
           compVotes: [],
           myVotes: [], // mis votos en esta competencia
+          dojoParticipants: [], // participantes con dojo_xp
           submissionComments: [],
           expandedComments: null,
           newSubComments: {},
@@ -820,24 +837,59 @@
           return list;
         },
         leaderboard() {
-          // Calcular score por usuario
+          // Calcular score del dojo EXCLUSIVAMENTE con métricas internas
           const scores = {};
           if (!this.viewComp) return [];
-          const compStart = new Date(this.viewComp.created_at).getTime();
 
+          // 1. Contar submissions y likes por usuario (métricas internas del dojo)
           this.compSubmissions.forEach(sub => {
             if (!scores[sub.user_id]) {
-              scores[sub.user_id] = { user_id: sub.user_id, nickname: sub.profiles?.nickname || 'Usuario', avatar_id: sub.profiles?.avatar_id || 'default', score: 0 };
+              scores[sub.user_id] = {
+                user_id: sub.user_id,
+                nickname: sub.profiles?.nickname || 'Usuario',
+                avatar_id: sub.profiles?.avatar_id || 'default',
+                submissions: 0,
+                likes: 0,
+                wallPosts: 0,
+                dojoXp: 0,
+                dojoScore: 0
+              };
             }
-            const likesNetos = sub.likes_count - sub.dislikes_count;
-            // time bonus: max(0, 500 - minutos)
-            const minutesSinceStart = Math.max(0, (new Date(sub.submitted_at).getTime() - compStart) / 60000);
-            const timeBonus = Math.max(0, 500 - Math.floor(minutesSinceStart));
-
-            scores[sub.user_id].score += (likesNetos * 100) + timeBonus;
+            scores[sub.user_id].submissions += 1;
+            scores[sub.user_id].likes += Math.max(0, (sub.likes_count || 0) - (sub.dislikes_count || 0));
           });
 
-          return Object.values(scores).sort((a, b) => b.score - a.score);
+          // 2. Contar wall posts por usuario
+          (this.muroPosts || []).forEach(post => {
+            if (scores[post.user_id]) {
+              scores[post.user_id].wallPosts += 1;
+            } else {
+              scores[post.user_id] = {
+                user_id: post.user_id,
+                nickname: post.profiles?.nickname || 'Usuario',
+                avatar_id: post.profiles?.avatar_id || 'default',
+                submissions: 0, likes: 0, wallPosts: 1, dojoXp: 0, dojoScore: 0
+              };
+            }
+          });
+
+          // 3. Obtener dojo_xp de la tabla de participantes
+          (this.dojoParticipants || []).forEach(p => {
+            if (scores[p.user_id]) {
+              scores[p.user_id].dojoXp = p.dojo_xp || 0;
+            }
+          });
+
+          // 4. Calcular dojoScore compuesto:
+          //    - Cada submission vale 100 pts
+          //    - Cada like neto vale 50 pts
+          //    - Cada wall post vale 10 pts
+          //    - dojo_xp se suma directo
+          Object.values(scores).forEach(s => {
+            s.dojoScore = (s.submissions * 100) + (s.likes * 50) + (s.wallPosts * 10) + s.dojoXp;
+          });
+
+          return Object.values(scores).sort((a, b) => b.dojoScore - a.dojoScore);
         },
         uniqueParticipants() {
           const map = new Map();
@@ -852,7 +904,7 @@
           if (!this.profile) return '-';
           const lb = this.leaderboard;
           const idx = lb.findIndex(u => u.user_id === this.profile.id);
-          return idx >= 0 ? '#' + (idx + 1) : '-';
+          return idx >= 0 ? (idx === 0 ? '👑' : '#' + (idx + 1)) : '-';
         },
         solvedCount() {
           if (!this.profile || !this.compProblems.length) return 0;
@@ -988,11 +1040,35 @@
           const { data: posts } = await client.from('competition_wall_posts').select('*, profiles(nickname, avatar_id)').eq('competition_id', comp.id).order('created_at', { ascending: false });
           this.muroPosts = posts || [];
 
-          this.activityFeed = [
-            { id: 1, nickname: 'Hachi', action: 'resolvió el desafío 1', time: 'hace 5 min' },
-            { id: 2, nickname: 'Sora', action: 'se unió a la competencia', time: 'hace 12 min' },
-            { id: 3, nickname: 'Maki', action: 'resolvió el desafío 5', time: 'hace 20 min' }
-          ];
+          // Cargar participantes con dojo_xp
+          const { data: dojoP } = await client.from('competition_participants').select('user_id, dojo_xp').eq('competition_id', comp.id);
+          this.dojoParticipants = dojoP || [];
+
+          // Construir feed de actividad REAL desde submissions y muro
+          this.activityFeed = [];
+          (this.compSubmissions || []).slice(0, 10).forEach(sub => {
+            const probTitle = this.compProblems.find(p => p.id === sub.problem_id)?.title || 'un desafío';
+            this.activityFeed.push({
+              id: 'sub-' + sub.id,
+              nickname: sub.profiles?.nickname || 'Usuario',
+              action: `subió solución a "${probTitle}"`,
+              time: this.timeAgo(sub.submitted_at)
+            });
+          });
+          (this.muroPosts || []).slice(0, 5).forEach(post => {
+            this.activityFeed.push({
+              id: 'wall-' + post.id,
+              nickname: post.profiles?.nickname || 'Usuario',
+              action: 'publicó en el muro',
+              time: this.timeAgo(post.created_at)
+            });
+          });
+          // Ordenar por fecha
+          this.activityFeed.sort((a, b) => {
+            const tA = a.time || '';
+            const tB = b.time || '';
+            return tA.localeCompare(tB);
+          });
 
           if (this.compProblems.length > 0) {
             this.selectedProblemId = this.compProblems[0].id;

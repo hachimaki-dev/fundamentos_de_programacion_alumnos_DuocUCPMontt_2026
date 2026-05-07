@@ -10,8 +10,8 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>?? Taller: Condicionales if/elif/else — Semana 2</title>
-  <meta name="description" content="Taller práctico de condicionales en Python: documentación, ejercicios de selección múltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de código." />
+  <title>?? Taller: Condicionales if/elif/else â€” Semana 2</title>
+  <meta name="description" content="Taller prÃ¡ctico de condicionales en Python: documentaciÃ³n, ejercicios de selecciÃ³n mÃºltiple, verdadero/falso, unir conceptos, diagramas de flujo y trazado de cÃ³digo." />
 <!-- Prism.js -->
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
@@ -231,9 +231,9 @@
           ?? Condicionales: if / elif / else
         </h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          ¡Bienvenid@ al taller de la <strong>Semana 2</strong>! ?? Aquí aprenderás a tomar decisiones con Python.
-          Primero revisa la <strong>referencia rápida</strong> ??, luego resuelve los ejercicios a tu ritmo.
-          <br><span class="text-xs mt-1 inline-block">Tienes todo lo que necesitas aquí — ¡tú puedes hacerlo! ????</span>
+          Â¡Bienvenid@ al taller de la <strong>Semana 2</strong>! ?? AquÃ­ aprenderÃ¡s a tomar decisiones con Python.
+          Primero revisa la <strong>referencia rÃ¡pida</strong> ??, luego resuelve los ejercicios a tu ritmo.
+          <br><span class="text-xs mt-1 inline-block">Tienes todo lo que necesitas aquÃ­ â€” Â¡tÃº puedes hacerlo! ????</span>
         </p>
       </div>
     </div>
@@ -245,7 +245,7 @@
           ?? Referencia
         </button>
         <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">
-          ?? Selección Múltiple <span class="pill-count">{{ choiceExercises.length }}</span>
+          ?? SelecciÃ³n MÃºltiple <span class="pill-count">{{ choiceExercises.length }}</span>
         </button>
         <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">
           ? V o F <span class="pill-count">{{ tfExercises.length }}</span>
@@ -257,58 +257,58 @@
           ?? Diagramas <span class="pill-count">{{ flowData.length }}</span>
         </button>
         <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">
-          ?? Trazar Código <span class="pill-count">{{ traceData.length }}</span>
+          ?? Trazar CÃ³digo <span class="pill-count">{{ traceData.length }}</span>
         </button>
       </div>
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: REFERENCIA RÁPIDA                           -->
+    <!--  SECCIÃ“N: REFERENCIA RÃPIDA                           -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
 
       <div class="doc-section">
-        <h2>?? ¿Qué es un condicional?</h2>
-        <p>Un <strong>condicional</strong> permite que tu programa tome <strong>decisiones</strong>. Dependiendo de si una condición es verdadera o falsa, se ejecuta un bloque de código u otro.</p>
-        <div class="tip-box">?? <strong>Piénsalo así:</strong> Es como un semáforo ?? — si está en verde, avanzas; si está en rojo, te detienes.</div>
+        <h2>?? Â¿QuÃ© es un condicional?</h2>
+        <p>Un <strong>condicional</strong> permite que tu programa tome <strong>decisiones</strong>. Dependiendo de si una condiciÃ³n es verdadera o falsa, se ejecuta un bloque de cÃ³digo u otro.</p>
+        <div class="tip-box">?? <strong>PiÃ©nsalo asÃ­:</strong> Es como un semÃ¡foro ?? â€” si estÃ¡ en verde, avanzas; si estÃ¡ en rojo, te detienes.</div>
       </div>
 
       <div class="doc-section">
         <h2>?? Estructura: if</h2>
-        <p>La forma más simple. Se ejecuta el bloque <strong>solo si la condición es True</strong>:</p>
-        <div class="code-example">if condición:<br>    # Este código se ejecuta si la condición es True<br>    print("¡La condición se cumplió!")</div>
+        <p>La forma mÃ¡s simple. Se ejecuta el bloque <strong>solo si la condiciÃ³n es True</strong>:</p>
+        <div class="code-example">if condiciÃ³n:<br>    # Este cÃ³digo se ejecuta si la condiciÃ³n es True<br>    print("Â¡La condiciÃ³n se cumpliÃ³!")</div>
         <p><strong>Ejemplo concreto:</strong></p>
         <div class="code-example">edad = 20<br><br>if edad >= 18:<br>    print("Eres mayor de edad")<br><br># Resultado: Eres mayor de edad</div>
-        <div class="tip-box">?? <strong>¡No olvides los dos puntos <code>:</code></strong> al final de la línea del if! Y el bloque debe estar <strong>indentado</strong> (con 4 espacios).</div>
+        <div class="tip-box">?? <strong>Â¡No olvides los dos puntos <code>:</code></strong> al final de la lÃ­nea del if! Y el bloque debe estar <strong>indentado</strong> (con 4 espacios).</div>
       </div>
 
       <div class="doc-section">
         <h2>?? Estructura: if / else</h2>
-        <p>Cuando necesitas un <strong>"si no"</strong> — un camino alternativo cuando la condición es False:</p>
+        <p>Cuando necesitas un <strong>"si no"</strong> â€” un camino alternativo cuando la condiciÃ³n es False:</p>
         <div class="code-example">edad = 15<br><br>if edad >= 18:<br>    print("Eres mayor de edad")<br>else:<br>    print("Eres menor de edad")<br><br># Resultado: Eres menor de edad</div>
         <table class="doc-table">
-          <tr><th>¿La condición es True?</th><th>¿Qué se ejecuta?</th></tr>
-          <tr><td>Sí (True)</td><td>El bloque del <code>if</code></td></tr>
+          <tr><th>Â¿La condiciÃ³n es True?</th><th>Â¿QuÃ© se ejecuta?</th></tr>
+          <tr><td>SÃ­ (True)</td><td>El bloque del <code>if</code></td></tr>
           <tr><td>No (False)</td><td>El bloque del <code>else</code></td></tr>
         </table>
       </div>
 
       <div class="doc-section">
         <h2>?? Estructura: if / elif / else</h2>
-        <p>Cuando hay <strong>múltiples opciones</strong>. <code>elif</code> es la abreviación de "else if" (si no, pero si...):</p>
+        <p>Cuando hay <strong>mÃºltiples opciones</strong>. <code>elif</code> es la abreviaciÃ³n de "else if" (si no, pero si...):</p>
         <div class="code-example">nota = 5.5<br><br>if nota >= 6.0:<br>    print("Excelente")<br>elif nota >= 5.0:<br>    print("Bien")<br>elif nota >= 4.0:<br>    print("Suficiente")<br>else:<br>    print("Reprobado")<br><br># Resultado: Bien</div>
-        <div class="deep-box">?? <strong>Regla clave:</strong> Python evalúa las condiciones <strong>de arriba hacia abajo</strong>. Ejecuta el <strong>primer bloque True</strong> que encuentre y salta todo lo demás. ¡Solo uno se ejecuta!</div>
+        <div class="deep-box">?? <strong>Regla clave:</strong> Python evalÃºa las condiciones <strong>de arriba hacia abajo</strong>. Ejecuta el <strong>primer bloque True</strong> que encuentre y salta todo lo demÃ¡s. Â¡Solo uno se ejecuta!</div>
       </div>
 
       <div class="doc-section">
         <h2>?? Condicionales Anidados</h2>
-        <p>Puedes poner un if dentro de otro if para tomar decisiones más complejas:</p>
+        <p>Puedes poner un if dentro de otro if para tomar decisiones mÃ¡s complejas:</p>
         <div class="code-example">edad = 25<br>tiene_carnet = True<br><br>if edad >= 18:<br>    if tiene_carnet:<br>        print("Puede conducir")<br>    else:<br>        print("Necesita sacar el carnet")<br>else:<br>    print("Es menor de edad")<br><br># Resultado: Puede conducir</div>
-        <div class="tip-box">?? <strong>Tip:</strong> Cada nivel de indentación marca un nuevo nivel de decisión. Usa lápiz y papel para seguirlos.</div>
+        <div class="tip-box">?? <strong>Tip:</strong> Cada nivel de indentaciÃ³n marca un nuevo nivel de decisiÃ³n. Usa lÃ¡piz y papel para seguirlos.</div>
       </div>
 
       <div class="doc-section">
-        <h2>?? Operadores útiles en condiciones</h2>
+        <h2>?? Operadores Ãºtiles en condiciones</h2>
         <table class="doc-table">
           <tr><th>Operador</th><th>Significado</th><th>Ejemplo</th><th>Resultado</th></tr>
           <tr><td><code>==</code></td><td>Igual a</td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
@@ -325,28 +325,28 @@
 
       <div class="doc-section">
         <h2>?? En Diagramas de Flujo</h2>
-        <p>Las decisiones se representan con un <strong>rombo ?</strong>. Del rombo salen dos caminos: <strong>Sí</strong> (True) y <strong>No</strong> (False).</p>
-        <div class="tip-box">??? <strong>Clave para el taller:</strong> En los ejercicios de diagramas, sigue siempre el camino que corresponda según el valor de la condición. Si hay múltiples rombos, evalúa cada uno en orden.</div>
+        <p>Las decisiones se representan con un <strong>rombo ?</strong>. Del rombo salen dos caminos: <strong>SÃ­</strong> (True) y <strong>No</strong> (False).</p>
+        <div class="tip-box">??? <strong>Clave para el taller:</strong> En los ejercicios de diagramas, sigue siempre el camino que corresponda segÃºn el valor de la condiciÃ³n. Si hay mÃºltiples rombos, evalÃºa cada uno en orden.</div>
       </div>
 
       <div class="doc-section" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-color: #a5d6a7;">
-        <h2>?? ¡Estás list@! ¡A practicar!</h2>
-        <p>Ahora que revisaste la teoría, es momento de poner todo en práctica. Usa los botones de arriba para navegar entre las secciones de ejercicios. <strong>¡Recuerda que puedes volver a esta referencia en cualquier momento!</strong> ??</p>
-        <p class="mt-2"><strong>Consejo:</strong> Te recomendamos hacer los ejercicios en orden: primero selección múltiple, luego V o F, después unir, diagramas, y finalmente trazar código. ¡Así irás de lo más sencillo a lo más desafiante! ??</p>
+        <h2>?? Â¡EstÃ¡s list@! Â¡A practicar!</h2>
+        <p>Ahora que revisaste la teorÃ­a, es momento de poner todo en prÃ¡ctica. Usa los botones de arriba para navegar entre las secciones de ejercicios. <strong>Â¡Recuerda que puedes volver a esta referencia en cualquier momento!</strong> ??</p>
+        <p class="mt-2"><strong>Consejo:</strong> Te recomendamos hacer los ejercicios en orden: primero selecciÃ³n mÃºltiple, luego V o F, despuÃ©s unir, diagramas, y finalmente trazar cÃ³digo. Â¡AsÃ­ irÃ¡s de lo mÃ¡s sencillo a lo mÃ¡s desafiante! ??</p>
       </div>
 
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: SELECCIÓN MÚLTIPLE                           -->
+    <!--  SECCIÃ“N: SELECCIÃ“N MÃšLTIPLE                           -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
 
       <!-- Section header -->
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple — Conceptos</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. ¡Lee bien cada opción!</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">SelecciÃ³n MÃºltiple â€” Conceptos</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. Â¡Lee bien cada opciÃ³n!</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -381,7 +381,7 @@
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
              :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span>
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span>
           <span v-else class="font-bold text-red-700">?? No es esa. </span>
           <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
@@ -389,14 +389,14 @@
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: VERDADERO O FALSO                            -->
+    <!--  SECCIÃ“N: VERDADERO O FALSO                            -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
 
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmación y decide: ¿es verdadera o falsa?</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmaciÃ³n y decide: Â¿es verdadera o falsa?</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ tfScore }} / {{ tfExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -437,15 +437,15 @@
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
              :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span>
-          <span v-else class="font-bold text-red-700">?? ¡Ojo! </span>
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span>
+          <span v-else class="font-bold text-red-700">?? Â¡Ojo! </span>
           <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: UNIR CONCEPTOS                               -->
+    <!--  SECCIÃ“N: UNIR CONCEPTOS                               -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
 
@@ -482,13 +482,13 @@
         </div>
 
         <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center">
-          <span class="font-bold text-green-700">?? ¡Perfecto! ¡Todos los pares correctos!</span>
+          <span class="font-bold text-green-700">?? Â¡Perfecto! Â¡Todos los pares correctos!</span>
         </div>
       </div>
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: DIAGRAMAS DE FLUJO                           -->
+    <!--  SECCIÃ“N: DIAGRAMAS DE FLUJO                           -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'flow'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
 
@@ -536,7 +536,7 @@
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
              :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span>
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span>
           <span v-else class="font-bold text-red-700">?? Incorrecto. </span>
           <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
@@ -544,14 +544,14 @@
     </div>
 
     <!-- ------------------------------------------------------- -->
-    <!--  SECCIÓN: TRAZAR CÓDIGO                                -->
+    <!--  SECCIÃ“N: TRAZAR CÃ“DIGO                                -->
     <!-- ------------------------------------------------------- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
 
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Leer e Interpretar Código Python</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee el código, trázalo paso a paso (usa lápiz y papel si quieres) y elige la salida correcta.</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Leer e Interpretar CÃ³digo Python</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee el cÃ³digo, trÃ¡zalo paso a paso (usa lÃ¡piz y papel si quieres) y elige la salida correcta.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -595,7 +595,7 @@
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm"
              :class="ex.selected === ex.correct ? 'bg-kawaii-mint border border-green-300' : 'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span>
+          <span v-if="ex.selected === ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span>
           <span v-else class="font-bold text-red-700">?? Incorrecto. </span>
           <span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
@@ -608,9 +608,10 @@
     <div v-if="currentSection !== 'ref' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
       <div class="score-summary fade-in-up">
         <p class="text-4xl mb-2">??</p>
-        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta secciÃ³n</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
       </div>
     </div>
 
@@ -625,6 +626,9 @@
   <script src="../data/conditionals-exercises.js"></script>
 
   <!-- Shared engine -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
   <script src="../js/app.js"></script>
 
   <!-- Page logic -->
@@ -632,9 +636,11 @@
     const { createApp } = Vue;
 
     const app = createApp({
+      mixins: [QuizXP.vueMixin('conditionals')],
       data() {
         return {
           currentSection: 'ref',
+          xpResult: '',
 
           // Choice exercises
           choiceExercises: choiceExercises.map(e => ({ ...e, answered: false, selected: null })),
@@ -716,11 +722,11 @@
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '?? ¡Perfecto! ¡Eres un crack! ??';
-          if (pct >= 0.8) return '¡Excelente! ¡Casi perfecto! ??';
-          if (pct >= 0.6) return '¡Bien! Sigue practicando para mejorar ??';
-          if (pct >= 0.4) return 'Vas por buen camino. ¡Revisa la referencia y vuelve a intentar! ??';
-          return 'No te preocupes, ¡la práctica hace al maestro! Revisa la referencia ??';
+          if (pct === 1) return '?? Â¡Perfecto! Â¡Eres un crack! ??';
+          if (pct >= 0.8) return 'Â¡Excelente! Â¡Casi perfecto! ??';
+          if (pct >= 0.6) return 'Â¡Bien! Sigue practicando para mejorar ??';
+          if (pct >= 0.4) return 'Vas por buen camino. Â¡Revisa la referencia y vuelve a intentar! ??';
+          return 'No te preocupes, Â¡la prÃ¡ctica hace al maestro! Revisa la referencia ??';
         },
       },
       methods: {

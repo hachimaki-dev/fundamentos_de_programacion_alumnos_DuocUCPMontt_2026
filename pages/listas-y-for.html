@@ -10,10 +10,10 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>?? Taller: Listas y Ciclo FOR ó Python</title>
+  <title>?? Taller: Listas y Ciclo FOR ‚Äî Python</title>
   <meta name="description" content="Taller interactivo descubriendo el poder de las Listas y el ciclo FOR para recorrer colecciones de datos." />
 <!-- TailwindCSS -->
-<!-- PrismJS para cÛdigo -->
+<!-- PrismJS para c√≥digo -->
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -76,7 +76,7 @@
         <a href="../index.html" class="back-btn mb-4">? Volver al diario</a>
         <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">?? El Poder de las Listas y FOR</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          °Di adiÛs al procesamiento de a uno! ? Es hora de guardar m˙ltiples datos en nuestro primer gran contenedor: <strong>Las Listas</strong>. Para recorrerlas, el compaÒero perfecto es el ciclo <strong>FOR</strong>.
+          ¬°Di adi√≥s al procesamiento de a uno! ? Es hora de guardar m√∫ltiples datos en nuestro primer gran contenedor: <strong>Las Listas</strong>. Para recorrerlas, el compa√±ero perfecto es el ciclo <strong>FOR</strong>.
         </p>
       </div>
     </div>
@@ -85,7 +85,7 @@
     <div class="max-w-3xl mx-auto px-4 mt-4">
       <div class="section-nav">
         <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">?? Conceptos</button>
-        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? SelecciÛn <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? Selecci√≥n <span class="pill-count">{{ choiceExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">? V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">?? Unir <span class="pill-count">{{ matchData.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">?? Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
@@ -102,29 +102,29 @@
       <div class="doc-section">
         <h2>?? El Problema: Datos Aislados</h2>
         <p>
-          Imagina que necesitas procesar las notas de 50 estudiantes. Hasta ahora, tendrÌas que crear 50 variables (<code>nota1</code>, <code>nota2</code>... <code>nota50</code>) e imprimir cada una manualmente. °Eso es una locura, es inescalable y te tomarÌa horas!
+          Imagina que necesitas procesar las notas de 50 estudiantes. Hasta ahora, tendr√≠as que crear 50 variables (<code>nota1</code>, <code>nota2</code>... <code>nota50</code>) e imprimir cada una manualmente. ¬°Eso es una locura, es inescalable y te tomar√≠a horas!
           <br><br>
-          La soluciÛn nace de una necesidad fundamental en programaciÛn: <strong>"Tengo enormes cantidades de datos agrupados y necesito procesarlos uno por uno usando las mismas reglas"</strong>.
+          La soluci√≥n nace de una necesidad fundamental en programaci√≥n: <strong>"Tengo enormes cantidades de datos agrupados y necesito procesarlos uno por uno usando las mismas reglas"</strong>.
         </p>
       </div>
 
-      <!-- Bloque: Listas e Õndices -->
+      <!-- Bloque: Listas e √çndices -->
       <div class="doc-section">
-        <h2>?? Listas y la Alquimia de los Õndices</h2>
-        <p>Una lista es el primer "contenedor" o "caja de almacenamiento" profundo que aprender·s a usar. TÈcnicamente, es una <strong>colecciÛn ordenada y modificable</strong> (mutable) de elementos infinitos.</p>
+        <h2>?? Listas y la Alquimia de los √çndices</h2>
+        <p>Una lista es el primer "contenedor" o "caja de almacenamiento" profundo que aprender√°s a usar. T√©cnicamente, es una <strong>colecci√≥n ordenada y modificable</strong> (mutable) de elementos infinitos.</p>
         
         <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
-          <p class="font-bold text-green-800 mb-1">?? El Secreto del Orden: Los Õndices</p>
-          <p class="text-sm">Imagina la lista como un tren con vagones numerados. Cada vagÛn guarda un dato de tu interÈs, y el n˙mero pintado en la puerta de entrada del vagÛn es su <strong>Õndice</strong>. 
-          °ATENCI”N! En Python (y en casi el 90% de los lenguajes de programaciÛn del mundo), <strong>siempre empezamos a contar posiciones matem·ticas desde el CERO (0)</strong>.</p>
+          <p class="font-bold text-green-800 mb-1">?? El Secreto del Orden: Los √çndices</p>
+          <p class="text-sm">Imagina la lista como un tren con vagones numerados. Cada vag√≥n guarda un dato de tu inter√©s, y el n√∫mero pintado en la puerta de entrada del vag√≥n es su <strong>√çndice</strong>. 
+          ¬°ATENCI√ìN! En Python (y en casi el 90% de los lenguajes de programaci√≥n del mundo), <strong>siempre empezamos a contar posiciones matem√°ticas desde el CERO (0)</strong>.</p>
         </div>
 
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3 border border-gray-200">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>AnatomÌa Absoluta de los Õndices</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Anatom√≠a Absoluta de los √çndices</span></div>
           <pre class="!mt-0"><code class="language-python"># Lista de Ejemplo con 4 elementos
 pokemones = ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"]
 
-# Õndices positivos (Leyendo de izquierda a derecha):
+# √çndices positivos (Leyendo de izquierda a derecha):
 # [0] -> "Pikachu"
 # [1] -> "Charmander"
 # [2] -> "Squirtle"
@@ -132,76 +132,76 @@ pokemones = ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"]
 
 print(pokemones[1]) # Imprime en consola: Charmander
 
-# °Magia pura! Õndices negativos giran desde el final (Hacia atr·s, de derecha a izquierda)
+# ¬°Magia pura! √çndices negativos giran desde el final (Hacia atr√°s, de derecha a izquierda)
 # [-1] -> "Bulbasaur"
 # [-2] -> "Squirtle"
 
-print(pokemones[-1]) # Imprime r·pidamente sin calcular tamaÒo: Bulbasaur</code></pre>
+print(pokemones[-1]) # Imprime r√°pidamente sin calcular tama√±o: Bulbasaur</code></pre>
         </div>
 
         <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4 mb-2">
           <p class="font-bold text-red-800 text-sm">?? El Horror del IndexError</p>
-          <p class="text-sm mt-1">Si la lista tiene 4 elementos visuales contables, el m·ximo Ìndice existente es el 3. Si t˙ intentas pedir <code>pokemones[4]</code> o <code>pokemones[100]</code>, Python entrar· en p·nico y el programa colapsar· inmediatamente soltando un error fatal: <strong>?? IndexError: list index out of range</strong>. Es figurativamente igual a intentar abrir el vagÛn 10 de un tren que solo tiene la suerte de poseer 4 vagones en pista. FÌsicamente inalcanzable y rompe el compilador.</p>
+          <p class="text-sm mt-1">Si la lista tiene 4 elementos visuales contables, el m√°ximo √≠ndice existente es el 3. Si t√∫ intentas pedir <code>pokemones[4]</code> o <code>pokemones[100]</code>, Python entrar√° en p√°nico y el programa colapsar√° inmediatamente soltando un error fatal: <strong>?? IndexError: list index out of range</strong>. Es figurativamente igual a intentar abrir el vag√≥n 10 de un tren que solo tiene la suerte de poseer 4 vagones en pista. F√≠sicamente inalcanzable y rompe el compilador.</p>
         </div>
       </div>
 
       <!-- Bloque: Funciones Esenciales -->
       <div class="doc-section">
         <h2>??? Herramientas Fundamentales que DEBES Dominar</h2>
-        <p>Listas de datos huÈrfanas sin mÈtodos para alterarlas se sienten como una pesada maleta cerrada con llave y olvidada. Adopta y memoriza estas 4 operaciones b·sicas y reina en Python:</p>
+        <p>Listas de datos hu√©rfanas sin m√©todos para alterarlas se sienten como una pesada maleta cerrada con llave y olvidada. Adopta y memoriza estas 4 operaciones b√°sicas y reina en Python:</p>
         
         <div class="space-y-4 mt-4">
           <!-- 1. len -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-blue-700 font-code text-lg">len(lista)</p>
-            <p class="text-sm mt-1"><strong>øQuÈ hace de vital?</strong> Es una herramienta de scanner r·pida que cuenta y te devuelve contablemente (1,2,3...) la <u>longitud</u> o cantidad total de elementos internos de punta a punta. Nada que ver con buscar Ìndices.</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">tamaÒo = len(["a", "b", "c"]) # Resultado guardable en variable: 3 elementos</p>
+            <p class="text-sm mt-1"><strong>¬øQu√© hace de vital?</strong> Es una herramienta de scanner r√°pida que cuenta y te devuelve contablemente (1,2,3...) la <u>longitud</u> o cantidad total de elementos internos de punta a punta. Nada que ver con buscar √≠ndices.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">tama√±o = len(["a", "b", "c"]) # Resultado guardable en variable: 3 elementos</p>
           </div>
 
           <!-- 2. append -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-kawaii-deep font-code text-lg">.append(elemento)</p>
-            <p class="text-sm mt-1"><strong>øQuÈ hace de vital?</strong> Inyecta sin preguntas el elemento, variable o resultado aritmÈtico que le des y lo lanza justo al <u>final del tren numÈrico</u> de la lista actual (como hacer fila ˙ltima en el aburrido supermercado).</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">notas.append(7.0) # El glorioso 7.0 se forma ˙ltimo.</p>
+            <p class="text-sm mt-1"><strong>¬øQu√© hace de vital?</strong> Inyecta sin preguntas el elemento, variable o resultado aritm√©tico que le des y lo lanza justo al <u>final del tren num√©rico</u> de la lista actual (como hacer fila √∫ltima en el aburrido supermercado).</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">notas.append(7.0) # El glorioso 7.0 se forma √∫ltimo.</p>
           </div>
 
           <!-- 3. insert -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-orange-600 font-code text-lg">.insert(indice_num, elemento)</p>
-            <p class="text-sm mt-1"><strong>øQuÈ hace de vital?</strong> Cansado de ir al final, te permite forzar agresivamente la inserciÛn de un elemento en una posiciÛn <u>numÈrica y exacta</u>, empujando pacÌficamente a todos los vecinos actuales uno hacia la derecha para crear un espacio vacÌo y ceder paso.</p>
+            <p class="text-sm mt-1"><strong>¬øQu√© hace de vital?</strong> Cansado de ir al final, te permite forzar agresivamente la inserci√≥n de un elemento en una posici√≥n <u>num√©rica y exacta</u>, empujando pac√≠ficamente a todos los vecinos actuales uno hacia la derecha para crear un espacio vac√≠o y ceder paso.</p>
             <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.insert(0, "Presidente") # Entra dictatorialmente a rango [0] inicial, el resto decae un sitio.</p>
           </div>
 
           <!-- 4. pop -->
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-red-600 font-code text-lg">.pop() &nbsp;&nbsp;|&nbsp;&nbsp; .remove("texto_a_buscar")</p>
-            <p class="text-sm mt-1"><strong>øQuÈ hacen destructivamente?</strong> <br><code>pop()</code> sin rellenar los parÈntesis elimina ciegamente por defecto siempre el <u>˙ltimo elemento marginal</u> (o recibe un Ìndice para ejecutar allÌ). <br><code>remove("x")</code> trabaja como buscador policÌaco: busca analÛgicamente el texto o valor exacto interno por caracteres y expulsa sin piedad al primer sospechoso que cruce.</p>
-            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.pop() # AdiÛs ˙ltimo.<br>lista.remove("Pikachu") # Busca literalidades despide primeramente a nuestro ratÛn elÈctrico.</p>
+            <p class="text-sm mt-1"><strong>¬øQu√© hacen destructivamente?</strong> <br><code>pop()</code> sin rellenar los par√©ntesis elimina ciegamente por defecto siempre el <u>√∫ltimo elemento marginal</u> (o recibe un √≠ndice para ejecutar all√≠). <br><code>remove("x")</code> trabaja como buscador polic√≠aco: busca anal√≥gicamente el texto o valor exacto interno por caracteres y expulsa sin piedad al primer sospechoso que cruce.</p>
+            <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">lista.pop() # Adi√≥s √∫ltimo.<br>lista.remove("Pikachu") # Busca literalidades despide primeramente a nuestro rat√≥n el√©ctrico.</p>
           </div>
         </div>
       </div>
 
       <!-- Bloque: While VS For -->
       <div class="doc-section">
-        <h2>?? El Duelo Final …pico: While vs For</h2>
-        <p>øCu·ndo demonios utilizo cada ciclo en una evaluaciÛn? La regla y pregunta del millÛn de dÛlares descifrada y respondida gr·ficamente ahora mismo:</p>
+        <h2>?? El Duelo Final √âpico: While vs For</h2>
+        <p>¬øCu√°ndo demonios utilizo cada ciclo en una evaluaci√≥n? La regla y pregunta del mill√≥n de d√≥lares descifrada y respondida gr√°ficamente ahora mismo:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div class="bg-kawaii-pink/40 p-5 rounded-xl border-2 border-kawaii-rose relative overflow-hidden group">
             <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">??</div>
-            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">WHILE: El Guardi·n Eterno</h3>
+            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">WHILE: El Guardi√°n Eterno</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Repite un bucle mortal <strong>solo MIENTRAS una validaciÛn se cumpla numÈricamente</strong>. Al momento de dar falso detiene el infierno autom·ticamente.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">?</span> <span><strong>NO sabemos ni nos importa antemano de cu·ntas iteraciones relativas hablamos</strong> en el reloj.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>Uso estrella empresarial de mercado:</strong> Men˙s interactivos pidiendo selecciones, validaciÛn segura e infinita de contraseÒas equivocadas de usuario, rogar sistem·ticamente reingresar datos vitales hasta captar sensatez ˙til.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Repite un bucle mortal <strong>solo MIENTRAS una validaci√≥n se cumpla num√©ricamente</strong>. Al momento de dar falso detiene el infierno autom√°ticamente.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">?</span> <span><strong>NO sabemos ni nos importa antemano de cu√°ntas iteraciones relativas hablamos</strong> en el reloj.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>Uso estrella empresarial de mercado:</strong> Men√∫s interactivos pidiendo selecciones, validaci√≥n segura e infinita de contrase√±as equivocadas de usuario, rogar sistem√°ticamente reingresar datos vitales hasta captar sensatez √∫til.</span></li>
             </ul>
           </div>
           <div class="bg-kawaii-mint/30 p-5 rounded-xl border-2 border-kawaii-mint relative overflow-hidden group">
             <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">??</div>
             <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-kawaii-mint pb-2">FOR: Cazador de Colecciones</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Rastrea y recorre ordenadamente de esquina a esquina, de vagÛn a vagÛn, todos los elementos preexistentes inyectables de tu nueva lista maestra sin salirse, sin reescribir.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>SÕ sabemos a ciencia cierta universal</strong> cu·ndo este ciclo va terminar matem·ticamente su iterado (justo y exactamente en el milisegundo milimÈtrico en que agote la lectura general del ˙ltimo pasillo o nodo de la lista madre entregada).</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>Uso estrella empresarial de rendimiento:</strong> Recorrer las sumas por notas pasivas de 400 estudiantes de base de datos interconectada, cambiar a may˙sculas mil nombres textuales, sumar y analizar listas matem·ticas.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Rastrea y recorre ordenadamente de esquina a esquina, de vag√≥n a vag√≥n, todos los elementos preexistentes inyectables de tu nueva lista maestra sin salirse, sin reescribir.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>S√ç sabemos a ciencia cierta universal</strong> cu√°ndo este ciclo va terminar matem√°ticamente su iterado (justo y exactamente en el milisegundo milim√©trico en que agote la lectura general del √∫ltimo pasillo o nodo de la lista madre entregada).</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>Uso estrella empresarial de rendimiento:</strong> Recorrer las sumas por notas pasivas de 400 estudiantes de base de datos interconectada, cambiar a may√∫sculas mil nombres textuales, sumar y analizar listas matem√°ticas.</span></li>
             </ul>
           </div>
         </div>
@@ -210,56 +210,56 @@ print(pokemones[-1]) # Imprime r·pidamente sin calcular tamaÒo: Bulbasaur</code>
       <!-- Bloque: For directo -->
       <div class="doc-section">
         <h2>?? Dominando a la bestia FOR: Sus Dos Modos Divinos</h2>
-        <p>El cÛdigo FOR y sus sub-mÈtodos de desarrollo en pantalla pueden desdoblarse o transmutarse dependiendo la filosofÌa a resolver. <em>T˙ primero debes meditar mentalmente: øSolamente requiero LEER datos vol·tiles o busco activamente re-escribir MANIPULANDO vitalicios datos directos al n˙cleo de mi lista original maestra de base y que persistan?</em></p>
+        <p>El c√≥digo FOR y sus sub-m√©todos de desarrollo en pantalla pueden desdoblarse o transmutarse dependiendo la filosof√≠a a resolver. <em>T√∫ primero debes meditar mentalmente: ¬øSolamente requiero LEER datos vol√°tiles o busco activamente re-escribir MANIPULANDO vitalicios datos directos al n√∫cleo de mi lista original maestra de base y que persistan?</em></p>
         
         <div class="bg-white p-5 rounded-xl border shadow-sm my-4">
-          <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Recorrido por VALOR (Directo y Vol·til)</p>
-          <p class="text-sm text-gray-700">El modelo catalogado mundialmente como "No me toques". Autom·ticamente extrae fugaces <strong>copias visuales</strong> de elementos por cada vuelta rotatoria en tu lista central y te permite leerlos por variable pasiva. Es un script hermoso y cortÌsimo. Intocable para c·lculos matem·ticos, promedios sumatorios de control y simplemente ver sin modificar.</p>
+          <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Recorrido por VALOR (Directo y Vol√°til)</p>
+          <p class="text-sm text-gray-700">El modelo catalogado mundialmente como "No me toques". Autom√°ticamente extrae fugaces <strong>copias visuales</strong> de elementos por cada vuelta rotatoria en tu lista central y te permite leerlos por variable pasiva. Es un script hermoso y cort√≠simo. Intocable para c√°lculos matem√°ticos, promedios sumatorios de control y simplemente ver sin modificar.</p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>ExtracciÛn Visual (Recorrido por Valor)</span></div>
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Extracci√≥n Visual (Recorrido por Valor)</span></div>
             <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
 
-# La variable "n" genera un recipiente clon y es una copia efÌmera del valor.
+# La variable "n" genera un recipiente clon y es una copia ef√≠mera del valor.
 for n in mis_notas:
-    print("El profesor ingresÛ velozmente de base la  nota:", n)
+    print("El profesor ingres√≥ velozmente de base la  nota:", n)
     
 # Si trato de cambiar arbitrariamente la variable 'n' dentro de las llaves
-# NO MODIFICAR¡ PARA NADA la lista profunda y universal.
-# n = 7.0 ser· un dato al basurero que no altera mis_notas raizales.</code></pre>
+# NO MODIFICAR√Å PARA NADA la lista profunda y universal.
+# n = 7.0 ser√° un dato al basurero que no altera mis_notas raizales.</code></pre>
           </div>
         </div>
 
         <div class="bg-blue-50/50 p-5 rounded-xl border shadow-sm my-4">
-          <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: Recorrido por ÕNDICES (Posicional Letal)</p>
-          <p class="text-sm text-gray-700">El modo Avanzado. AquÌ combinativamente fusionamos nuestra funciÛn calculable externa <code>len()</code> con el operador de serie numÈrica <code>range()</code>. La uniÛn generativa en <code>range(len(lista))</code> parÈ universalmente la iteraciÛn exacta de rangos de tu variable matriz (entregando n˙meros base purÌsimos que transitan desde tu 0, hasta tu 1, y tu respectivo 2 sin saltarse). Rompiendo y logrando penetrar con la llave posicional que te abre la puerta fÌsica a reescribir de lleno todo. <strong>Vas, entras, reseteas o alteras un metadato internamente reescribiendo celdas que afectan la raÌz madre base.</strong></p>
+          <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: Recorrido por √çNDICES (Posicional Letal)</p>
+          <p class="text-sm text-gray-700">El modo Avanzado. Aqu√≠ combinativamente fusionamos nuestra funci√≥n calculable externa <code>len()</code> con el operador de serie num√©rica <code>range()</code>. La uni√≥n generativa en <code>range(len(lista))</code> par√© universalmente la iteraci√≥n exacta de rangos de tu variable matriz (entregando n√∫meros base pur√≠simos que transitan desde tu 0, hasta tu 1, y tu respectivo 2 sin saltarse). Rompiendo y logrando penetrar con la llave posicional que te abre la puerta f√≠sica a reescribir de lleno todo. <strong>Vas, entras, reseteas o alteras un metadato internamente reescribiendo celdas que afectan la ra√≠z madre base.</strong></p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
-            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>AlteraciÛn Posicional del N˙cleo y Elementos Base</span></div>
+            <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Alteraci√≥n Posicional del N√∫cleo y Elementos Base</span></div>
             <pre class="!mt-0"><code class="language-python">mis_notas = [6.5, 5.0, 4.0]
-# El mÈtodo len contarÌa 3 objetos. Por deducciÛn matem·tica range(3)
-# arrojar· iteraciÛn posicional: el 0 pasivo, el 1 continuo, el 2 base.
+# El m√©todo len contar√≠a 3 objetos. Por deducci√≥n matem√°tica range(3)
+# arrojar√° iteraci√≥n posicional: el 0 pasivo, el 1 continuo, el 2 base.
 
 for contador_de_posicion in range(len(mis_notas)):
-    # ModificaciÛn dr·stica directa del n˙cleo matriz usando sus corchetes y llaves vitales: 
-    # Apuntamos localitariamente por uso de Ìndice al elemento [contador_de_posicion].
+    # Modificaci√≥n dr√°stica directa del n√∫cleo matriz usando sus corchetes y llaves vitales: 
+    # Apuntamos localitariamente por uso de √≠ndice al elemento [contador_de_posicion].
     mis_notas[contador_de_posicion] = mis_notas[contador_de_posicion] + 0.1
 
-print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito masivo inyectado en servidor variables.</code></pre>
+print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- √âxito masivo inyectado en servidor variables.</code></pre>
           </div>
         </div>
       </div>
 
       <div class="doc-section shadow-sm text-center transform hover:-translate-y-1 transition duration-300" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2 class="text-2xl pt-2">?? °Magia acadÈmica asimilada, al campo de batalla!</h2>
-        <p class="max-w-2xl mx-auto pb-2">Ve y ejecuta. Selecciona los botones en formato de pastilla ubicados justo al men˙ superior (SelecciÛn, V o F, Completar...). Caza ese altÌsimo puntaje perfecto comprobando l˙dicamente tu real dominancia con estas reglas y lisonjas divinas matem·ticas.</p>
+        <h2 class="text-2xl pt-2">?? ¬°Magia acad√©mica asimilada, al campo de batalla!</h2>
+        <p class="max-w-2xl mx-auto pb-2">Ve y ejecuta. Selecciona los botones en formato de pastilla ubicados justo al men√∫ superior (Selecci√≥n, V o F, Completar...). Caza ese alt√≠simo puntaje perfecto comprobando l√∫dicamente tu real dominancia con estas reglas y lisonjas divinas matem√°ticas.</p>
       </div>
 
     </div>
 
-    <!-- --- SELECCI”N M⁄LTIPLE --- -->
+    <!-- --- SELECCI√ìN M√öLTIPLE --- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">SelecciÛn M˙ltiple</h2>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selecci√≥n M√∫ltiple</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -332,7 +332,7 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
           <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">?</span><span v-else>?</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
-        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? °Magistral en conceptos!</span></div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? ¬°Magistral en conceptos!</span></div>
       </div>
     </div>
 
@@ -354,7 +354,7 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Modo DepuraciÛn</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Modo Depuraci√≥n</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
@@ -376,11 +376,11 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
       </div>
     </div>
 
-    <!-- --- COMPLETAR C”DIGO --- -->
+    <!-- --- COMPLETAR C√ìDIGO --- -->
     <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Completa el CÛdigo</h2>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el C√≥digo</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ completeScore }} / {{ completeExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
@@ -416,12 +416,12 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
       </div>
     </div>
 
-    <!-- --- TRAZAR C”DIGO --- -->
+    <!-- --- TRAZAR C√ìDIGO --- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Recorrido Mentales</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el hilo lÛgico del For a travÈs de las listas.</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el hilo l√≥gico del For a trav√©s de las listas.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -435,7 +435,7 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Eval˙a</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Eval√∫a</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
@@ -461,20 +461,20 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
     <div v-show="currentSection === 'retos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
         <p class="text-4xl mb-2">??</p>
-        <h2 class="text-2xl font-bold text-indigo-900">AplicaciÛn Pr·ctica y Retos</h2>
+        <h2 class="text-2xl font-bold text-indigo-900">Aplicaci√≥n Pr√°ctica y Retos</h2>
         <p class="text-indigo-800/70 mt-2">Pon tu IDE en marcha e implementa estas soluciones maestras.</p>
       </div>
 
-      <!-- Reto F·cil -->
+      <!-- Reto F√°cil -->
       <div class="reto-card mb-4 border-2 border-green-200">
-        <h3 class="text-xl font-bold text-green-700 mb-2">?? Reto F·cil: Ataques de Pikachu</h3>
+        <h3 class="text-xl font-bold text-green-700 mb-2">?? Reto F√°cil: Ataques de Pikachu</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Ash olvidÛ los movimientos de su Pikachu. Revisa la base de datos (tu lista) e imprime sus ataques.
+          Ash olvid√≥ los movimientos de su Pikachu. Revisa la base de datos (tu lista) e imprime sus ataques.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea una lista llamada <code>ataques = ["Impactrueno", "Ataque R·pido", "Rayo", "Cola FÈrrea"]</code>.</li>
-          <li>Utiliza un ciclo <code>for</code> b·sico (por valor) para imprimir en consola "Pikachu puede usar: [nombre del ataque]".</li>
+          <li>Crea una lista llamada <code>ataques = ["Impactrueno", "Ataque R√°pido", "Rayo", "Cola F√©rrea"]</code>.</li>
+          <li>Utiliza un ciclo <code>for</code> b√°sico (por valor) para imprimir en consola "Pikachu puede usar: [nombre del ataque]".</li>
           <li>Al salir del ciclo, usa <code>len()</code> para imprimir un mensaje final que diga: "Pikachu tiene un total de [X] ataques disponibles."</li>
         </ul>
       </div>
@@ -483,14 +483,14 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
       <div class="reto-card mb-4 border-2 border-yellow-300">
         <h3 class="text-xl font-bold text-yellow-600 mb-2">?? Reto Medio: El Sombrero Seleccionador</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Es el primer aÒo en Hogwarts y tienes una lista de aspirantes. El Sombrero elegir· su casa dependiendo del tamaÒo de su nombre.
+          Es el primer a√±o en Hogwarts y tienes una lista de aspirantes. El Sombrero elegir√° su casa dependiendo del tama√±o de su nombre.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea una lista <code>alumnos = ["Harry", "Hermione", "Ron", "Draco", "Neville", "Luna"]</code> y otras dos listas vacÌas: <code>gryffindor = []</code> y <code>slytherin = []</code>.</li>
+          <li>Crea una lista <code>alumnos = ["Harry", "Hermione", "Ron", "Draco", "Neville", "Luna"]</code> y otras dos listas vac√≠as: <code>gryffindor = []</code> y <code>slytherin = []</code>.</li>
           <li>Recorre la lista <code>alumnos</code> con un ciclo <code>for</code>.</li>
-          <li>Dentro del ciclo, eval˙a: si el nombre tiene <strong>m·s de 5 letras</strong> (recuerda que <code>len()</code> tambiÈn sirve para medir un texto corto), el alumno ser· inyectado a <code>gryffindor</code> usando <code>.append()</code>. Si tiene 5 letras o menos, ir· a <code>slytherin</code>.</li>
-          <li>Imprime ambas listas finales para ver quiÈn quedÛ en quÈ casa.</li>
+          <li>Dentro del ciclo, eval√∫a: si el nombre tiene <strong>m√°s de 5 letras</strong> (recuerda que <code>len()</code> tambi√©n sirve para medir un texto corto), el alumno ser√° inyectado a <code>gryffindor</code> usando <code>.append()</code>. Si tiene 5 letras o menos, ir√° a <code>slytherin</code>.</li>
+          <li>Imprime ambas listas finales para ver qui√©n qued√≥ en qu√© casa.</li>
         </ul>
       </div>
 
@@ -498,15 +498,15 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
       <div class="reto-card border-2 border-red-300">
         <h3 class="text-xl font-bold text-red-700 mb-2">?? Reto Avanzado: Ensamblando a los Vengadores</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Thanos se acerca. Nick Fury de Marvel necesita un programa que le permita alistar a los Avengers en la base. Si envÌa a alguien al frente, debe ser eliminado de la base usando men˙s.
+          Thanos se acerca. Nick Fury de Marvel necesita un programa que le permita alistar a los Avengers en la base. Si env√≠a a alguien al frente, debe ser eliminado de la base usando men√∫s.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
           <li>Inicializa tu base <code>vengadores = []</code>.</li>
-          <li>Inicia un ciclo infinito <code>while True:</code> con un men˙ de opciones numÈricas: 1-Agregar Avenger, 2-Mostrar Base y Modificar, 3-Salir.</li>
-          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del hÈroe y lo agregas al final de la lista. (Pista: <code>.append()</code>)</li>
-          <li><strong>Si es 2:</strong> Recorre la lista por Õndices: <code>for i in range(len(vengadores)):</code> e imprime cada hÈroe junto a su cÛdigo de posiciÛn (Ej: `0 - Iron Man`, `1 - Thor`). Luego permite a Fury poner en may˙sculas a todos los hÈroes procesando: <code>vengadores[i] = vengadores[i].upper()</code>.</li>
-          <li><strong>Opcional de DestrucciÛn:</strong> Integra la opciÛn de permitir hacer <code>vengadores.pop()</code> si el usuario escribe la palabra secreta "Sacrificar".</li>
+          <li>Inicia un ciclo infinito <code>while True:</code> con un men√∫ de opciones num√©ricas: 1-Agregar Avenger, 2-Mostrar Base y Modificar, 3-Salir.</li>
+          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del h√©roe y lo agregas al final de la lista. (Pista: <code>.append()</code>)</li>
+          <li><strong>Si es 2:</strong> Recorre la lista por √çndices: <code>for i in range(len(vengadores)):</code> e imprime cada h√©roe junto a su c√≥digo de posici√≥n (Ej: `0 - Iron Man`, `1 - Thor`). Luego permite a Fury poner en may√∫sculas a todos los h√©roes procesando: <code>vengadores[i] = vengadores[i].upper()</code>.</li>
+          <li><strong>Opcional de Destrucci√≥n:</strong> Integra la opci√≥n de permitir hacer <code>vengadores.pop()</code> si el usuario escribe la palabra secreta "Sacrificar".</li>
         </ul>
       </div>
     </div>
@@ -518,6 +518,7 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
         <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta parte interactiva</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
       </div>
     </div>
 
@@ -525,13 +526,18 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
   </div>
 
   <script src="../data/listas-y-for-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
   <script src="../js/app.js"></script>
   <script>
     const { createApp } = Vue;
     const app = createApp({
+      mixins: [QuizXP.vueMixin('listas-y-for')],
       data() {
         return {
           currentSection: 'ref',
+          xpResult: '',
           choiceExercises: typeof listasForChoiceExercises !== 'undefined' ? listasForChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
           tfExercises: typeof listasForTfExercises !== 'undefined' ? listasForTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
           errorExercises: typeof listasForErrorExercises !== 'undefined' ? listasForErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
@@ -571,11 +577,11 @@ print(mis_notas) # Resalta modificativamente permanente [6.6, 5.1, 4.1] <- …xito
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '?? °Asombroso! Conocimiento sellado ??';
-          if (pct >= 0.8) return '°Casi perfecto! Excelente trabajo ??';
-          if (pct >= 0.6) return '°Bien! El concepto se va afianzando ??';
-          if (pct >= 0.4) return 'Buena pelea. °Un repaso no viene mal! ??';
-          return 'No desanimes, el cÛdigo se domina practicando ??';
+          if (pct === 1) return '?? ¬°Asombroso! Conocimiento sellado ??';
+          if (pct >= 0.8) return '¬°Casi perfecto! Excelente trabajo ??';
+          if (pct >= 0.6) return '¬°Bien! El concepto se va afianzando ??';
+          if (pct >= 0.4) return 'Buena pelea. ¬°Un repaso no viene mal! ??';
+          return 'No desanimes, el c√≥digo se domina practicando ??';
         },
       },
       methods: {

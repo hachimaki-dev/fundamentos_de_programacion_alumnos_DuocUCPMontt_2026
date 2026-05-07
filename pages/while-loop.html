@@ -10,8 +10,8 @@
   <!-- Theme System CSS -->
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
-  <title>?? Taller: Ciclo while — Python</title>
-  <meta name="description" content="Taller interactivo del ciclo while en Python: referencia, selección múltiple, verdadero/falso, unir conceptos, encontrar errores, completar código y trazar código." />
+  <title>?? Taller: Ciclo while â€” Python</title>
+  <meta name="description" content="Taller interactivo del ciclo while en Python: referencia, selecciÃ³n mÃºltiple, verdadero/falso, unir conceptos, encontrar errores, completar cÃ³digo y trazar cÃ³digo." />
 <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -62,8 +62,8 @@
         <a href="../index.html" class="back-btn mb-4">? Volver al diario</a>
         <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">?? Ciclo while en Python</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          ¡Bienvenid@ al taller del ciclo <strong>while</strong>! ?? Aprende a repetir mientras se cumpla una condición, validar datos, crear menús interactivos y controlar el flujo.
-          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia ??, luego resuelve los ejercicios a tu ritmo. ¡Tú puedes! ????</span>
+          Â¡Bienvenid@ al taller del ciclo <strong>while</strong>! ?? Aprende a repetir mientras se cumpla una condiciÃ³n, validar datos, crear menÃºs interactivos y controlar el flujo.
+          <br><span class="text-xs mt-1 inline-block">Primero revisa la referencia ??, luego resuelve los ejercicios a tu ritmo. Â¡TÃº puedes! ????</span>
         </p>
       </div>
     </div>
@@ -72,7 +72,7 @@
     <div class="max-w-3xl mx-auto px-4 mt-4">
       <div class="section-nav">
         <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">?? Referencia</button>
-        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? SelecciÃ³n <span class="pill-count">{{ choiceExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">? V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">?? Unir <span class="pill-count">{{ matchData.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">?? Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
@@ -84,34 +84,34 @@
     <!-- --- REFERENCIA --- -->
     <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
       <div class="doc-section">
-        <h2>?? ¿Qué es un ciclo while?</h2>
-        <p>Un <strong>while</strong> repite un bloque de código <strong>mientras una condición sea True</strong>. Cuando la condición se vuelve False, el ciclo termina.</p>
-        <div class="tip-box">?? <strong>Piénsalo así:</strong> Es como un guardia en una puerta ??. Mientras la condición se cumpla, te deja pasar otra vez. Cuando deja de cumplirse, la puerta se cierra.</div>
+        <h2>?? Â¿QuÃ© es un ciclo while?</h2>
+        <p>Un <strong>while</strong> repite un bloque de cÃ³digo <strong>mientras una condiciÃ³n sea True</strong>. Cuando la condiciÃ³n se vuelve False, el ciclo termina.</p>
+        <div class="tip-box">?? <strong>PiÃ©nsalo asÃ­:</strong> Es como un guardia en una puerta ??. Mientras la condiciÃ³n se cumpla, te deja pasar otra vez. Cuando deja de cumplirse, la puerta se cierra.</div>
       </div>
 
       <div class="doc-section">
-        <h2>?? Estructura básica del while</h2>
+        <h2>?? Estructura bÃ¡sica del while</h2>
         <p>El while necesita 3 cosas para funcionar correctamente:</p>
         <ul class="list-disc pl-5 mb-5 space-y-2 text-kawaii-text">
-            <li><strong>Una condición</strong> que se evalúa antes de cada vuelta.</li>
-            <li><strong>Un bloque indentado</strong> que se ejecuta mientras la condición sea True.</li>
-            <li><strong>Algo que cambie la condición</strong> dentro del bloque, para que eventualmente sea False.</li>
+            <li><strong>Una condiciÃ³n</strong> que se evalÃºa antes de cada vuelta.</li>
+            <li><strong>Un bloque indentado</strong> que se ejecuta mientras la condiciÃ³n sea True.</li>
+            <li><strong>Algo que cambie la condiciÃ³n</strong> dentro del bloque, para que eventualmente sea False.</li>
         </ul>
         
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python — while básico</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python â€” while bÃ¡sico</span></div>
           <pre class="!mt-0"><code class="language-python">x = 5
 
-while x > 0:     # ? condición
+while x > 0:     # ? condiciÃ³n
     print(x)     # ? bloque que se repite
-    x -= 1       # ? cambio que afecta la condición
+    x -= 1       # ? cambio que afecta la condiciÃ³n
 
 # Imprime: 5, 4, 3, 2, 1</code></pre>
         </div>
 
         <div class="overflow-x-auto mb-4">
           <table class="doc-table w-full">
-            <tr><th>Paso</th><th>Valor de x</th><th>¿x > 0?</th><th>¿Qué pasa?</th></tr>
+            <tr><th>Paso</th><th>Valor de x</th><th>Â¿x > 0?</th><th>Â¿QuÃ© pasa?</th></tr>
             <tr><td>1</td><td>5</td><td>True ?</td><td>Imprime 5, x baja a 4</td></tr>
             <tr><td>2</td><td>4</td><td>True ?</td><td>Imprime 4, x baja a 3</td></tr>
             <tr><td>3</td><td>3</td><td>True ?</td><td>Imprime 3, x baja a 2</td></tr>
@@ -120,16 +120,16 @@ while x > 0:     # ? condición
             <tr><td>6</td><td>0</td><td>False ?</td><td>Sale del ciclo</td></tr>
           </table>
         </div>
-        <div class="deep-box mt-4">?? <strong>Regla clave:</strong> Si nada cambia la condición dentro del while, el ciclo será <strong>infinito</strong>. ¡Siempre asegúrate de que algo modifique las variables de la condición!</div>
+        <div class="deep-box mt-4">?? <strong>Regla clave:</strong> Si nada cambia la condiciÃ³n dentro del while, el ciclo serÃ¡ <strong>infinito</strong>. Â¡Siempre asegÃºrate de que algo modifique las variables de la condiciÃ³n!</div>
       </div>
 
       <div class="doc-section">
         <h2>?? Ciclo infinito y while True</h2>
-        <p>Si la condición nunca se vuelve False, el ciclo se repite <strong>infinitamente</strong>. A veces esto es intencional:</p>
+        <p>Si la condiciÃ³n nunca se vuelve False, el ciclo se repite <strong>infinitamente</strong>. A veces esto es intencional:</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div class="rounded-xl overflow-hidden shadow-sm">
             <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>? Infinito accidental</span></div>
-            <pre class="!mt-0 h-full"><code class="language-python"># ¡CUIDADO! x nunca cambia
+            <pre class="!mt-0 h-full"><code class="language-python"># Â¡CUIDADO! x nunca cambia
 x = 5
 while x > 0:
     print(x)
@@ -150,41 +150,41 @@ while True:
 
       <div class="doc-section">
         <h2>?? Validar datos con while</h2>
-        <p>Uno de los usos más comunes: <strong>pedir datos hasta que sean válidos</strong>:</p>
+        <p>Uno de los usos mÃ¡s comunes: <strong>pedir datos hasta que sean vÃ¡lidos</strong>:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python — Validación de datos</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python â€” ValidaciÃ³n de datos</span></div>
           <pre class="!mt-0"><code class="language-python">edad = int(input("Edad: "))
 
 while edad < 0 or edad > 120:
-    print("? Edad inválida")
+    print("? Edad invÃ¡lida")
     edad = int(input("Edad: "))
 
 print(f"? Edad registrada: {edad}")</code></pre>
         </div>
-        <div class="deep-box">?? <strong>Patrón clave:</strong> La condición del while describe cuándo el dato es <strong>inválido</strong>. Mientras sea inválido ? pedir de nuevo.</div>
+        <div class="deep-box">?? <strong>PatrÃ³n clave:</strong> La condiciÃ³n del while describe cuÃ¡ndo el dato es <strong>invÃ¡lido</strong>. Mientras sea invÃ¡lido ? pedir de nuevo.</div>
       </div>
 
       <div class="doc-section">
-        <h2>?? Patrón centinela</h2>
+        <h2>?? PatrÃ³n centinela</h2>
         <p>Repetir hasta que el usuario ingrese un <strong>valor especial</strong> para salir:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python — Centinela</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python â€” Centinela</span></div>
           <pre class="!mt-0"><code class="language-python">total = 0
-numero = int(input("Número (0 para salir): "))
+numero = int(input("NÃºmero (0 para salir): "))
 
 while numero != 0:
     total += numero
-    numero = int(input("Número (0 para salir): "))
+    numero = int(input("NÃºmero (0 para salir): "))
 
 print(f"Total: {total}")</code></pre>
         </div>
       </div>
 
       <div class="doc-section">
-        <h2>?? Menú interactivo</h2>
-        <p>Un menú que se repite hasta que el usuario elija salir:</p>
+        <h2>?? MenÃº interactivo</h2>
+        <p>Un menÃº que se repite hasta que el usuario elija salir:</p>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python — Menú</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python â€” MenÃº</span></div>
           <pre class="!mt-0"><code class="language-python">opcion = ""
 
 while opcion != "3":
@@ -194,35 +194,35 @@ while opcion != "3":
     opcion = input("Elige: ")
 
     if opcion == "1":
-        print("¡Hola! ??")
+        print("Â¡Hola! ??")
     elif opcion == "2":
-        print("¡Adiós! ??")
+        print("Â¡AdiÃ³s! ??")
 
 print("Programa terminado")</code></pre>
         </div>
       </div>
 
       <div class="doc-section">
-        <h2>?? while vs if (¡no confundir!)</h2>
+        <h2>?? while vs if (Â¡no confundir!)</h2>
         <table class="doc-table">
-          <tr><th>Estructura</th><th>¿Qué hace?</th><th>¿Cuántas veces?</th></tr>
-          <tr><td><code>if</code></td><td>Evalúa la condición</td><td>Una sola vez</td></tr>
-          <tr><td><code>while</code></td><td>Evalúa la condición repetidamente</td><td>Mientras sea True</td></tr>
+          <tr><th>Estructura</th><th>Â¿QuÃ© hace?</th><th>Â¿CuÃ¡ntas veces?</th></tr>
+          <tr><td><code>if</code></td><td>EvalÃºa la condiciÃ³n</td><td>Una sola vez</td></tr>
+          <tr><td><code>while</code></td><td>EvalÃºa la condiciÃ³n repetidamente</td><td>Mientras sea True</td></tr>
         </table>
       </div>
 
       <div class="doc-section" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2>?? ¡Estás list@! ¡A practicar!</h2>
-        <p>Usa los botones de arriba para navegar. Recomendación: Selección ? V o F ? Unir ? Errores ? Completar ? Trazar ??</p>
+        <h2>?? Â¡EstÃ¡s list@! Â¡A practicar!</h2>
+        <p>Usa los botones de arriba para navegar. RecomendaciÃ³n: SelecciÃ³n ? V o F ? Unir ? Errores ? Completar ? Trazar ??</p>
       </div>
     </div>
 
-    <!-- --- SELECCIÓN MÚLTIPLE --- -->
+    <!-- --- SELECCIÃ“N MÃšLTIPLE --- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple — Conceptos del while</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. ¡Lee bien cada opción!</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">SelecciÃ³n MÃºltiple â€” Conceptos del while</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la respuesta correcta. Â¡Lee bien cada opciÃ³n!</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -244,7 +244,7 @@ print("Programa terminado")</code></pre>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
@@ -254,7 +254,7 @@ print("Programa terminado")</code></pre>
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmación y decide: ¿es verdadera o falsa?</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee cada afirmaciÃ³n y decide: Â¿es verdadera o falsa?</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ tfScore }} / {{ tfExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -273,7 +273,7 @@ print("Programa terminado")</code></pre>
           <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">? Falso</button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span><span v-else class="font-bold text-red-700">?? ¡Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span><span v-else class="font-bold text-red-700">?? Â¡Ojo! </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
@@ -292,7 +292,7 @@ print("Programa terminado")</code></pre>
           <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">?</span><span v-else>?</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
-        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? ¡Perfecto! ¡Todos los pares correctos!</span></div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? Â¡Perfecto! Â¡Todos los pares correctos!</span></div>
       </div>
     </div>
 
@@ -301,7 +301,7 @@ print("Programa terminado")</code></pre>
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Encuentra el Error</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Cada código tiene un error. ¿Puedes encontrarlo?</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Cada cÃ³digo tiene un error. Â¿Puedes encontrarlo?</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ errorScore }} / {{ errorExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -315,7 +315,7 @@ print("Programa terminado")</code></pre>
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3><p class="text-kawaii-text/70 text-sm mt-1" v-if="ex.instruction">{{ ex.instruction }}</p></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python — ¿Dónde está el error?</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Python â€” Â¿DÃ³nde estÃ¡ el error?</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
@@ -327,17 +327,17 @@ print("Programa terminado")</code></pre>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- --- COMPLETAR CÓDIGO --- -->
+    <!-- --- COMPLETAR CÃ“DIGO --- -->
     <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Elige la opción que completa correctamente los espacios en blanco.</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el CÃ³digo</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Elige la opciÃ³n que completa correctamente los espacios en blanco.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ completeScore }} / {{ completeExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -363,17 +363,17 @@ print("Programa terminado")</code></pre>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span><span v-else class="font-bold text-red-700">?? No es esa. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
 
-    <!-- --- TRAZAR CÓDIGO --- -->
+    <!-- --- TRAZAR CÃ“DIGO --- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Trazar Código Python</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Lee el código, trázalo paso a paso y elige la salida correcta.</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Trazar CÃ³digo Python</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Lee el cÃ³digo, trÃ¡zalo paso a paso y elige la salida correcta.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -400,7 +400,7 @@ print("Programa terminado")</code></pre>
           </button>
         </div>
         <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
-          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? ¡Correcto! </span><span v-else class="font-bold text-red-700">?? Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
+          <span v-if="ex.selected===ex.correct" class="font-bold text-green-700">?? Â¡Correcto! </span><span v-else class="font-bold text-red-700">?? Incorrecto. </span><span class="text-kawaii-text/80">{{ ex.explanation }}</span>
         </div>
       </div>
     </div>
@@ -409,9 +409,10 @@ print("Programa terminado")</code></pre>
     <div v-if="currentSection !== 'ref' && currentSection !== 'match' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
       <div class="score-summary fade-in-up">
         <p class="text-4xl mb-2">??</p>
-        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta secciÃ³n</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
       </div>
     </div>
 
@@ -419,13 +420,18 @@ print("Programa terminado")</code></pre>
   </div>
 
   <script src="../data/while-exercises.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
   <script src="../js/app.js"></script>
   <script>
     const { createApp } = Vue;
     const app = createApp({
+      mixins: [QuizXP.vueMixin('while-loop')],
       data() {
         return {
           currentSection: 'ref',
+          xpResult: '',
           choiceExercises: whileChoiceExercises.map(e => ({ ...e, answered: false, selected: null })),
           tfExercises: whileTfExercises.map(e => ({ ...e, answered: false, selected: null })),
           errorExercises: whileErrorExercises.map(e => ({ ...e, answered: false, selected: null })),
@@ -466,11 +472,11 @@ print("Programa terminado")</code></pre>
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '?? ¡Perfecto! ¡Eres un crack! ??';
-          if (pct >= 0.8) return '¡Excelente! ¡Casi perfecto! ??';
-          if (pct >= 0.6) return '¡Bien! Sigue practicando para mejorar ??';
-          if (pct >= 0.4) return 'Vas por buen camino. ¡Revisa la referencia! ??';
-          return 'No te preocupes, ¡la práctica hace al maestro! ??';
+          if (pct === 1) return '?? Â¡Perfecto! Â¡Eres un crack! ??';
+          if (pct >= 0.8) return 'Â¡Excelente! Â¡Casi perfecto! ??';
+          if (pct >= 0.6) return 'Â¡Bien! Sigue practicando para mejorar ??';
+          if (pct >= 0.4) return 'Vas por buen camino. Â¡Revisa la referencia! ??';
+          return 'No te preocupes, Â¡la prÃ¡ctica hace al maestro! ??';
         },
       },
       methods: {

@@ -29,8 +29,14 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
     .player-card.is-me { border-color: var(--t-accent); }
+    .player-card.winner {
+      border-color: #4ade80;
+      box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    }
+    .player-card.loser { opacity: 0.6; }
     .player-avatar {
       width: 100px; height: 100px;
       border-radius: 50%;
@@ -55,17 +61,6 @@
       100% { transform: scale(1); }
     }
     
-    .versus {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3rem;
-      font-weight: 900;
-      color: var(--t-accent);
-      text-shadow: 0 0 20px rgba(0,0,0,0.5);
-      z-index: 10;
-    }
-    
     .lobby-list {
       display: flex;
       flex-direction: column;
@@ -79,6 +74,76 @@
       padding: 1rem;
       background: var(--t-surface);
       border-radius: 8px;
+    }
+    
+    .problem-card {
+      background: var(--t-surface);
+      border: 2px solid var(--t-accent);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .problem-card h2 {
+      color: var(--t-accent);
+      margin: 0 0 0.5rem;
+    }
+    .problem-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .problem-meta .tag {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .tag-easy { background: #d1fae5; color: #065f46; }
+    .tag-medium { background: #fef3c7; color: #92400e; }
+    .tag-hard { background: #fee2e2; color: #991b1b; }
+    .tag-xp { background: var(--t-surface-alt); color: var(--t-accent); border: 1px solid var(--t-accent); }
+    
+    .example-box {
+      background: var(--t-bg);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+    }
+    
+    .upload-zone {
+      border: 2px dashed var(--t-border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--t-surface-alt);
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--t-accent);
+      background: rgba(var(--t-accent-rgb), 0.05);
+    }
+    .upload-zone.uploaded {
+      border-color: #4ade80;
+      background: rgba(74, 222, 128, 0.05);
+    }
+    
+    .timer {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--t-accent);
+      text-align: center;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+    }
+    .timer.danger { color: #f43f5e; animation: pulse 0.5s infinite; }
+    
+    @media (max-width: 768px) {
+      .arena-container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -94,7 +159,7 @@
 
   <div id="app" class="container" style="padding-top: 6rem; padding-bottom: 4rem;">
     <h1 class="text-3xl font-bold text-center mb-2">⚔️ CODE ROYALE</h1>
-    <p class="text-center text-muted mb-8">La arena de combate en vivo. El primero en resolver, se lleva el XP.</p>
+    <p class="text-center text-muted mb-8">La arena de combate en vivo. Resuelve el problema y sube tu .py antes que tu oponente.</p>
 
     <!-- LOADING -->
     <div id="loading-screen" v-if="loading">
@@ -105,59 +170,125 @@
     </div>
 
     <!-- LOBBY -->
-    <div v-else-if="!inMatch" class="card">
-      <h2 class="text-xl font-bold mb-4">Lobby Abierto</h2>
-      <p class="text-muted mb-4">Jugadores esperando un oponente...</p>
-      
-      <div class="flex gap-4 mb-6">
-        <button v-if="!isWaiting" @click="joinLobby" class="btn-primary">Entrar al Lobby</button>
-        <button v-else @click="leaveLobby" class="btn-secondary">Salir del Lobby</button>
-      </div>
-      
-      <div class="lobby-list">
-        <div v-if="waitingPlayers.length === 0" class="text-center text-muted py-4">
-          No hay nadie en el lobby ahora mismo.
+    <div v-else-if="!inMatch">
+      <!-- Stats rápidos -->
+      <div class="flex gap-4 justify-center mb-6 flex-wrap">
+        <div class="card text-center" style="min-width:120px;">
+          <div class="text-2xl font-bold" style="color:var(--t-accent);">{{ stats.wins }}</div>
+          <div class="text-xs text-muted">Victorias</div>
         </div>
-        <div v-for="p in waitingPlayers" :key="p.id" class="lobby-item">
-          <div class="flex items-center gap-4">
-            <img :src="getAvatar(p.avatar_id)" style="width:40px; height:40px; border-radius:50%;">
-            <strong>{{ p.nickname }}</strong>
-            <span class="text-xs text-muted">Lvl {{ p.level }}</span>
+        <div class="card text-center" style="min-width:120px;">
+          <div class="text-2xl font-bold" style="color:var(--t-text);">{{ stats.total }}</div>
+          <div class="text-xs text-muted">Batallas</div>
+        </div>
+        <div class="card text-center" style="min-width:120px;">
+          <div class="text-2xl font-bold" style="color:var(--t-accent);">{{ stats.winRate }}%</div>
+          <div class="text-xs text-muted">Win Rate</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="text-xl font-bold mb-4">Lobby Abierto</h2>
+        <p class="text-muted mb-4">Jugadores esperando un oponente. El problema se revela al empezar la batalla.</p>
+        
+        <div class="flex gap-4 mb-6">
+          <button v-if="!isWaiting" @click="joinLobby" class="btn-primary">Entrar al Lobby ⚔️</button>
+          <button v-else @click="leaveLobby" class="btn-secondary">Salir del Lobby</button>
+        </div>
+        
+        <div class="lobby-list">
+          <div v-if="waitingPlayers.length === 0" class="text-center text-muted py-4">
+            No hay nadie en el lobby ahora mismo. ¡Sé el primero!
           </div>
-          <button v-if="p.id !== currentUser.id && isWaiting" @click="challengePlayer(p)" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;">
-            Desafiar ⚔️
-          </button>
+          <div v-for="p in waitingPlayers" :key="p.id" class="lobby-item">
+            <div class="flex items-center gap-4">
+              <img :src="getAvatar(p.avatar_id)" style="width:40px; height:40px; border-radius:50%;">
+              <strong>{{ p.nickname }}</strong>
+              <span class="text-xs text-muted">Lvl {{ p.level }}</span>
+            </div>
+            <button v-if="p.id !== currentUser.id && isWaiting" @click="challengePlayer(p)" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;">
+              Desafiar ⚔️
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- MATCH ARENA -->
-    <div v-else class="relative">
-      <div class="card mb-6 text-center" style="border-color: var(--t-accent);">
-        <h2 class="text-2xl font-bold mb-2">Problema: Invertir Diccionario</h2>
-        <p class="mb-4">Crea una función <code>invertir(d)</code> que reciba un diccionario y devuelva uno nuevo donde las llaves sean los valores y los valores las llaves.</p>
-        <button v-if="matchState === 'coding'" @click="declareVictory" class="btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
-          ¡LO RESOLVÍ! 🚀
-        </button>
-        <div v-if="matchState === 'finished'" class="text-2xl font-bold mt-4" :style="{color: winnerId === currentUser.id ? '#4ade80' : '#f43f5e'}">
-          {{ winnerId === currentUser.id ? '¡GANASTE! +100 XP' : 'FUISTE DERROTADO' }}
+    <div v-else>
+      <!-- Problema -->
+      <div class="problem-card">
+        <div class="problem-meta">
+          <span class="tag" :class="'tag-' + currentProblem.difficulty">{{ diffLabel(currentProblem.difficulty) }}</span>
+          <span class="tag tag-xp">🏆 {{ currentProblem.xp_reward }} XP</span>
+          <span class="tag" style="background:var(--t-surface-alt); color:var(--t-text-muted);">⏱️ {{ Math.floor(currentProblem.time_limit_seconds / 60) }} min</span>
         </div>
-        <button v-if="matchState === 'finished'" @click="resetMatch" class="btn-secondary mt-4">Volver al Lobby</button>
+        <h2 class="text-2xl font-bold mb-2">{{ currentProblem.title }}</h2>
+        <p class="mb-4" style="color:var(--t-text-secondary);">{{ currentProblem.description }}</p>
+        
+        <div v-if="currentProblem.example_input" class="mb-2">
+          <strong class="text-sm">Ejemplo Input:</strong>
+          <div class="example-box">{{ currentProblem.example_input }}</div>
+        </div>
+        <div v-if="currentProblem.example_output">
+          <strong class="text-sm">Ejemplo Output:</strong>
+          <div class="example-box">{{ currentProblem.example_output }}</div>
+        </div>
       </div>
 
+      <!-- Timer -->
+      <div class="timer" :class="{ danger: timeLeft <= 30 }">
+        {{ formatTimer(timeLeft) }}
+      </div>
+
+      <!-- Upload zone -->
+      <div v-if="matchState === 'coding'" class="mb-6">
+        <div class="upload-zone" :class="{ uploaded: myFile }"
+          @click="$refs.fileInput.click()"
+          @dragover.prevent="$event.currentTarget.classList.add('dragover')"
+          @dragleave="$event.currentTarget.classList.remove('dragover')"
+          @drop.prevent="handleDrop($event)">
+          <input type="file" ref="fileInput" accept=".py" style="display:none;" @change="handleFileSelect">
+          <div v-if="!myFile">
+            <p class="text-2xl mb-2">📁</p>
+            <p class="font-bold">Arrastra tu archivo .py aquí</p>
+            <p class="text-xs text-muted mt-1">o haz click para seleccionar</p>
+          </div>
+          <div v-else>
+            <p class="text-2xl mb-2">✅</p>
+            <p class="font-bold" style="color:#4ade80;">{{ myFile.name }}</p>
+            <p class="text-xs text-muted mt-1">{{ (myFile.size / 1024).toFixed(1) }} KB — Click para reemplazar</p>
+          </div>
+        </div>
+        <button v-if="myFile" @click="submitSolution" class="btn-primary mt-4" style="width:100%; font-size: 1.2rem; padding: 1rem;">
+          ¡ENVIAR SOLUCIÓN! 🚀
+        </button>
+      </div>
+
+      <!-- Resultado -->
+      <div v-if="matchState === 'finished'" class="card text-center mb-6" style="border-color: var(--t-accent);">
+        <div class="text-3xl font-bold mb-2" :style="{color: winnerId === currentUser.id ? '#4ade80' : '#f43f5e'}">
+          {{ winnerId === currentUser.id ? '¡GANASTE! 🏆' : 'FUISTE DERROTADO 💀' }}
+        </div>
+        <p v-if="winnerId === currentUser.id" class="text-lg font-bold" style="color:var(--t-accent);">
+          +{{ currentProblem.xp_reward }} XP
+        </p>
+        <p v-else class="text-muted">+10 XP por participar</p>
+        <button @click="resetMatch" class="btn-secondary mt-4">Volver al Lobby</button>
+      </div>
+
+      <!-- Players -->
       <div class="arena-container">
         <!-- Yo -->
-        <div class="player-card is-me">
+        <div class="player-card is-me" :class="{ winner: matchState === 'finished' && winnerId === currentUser.id, loser: matchState === 'finished' && winnerId !== currentUser.id }">
           <img :src="getAvatar(myProfile.avatar_id)" class="player-avatar">
           <h3 class="text-xl font-bold">{{ myProfile.nickname }}</h3>
           <p class="text-muted mb-4">Tú</p>
           <div class="status-badge" :class="myStatus">{{ getStatusText(myStatus) }}</div>
         </div>
         
-        <div class="versus">VS</div>
-        
         <!-- Oponente -->
-        <div class="player-card" v-if="opponent">
+        <div class="player-card" v-if="opponent" :class="{ winner: matchState === 'finished' && winnerId === opponent.id, loser: matchState === 'finished' && winnerId !== opponent.id }">
           <img :src="getAvatar(opponent.avatar_id)" class="player-avatar">
           <h3 class="text-xl font-bold">{{ opponent.nickname }}</h3>
           <p class="text-muted mb-4">Nivel {{ opponent.level }}</p>
@@ -189,6 +320,20 @@
           myStatus: 'coding',
           opponentStatus: 'coding',
           winnerId: null,
+          
+          // Problema dinámico
+          problems: [],
+          currentProblem: { title: '', description: '', difficulty: 'medium', xp_reward: 100, time_limit_seconds: 300, example_input: '', example_output: '' },
+          
+          // File upload
+          myFile: null,
+          
+          // Timer
+          timeLeft: 300,
+          timerInterval: null,
+          
+          // Stats
+          stats: { wins: 0, total: 0, winRate: 0 },
         };
       },
       async mounted() {
@@ -198,12 +343,15 @@
         const { profile } = await SupabaseManager.getProfile();
         this.myProfile = profile;
         
+        await this.loadProblems();
+        await this.loadStats();
         this.initLobby();
         this.loading = false;
       },
       beforeUnmount() {
         if (this.lobbyChannel) this.lobbyChannel.unsubscribe();
         if (this.matchChannel) this.matchChannel.unsubscribe();
+        if (this.timerInterval) clearInterval(this.timerInterval);
       },
       methods: {
         getAvatar(id) {
@@ -214,9 +362,43 @@
           if (status === 'done') return '🔥 ¡Terminó!';
           return 'Esperando';
         },
+        diffLabel(d) {
+          return { easy: '🟢 Fácil', medium: '🟡 Media', hard: '🔴 Difícil' }[d] || d;
+        },
+        formatTimer(seconds) {
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+          return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        },
+        
+        // --- Data Loading ---
+        async loadProblems() {
+          const client = SupabaseManager.getClient();
+          const { data } = await client.from('code_royale_problems').select('*');
+          this.problems = data || [];
+        },
+        async loadStats() {
+          const client = SupabaseManager.getClient();
+          try {
+            const { data } = await client.from('code_royale_matches')
+              .select('winner_id')
+              .or(`player1_id.eq.${this.currentUser.id},player2_id.eq.${this.currentUser.id}`)
+              .eq('status', 'finished');
+            if (data) {
+              this.stats.total = data.length;
+              this.stats.wins = data.filter(m => m.winner_id === this.currentUser.id).length;
+              this.stats.winRate = this.stats.total > 0 ? Math.round((this.stats.wins / this.stats.total) * 100) : 0;
+            }
+          } catch (e) { /* tabla puede no existir aún */ }
+        },
+        getRandomProblem() {
+          if (!this.problems.length) return this.currentProblem;
+          return this.problems[Math.floor(Math.random() * this.problems.length)];
+        },
+        
+        // --- Lobby ---
         initLobby() {
           const client = SupabaseManager.getClient();
-          // Canal de Presencia para el Lobby
           this.lobbyChannel = client.channel('code_royale_lobby', {
             config: { presence: { key: this.currentUser.id } }
           });
@@ -232,9 +414,8 @@
             })
             .on('broadcast', { event: 'challenge' }, (payload) => {
               if (payload.payload.targetId === this.currentUser.id) {
-                // Fui desafiado!
                 if(confirm(`¡${payload.payload.challenger.nickname} te ha desafiado a un Code Royale! ¿Aceptas?`)) {
-                  this.acceptChallenge(payload.payload.challenger, payload.payload.matchId);
+                  this.acceptChallenge(payload.payload.challenger, payload.payload.matchId, payload.payload.problem);
                 }
               }
             })
@@ -248,43 +429,53 @@
           this.isWaiting = false;
           await this.lobbyChannel.untrack();
         },
+        
+        // --- Challenge ---
         challengePlayer(targetProfile) {
           const matchId = `match_${Date.now()}`;
+          const problem = this.getRandomProblem();
+          
           this.lobbyChannel.send({
             type: 'broadcast',
             event: 'challenge',
             payload: {
               targetId: targetProfile.id,
               challenger: this.myProfile,
-              matchId: matchId
+              matchId: matchId,
+              problem: problem
             }
           });
-          // Entrar directo a la arena a esperar
-          this.enterArena(targetProfile, matchId);
+          this.enterArena(targetProfile, matchId, problem);
         },
-        acceptChallenge(challengerProfile, matchId) {
-          this.enterArena(challengerProfile, matchId);
-          // Notificar que entré
+        acceptChallenge(challengerProfile, matchId, problem) {
+          this.enterArena(challengerProfile, matchId, problem);
           this.matchChannel.send({
             type: 'broadcast',
             event: 'status',
             payload: { userId: this.currentUser.id, status: 'coding' }
           });
         },
-        enterArena(opponentProfile, matchId) {
+        enterArena(opponentProfile, matchId, problem) {
           this.leaveLobby();
           this.inMatch = true;
           this.opponent = opponentProfile;
+          this.currentProblem = problem;
           this.matchState = 'coding';
           this.myStatus = 'coding';
           this.opponentStatus = 'coding';
+          this.myFile = null;
+          this.winnerId = null;
+          
+          // Start timer
+          this.timeLeft = problem.time_limit_seconds || 300;
+          this.startTimer();
           
           const client = SupabaseManager.getClient();
           this.matchChannel = client.channel(matchId);
           
           this.matchChannel
             .on('broadcast', { event: 'status' }, (payload) => {
-              if (payload.payload.userId === this.opponent.id) {
+              if (payload.payload.userId !== this.currentUser.id) {
                 this.opponentStatus = payload.payload.status;
                 if (this.opponentStatus === 'done' && this.matchState !== 'finished') {
                   this.finishMatch(this.opponent.id);
@@ -293,7 +484,54 @@
             })
             .subscribe();
         },
-        declareVictory() {
+        
+        // --- Timer ---
+        startTimer() {
+          if (this.timerInterval) clearInterval(this.timerInterval);
+          this.timerInterval = setInterval(() => {
+            this.timeLeft--;
+            if (this.timeLeft <= 0) {
+              clearInterval(this.timerInterval);
+              if (this.matchState !== 'finished') {
+                // Tiempo agotado - ambos pierden
+                this.matchState = 'finished';
+                this.winnerId = null;
+                SupabaseManager.showToast('⏰ ¡Tiempo agotado! Nadie gana esta ronda.', 'warning');
+              }
+            }
+          }, 1000);
+        },
+        
+        // --- File handling ---
+        handleFileSelect(e) {
+          if (e.target.files && e.target.files.length > 0) {
+            this.validateAndSetFile(e.target.files[0]);
+          }
+          e.target.value = '';
+        },
+        handleDrop(e) {
+          e.currentTarget.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            this.validateAndSetFile(e.dataTransfer.files[0]);
+          }
+        },
+        validateAndSetFile(file) {
+          if (!file.name.endsWith('.py')) {
+            SupabaseManager.showToast('Solo se permiten archivos .py', 'warning');
+            return;
+          }
+          if (file.size > 50 * 1024) {
+            SupabaseManager.showToast('El archivo debe pesar menos de 50KB', 'warning');
+            return;
+          }
+          this.myFile = file;
+          SupabaseManager.showToast(`📁 ${file.name} listo para enviar`, 'info');
+        },
+        
+        // --- Submit solution ---
+        async submitSolution() {
+          if (!this.myFile) return;
+          
           this.myStatus = 'done';
           this.matchChannel.send({
             type: 'broadcast',
@@ -302,21 +540,58 @@
           });
           this.finishMatch(this.currentUser.id);
         },
-        finishMatch(winnerId) {
+        
+        async finishMatch(winnerId) {
           this.matchState = 'finished';
           this.winnerId = winnerId;
+          if (this.timerInterval) clearInterval(this.timerInterval);
+          
+          const client = SupabaseManager.getClient();
           
           if (winnerId === this.currentUser.id) {
-            // Dar XP (esto debería ir por BD segura, aquí es demo visual)
-            const client = SupabaseManager.getClient();
-            client.rpc('award_xp_and_badge', { target_user: this.currentUser.id, xp_amount: 100 });
-            SupabaseManager.showToast('¡Has ganado 100 XP!', 'success');
+            // Dar XP al ganador
+            try {
+              await client.rpc('award_xp_and_badge', { 
+                target_user: this.currentUser.id, 
+                xp_amount: this.currentProblem.xp_reward || 100,
+                badge_id: 'royale_champion'
+              });
+              SupabaseManager.showToast(`🏆 ¡Has ganado ${this.currentProblem.xp_reward || 100} XP!`, 'success', 5000);
+            } catch (e) {
+              console.error('Error awarding XP:', e);
+            }
+          } else {
+            // Dar XP de participación al perdedor
+            try {
+              await client.rpc('award_xp_and_badge', { 
+                target_user: this.currentUser.id, 
+                xp_amount: 10
+              });
+            } catch (e) { /* */ }
           }
+          
+          // Registrar match en BD
+          try {
+            await client.from('code_royale_matches').insert({
+              problem_id: this.currentProblem.id || null,
+              player1_id: this.currentUser.id,
+              player2_id: this.opponent?.id || null,
+              winner_id: winnerId,
+              status: 'finished',
+              started_at: new Date(Date.now() - ((this.currentProblem.time_limit_seconds || 300) - this.timeLeft) * 1000).toISOString(),
+              finished_at: new Date().toISOString()
+            });
+          } catch (e) { /* tabla puede no existir aún */ }
+          
+          this.loadStats();
         },
         resetMatch() {
           if(this.matchChannel) this.matchChannel.unsubscribe();
+          if(this.timerInterval) clearInterval(this.timerInterval);
           this.inMatch = false;
           this.opponent = null;
+          this.myFile = null;
+          this.initLobby();
         }
       }
     }).mount('#app');

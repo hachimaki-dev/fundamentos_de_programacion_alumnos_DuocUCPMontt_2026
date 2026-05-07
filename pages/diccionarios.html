@@ -11,9 +11,9 @@
   <link rel="stylesheet" href="../css/themes.css" />
   <link rel="stylesheet" href="../css/utilities.css" />
   <title>?? Taller: Diccionarios en Python</title>
-  <meta name="description" content="Taller interactivo sobre Diccionarios en Python: pares clave-valor, mÈtodos esenciales, recorridos con .items() y ejercicios pr·cticos." />
+  <meta name="description" content="Taller interactivo sobre Diccionarios en Python: pares clave-valor, m√©todos esenciales, recorridos con .items() y ejercicios pr√°cticos." />
 <!-- TailwindCSS -->
-<!-- PrismJS para cÛdigo -->
+<!-- PrismJS para c√≥digo -->
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
@@ -76,7 +76,7 @@
         <a href="../index.html" class="back-btn mb-4">? Volver al diario</a>
         <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">?? Diccionarios en Python</h1>
         <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
-          °Bienvenid@ al mundo de los pares <strong>clave:valor</strong>! ?? Los diccionarios son la estructura m·s poderosa para organizar datos con etiquetas descriptivas en vez de Ìndices numÈricos.
+          ¬°Bienvenid@ al mundo de los pares <strong>clave:valor</strong>! ?? Los diccionarios son la estructura m√°s poderosa para organizar datos con etiquetas descriptivas en vez de √≠ndices num√©ricos.
         </p>
       </div>
     </div>
@@ -85,7 +85,7 @@
     <div class="max-w-3xl mx-auto px-4 mt-4">
       <div class="section-nav">
         <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">?? Conceptos</button>
-        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? SelecciÛn <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">?? Selecci√≥n <span class="pill-count">{{ choiceExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">? V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">?? Unir <span class="pill-count">{{ matchData.length }}</span></button>
         <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">?? Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
@@ -102,25 +102,25 @@
       <div class="doc-section">
         <h2>?? El Problema: Datos Sin Contexto</h2>
         <p>
-          Con las listas aprendiste a guardar muchos datos en una sola variable. Pero... øy si necesitas saber <strong>a quiÈn pertenece cada dato</strong>? Imagina tener <code>["Ash", 10, "Pueblo Paleta"]</code>. øEl 10 es edad? øNivel? øPokÈdex? Sin contexto, tus datos son un rompecabezas sin imagen de referencia.
+          Con las listas aprendiste a guardar muchos datos en una sola variable. Pero... ¬øy si necesitas saber <strong>a qui√©n pertenece cada dato</strong>? Imagina tener <code>["Ash", 10, "Pueblo Paleta"]</code>. ¬øEl 10 es edad? ¬øNivel? ¬øPok√©dex? Sin contexto, tus datos son un rompecabezas sin imagen de referencia.
           <br><br>
-          La soluciÛn: <strong>"Necesito almacenar datos CON etiquetas descriptivas que me digan exactamente QU… representa cada valor"</strong>.
+          La soluci√≥n: <strong>"Necesito almacenar datos CON etiquetas descriptivas que me digan exactamente QU√â representa cada valor"</strong>.
         </p>
       </div>
 
-      <!-- Bloque: QuÈ es un Diccionario -->
+      <!-- Bloque: Qu√© es un Diccionario -->
       <div class="doc-section">
         <h2>?? El Diccionario: Tu Base de Datos Personal</h2>
-        <p>Un diccionario es una <strong>colecciÛn de pares clave:valor</strong>. Piensa en Èl como un directorio telefÛnico: buscas por nombre (clave) y obtienes el n˙mero (valor). No necesitas recordar posiciones numÈricas.</p>
+        <p>Un diccionario es una <strong>colecci√≥n de pares clave:valor</strong>. Piensa en √©l como un directorio telef√≥nico: buscas por nombre (clave) y obtienes el n√∫mero (valor). No necesitas recordar posiciones num√©ricas.</p>
         
         <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
-          <p class="font-bold text-green-800 mb-1">?? La Diferencia Clave vs Õndice</p>
-          <p class="text-sm">En las <strong>listas</strong> accedes por posiciÛn numÈrica: <code>lista[0]</code>. En los <strong>diccionarios</strong> accedes por etiqueta descriptiva: <code>diccionario["nombre"]</code>. Es como la diferencia entre buscar "el cajÛn #3" vs buscar "el cajÛn que dice CALCETINES".</p>
+          <p class="font-bold text-green-800 mb-1">?? La Diferencia Clave vs √çndice</p>
+          <p class="text-sm">En las <strong>listas</strong> accedes por posici√≥n num√©rica: <code>lista[0]</code>. En los <strong>diccionarios</strong> accedes por etiqueta descriptiva: <code>diccionario["nombre"]</code>. Es como la diferencia entre buscar "el caj√≥n #3" vs buscar "el caj√≥n que dice CALCETINES".</p>
         </div>
 
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3 border border-gray-200">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>AnatomÌa de un Diccionario</span></div>
-          <pre class="!mt-0"><code class="language-python"># CreaciÛn con llaves { } y pares clave: valor
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Anatom√≠a de un Diccionario</span></div>
+          <pre class="!mt-0"><code class="language-python"># Creaci√≥n con llaves { } y pares clave: valor
 personaje = {
     "nombre": "Ash",
     "edad": 10,
@@ -128,7 +128,7 @@ personaje = {
     "pokemones": ["Pikachu", "Charizard"]
 }
 
-# Acceso por CLAVE (no por Ìndice numÈrico)
+# Acceso por CLAVE (no por √≠ndice num√©rico)
 print(personaje["nombre"])   # Ash
 print(personaje["edad"])     # 10
 
@@ -141,14 +141,14 @@ personaje["edad"] = 11</code></pre>
 
         <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4 mb-2">
           <p class="font-bold text-red-800 text-sm">?? El Horror del KeyError</p>
-          <p class="text-sm mt-1">Si intentas acceder a una clave que NO existe usando corchetes ó <code>personaje["novia"]</code> ó Python colapsa con un <strong>?? KeyError</strong>. SoluciÛn segura: usa <code>.get("novia", "No tiene")</code> que devuelve un valor por defecto sin romper nada.</p>
+          <p class="text-sm mt-1">Si intentas acceder a una clave que NO existe usando corchetes ‚Äî <code>personaje["novia"]</code> ‚Äî Python colapsa con un <strong>?? KeyError</strong>. Soluci√≥n segura: usa <code>.get("novia", "No tiene")</code> que devuelve un valor por defecto sin romper nada.</p>
         </div>
       </div>
 
-      <!-- Bloque: MÈtodos Esenciales -->
+      <!-- Bloque: M√©todos Esenciales -->
       <div class="doc-section">
-        <h2>??? MÈtodos que DEBES Dominar</h2>
-        <p>Un diccionario sin mÈtodos es como un cofre del tesoro sin llave. Memoriza estas operaciones y domina Python:</p>
+        <h2>??? M√©todos que DEBES Dominar</h2>
+        <p>Un diccionario sin m√©todos es como un cofre del tesoro sin llave. Memoriza estas operaciones y domina Python:</p>
         
         <div class="space-y-4 mt-4">
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
@@ -158,17 +158,17 @@ personaje["edad"] = 11</code></pre>
           </div>
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-kawaii-deep font-code text-lg">.get(clave, default)</p>
-            <p class="text-sm mt-1"><strong>Acceso seguro:</strong> Busca la clave sin riesgo de KeyError. Si no existe, devuelve el valor por defecto que t˙ elijas.</p>
+            <p class="text-sm mt-1"><strong>Acceso seguro:</strong> Busca la clave sin riesgo de KeyError. Si no existe, devuelve el valor por defecto que t√∫ elijas.</p>
             <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">nivel = jugador.get("nivel", 1) # Si no tiene nivel, devuelve 1</p>
           </div>
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-orange-600 font-code text-lg">.keys() / .values() / .items()</p>
-            <p class="text-sm mt-1"><strong>Los 3 mosqueteros:</strong> <code>.keys()</code> devuelve solo las claves, <code>.values()</code> solo los valores, y <code>.items()</code> devuelve pares (clave, valor) ó perfecto para recorrer con for.</p>
+            <p class="text-sm mt-1"><strong>Los 3 mosqueteros:</strong> <code>.keys()</code> devuelve solo las claves, <code>.values()</code> solo los valores, y <code>.items()</code> devuelve pares (clave, valor) ‚Äî perfecto para recorrer con for.</p>
             <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">for clave, valor in diccionario.items(): print(clave, valor)</p>
           </div>
           <div class="p-4 bg-white rounded-xl shadow-sm border border-gray-100 transition-transform hover:scale-[1.02]">
             <p class="font-bold text-red-600 font-code text-lg">del dict['clave'] &nbsp;|&nbsp; .pop('clave')</p>
-            <p class="text-sm mt-1"><strong>Eliminar pares:</strong> <code>del</code> borra directamente. <code>.pop("clave")</code> borra y adem·s te devuelve el valor eliminado.</p>
+            <p class="text-sm mt-1"><strong>Eliminar pares:</strong> <code>del</code> borra directamente. <code>.pop("clave")</code> borra y adem√°s te devuelve el valor eliminado.</p>
             <p class="text-xs font-code text-gray-500 bg-gray-50 border p-2 mt-2 rounded">del persona["edad"] # Elimina el par edad:valor<br>eliminado = persona.pop("region", "N/A") # Borra y guarda</p>
           </div>
         </div>
@@ -176,16 +176,16 @@ personaje["edad"] = 11</code></pre>
 
       <!-- Bloque: Lista vs Diccionario -->
       <div class="doc-section">
-        <h2>?? Lista vs Diccionario: øCu·ndo Uso Cada Uno?</h2>
-        <p>Esta es la pregunta del millÛn. La respuesta depende de UNA cosa: ønecesitas etiquetas o solo posiciones?</p>
+        <h2>?? Lista vs Diccionario: ¬øCu√°ndo Uso Cada Uno?</h2>
+        <p>Esta es la pregunta del mill√≥n. La respuesta depende de UNA cosa: ¬ønecesitas etiquetas o solo posiciones?</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
           <div class="bg-kawaii-pink/40 p-5 rounded-xl border-2 border-kawaii-rose relative overflow-hidden group">
             <div class="absolute -right-4 -bottom-4 opacity-10 text-8xl group-hover:scale-110 transition-transform group-hover:opacity-20">??</div>
-            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">LISTA: ColecciÛn Ordenada</h3>
+            <h3 class="font-bold text-kawaii-deep mb-3 text-lg border-b border-kawaii-rose pb-2">LISTA: Colecci√≥n Ordenada</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span>Acceso por <strong>posiciÛn numÈrica</strong>: lista[0], lista[1]...</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span>Ideal para <strong>colecciones homogÈneas</strong>: notas, nombres, precios.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>⁄sala cuando:</strong> solo necesitas almacenar muchos datos del mismo tipo y recorrerlos en orden.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span>Acceso por <strong>posici√≥n num√©rica</strong>: lista[0], lista[1]...</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span>Ideal para <strong>colecciones homog√©neas</strong>: notas, nombres, precios.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>√ösala cuando:</strong> solo necesitas almacenar muchos datos del mismo tipo y recorrerlos en orden.</span></li>
             </ul>
           </div>
           <div class="bg-kawaii-mint/30 p-5 rounded-xl border-2 border-kawaii-mint relative overflow-hidden group">
@@ -193,8 +193,8 @@ personaje["edad"] = 11</code></pre>
             <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-kawaii-mint pb-2">DICCIONARIO: Pares con Nombre</h3>
             <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium">
               <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span>Acceso por <strong>clave descriptiva</strong>: dict["nombre"], dict["edad"].</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Ideal para <strong>datos heterogÈneos con contexto</strong>: ficha de estudiante, configuraciÛn, perfil.</span></li>
-              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>⁄salo cuando:</strong> cada dato necesita una etiqueta que explique quÈ representa.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">???</span> <span>Ideal para <strong>datos heterog√©neos con contexto</strong>: ficha de estudiante, configuraci√≥n, perfil.</span></li>
+              <li class="flex items-start gap-2"><span class="shrink-0 text-lg">??</span> <span><strong>√ösalo cuando:</strong> cada dato necesita una etiqueta que explique qu√© representa.</span></li>
             </ul>
           </div>
         </div>
@@ -203,14 +203,14 @@ personaje["edad"] = 11</code></pre>
       <!-- Bloque: Recorridos del Diccionario -->
       <div class="doc-section">
         <h2>?? Recorriendo Diccionarios: Los 3 Modos</h2>
-        <p>El ciclo <code>for</code> sobre diccionarios tiene 3 modos seg˙n lo que necesites extraer: solo claves, solo valores, o ambos.</p>
+        <p>El ciclo <code>for</code> sobre diccionarios tiene 3 modos seg√∫n lo que necesites extraer: solo claves, solo valores, o ambos.</p>
         
         <div class="bg-white p-5 rounded-xl border shadow-sm my-4">
           <p class="font-bold mt-1 mb-2 text-kawaii-deep text-lg uppercase flex items-center gap-2"><span class="bg-kawaii-pink p-1 rounded">1</span> MODO: Solo CLAVES (por defecto)</p>
-          <p class="text-sm text-gray-700">Por defecto, iterar sobre un diccionario recorre <strong>solo las claves</strong>. ⁄til cuando necesitas verificar existencia o acceder a valores manualmente.</p>
+          <p class="text-sm text-gray-700">Por defecto, iterar sobre un diccionario recorre <strong>solo las claves</strong>. √ötil cuando necesitas verificar existencia o acceder a valores manualmente.</p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
             <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Recorrido por Claves</span></div>
-            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "ElÈctrico", "Charmander": "Fuego", "Squirtle": "Agua"}
+            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "El√©ctrico", "Charmander": "Fuego", "Squirtle": "Agua"}
 
 # Por defecto, el for recorre las CLAVES
 for pokemon in pokedex:
@@ -223,31 +223,31 @@ for pokemon in pokedex:
 
         <div class="bg-blue-50/50 p-5 rounded-xl border shadow-sm my-4">
           <p class="font-bold mt-1 mb-2 text-indigo-700 text-lg uppercase flex items-center gap-2"><span class="bg-blue-100 p-1 rounded">2</span> MODO: CLAVE + VALOR con .items()</p>
-          <p class="text-sm text-gray-700">El modo m·s poderoso. Con <code>.items()</code> desempaquetas <strong>clave y valor simult·neamente</strong> en dos variables. Es el patrÛn estrella para procesar diccionarios.</p>
+          <p class="text-sm text-gray-700">El modo m√°s poderoso. Con <code>.items()</code> desempaquetas <strong>clave y valor simult√°neamente</strong> en dos variables. Es el patr√≥n estrella para procesar diccionarios.</p>
           <div class="mb-2 mt-4 rounded-xl overflow-hidden shadow-sm border border-gray-200">
             <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Desempaquetado con .items()</span></div>
-            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "ElÈctrico", "Charmander": "Fuego"}
+            <pre class="!mt-0"><code class="language-python">pokedex = {"Pikachu": "El√©ctrico", "Charmander": "Fuego"}
 
 # .items() entrega tuplas (clave, valor) - usamos DOS variables
 for pokemon, tipo in pokedex.items():
     print(f"{pokemon} es de tipo {tipo}")
-# Imprime: Pikachu es de tipo ElÈctrico
+# Imprime: Pikachu es de tipo El√©ctrico
 #          Charmander es de tipo Fuego</code></pre>
           </div>
         </div>
       </div>
 
       <div class="doc-section shadow-sm text-center transform hover:-translate-y-1 transition duration-300" style="background:var(--t-correct-bg);border-color:var(--t-correct-border);">
-        <h2 class="text-2xl pt-2">?? °Diccionarios dominados, a los ejercicios!</h2>
-        <p class="max-w-2xl mx-auto pb-2">Selecciona las pestaÒas superiores (SelecciÛn, V o F, Completar...) y demuestra tu dominio de los diccionarios.</p>
+        <h2 class="text-2xl pt-2">?? ¬°Diccionarios dominados, a los ejercicios!</h2>
+        <p class="max-w-2xl mx-auto pb-2">Selecciona las pesta√±as superiores (Selecci√≥n, V o F, Completar...) y demuestra tu dominio de los diccionarios.</p>
       </div>
     </div>
 
-    <!-- --- SELECCI”N M⁄LTIPLE --- -->
+    <!-- --- SELECCI√ìN M√öLTIPLE --- -->
     <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">SelecciÛn M˙ltiple</h2>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selecci√≥n M√∫ltiple</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ choiceScore }} / {{ choiceExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -320,7 +320,7 @@ for pokemon, tipo in pokedex.items():
           <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">?</span><span v-else>?</span></div>
           <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
         </div>
-        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? °Magistral en conceptos!</span></div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">?? ¬°Magistral en conceptos!</span></div>
       </div>
     </div>
 
@@ -342,7 +342,7 @@ for pokemon, tipo in pokedex.items():
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Modo DepuraciÛn</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Modo Depuraci√≥n</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
@@ -364,11 +364,11 @@ for pokemon, tipo in pokedex.items():
       </div>
     </div>
 
-    <!-- --- COMPLETAR C”DIGO --- -->
+    <!-- --- COMPLETAR C√ìDIGO --- -->
     <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
-        <h2 class="text-xl font-bold text-kawaii-deep">Completa el CÛdigo</h2>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el C√≥digo</h2>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ completeScore }} / {{ completeExercises.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
@@ -404,12 +404,12 @@ for pokemon, tipo in pokedex.items():
       </div>
     </div>
 
-    <!-- --- TRAZAR C”DIGO --- -->
+    <!-- --- TRAZAR C√ìDIGO --- -->
     <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center">
         <p class="text-3xl mb-2">??</p>
         <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Recorrido Mentales</h2>
-        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el hilo lÛgico del For a travÈs de las listas.</p>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el hilo l√≥gico del For a trav√©s de las listas.</p>
         <div class="flex justify-center items-center gap-4 mt-3">
           <span class="text-sm font-semibold text-kawaii-deep">?? {{ traceScore }} / {{ traceData.length }}</span>
           <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
@@ -423,7 +423,7 @@ for pokemon, tipo in pokedex.items():
           <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
         </div>
         <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
-          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Eval˙a</span></div>
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>??</span><span>Eval√∫a</span></div>
           <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
         </div>
         <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
@@ -449,22 +449,22 @@ for pokemon, tipo in pokedex.items():
     <div v-show="currentSection === 'retos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
       <div class="card p-5 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
         <p class="text-4xl mb-2">??</p>
-        <h2 class="text-2xl font-bold text-indigo-900">AplicaciÛn Pr·ctica y Retos</h2>
+        <h2 class="text-2xl font-bold text-indigo-900">Aplicaci√≥n Pr√°ctica y Retos</h2>
         <p class="text-indigo-800/70 mt-2">Pon tu IDE en marcha e implementa estas soluciones maestras.</p>
       </div>
 
-      <!-- Reto F·cil -->
+      <!-- Reto F√°cil -->
       <div class="reto-card mb-4 border-2 border-green-200">
-        <h3 class="text-xl font-bold text-green-700 mb-2">?? Reto F·cil: PokÈdex B·sica</h3>
+        <h3 class="text-xl font-bold text-green-700 mb-2">?? Reto F√°cil: Pok√©dex B√°sica</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Ash quiere registrar a sus primeros 3 PokÈmon con su tipo elemental en la PokÈdex.
+          Ash quiere registrar a sus primeros 3 Pok√©mon con su tipo elemental en la Pok√©dex.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Crea un diccionario <code>pokedex = {"Pikachu": "ElÈctrico", "Charmander": "Fuego", "Squirtle": "Agua"}</code>.</li>
+          <li>Crea un diccionario <code>pokedex = {"Pikachu": "El√©ctrico", "Charmander": "Fuego", "Squirtle": "Agua"}</code>.</li>
           <li>Usa un ciclo <code>for pokemon, tipo in pokedex.items():</code> para iterar.</li>
-          <li>Dentro del ciclo, imprime en consola "El PokÈmon [nombre] es de tipo [tipo]".</li>
-          <li>Al salir, usa <code>len()</code> para imprimir "Ash tiene [X] PokÈmon registrados".</li>
+          <li>Dentro del ciclo, imprime en consola "El Pok√©mon [nombre] es de tipo [tipo]".</li>
+          <li>Al salir, usa <code>len()</code> para imprimir "Ash tiene [X] Pok√©mon registrados".</li>
         </ul>
       </div>
 
@@ -479,7 +479,7 @@ for pokemon, tipo in pokedex.items():
           <li>Crea el diccionario base: <code>alumnos = {"Ana": [6.5, 7.0, 5.5], "Luis": [4.0, 3.5, 5.0], "Marta": [7.0, 6.8, 6.5]}</code>.</li>
           <li>Recorre el diccionario con <code>for nombre, notas in alumnos.items():</code>.</li>
           <li>Dentro del ciclo, calcula el promedio sumando las notas y dividiendo por la cantidad: <code>prom = sum(notas) / len(notas)</code>.</li>
-          <li>Eval˙a si el promedio es mayor o igual a 4.0. Imprime "[Nombre] tiene promedio [Prom] - APROBADO" o "REPROBADO".</li>
+          <li>Eval√∫a si el promedio es mayor o igual a 4.0. Imprime "[Nombre] tiene promedio [Prom] - APROBADO" o "REPROBADO".</li>
         </ul>
       </div>
 
@@ -487,15 +487,15 @@ for pokemon, tipo in pokedex.items():
       <div class="reto-card border-2 border-red-300">
         <h3 class="text-xl font-bold text-red-700 mb-2">?? Reto Avanzado: Sistema de Inventario RPG</h3>
         <p class="text-kawaii-text text-sm mb-4">
-          Crea un sistema de inventario para un RPG donde el jugador pueda agregar, ver, modificar y eliminar objetos usando un men˙ interactivo.
+          Crea un sistema de inventario para un RPG donde el jugador pueda agregar, ver, modificar y eliminar objetos usando un men√∫ interactivo.
         </p>
         <p class="text-kawaii-text text-sm mb-2"><strong>Instrucciones:</strong></p>
         <ul class="list-disc pl-5 text-sm text-kawaii-text space-y-1 mb-4">
-          <li>Inicializa <code>inventario = {}</code> (diccionario vacÌo).</li>
-          <li>Crea un <code>while True:</code> con un men˙ numÈrico: 1-Agregar objeto, 2-Ver inventario, 3-Modificar cantidad, 4-Eliminar objeto, 5-Salir.</li>
-          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del objeto y su cantidad. Gu·rdalo con <code>inventario[nombre] = cantidad</code>.</li>
+          <li>Inicializa <code>inventario = {}</code> (diccionario vac√≠o).</li>
+          <li>Crea un <code>while True:</code> con un men√∫ num√©rico: 1-Agregar objeto, 2-Ver inventario, 3-Modificar cantidad, 4-Eliminar objeto, 5-Salir.</li>
+          <li><strong>Si es 1:</strong> Solicita al usuario el nombre del objeto y su cantidad. Gu√°rdalo con <code>inventario[nombre] = cantidad</code>.</li>
           <li><strong>Si es 2:</strong> Recorre el inventario con <code>.items()</code> y muestra todo en pantalla.</li>
-          <li><strong>Si es 4:</strong> Solicita el nombre del objeto, verifica <code>if nombre in inventario:</code> y elimÌnalo usando la instrucciÛn <code>del</code> o <code>.pop()</code>.</li>
+          <li><strong>Si es 4:</strong> Solicita el nombre del objeto, verifica <code>if nombre in inventario:</code> y elim√≠nalo usando la instrucci√≥n <code>del</code> o <code>.pop()</code>.</li>
         </ul>
       </div>
     </div>
@@ -507,6 +507,7 @@ for pokemon, tipo in pokedex.items():
         <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta parte interactiva</p>
         <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
         <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
       </div>
     </div>
 
@@ -514,13 +515,18 @@ for pokemon, tipo in pokedex.items():
   </div>
 
   <script src="../data/diccionarios-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
   <script src="../js/app.js"></script>
   <script>
     const { createApp } = Vue;
     const app = createApp({
+      mixins: [QuizXP.vueMixin('diccionarios')],
       data() {
         return {
           currentSection: 'ref',
+          xpResult: '',
           choiceExercises: typeof dictChoiceExercises !== 'undefined' ? dictChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
           tfExercises: typeof dictTfExercises !== 'undefined' ? dictTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
           errorExercises: typeof dictErrorExercises !== 'undefined' ? dictErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
@@ -560,11 +566,11 @@ for pokemon, tipo in pokedex.items():
         },
         scoreMessage() {
           const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
-          if (pct === 1) return '?? °Asombroso! Conocimiento sellado ??';
-          if (pct >= 0.8) return '°Casi perfecto! Excelente trabajo ??';
-          if (pct >= 0.6) return '°Bien! El concepto se va afianzando ??';
-          if (pct >= 0.4) return 'Buena pelea. °Un repaso no viene mal! ??';
-          return 'No desanimes, el cÛdigo se domina practicando ??';
+          if (pct === 1) return '?? ¬°Asombroso! Conocimiento sellado ??';
+          if (pct >= 0.8) return '¬°Casi perfecto! Excelente trabajo ??';
+          if (pct >= 0.6) return '¬°Bien! El concepto se va afianzando ??';
+          if (pct >= 0.4) return 'Buena pelea. ¬°Un repaso no viene mal! ??';
+          return 'No desanimes, el c√≥digo se domina practicando ??';
         },
       },
       methods: {
