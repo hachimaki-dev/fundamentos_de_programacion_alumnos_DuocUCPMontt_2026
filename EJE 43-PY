@@ -1,0 +1,4 @@
+usuario = {'pagos': 0}
+usuario['visa'] = 'activa'
+print(usuario)
+print()
