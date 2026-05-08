@@ -22,7 +22,7 @@ Si además el consumo es mayor o igual a 400 kWh → 5% adicional.
 Debe mostrar ambos valores finales.'''
 
 
-int(cuenta_mensual) = 45000
+cuenta_mensual = 45000
 medicion = 6000
 consumo = int(input("Ingrese el consumo: "))
 tarifa = str(input("Ingrese su tarifa (A-B-C-D): ")).upper
@@ -50,5 +50,5 @@ if tarifa == 'A' or 'B':
         descuento_medicion = medicion * 0.5
         cuenta_mensual -= descuento_medicion
 
-print(cuenta_mensual)
-print(medicion)
+print(int(cuenta_mensual))
+print(int(medicion))
