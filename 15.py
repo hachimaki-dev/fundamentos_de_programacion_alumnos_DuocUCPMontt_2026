@@ -14,4 +14,6 @@ if nota_final >= 4.0:
 elif nota_final >= 3.5: # Si llegó aquí, es porque es menor a 4.0
     print(" para aprobar el ramo tienes que irte a examen")
 else: 
-    print("lo siento usted reprobo el ramo")
+    print("lo siento usted reprobo el ramo")    
+  
+
