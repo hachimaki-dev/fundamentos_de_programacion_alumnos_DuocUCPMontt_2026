@@ -8,7 +8,7 @@
 intento_fallido = 0
 clave = 3245
 while True:
-    clave_igresada = int(input("ingrese clave: "))
+    clave_igresada = 2134
     if clave_igresada != clave:
         intento_fallido += 1
         if intento_fallido == 3:
