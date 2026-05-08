@@ -1,0 +1,31 @@
+membresia = 35000
+casillero = 4500
+
+meses = int(input("Ingrese meses: "))
+plan = int(input("Ingrese plan (1-4):"))
+
+descuento = 0
+
+if meses >= 12:
+    if plan == 1 or plan == 2:
+        descuento = 22
+    else:
+        descuento = 15
+
+elif meses >= 6: 
+    if plan == 1 or plan == 2:
+        descuento = 12
+    else:
+        descuento = 7
+
+total_membresia = membresia - (membresia * descuento / 100)
+
+descuento_casillero = 0
+
+if plan == 1 or plan == 2:
+    descuento_casillero += 5
+
+total_casillero = casillero - (casillero * descuento_casillero / 100)
+
+print("Membresia final:", total_membresia)
+print("Casillero final:" , total_casillero)

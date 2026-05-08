@@ -1,0 +1,33 @@
+plan = 28000
+instalacion = 15000
+
+velocidad = int(input("Ingrese su velocidad Mbps"))
+categoria = int(input("Ingrese categoria (1-4):"))
+
+descuento = 0
+
+if velocidad >= 600:
+    if categoria == 1 or  categoria == 2:
+        descuento = 18
+    else:
+        descuento = 11
+
+elif velocidad >= 300:
+    if categoria == 1 or categoria == 2:
+        descuento = 10
+    else:
+        descuento = 6
+
+total_plan = plan - (plan * descuento / 100)
+
+descuento_instalacion = 0
+
+if categoria == 1 or categoria == 2:
+    descuento_instalacion += 20
+
+    if velocidad >= 500:
+        descuento_instalacion += 10
+
+total_instalacion = instalacion - (instalacion * descuento_instalacion / 100)
+print("Plan final:", total_plan)
+print("Instalacion final", total_instalacion)

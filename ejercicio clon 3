@@ -1,0 +1,33 @@
+mensualidad = 85000
+kit = 18000
+
+edad = int(input("Ingrese edad en meses: "))
+nivel = int(input("Ingrese nive (1-4)"))
+
+descuento = 0
+
+if edad <= 18:
+    if nivel == 1 or nivel == 2:
+        descuento = 20
+    else:
+        descuento = 13
+
+elif edad <= 36:
+    if nivel == 1 or nivel == 2:
+        descuento = 12
+    else:
+        descuento = 7
+
+total_mensualidad = mensualidad - (mensualidad * descuento / 100)
+
+descuento_kit = 0
+
+if nivel == 1 or nivel == 2:
+    descuento_kit  += 10
+
+    if edad <= 12:
+        descuento_kit += 5
+
+total_kit = kit - (kit * descuento_kit / 100)
+print("Mensualidad final:", total_mensualidad)
+print("kit final:", total_kit)

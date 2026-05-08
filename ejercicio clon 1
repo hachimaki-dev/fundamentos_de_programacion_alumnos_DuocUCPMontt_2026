@@ -1,0 +1,33 @@
+cuenta = 45000
+medicion = 6000
+
+consumo = int(input("Ingrese consumo kwh:"))
+tarifa = input("Ingrese tarifa (A/B/C/D):")
+
+
+descuento = 0
+
+if consumo >= 500:
+    if tarifa == "A" or tarifa == "B":
+        descuento = 20
+    else:
+        descuento = 14
+
+
+elif consumo >= 200: 
+    if tarifa == "A" or tarifa == "B":
+        descuento = 12
+    else:
+        descuento = 8
+
+total_cuenta = cuenta - (cuenta * descuento / 100)
+
+descuento_medicion = 0
+
+if tarifa == "A" or tarifa == "B":
+     descuento_medicion += 5
+
+total_medicion = medicion - (medicion * descuento_medicion / 100)
+
+print("Cuenta final: ", total_cuenta)
+print("Medicion final:, total_medidicion")
