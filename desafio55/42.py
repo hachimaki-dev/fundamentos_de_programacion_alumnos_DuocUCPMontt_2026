@@ -3,9 +3,20 @@
 
 #Datos Iniciales: El cliente tiene un diccionario con sus datos: `{'puntos': 1500}`.
 
-#Reglas de Negocio: Por comprar hoy, el cliente se ganó 300 puntos extra. Tienes que sumárselos a los que ya tiene.
+#Reglas de Negocio: Por comprar hoy, el cliente se ganó 300 puntos extra. Tienes que sumárselos 
+# a los que ya tiene.
 
-#Restricciones: No escribas el resultado final mentalmente (eso es trampa). Dile a Python que vaya a la llave `'puntos'` y le sume `+ 300` a lo que sea que haya adentro. Imprime el diccionario completo para ver el cambio.
+#Restricciones: No escribas el resultado final mentalmente (eso es trampa). 
+# Dile a Python que vaya a la llave `'puntos'` y le sume `+ 300` a lo que sea que haya adentro.
+# Imprime el diccionario completo para ver el cambio.
 
 #Resultado esperado en consola:
 #{'puntos': 1800}
+
+datos_cliente = {'puntos': 1500}
+
+
+
+print(datos_cliente)
+
+
