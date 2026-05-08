@@ -8,4 +8,4 @@ while kcal_quemadas < kcal:
         kcal_quemadas += 20 
     else: 
         kcal_quemadas += 10 
-    print(minutos)
+print(minutos)
