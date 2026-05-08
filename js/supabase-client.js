@@ -310,6 +310,21 @@ const SupabaseManager = (() => {
     return AVATAR_CATALOG.find(a => a.id === id) || AVATAR_CATALOG[0];
   }
 
+  /** Resolve avatar URL from profile object or ID */
+  function getAvatarUrl(profileOrId) {
+    if (typeof profileOrId === 'object' && profileOrId !== null) {
+      if (profileOrId.avatar_source === 'custom' && profileOrId.avatar_custom_url) {
+        return profileOrId.avatar_custom_url;
+      }
+      profileOrId = profileOrId.avatar_id;
+    }
+    
+    // Si llegamos aquí, profileOrId es un ID de catálogo
+    const catalog = getAvatarCatalog();
+    const av = catalog.find(a => a.id === profileOrId);
+    return av ? av.src : catalog[0].src;
+  }
+
   function getAvatarCategories() {
     return [
       { id: 'python', label: '🐍 Python', icon: '🐍' },
@@ -404,7 +419,7 @@ const SupabaseManager = (() => {
     const client = getClient();
     return await client.from('competition_wall_posts')
       .insert({ competition_id: competitionId, user_id: user.id, content })
-      .select('*, profiles(nickname, avatar_id, github_username, level, section)')
+      .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, github_username, level, section)')
       .single();
   }
 
@@ -442,6 +457,114 @@ const SupabaseManager = (() => {
   }
 
   // ═══════════════════════════════════════════
+  //  PROFILE FOLLOWERS (SISTEMA DE SEGUIMIENTO)
+  // ═══════════════════════════════════════════
+
+  /** Get a profile by nickname (public view) */
+  async function getProfileByNickname(nickname) {
+    if (!nickname) return { profile: null, error: 'Nickname required' };
+
+    const client = getClient();
+    const { data, error } = await client.from('profiles')
+      .select('*')
+      .eq('nickname', nickname)
+      .maybeSingle();
+
+    return { profile: data, error };
+  }
+
+  /** Follow a user */
+  async function followUser(followingId) {
+    const user = await getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const client = getClient();
+    const { data, error } = await client.from('profile_followers')
+      .insert({ follower_id: user.id, following_id: followingId })
+      .select()
+      .single();
+
+    return { data, error };
+  }
+
+  /** Unfollow a user */
+  async function unfollowUser(followingId) {
+    const user = await getUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const client = getClient();
+    const { error } = await client.from('profile_followers')
+      .delete()
+      .eq('follower_id', user.id)
+      .eq('following_id', followingId);
+
+    return { error };
+  }
+
+  /** Check if current user follows another user */
+  async function isFollowing(followingId) {
+    const user = await getUser();
+    if (!user) return false;
+
+    const client = getClient();
+    const { count, error } = await client.from('profile_followers')
+      .select('*', { count: 'exact', head: true })
+      .eq('follower_id', user.id)
+      .eq('following_id', followingId);
+
+    if (error) return false;
+    return count > 0;
+  }
+
+  /** Get follower count for a profile */
+  async function getFollowerCount(profileId) {
+    const client = getClient();
+    const { count, error } = await client.from('profile_followers')
+      .select('*', { count: 'exact', head: true })
+      .eq('following_id', profileId);
+
+    if (error) return 0;
+    return count || 0;
+  }
+
+  /** Get following count for a profile */
+  async function getFollowingCount(profileId) {
+    const client = getClient();
+    const { count, error } = await client.from('profile_followers')
+      .select('*', { count: 'exact', head: true })
+      .eq('follower_id', profileId);
+
+    if (error) return 0;
+    return count || 0;
+  }
+
+  /** Get list of followers for a profile */
+  async function getFollowers(profileId, limit = 20, offset = 0) {
+    const client = getClient();
+    const { data, error } = await client.from('profile_followers')
+      .select('profiles!follower_id(id, nickname, avatar_id, avatar_source, avatar_custom_url, level, section)')
+      .eq('following_id', profileId)
+      .range(offset, offset + limit - 1)
+      .order('created_at', { ascending: false });
+
+    if (error) return { followers: [], error };
+    return { followers: data?.map(f => f.profiles) || [], error: null };
+  }
+
+  /** Get list of users being followed by a profile */
+  async function getFollowing(profileId, limit = 20, offset = 0) {
+    const client = getClient();
+    const { data, error } = await client.from('profile_followers')
+      .select('profiles!following_id(id, nickname, avatar_id, avatar_source, avatar_custom_url, level, section)')
+      .eq('follower_id', profileId)
+      .range(offset, offset + limit - 1)
+      .order('created_at', { ascending: false });
+
+    if (error) return { following: [], error };
+    return { following: data?.map(f => f.profiles) || [], error: null };
+  }
+
+  // ═══════════════════════════════════════════
   //  PUBLIC API
   // ═══════════════════════════════════════════
 
@@ -458,6 +581,15 @@ const SupabaseManager = (() => {
     getProfile,
     updateProfile,
     isNicknameTaken,
+    getProfileByNickname,
+    // Followers
+    followUser,
+    unfollowUser,
+    isFollowing,
+    getFollowerCount,
+    getFollowingCount,
+    getFollowers,
+    getFollowing,
     // Guards
     requireAuth,
     requireProfile,
@@ -475,6 +607,7 @@ const SupabaseManager = (() => {
     // Data
     getAvatarCatalog,
     getAvatarById,
+    getAvatarUrl,
     getAvatarCategories,
     getSections,
   };

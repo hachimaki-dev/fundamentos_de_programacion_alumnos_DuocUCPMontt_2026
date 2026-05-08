@@ -307,7 +307,7 @@
                         <button v-for="p in compProblems" :key="p.id" class="sd-nav-item-btn"
                           :class="{ active: selectedProblemId === p.id, solved: isSolved(p.id) }"
                           @click="selectedProblemId = p.id">
-                          {{ p.order_index }}
+                          {{ p.sort_order + 1 }}
                         </button>
                       </div>
                     </div>
@@ -315,7 +315,7 @@
                     <div class="sd-problem-detail" v-if="selectedProblem">
                       <div class="sd-problem-header">
                         <div>
-                          <h2 class="sd-problem-title">Ejercicio {{ selectedProblem.order_index }}: {{
+                          <h2 class="sd-problem-title">Ejercicio {{ selectedProblem.sort_order + 1 }}: {{
                             selectedProblem.title }}</h2>
                           <span class="sd-pill mt-2" :class="selectedProblem.difficulty">{{
                             selectedProblem.difficulty.toUpperCase() }}</span>
@@ -410,7 +410,7 @@
                             <div v-for="sub in getSubmissionsForProblem(prob.id)" :key="sub.id" class="flex flex-col mb-1">
                               <div class="dojo-commit-row">
                                 <div class="dojo-commit-avatar" @click="goToProfile(sub.user_id)">
-                                  <img :src="getAvatar(sub.profiles?.avatar_id)" />
+                                  <img :src="getAvatar(sub.profiles)" />
                                 </div>
                                 <span class="dojo-commit-nick" @click="goToProfile(sub.user_id)">{{
                                   sub.profiles?.nickname
@@ -448,7 +448,7 @@
                                 style="padding-left: 3rem; margin-top: 4px; margin-bottom: 12px; border-left: 2px solid var(--t-glass-border); margin-left: 14px;">
                                 <div v-for="c in getSubComments(sub.id)" :key="c.id" class="sd-inline-comment mb-2">
                                   <div class="sd-av" style="width:24px;height:24px;"><img
-                                      :src="getAvatar(c.profiles?.avatar_id)" /></div>
+                                      :src="getAvatar(c.profiles)" /></div>
                                   <div class="sd-comment-bubble" style="padding: 6px 12px;">
                                     <div class="sd-comment-author"
                                       style="font-size: 10px; font-weight: 800; color: var(--t-accent);">{{
@@ -458,7 +458,7 @@
                                 </div>
                                 <div class="sd-inline-comment mt-2">
                                   <div class="sd-av" style="width:24px;height:24px;"><img
-                                      :src="getAvatar(profile.avatar_id)" /></div>
+                                      :src="getAvatar(profile)" /></div>
                                   <div class="flex-1 flex gap-2">
                                     <input type="text" class="sd-composer-input" v-model="newSubComments[sub.id]"
                                       placeholder="Escribe un comentario..." @keyup.enter="postSubComment(sub.id)"
@@ -484,7 +484,7 @@
                             <span class="text-xs" style="color:var(--t-accent); min-width: 15px;">{{
                               expandedSubGroups['usr-'+person.user_id] ? '▼' : '▶' }}</span>
                             <div class="dojo-commit-avatar" @click.stop="goToProfile(person.user_id)">
-                              <img :src="getAvatar(person.avatar_id)" />
+                              <img :src="getAvatar(person)" />
                             </div>
                             <span class="dojo-commit-nick">{{ person.nickname }}</span>
                             <a v-if="person.github_username" :href="'https://github.com/'+person.github_username"
@@ -529,7 +529,7 @@
                                 style="padding-left: 3rem; margin-top: 4px; margin-bottom: 12px; border-left: 2px solid var(--t-glass-border); margin-left: 14px;">
                                 <div v-for="c in getSubComments(sub.id)" :key="c.id" class="sd-inline-comment mb-2">
                                   <div class="sd-av" style="width:24px;height:24px;"><img
-                                      :src="getAvatar(c.profiles?.avatar_id)" /></div>
+                                      :src="getAvatar(c.profiles)" /></div>
                                   <div class="sd-comment-bubble" style="padding: 6px 12px;">
                                     <div class="sd-comment-author"
                                       style="font-size: 10px; font-weight: 800; color: var(--t-accent);">{{
@@ -539,7 +539,7 @@
                                 </div>
                                 <div class="sd-inline-comment mt-2">
                                   <div class="sd-av" style="width:24px;height:24px;"><img
-                                      :src="getAvatar(profile.avatar_id)" /></div>
+                                      :src="getAvatar(profile)" /></div>
                                   <div class="flex-1 flex gap-2">
                                     <input type="text" class="sd-composer-input" v-model="newSubComments[sub.id]"
                                       placeholder="Escribe un comentario..." @keyup.enter="postSubComment(sub.id)"
@@ -570,7 +570,7 @@
                         class="flex items-center gap-3 p-3 mb-2 rounded-xl border"
                         :style="idx === 0 ? 'border-color: var(--t-accent); background: var(--t-surface-alt); box-shadow: 0 0 12px rgba(var(--t-accent-rgb),0.15);' : 'border-color: var(--t-glass-border); background: var(--t-surface-alt);'">
                         <span class="font-bold w-8 text-center" style="color:var(--t-accent);">{{ idx === 0 ? '👑' : '#' + (idx + 1) }}</span>
-                        <img :src="getAvatar(entry.avatar_id)" style="width:28px;height:28px;border-radius:50%;" />
+                        <img :src="getAvatar(entry)" style="width:28px;height:28px;border-radius:50%;" />
                         <div class="flex-1">
                           <div class="font-semibold" style="color:var(--t-text);">
                             {{ entry.nickname }}
@@ -608,7 +608,7 @@
                   <div v-for="post in muroPosts" :key="post.id" class="sd-card mb-3 border-dashed"
                     style="background: var(--t-surface-alt);">
                     <div class="flex gap-3 mb-2">
-                      <div class="sd-av" style="width:32px;height:32px;"><img :src="getAvatar(post.profiles?.avatar_id)" /></div>
+                      <div class="sd-av" style="width:32px;height:32px;"><img :src="getAvatar(post.profiles)" /></div>
                       <div>
                         <div class="font-bold text-sm" style="color:var(--t-text);">{{ post.profiles?.nickname }}</div>
                         <div class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(post.created_at) }}</div>
@@ -651,7 +651,7 @@
               <div class="flex flex-wrap gap-2 mt-2">
                 <div v-for="part in uniqueParticipants" :key="part.user_id" class="nav-auth-avatar"
                   style="width:32px;height:32px;" :title="part.profiles?.nickname">
-                  <img :src="getAvatar(part.avatar_id)" />
+                  <img :src="getAvatar(part)" />
                 </div>
               </div>
             </div>
@@ -848,6 +848,8 @@
                 user_id: sub.user_id,
                 nickname: sub.profiles?.nickname || 'Usuario',
                 avatar_id: sub.profiles?.avatar_id || 'default',
+                avatar_source: sub.profiles?.avatar_source,
+                avatar_custom_url: sub.profiles?.avatar_custom_url,
                 submissions: 0,
                 likes: 0,
                 wallPosts: 0,
@@ -868,6 +870,8 @@
                 user_id: post.user_id,
                 nickname: post.profiles?.nickname || 'Usuario',
                 avatar_id: post.profiles?.avatar_id || 'default',
+                avatar_source: post.profiles?.avatar_source,
+                avatar_custom_url: post.profiles?.avatar_custom_url,
                 submissions: 0, likes: 0, wallPosts: 1, dojoXp: 0, dojoScore: 0
               };
             }
@@ -895,7 +899,13 @@
           const map = new Map();
           this.compSubmissions.forEach(sub => {
             if (!map.has(sub.user_id)) {
-              map.set(sub.user_id, { id: sub.user_id, nickname: sub.profiles?.nickname || 'Usuario', avatar_id: sub.profiles?.avatar_id || 'default' });
+              map.set(sub.user_id, {
+                id: sub.user_id,
+                nickname: sub.profiles?.nickname || 'Usuario',
+                avatar_id: sub.profiles?.avatar_id || 'default',
+                avatar_source: sub.profiles?.avatar_source,
+                avatar_custom_url: sub.profiles?.avatar_custom_url
+              });
             }
           });
           return Array.from(map.values());
@@ -929,6 +939,8 @@
                 user_id: uid,
                 nickname: sub.profiles?.nickname || 'Usuario',
                 avatar_id: sub.profiles?.avatar_id || 'default',
+                avatar_source: sub.profiles?.avatar_source,
+                avatar_custom_url: sub.profiles?.avatar_custom_url,
                 github_username: sub.profiles?.github_username,
                 level: sub.profiles?.level,
                 subs: []
@@ -982,9 +994,7 @@
         renderMd(text) {
           return text ? marked.parse(text) : '';
         },
-        getAvatar(id) {
-          return SupabaseManager.getAvatarById(id).src;
-        },
+
 
         // Acciones Listado
         async joinComp(comp) {
@@ -1022,7 +1032,7 @@
           this.compProblems = probs || [];
 
           // Cargar entregas (con joins manuales o automaticos)
-          const { data: subs } = await client.from('competition_submissions').select('*, profiles(nickname, avatar_id, github_username, level)').eq('competition_id', comp.id);
+          const { data: subs } = await client.from('competition_submissions').select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, github_username, level)').eq('competition_id', comp.id);
           this.compSubmissions = subs || [];
 
           // Cargar mis votos
@@ -1032,16 +1042,16 @@
             this.myVotes = votes || [];
 
             // Cargar comentarios
-            const { data: comments } = await client.from('submission_comments').select('*, profiles(nickname, avatar_id)').in('submission_id', subIds).order('created_at', { ascending: true });
+            const { data: comments } = await client.from('submission_comments').select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)').in('submission_id', subIds).order('created_at', { ascending: true });
             this.submissionComments = comments || [];
           }
 
           // Cargar Muro Social
-          const { data: posts } = await client.from('competition_wall_posts').select('*, profiles(nickname, avatar_id)').eq('competition_id', comp.id).order('created_at', { ascending: false });
+          const { data: posts } = await client.from('competition_wall_posts').select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)').eq('competition_id', comp.id).order('created_at', { ascending: false });
           this.muroPosts = posts || [];
 
           // Cargar participantes con dojo_xp
-          const { data: dojoP } = await client.from('competition_participants').select('user_id, dojo_xp').eq('competition_id', comp.id);
+          const { data: dojoP } = await client.from('competition_participants').select('user_id, dojo_xp, profiles(nickname, avatar_id, avatar_source, avatar_custom_url, github_username, level)').eq('competition_id', comp.id);
           this.dojoParticipants = dojoP || [];
 
           // Construir feed de actividad REAL desde submissions y muro
@@ -1248,6 +1258,17 @@
         toggleComments(subId) {
           this.expandedComments = this.expandedComments === subId ? null : subId;
         },
+        getAvatar(profileOrId) {
+          if (typeof profileOrId === 'object' && profileOrId !== null) {
+            if (profileOrId.avatar_source === 'custom' && profileOrId.avatar_custom_url) {
+              return profileOrId.avatar_custom_url;
+            }
+            profileOrId = profileOrId.avatar_id;
+          }
+          const catalog = SupabaseManager.getAvatarCatalog();
+          const av = catalog.find(a => a.id === profileOrId);
+          return av ? av.src : catalog[0].src;
+        },
         async postSubComment(subId) {
           const content = (this.newSubComments[subId] || '').trim();
           if (!content) return;
@@ -1262,7 +1283,7 @@
               user_id: this.profile.id,
               content: content
             })
-            .select('*, profiles(nickname, avatar_id)')
+            .select('*, profiles(nickname, avatar_id, avatar_source, avatar_custom_url)')
             .single();
 
           if (error) {

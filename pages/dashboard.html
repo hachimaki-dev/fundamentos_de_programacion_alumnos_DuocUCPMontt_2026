@@ -96,7 +96,15 @@
             <div v-if="profile.title"
               style="margin-top:8px;font-size:11px;color:var(--t-text-muted);font-style:italic;border-top:1px solid var(--t-glass-border);padding-top:8px">
               "{{ profile.title }}"</div>
-            <a :href="'profile.html?nickname=' + profile.nickname" class="sd-link">Ver mi perfil MySpace</a>
+            <!-- Bio -->
+            <div v-if="profile.bio"
+              style="margin-top:8px;font-size:11px;color:var(--t-text-secondary);border-top:1px solid var(--t-glass-border);padding-top:8px">
+              "{{ profile.bio }}"</div>
+            <!-- Action Links -->
+            <div style="display:flex;gap:6px;margin-top:10px;">
+              <a href="../pages/profile-editor.html" class="sd-btn-sm" style="flex:1;text-align:center;text-decoration:none;">✏️ Editar</a>
+              <a :href="'profile.html?nickname=' + profile.nickname" class="sd-link" style="flex:1;text-align:center;">👁️ Ver</a>
+            </div>
           </div>
 
           <!-- FACTION -->
@@ -222,7 +230,7 @@
               <!-- DIARY POST -->
               <template v-if="item._type === 'diary'">
                 <div class="sd-post-header">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" />
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles)" />
                   </div>
                   <div class="sd-post-meta">
                     <div class="sd-post-author">{{ item.profiles?.nickname || '?' }} <span v-if="item.profiles?.level"
@@ -249,7 +257,7 @@
                 <!-- Inline comment preview -->
                 <div v-if="item._topComment" class="sd-inline-comment">
                   <div class="sd-av" style="width:22px;height:22px"><img
-                      :src="getAvatar(item._topComment.profiles?.avatar_id)" /></div>
+                      :src="getAvatar(item._topComment.profiles)" /></div>
                   <div class="sd-comment-bubble">
                     <span class="sd-comment-author">{{ item._topComment.profiles?.nickname }} </span>
                     <span class="sd-comment-text">{{ item._topComment.content }}</span>
@@ -292,7 +300,7 @@
               <!-- GITHUB ACTIVITY -->
               <template v-if="item._type === 'github'">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" />
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles)" />
                   </div>
                   <div>
                     <div style="font-size:13px;font-weight:600;color:var(--t-text)">{{ item.profiles?.nickname }}</div>
@@ -358,7 +366,7 @@
               <div v-for="(p,i) in leaderboard" :key="p.id" class="sd-lb-row"
                 :class="{'sd-lb-you': p.id === profile.id}">
                 <span class="sd-lb-rank" :class="{gold:i===0,silver:i===1,bronze:i===2}">{{ i+1 }}</span>
-                <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p.avatar_id)" /></div>
+                <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p)" /></div>
                 <span class="sd-lb-name">{{ p.id === profile.id ? 'Tú' : p.nickname }}</span>
                 <span class="sd-lb-xp">{{ (p.xp||0).toLocaleString() }} xp</span>
               </div>
@@ -370,7 +378,7 @@
             <div class="sd-sec">Sugeridos para seguir</div>
             <div style="display:flex;flex-direction:column;gap:8px">
               <div v-for="s in suggestions" :key="s.id" class="sd-follow-row">
-                <div class="sd-av" style="width:28px;height:28px"><img :src="getAvatar(s.avatar_id)" /></div>
+                <div class="sd-av" style="width:28px;height:28px"><img :src="getAvatar(s)" /></div>
                 <div class="sd-follow-info">
                   <div class="sd-follow-name">{{ s.nickname }}</div>
                   <div class="sd-follow-sub">{{ (s.xp||0) }} XP · Lv {{ s.level||1 }}</div>
@@ -416,9 +424,9 @@
                   style="color:var(--t-warning-text);font-weight:600">{{ comp._timeLeft }}</span></div>
             </div>
             <div v-if="comp._submitters && comp._submitters.length" class="sd-banner-avatars">
-              <div v-for="(avId, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av"
+              <div v-for="(submitter, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av"
                 :style="{ zIndex: 5 - i }">
-                <img :src="getAvatar(avId)" />
+                <img :src="getAvatar(submitter)" />
               </div>
               <div v-if="comp._submitters.length >= 5" class="sd-banner-av-more">+</div>
             </div>

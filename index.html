@@ -347,10 +347,13 @@
         if (user) {
           const { profile } = await SupabaseManager.getProfile();
           if (profile && profile.profile_completed) {
-            const av = SupabaseManager.getAvatarById(profile.avatar_id);
+            let avatarSrc = SupabaseManager.getAvatarUrl(profile);
+            // Si el avatar es del catálogo, quitar '../' porque estamos en la raíz
+            if (avatarSrc.startsWith('../')) avatarSrc = avatarSrc.replace('../', '');
+            
             nav.innerHTML = `
               <a href="pages/dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">
-                <span class="nav-auth-avatar" style="width:24px;height:24px;"><img src="${av.src.replace('../', '')}" alt="Avatar" /></span>
+                <span class="nav-auth-avatar" style="width:24px;height:24px;"><img src="${avatarSrc}" alt="Avatar" /></span>
                 Dashboard
               </a>`;
           } else {

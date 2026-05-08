@@ -4,30 +4,71 @@
 --
 -- Ejecutar EN ORDEN en Supabase Dashboard → SQL Editor:
 --
--- 1. 01_profiles.sql    — Tabla de perfiles + trigger auth
--- 2. 02_diary.sql       — Tabla de diario de clase
--- 3. 03_competitions.sql — Sistema completo de competencias
+-- 1. 01_profiles.sql              — Tabla de perfiles + trigger auth
+-- 2. 02_profiles_enhancement.sql   — NUEVO: Campos para personalización
+-- 3. 03_profile_followers.sql      — NUEVO: Sistema de seguimiento
+-- 4. 04_profile_storage.sql        — NUEVO: Storage para avatares custom
+-- 5. 02_diary.sql                 — Tabla de diario de clase
+-- 6. 03_competitions.sql          — Sistema completo de competencias
 --
 -- NOTA: Todos los scripts son IDEMPOTENTES.
 -- Puedes re-ejecutarlos sin romper la BD.
 -- Usan DROP IF EXISTS antes de CREATE.
 --
--- CONFIGURACIÓN MANUAL ADICIONAL:
+-- ============================================================
+-- 🎯 NUEVAS CARACTERÍSTICAS (Scripts 2-4)
+-- ============================================================
 --
--- A) Storage → New Bucket:
+-- Con estos scripts agregas:
+--
+-- ✅ 02_profiles_enhancement.sql
+--    - avatar_custom_url: URL para fotos subidas
+--    - avatar_source: 'catalog' o 'custom'
+--    - bio: Biografía del usuario
+--    - social_links: JSON con github, twitter, youtube, portfolio
+--    - visibility: 'public', 'private', 'followers_only'
+--    - custom_html/css: MySpace personalizado
+--    - myspace_theme: Tema seleccionado
+--    - profile_completed: Flag de setup completo
+--
+-- ✅ 03_profile_followers.sql
+--    - tabla profile_followers: Relación follower → following
+--    - Views helper: v_follower_counts, v_top_followed
+--    - Funciones: is_following(), get_follower_count(), get_following_count()
+--    - RLS policies para seguidores/unfollows
+--
+-- ✅ 04_profile_storage.sql
+--    - Bucket 'profile-avatars' para fotos custom
+--    - Límite: 5MB por imagen
+--    - Formatos: JPG, PNG, WebP, GIF
+--    - RLS policies para upload/delete
+--
+-- ============================================================
+-- 📁 CONFIGURACIÓN MANUAL ADICIONAL
+-- ============================================================
+--
+-- A) Storage → New Bucket (si no ejecutaste 04_profile_storage.sql):
+--    - Nombre: "profile-avatars"
+--    - Public: YES
+--    - File size limit: 5MB
+--    - Allowed MIME: image/jpeg, image/png, image/webp, image/gif
+--
+--    Nota: Si al ejecutar SQL obtienes "must be owner of table objects",
+--    crea las políticas de Storage manualmente desde el panel de Storage de Supabase.
+-- B) Storage → Bucket "competition-solutions" (existente):
 --    - Nombre: "competition-solutions"
 --    - Public: NO
 --    - File size limit: 50KB
 --
--- B) Authentication → Providers → Email:
+-- C) Authentication → Providers → Email:
 --    - Enable Email Signup: ✅
 --    - Enable Email Confirmations: ✅ (o ❌ para testing)
 --
--- C) Authentication → URL Configuration:
+-- D) Authentication → URL Configuration:
 --    - Site URL: https://tu-sitio.com
 --    - Redirect URLs: https://tu-sitio.com/pages/confirm.html
 --
--- D) Para hacerte profesor:
+-- E) Para hacerte profesor:
 --    UPDATE public.profiles SET role = 'teacher'
 --    WHERE email = 'TU_EMAIL';
 --

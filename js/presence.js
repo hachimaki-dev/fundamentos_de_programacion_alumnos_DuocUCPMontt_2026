@@ -239,10 +239,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         list.innerHTML = users.map(u => {
             const state = u.presenceData;
-            const avatarObj = avatarCatalog.find(a => a.id === state.avatar_id) || avatarCatalog[0];
-            // Ajustar ruta de avatar según dónde estemos
-            const isPagesDir = window.location.pathname.includes('/pages/');
-            const avatarSrc = isPagesDir ? avatarObj.src : avatarObj.src.replace('../', '');
+            
+            let avatarSrc = '';
+            if (state.avatar_source === 'custom' && state.avatar_custom_url) {
+                avatarSrc = state.avatar_custom_url;
+            } else {
+                const avatarObj = avatarCatalog.find(a => a.id === state.avatar_id) || avatarCatalog[0];
+                const isPagesDir = window.location.pathname.includes('/pages/');
+                avatarSrc = isPagesDir ? avatarObj.src : avatarObj.src.replace('../', '');
+            }
 
             // Nivel (si existe)
             const levelBadge = state.level ? \`<span class="presence-level-badge">Lvl \${state.level}</span>\` : '';
@@ -289,6 +294,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     user_id: user.id,
                     nickname: profile.nickname || 'Anon Dev',
                     avatar_id: profile.avatar_id,
+                    avatar_source: profile.avatar_source,
+                    avatar_custom_url: profile.avatar_custom_url,
                     section: profile.section,
                     activity: activity,
                     level: profile.level || 1 // Agregaremos esto en la Fase 2

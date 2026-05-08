@@ -60,7 +60,7 @@ createApp({
         // Fetch all profiles
         const { data: profilesData } = await client
           .from('profiles')
-          .select('id, nickname, avatar_id, xp, level, github_username, faction_id')
+          .select('id, nickname, avatar_id, avatar_source, avatar_custom_url, xp, level, github_username, faction_id')
           .order('xp', { ascending: false });
 
         if (factionsData) {
@@ -113,8 +113,14 @@ createApp({
     // Resolves raw victories into renderable objects
     // MOVIDO A COMPUTED
 
-    getAvatar(id) {
-      const av = this.avatarCatalog.find(a => a.id === id);
+    getAvatar(profileOrId) {
+      if (typeof profileOrId === 'object' && profileOrId !== null) {
+        if (profileOrId.avatar_source === 'custom' && profileOrId.avatar_custom_url) {
+          return profileOrId.avatar_custom_url;
+        }
+        profileOrId = profileOrId.avatar_id;
+      }
+      const av = this.avatarCatalog.find(a => a.id === profileOrId);
       return av ? av.src : this.avatarCatalog[0].src;
     },
 

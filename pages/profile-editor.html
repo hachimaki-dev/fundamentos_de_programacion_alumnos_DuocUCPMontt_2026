@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✏️ Editar Perfil — Academia hachimaki</title>
+  <meta name="description" content="Personaliza tu perfil en Academia hachimaki.">
+
+  <script src="../js/theme-engine.js"></script>
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+  <link rel="stylesheet" href="../css/social-dashboard.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+
+  <style>
+    .pe-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .pe-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--t-glass-border);
+    }
+
+    .pe-header h1 {
+      margin: 0;
+      color: var(--t-text);
+      font-size: 1.8rem;
+    }
+
+    .pe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .pe-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pe-section {
+      background: var(--t-glass-bg);
+      border: 1px solid var(--t-glass-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px var(--t-shadow);
+    }
+
+    .pe-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--t-accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pe-form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .pe-form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--t-text-secondary);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pe-form-input,
+    .pe-form-textarea,
+    .pe-form-select {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--t-glass-border);
+      border-radius: 8px;
+      background: var(--t-surface);
+      color: var(--t-text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .pe-form-input:focus,
+    .pe-form-textarea:focus,
+    .pe-form-select:focus {
+      outline: none;
+      border-color: var(--t-accent);
+      box-shadow: 0 0 0 3px var(--t-accent-subtle);
+    }
+
+    .pe-form-input::placeholder {
+      color: var(--t-text-muted);
+    }
+
+    .pe-form-textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .pe-form-hint {
+      font-size: 0.75rem;
+      color: var(--t-text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .pe-form-error {
+      font-size: 0.75rem;
+      color: #ef4444;
+      margin-top: 0.3rem;
+    }
+
+    .pe-form-success {
+      font-size: 0.75rem;
+      color: #22c55e;
+      margin-top: 0.3rem;
+    }
+
+    /* Avatar Upload Section */
+    .pe-avatar-current {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--t-surface-hover);
+      border-radius: 8px;
+    }
+
+    .pe-avatar-preview {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--t-accent);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .pe-avatar-info {
+      flex: 1;
+    }
+
+    .pe-avatar-info-text {
+      font-size: 0.85rem;
+      color: var(--t-text-secondary);
+      margin-bottom: 0.3rem;
+    }
+
+    .pe-dropzone {
+      border: 2px dashed var(--t-accent-subtle);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--t-surface);
+    }
+
+    .pe-dropzone:hover,
+    .pe-dropzone.dragover {
+      border-color: var(--t-accent);
+      background: var(--t-accent-subtle);
+    }
+
+    .pe-dropzone-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pe-dropzone-text {
+      font-size: 0.9rem;
+      color: var(--t-text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .pe-file-input {
+      display: none;
+    }
+
+    /* Social Links */
+    .pe-social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .pe-social-input {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pe-social-input input {
+      flex: 1;
+    }
+
+    .pe-social-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Visibility Radio */
+    .pe-radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .pe-radio-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .pe-radio-item:hover {
+      background: var(--t-surface-hover);
+    }
+
+    .pe-radio-item input[type="radio"] {
+      margin-top: 0.2rem;
+      accent-color: var(--t-accent);
+    }
+
+    .pe-radio-label {
+      flex: 1;
+    }
+
+    .pe-radio-label-title {
+      font-weight: 600;
+      color: var(--t-text);
+      display: block;
+    }
+
+    .pe-radio-label-desc {
+      font-size: 0.8rem;
+      color: var(--t-text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Progress Bar */
+    .pe-progress-section {
+      background: var(--t-surface-hover);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .pe-progress-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--t-text-secondary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pe-progress-bar {
+      height: 8px;
+      background: var(--t-surface);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .pe-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--t-accent), var(--t-warning));
+      transition: width 0.3s ease;
+    }
+
+    /* Buttons */
+    .pe-button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .pe-btn {
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .pe-btn-primary {
+      background: var(--t-accent);
+      color: white;
+    }
+
+    .pe-btn-primary:hover:not(:disabled) {
+      background: var(--t-accent-alt);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(var(--t-accent-rgb), 0.4);
+    }
+
+    .pe-btn-secondary {
+      background: transparent;
+      color: var(--t-text-secondary);
+      border: 1px solid var(--t-glass-border);
+    }
+
+    .pe-btn-secondary:hover:not(:disabled) {
+      border-color: var(--t-accent);
+      color: var(--t-accent);
+    }
+
+    .pe-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Spinner */
+    .pe-spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid var(--t-accent-subtle);
+      border-top-color: var(--t-accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toast Notification */
+    .pe-toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      background: var(--t-accent);
+      color: white;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 16px var(--t-shadow);
+      animation: slideIn 0.3s ease;
+      z-index: 9999;
+    }
+
+    @media (max-width: 640px) {
+      .pe-toast {
+        right: 1rem;
+        left: 1rem;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* SideBar Preview */
+    .pe-sidebar {
+      position: sticky;
+      top: 6rem;
+      height: fit-content;
+    }
+
+    .pe-preview-card {
+      background: var(--t-glass-bg);
+      border: 1px solid var(--t-glass-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px var(--t-shadow);
+    }
+
+    .pe-preview-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--t-accent);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pe-preview-avatar {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid var(--t-accent-subtle);
+    }
+
+    .pe-preview-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--t-text);
+      margin-bottom: 0.3rem;
+    }
+
+    .pe-preview-username {
+      font-size: 0.85rem;
+      color: var(--t-text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .pe-preview-bio {
+      font-size: 0.8rem;
+      color: var(--t-text-secondary);
+      line-height: 1.4;
+      padding: 0.8rem;
+      background: var(--t-surface-hover);
+      border-radius: 6px;
+    }
+
+    @media (max-width: 768px) {
+      .pe-sidebar {
+        position: static;
+        margin-top: 2rem;
+      }
+    }
+
+    /* Code Editor para Custom MySpace */
+    .pe-code-editor {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Courier New', monospace;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #333;
+      min-height: 150px;
+      resize: vertical;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .pe-code-editor:focus {
+      outline: none;
+      border-color: var(--t-accent);
+    }
+
+    /* Tabs */
+    .pe-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--t-glass-border);
+    }
+
+    .pe-tab-btn {
+      padding: 0.8rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: var(--t-text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .pe-tab-btn.active {
+      color: var(--t-accent);
+      border-bottom-color: var(--t-accent);
+    }
+
+    .pe-tab-btn:hover {
+      color: var(--t-text);
+    }
+
+    .pe-tab-content {
+      display: none;
+    }
+
+    .pe-tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+  <nav class="top-nav"
+    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
+    <div class="nav-brand"
+      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">
+      💻 <span class="hidden-mobile">Academia hachimaki</span>
+    </div>
+    <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
+      <a href="../pages/dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">🏘️ Dashboard</a>
+      <button onclick="handleLogout()" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🚪 Salir</button>
+    </div>
+  </nav>
+
+  <div id="app" class="pe-container" style="margin-top: 5rem;">
+
+    <!-- Loading -->
+    <div v-if="loading" style="text-align:center;padding:3rem;">
+      <div class="spinner" style="display:inline-block;"></div>
+      <p class="text-muted" style="margin-top:1rem;">Cargando tu perfil...</p>
+    </div>
+
+    <!-- Not Authenticated -->
+    <div v-else-if="!isAuthenticated" style="text-align:center;padding:3rem;">
+      <h2>❌ Acceso Denegado</h2>
+      <p class="text-muted">Debes estar logueado para editar tu perfil.</p>
+      <a href="../pages/login.html" class="sd-btn-accent" style="display:inline-block;margin-top:1rem;padding:0.7rem 1.5rem;">🔐 Ir al Login</a>
+    </div>
+
+    <!-- Main Form -->
+    <template v-else>
+      <div class="pe-header">
+        <span style="font-size:2rem;">✏️</span>
+        <div>
+          <h1>Edita tu Perfil</h1>
+          <p class="text-muted" style="margin:0.3rem 0 0;">Personaliza tu identidad en Academia hachimaki</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:2rem;">
+
+        <!-- Left: Form -->
+        <div>
+
+          <!-- Tabs for organization -->
+          <div class="pe-tabs">
+            <button class="pe-tab-btn active" @click="activeTab = 'basic'">👤 Básico</button>
+            <button class="pe-tab-btn" @click="activeTab = 'advanced'">🎨 Avanzado</button>
+          </div>
+
+          <!-- BASIC TAB -->
+          <div v-if="activeTab === 'basic'">
+
+            <!-- Avatar Section -->
+            <div class="pe-section">
+              <div class="pe-section-title">📸 Foto de Perfil</div>
+
+              <!-- Current Avatar -->
+              <div class="pe-avatar-current">
+                <img :src="currentAvatarUrl" :alt="form.nickname" class="pe-avatar-preview">
+                <div class="pe-avatar-info">
+                  <div class="pe-avatar-info-text">Avatar Actual</div>
+                  <small style="color:var(--t-text-muted);">{{ form.avatar_source === 'custom' ? '📤 Subida' : '🎨 Catálogo' }}</small>
+                </div>
+              </div>
+
+              <!-- Dropzone -->
+              <div class="pe-dropzone" @click="$refs.fileInput.click()" @dragover.prevent="dragOver = true"
+                @dragleave="dragOver = false" @drop.prevent="handleDrop" :class="{dragover}">
+                <div class="pe-dropzone-icon">📤</div>
+                <div style="font-weight:600;color:var(--t-text);">Haz click o arrastra una imagen</div>
+                <div class="pe-dropzone-text">JPG, PNG, WebP, GIF (máx 5MB)</div>
+              </div>
+
+              <input type="file" ref="fileInput" @change="handleFileSelect" accept="image/*" class="pe-file-input">
+
+              <div v-if="uploadError" class="pe-form-error" style="margin-top:1rem;">❌ {{ uploadError }}</div>
+              <div v-if="uploadSuccess" class="pe-form-success" style="margin-top:1rem;">✅ {{ uploadSuccess }}</div>
+
+              <!-- Revert Option -->
+              <button v-if="form.avatar_source === 'custom'" @click="revertToDefaultAvatar"
+                class="pe-btn pe-btn-secondary" style="width:100%;margin-top:1rem;">
+                ↩️ Volver a Avatar Predeterminado
+              </button>
+            </div>
+
+            <!-- Basic Info Section -->
+            <div class="pe-section" style="margin-top:2rem;">
+              <div class="pe-section-title">ℹ️ Información Básica</div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Nombre Completo</label>
+                <input type="text" v-model="form.full_name" class="pe-form-input" placeholder="Tu nombre real"
+                  maxlength="100">
+                <div class="pe-form-hint">Opcional. Este nombre será visible en tu perfil.</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Nickname / Usuario</label>
+                <input type="text" v-model="form.nickname" class="pe-form-input" placeholder="hacker_2026"
+                  maxlength="30" @blur="validateNickname">
+                <div v-if="nicknameError" class="pe-form-error">⚠️ {{ nicknameError }}</div>
+                <div v-else class="pe-form-hint">3-30 caracteres, solo letras, números y _</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Biografía</label>
+                <textarea v-model="form.bio" class="pe-form-textarea"
+                  placeholder="Cuéntanos sobre ti en 160 caracteres..." maxlength="160"></textarea>
+                <div class="pe-form-hint">{{ form.bio.length }}/160 caracteres</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Sección / Curso</label>
+                <input type="text" v-model="form.section" class="pe-form-input" placeholder="ej: Lunes A1"
+                  maxlength="50">
+                <div class="pe-form-hint">Tu sección o grupo de clase.</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Fecha de Nacimiento</label>
+                <input type="date" v-model="form.birth_date" class="pe-form-input">
+              </div>
+            </div>
+
+            <!-- Social Links Section -->
+            <div class="pe-section" style="margin-top:2rem;">
+              <div class="pe-section-title">🔗 Enlaces Sociales</div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">GitHub</label>
+                <div class="pe-social-input">
+                  <span class="pe-social-icon">🐙</span>
+                  <input type="text" v-model="form.social_links.github" class="pe-form-input"
+                    placeholder="usuario (sin http://)" maxlength="50">
+                </div>
+                <div class="pe-form-hint">Tu usuario de GitHub</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Twitter / X</label>
+                <div class="pe-social-input">
+                  <span class="pe-social-icon">𝕏</span>
+                  <input type="text" v-model="form.social_links.twitter" class="pe-form-input"
+                    placeholder="usuario (sin @)" maxlength="50">
+                </div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">YouTube</label>
+                <div class="pe-social-input">
+                  <span class="pe-social-icon">▶️</span>
+                  <input type="text" v-model="form.social_links.youtube" class="pe-form-input"
+                    placeholder="canal (sin http://)" maxlength="100">
+                </div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Portfolio / Sitio Web</label>
+                <div class="pe-social-input">
+                  <span class="pe-social-icon">🌐</span>
+                  <input type="url" v-model="form.social_links.portfolio" class="pe-form-input"
+                    placeholder="https://tu-sitio.com" maxlength="200">
+                </div>
+              </div>
+            </div>
+
+            <!-- Visibility Section -->
+            <div class="pe-section" style="margin-top:2rem;">
+              <div class="pe-section-title">👁️ Visibilidad</div>
+
+              <div class="pe-radio-group">
+                <label class="pe-radio-item">
+                  <input type="radio" v-model="form.visibility" value="public">
+                  <div class="pe-radio-label">
+                    <span class="pe-radio-label-title">🌍 Público</span>
+                    <span class="pe-radio-label-desc">Todos pueden ver tu perfil</span>
+                  </div>
+                </label>
+
+                <label class="pe-radio-item">
+                  <input type="radio" v-model="form.visibility" value="followers_only">
+                  <div class="pe-radio-label">
+                    <span class="pe-radio-label-title">👥 Solo Seguidores</span>
+                    <span class="pe-radio-label-desc">Solo tus seguidores ven tu perfil</span>
+                  </div>
+                </label>
+
+                <label class="pe-radio-item">
+                  <input type="radio" v-model="form.visibility" value="private">
+                  <div class="pe-radio-label">
+                    <span class="pe-radio-label-title">🔒 Privado</span>
+                    <span class="pe-radio-label-desc">Solo tú ves tu perfil</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ADVANCED TAB -->
+          <div v-if="activeTab === 'advanced'">
+            <div class="pe-section">
+              <div class="pe-section-title">🎨 Personalización de MySpace (Avanzado)</div>
+
+              <p class="pe-form-hint" style="margin-bottom:1rem;">
+                ⚠️ Aquí puedes personalizar completamente tu MySpace con HTML y CSS.
+                Por seguridad, los scripts y eventos onclick serán removidos automáticamente.
+              </p>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">Tema de MySpace</label>
+                <select v-model="form.myspace_theme" class="pe-form-select">
+                  <option value="default">Default</option>
+                  <option value="dark">Dark Mode</option>
+                  <option value="neon">Neon</option>
+                  <option value="minimalist">Minimalist</option>
+                  <option value="custom">Custom (HTML/CSS)</option>
+                </select>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">CSS Personalizado</label>
+                <textarea v-model="form.custom_css" class="pe-code-editor"
+                  placeholder=".myspace-container { background: linear-gradient(...); }&#10;/* O declara clases personalizadas */&#10;.my-title { color: #fff; }"></textarea>
+                <div class="pe-form-hint">Define estilos CSS para tu perfil MySpace</div>
+              </div>
+
+              <div class="pe-form-group">
+                <label class="pe-form-label">HTML Personalizado</label>
+                <textarea v-model="form.custom_html" class="pe-code-editor"
+                  placeholder="<h1>Bienvenido a mi perfil!</h1>&#10;<p>Puedo usar HTML y CSS para personalizarlo.</p>"></textarea>
+                <div class="pe-form-hint">Agregar contenido HTML a tu MySpace (tags script serán eliminadas)</div>
+              </div>
+
+              <p style="color:#f59e0b;font-size:0.85rem;background:rgba(245,158,11,0.1);padding:0.8rem;border-radius:6px;margin-top:1rem;">
+                ⚠️ <strong>Nota:</strong> El HTML y CSS son sanitizados automáticamente para evitar ataques de seguridad.
+              </p>
+            </div>
+          </div>
+
+          <!-- Save Buttons -->
+          <div class="pe-button-group">
+            <button @click="discardChanges" class="pe-btn pe-btn-secondary" :disabled="saving">
+              ↩️ Descartar
+            </button>
+            <button @click="saveProfile" class="pe-btn pe-btn-primary" :disabled="saving || nicknameError">
+              <span v-if="saving" class="pe-spinner"></span>
+              💾 {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right: Preview Sidebar -->
+        <div class="pe-sidebar">
+          <div class="pe-preview-card">
+            <div class="pe-preview-title">👁️ Vista Previa</div>
+
+            <img :src="currentAvatarUrl" :alt="form.nickname" class="pe-preview-avatar">
+
+            <div class="pe-preview-name">{{ form.full_name || form.nickname }}</div>
+            <div class="pe-preview-username">@{{ form.nickname }}</div>
+
+            <div v-if="form.bio" class="pe-preview-bio">
+              "{{ form.bio }}"
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="pe-progress-section">
+              <div class="pe-progress-label">
+                <span>Perfil Completo</span>
+                <strong>{{ profileCompleteness }}%</strong>
+              </div>
+              <div class="pe-progress-bar">
+                <div class="pe-progress-fill" :style="{ width: profileCompleteness + '%' }"></div>
+              </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="margin-top:1rem;font-size:0.8rem;color:var(--t-text-muted);">
+              <div style="margin-bottom:0.5rem;">
+                <strong>Seguidores:</strong> {{ followerCount }}
+              </div>
+              <div>
+                <strong>Visibilidad:</strong> {{ visibilityLabel }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- Toast Notification -->
+    <div v-if="toast.show" class="pe-toast" :style="{ background: toast.type === 'success' ? '#22c55e' : '#ef4444' }">
+      {{ toast.message }}
+    </div>
+
+  </div>
+
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/profile-editor-app.js"></script>
+
+</body>
+
+</html>
