@@ -1,0 +1,39 @@
+prima = 22000
+chip = 9000
+
+peso = float(input("Ingrese el peso de la mascota en kg: "))
+cobertura = input("Ingrese cobertura (A, B, C, D): ").upper()
+
+
+descuento_prima = 0
+
+if peso >= 20:
+    if cobertura == "A" or cobertura == "B":
+        descuento_prima = 16
+    elif cobertura == "C" or cobertura == "D":
+        descuento_prima = 10
+
+elif peso >= 8:
+    if cobertura == "A" or cobertura == "B":
+        descuento_prima = 10
+    elif cobertura == "C" or cobertura == "D":
+        descuento_prima = 6
+
+prima_final = prima - (prima * descuento_prima / 100)
+
+
+descuento_chip = 0
+
+if cobertura == "A" or cobertura == "B":
+    descuento_chip += 12
+if peso >= 15:
+    descuento_chip += 6
+
+chip_final = chip - (chip * descuento_chip / 100)
+
+
+print("\n--- RESULTADOS ---")
+print("Descuento prima:", descuento_prima, "%")
+print("Prima final: $", prima_final)
+print("Descuento chip:", descuento_chip, "%")
+print("Chip_final: $", chip_final)
