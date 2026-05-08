@@ -17,6 +17,12 @@
 perfil_de_un_jugador =  {"nombre":"carlos", "nivel": 1}
 
 
+print(perfil_de_un_jugador["nombre"])
+
+
+
+
+
 
 
 
