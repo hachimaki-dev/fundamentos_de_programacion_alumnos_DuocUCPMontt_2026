@@ -1,7 +1,9 @@
 
-contador = 10
+cronometro = 10
 
-while contador > 10: 
-    contador = contador - 1
-    print(contador)
+while cronometro > 0:
+    print(cronometro)
+    cronometro = cronometro - 1 
+    
+print("despegue")
 
