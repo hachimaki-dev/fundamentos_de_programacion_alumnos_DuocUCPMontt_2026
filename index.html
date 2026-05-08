@@ -171,21 +171,40 @@
       <p class="mt-2 text-sm">Intenta con otra búsqueda o quita los filtros 🌸</p>
     </div>
 
-    <!-- ─── Stats Section ─── -->
-    <div class="sd-card mb-8">
-      <div class="sd-sec" style="text-align: center;">📊 Resumen del curso</div>
-      <div class="sd-stat-row" style="margin-top: 0.5rem;">
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ totalEntries }}</div>
-          <div class="sd-stat-label">entradas</div>
+    <!-- ─── Platform Stats Section ─── -->
+    <div class="sd-card mb-8 fade-in-up" style="background: linear-gradient(135deg, var(--t-surface), var(--t-surface-alt)); border-color: var(--t-accent-subtle); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: var(--t-accent); filter: blur(50px); opacity: 0.3;"></div>
+      <div style="position: absolute; bottom: -50px; left: -50px; width: 100px; height: 100px; background: var(--t-correct); filter: blur(50px); opacity: 0.2;"></div>
+      
+      <div class="sd-sec" style="text-align: center; font-size: 1.2rem; color: var(--t-accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        🌐 Estadísticas Globales de la Academia
+      </div>
+
+      <div v-if="loadingStats" style="text-align: center; padding: 2rem;">
+        <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent; width: 30px; height: 30px; margin: 0 auto;"></div>
+        <div style="margin-top: 1rem; color: var(--t-text-muted); font-size: 0.9rem;">Sincronizando con el servidor...</div>
+      </div>
+
+      <div v-else class="sd-stat-row" style="margin-top: 0.5rem; gap: 1rem; flex-wrap: wrap;">
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">🥷</div>
+          <div class="sd-stat-num" style="color: var(--t-text); font-size: 2rem;">{{ platformStats.hackers }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-accent);">Hackers Activos</div>
         </div>
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ availableEntries }}</div>
-          <div class="sd-stat-label">disponibles</div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">⚡</div>
+          <div class="sd-stat-num" style="color: var(--t-warning-text); font-size: 2rem;">{{ platformStats.totalXp.toLocaleString() }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-warning-text);">XP Total Farmeada</div>
         </div>
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ comingSoonEntries }}</div>
-          <div class="sd-stat-label">próximamente</div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">🐙</div>
+          <div class="sd-stat-num" style="color: var(--t-correct-text); font-size: 2rem;">{{ platformStats.commits }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-correct-text);">Commits GitHub</div>
+        </div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">📖</div>
+          <div class="sd-stat-num" style="color: var(--t-text); font-size: 2rem;">{{ platformStats.diaries }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-accent);">Publicaciones</div>
         </div>
       </div>
     </div>
@@ -232,7 +251,43 @@
             flow: 'Diagramas',
             docs: 'Documentación',
           },
+          platformStats: {
+            hackers: 0,
+            totalXp: 0,
+            commits: 0,
+            diaries: 0
+          },
+          loadingStats: true
         };
+      },
+      async mounted() {
+        try {
+          const client = typeof SupabaseManager !== 'undefined' ? SupabaseManager.getClient() : null;
+          if (!client) {
+            this.loadingStats = false;
+            return;
+          }
+
+          // Fetch hackers and total XP
+          const { data: profiles } = await client.from('profiles').select('xp');
+          if (profiles) {
+            this.platformStats.hackers = profiles.length;
+            this.platformStats.totalXp = profiles.reduce((sum, p) => sum + (p.xp || 0), 0);
+          }
+
+          // Fetch GitHub commits count
+          const { count: commitsCount } = await client.from('github_sync_history').select('*', { count: 'exact', head: true });
+          this.platformStats.commits = commitsCount || 0;
+
+          // Fetch diary entries count
+          const { count: diariesCount } = await client.from('diary_entries').select('*', { count: 'exact', head: true });
+          this.platformStats.diaries = diariesCount || 0;
+          
+        } catch (e) {
+          console.error('Error fetching global stats', e);
+        } finally {
+          this.loadingStats = false;
+        }
       },
       computed: {
         filteredEntries() {
