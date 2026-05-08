@@ -10,4 +10,5 @@ if retiro_de_dinero > saldo_cliente:
     print("saldo insuficiente")
 
 if retiro_de_dinero % 5000:
-    print("si puedes sacar dinero por que es multiplo de 5000")
+    print("si puedes sacar dinero por que es multiplo de 5000") 
+    
