@@ -1,0 +1,3 @@
+pagos = {}
+pagos['visa'] = 'activa'
+print(pagos)

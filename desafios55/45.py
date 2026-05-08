@@ -1,0 +1,6 @@
+criptos = {'BTC': 0.5, 'ETH': 2.0}
+if 'SOL' in criptos:
+    print("procesando")
+else: 
+    print("moneda no soportada")
+    
