@@ -1,0 +1,5 @@
+cliente = {"puntos": 1500 }
+
+cliente["puntos"] = cliente["puntos"] + 300
+
+print(f"{cliente}")
