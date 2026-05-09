@@ -7,14 +7,18 @@ hojas_impresora = 5
 Imprimir = ["TEXTO", "FOTO", "TEXTO", "FOTO"]
 
 for documento in Imprimir:
-    if hojas != 0
-        if documento == "TEXTO":    
-            hojas = hojas - 1
+    if documento == "TEXTO":
+        if hojas_impresora >= 1:
+            hojas_impresora -= 1
             print(f"imprimiendo {documento}")
-        elif documento == "FOTO":
-            if hojas >= 2
-                 hojas = hojas - 2
-                 print(f"imprimiendo {documento}")
-    else:
-        print("Sin papel")
-        break
+        else:
+            print("Sin papel")
+            break
+    elif documento == "FOTO":
+        if hojas_impresora >= 3:
+             hojas_impresora -= 3
+             print(f"imprimiendo {documento}")
+        else:
+            print("Sin papel")
+            break
+print(f"Hojas restantes: {hojas_impresora}")

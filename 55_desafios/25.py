@@ -6,7 +6,7 @@
 list = ["hola", "noob", "genial", "manco"]
 
 for i in list:
-    if i == "noob" or "manco":
+    if i == "noob" or i == "manco":
         i = "CENSURADO"
         print(i)
     else:
