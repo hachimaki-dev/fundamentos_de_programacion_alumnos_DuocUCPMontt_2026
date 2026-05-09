@@ -116,39 +116,38 @@ createApp({
       try {
         const { count } = await client.from('diary_entries').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
         this.diaryCount = count || 0;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading diary count:', e); }
 
       // Comps joined
       try {
         const { count } = await client.from('competition_participants').select('*', { count: 'exact', head: true }).eq('user_id', profile.id);
         this.compsJoined = count || 0;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading comps joined:', e); }
 
       // Active comps count
       try {
         const { count } = await client.from('competitions').select('*', { count: 'exact', head: true }).eq('status', 'active');
         this.activeComps = count || 0;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading active comps:', e); }
 
       // Followers
       try {
-        const { count } = await client.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', profile.id);
-        this.followersCount = count || 0;
-      } catch (e) { /* */ }
+        this.followersCount = await SupabaseManager.getFollowerCount(profile.id);
+      } catch (e) { console.warn('[Dashboard] Error loading followers:', e); }
 
       // Faction
       if (profile.faction_id) {
         try {
           const { data } = await client.from('factions').select('*').eq('id', profile.faction_id).single();
           if (data) this.faction = data;
-        } catch (e) { /* */ }
+        } catch (e) { console.warn('[Dashboard] Error loading faction:', e); }
       }
 
       // Faction ranking
       try {
         const { data } = await client.from('factions').select('*').order('total_xp', { ascending: false }).limit(5);
         if (data) this.factionRanking = data;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading faction ranking:', e); }
 
       // Achievements
       const emojiMap = { 'first_blood': '🩸', 'diarist': '📖', 'social_butterfly': '🦋', 'hacker_level_1': '🥷', 'hacker_level_5': '👑' };
@@ -163,6 +162,7 @@ createApp({
           }));
         }
       } catch (e) {
+        console.warn('[Dashboard] Error loading achievements, using fallback:', e);
         // Fallback
         const userAch = profile.achievements || [];
         this.allAchievements = Object.entries(emojiMap).map(([id, emoji]) => ({
@@ -266,7 +266,7 @@ createApp({
                     commentsMap[c.entry_id].push(c);
                   });
                 }
-              } catch (e) { /* */ }
+              } catch (e) { console.warn('[Dashboard] Error loading comments:', e); }
             }
 
             data.forEach(entry => {
@@ -282,7 +282,7 @@ createApp({
               });
             });
           }
-        } catch (e) { /* */ }
+        } catch (e) { console.warn('[Dashboard] Error loading diary feed:', e); }
       }
 
       if (this.activeTab === 'foryou' || this.activeTab === 'section') {
@@ -310,7 +310,7 @@ createApp({
                 }
               });
             }
-          } catch (e) { /* */ }
+          } catch (e) { console.warn('[Dashboard] Error loading section feed:', e); }
         }
       }
 
@@ -330,7 +330,7 @@ createApp({
                   .select('*', { count: 'exact', head: true })
                   .eq('competition_id', comp.id);
                 pCount = count || 0;
-              } catch (e) { /* */ }
+              } catch (e) { console.warn('[Dashboard] Error loading comp participants:', e); }
 
               // Get top submitters by likes
               let topSubmitters = [];
@@ -347,7 +347,7 @@ createApp({
                     isYou: s.user_id === profile.id,
                   }));
                 }
-              } catch (e) { /* */ }
+              } catch (e) { console.warn('[Dashboard] Error loading comp submitters:', e); }
 
               items.push({
                 ...comp,
@@ -359,7 +359,7 @@ createApp({
               });
             }
           }
-        } catch (e) { /* */ }
+        } catch (e) { console.warn('[Dashboard] Error loading competitions feed:', e); }
       }
 
       // GitHub activity (for foryou tab)
@@ -379,7 +379,7 @@ createApp({
               });
             });
           }
-        } catch (e) { /* */ }
+        } catch (e) { console.warn('[Dashboard] Error loading github feed:', e); }
       }
 
       // Sort all by date desc
@@ -398,7 +398,7 @@ createApp({
           .limit(1)
           .single();
         if (data) this.activeCompData = data;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading active competition:', e); }
 
       // Leaderboard
       try {
@@ -408,12 +408,12 @@ createApp({
           .order('xp', { ascending: false })
           .limit(10);
         if (data) this.leaderboard = data;
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading leaderboard:', e); }
 
       // Suggestions (same section, not already following)
       try {
         // Get who I follow
-        const { data: myFollows } = await client.from('follows')
+        const { data: myFollows } = await client.from('profile_followers')
           .select('following_id')
           .eq('follower_id', profile.id);
         const followingIds = (myFollows || []).map(f => f.following_id);
@@ -431,7 +431,7 @@ createApp({
             .slice(0, 5)
             .map(c => ({ ...c, _followed: false }));
         }
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading suggestions:', e); }
 
       // Notifications (calculated)
       await this.loadNotifications(client, profile);
@@ -444,7 +444,7 @@ createApp({
         if (data) {
           this.githubXp = data.reduce((sum, r) => sum + (r.xp_awarded || 0), 0);
         }
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading github XP:', e); }
     },
 
     async loadNotifications(client, profile) {
@@ -473,11 +473,11 @@ createApp({
             });
           }
         }
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading comment notifications:', e); }
 
       // Recent follows
       try {
-        const { data: follows } = await client.from('follows')
+        const { data: follows } = await client.from('profile_followers')
           .select('*, profiles:follower_id(nickname, avatar_id, avatar_source, avatar_custom_url)')
           .eq('following_id', profile.id)
           .order('created_at', { ascending: false })
@@ -492,7 +492,7 @@ createApp({
             });
           });
         }
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading follow notifications:', e); }
 
       // Recent XP from GitHub
       try {
@@ -511,7 +511,7 @@ createApp({
             });
           });
         }
-      } catch (e) { /* */ }
+      } catch (e) { console.warn('[Dashboard] Error loading github notifications:', e); }
 
       // Sort by date desc
       notifs.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -601,19 +601,25 @@ createApp({
     },
 
     async toggleFollowSuggestion(user) {
-      const client = SupabaseManager.getClient();
-      if (user._followed) {
-        await client.from('follows').delete()
-          .eq('follower_id', this.profile.id)
-          .eq('following_id', user.id);
-        user._followed = false;
-      } else {
-        await client.from('follows').insert({
-          follower_id: this.profile.id,
-          following_id: user.id,
-        });
-        user._followed = true;
-        SupabaseManager.showToast(`Ahora sigues a ${user.nickname}`, 'success');
+      try {
+        if (user._followed) {
+          const { error } = await SupabaseManager.unfollowUser(user.id);
+          if (!error) {
+            user._followed = false;
+          } else {
+            console.warn('[Dashboard] Error unfollowing:', error);
+          }
+        } else {
+          const { error } = await SupabaseManager.followUser(user.id);
+          if (!error) {
+            user._followed = true;
+            SupabaseManager.showToast(`Ahora sigues a ${user.nickname}`, 'success');
+          } else {
+            console.warn('[Dashboard] Error following:', error);
+          }
+        }
+      } catch (e) {
+        console.warn('[Dashboard] Error toggling follow:', e);
       }
     },
 

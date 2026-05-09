@@ -352,16 +352,18 @@
 
         if (data && !error) {
           // Verificar privacidad del perfil
-          if (!this.isOwner && data.visibility === 'private') {
+          const isOwnerOfProfile = this.currentUser && this.currentUser.id === data.id;
+
+          if (!isOwnerOfProfile && data.visibility === 'private') {
             this.profile = null;
             SupabaseManager.showToast('Este perfil es privado', 'info');
             this.loading = false;
             return;
           }
 
-          if (!this.isOwner && data.visibility === 'followers_only') {
+          if (!isOwnerOfProfile && data.visibility === 'followers_only') {
             // Verificar si el usuario actual es seguidor
-            const isFollower = await SupabaseManager.isFollowing(this.currentUser?.id, data.id);
+            const isFollower = this.currentUser ? await SupabaseManager.isFollowing(data.id) : false;
             if (!isFollower) {
               this.profile = null;
               SupabaseManager.showToast('Debes seguir este perfil para verlo', 'info');
@@ -391,9 +393,8 @@
           this.followingCount = await SupabaseManager.getFollowingCount(data.id);
 
           // Ver si lo sigo (si es otro usuario)
-          if (this.currentUser && !this.isOwner) {
-            const following = await SupabaseManager.isFollowing(this.currentUser.id, data.id);
-            this.isFollowing = following;
+          if (this.currentUser && !isOwnerOfProfile) {
+            this.isFollowing = await SupabaseManager.isFollowing(data.id);
           }
         } else {
           console.error("Error cargando perfil:", error);

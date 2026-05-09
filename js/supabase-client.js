@@ -22,8 +22,56 @@ const SupabaseManager = (() => {
         return null;
       }
       _client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      // Start listening for auth ready immediately
+      _initAuthReady(_client);
     }
     return _client;
+  }
+
+  // ═══════════════════════════════════════════
+  //  AUTH READY — Prevents race conditions
+  // ═══════════════════════════════════════════
+  // Supabase v2's getSession() reads from localStorage synchronously,
+  // but the token may not be rehydrated yet on page load. This causes
+  // intermittent null sessions → spurious redirects to login.
+  // We wait for the first onAuthStateChange event which fires once
+  // auth state is definitively known.
+
+  let _authReadyPromise = null;
+  let _resolvedSession = undefined; // undefined = not yet resolved
+
+  function _initAuthReady(client) {
+    if (_authReadyPromise) return; // Already initialized
+    _authReadyPromise = new Promise((resolve) => {
+      const { data: { subscription } } = client.auth.onAuthStateChange((event, session) => {
+        if (_resolvedSession === undefined) {
+          // First event — auth state is now definitively known
+          _resolvedSession = session;
+          resolve(session);
+        } else {
+          // Subsequent events — update cached session
+          _resolvedSession = session;
+        }
+      });
+    });
+
+    // Safety timeout: if onAuthStateChange never fires (e.g. network issues),
+    // resolve after 5 seconds with null to avoid hanging forever
+    setTimeout(() => {
+      if (_resolvedSession === undefined) {
+        console.warn('[SupabaseManager] Auth ready timeout — resolving with null session');
+        _resolvedSession = null;
+        // The promise may already be resolved, but calling resolve again is a no-op
+      }
+    }, 5000);
+  }
+
+  /** Wait for auth to be ready (first onAuthStateChange event) */
+  async function _waitForAuthReady() {
+    const client = getClient();
+    if (!client) return null;
+    if (_resolvedSession !== undefined) return _resolvedSession;
+    return _authReadyPromise;
   }
 
   // ═══════════════════════════════════════════
@@ -64,8 +112,13 @@ const SupabaseManager = (() => {
     return { session, error };
   }
 
-  /** Get current user (null if not logged in) */
+  /**
+   * Get current user (null if not logged in).
+   * Waits for auth to be ready first to prevent race conditions.
+   */
   async function getUser() {
+    // Wait for auth to be definitively ready before checking
+    await _waitForAuthReady();
     const { session } = await getSession();
     return session?.user || null;
   }
@@ -126,6 +179,7 @@ const SupabaseManager = (() => {
 
   /**
    * Require authentication.
+   * Waits for auth to be ready, then checks.
    * If not logged in → redirect to login.html
    * Returns the user if authenticated.
    */
