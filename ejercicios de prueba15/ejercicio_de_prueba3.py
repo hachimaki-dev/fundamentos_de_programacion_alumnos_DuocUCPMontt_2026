@@ -8,11 +8,11 @@
 4. Usa un contador para registrar en cuántos turnos logró adivinar.
 5. Imprime al final "¡Ganaste en X intentos!". >) y menor que (< {}  """
 
-numero_secreto = 42 
+numero_secreto = 100 
 contador = 0
 respuesta_del_usuario = 0
 
-while respuesta_del_usuario != 42:
+while respuesta_del_usuario != 100:
     respuesta_del_usuario = int(input("ingresa un numero: "))
     contador += 1
     if respuesta_del_usuario == numero_secreto:
