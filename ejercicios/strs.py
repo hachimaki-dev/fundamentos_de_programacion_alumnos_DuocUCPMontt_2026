@@ -1,0 +1,11 @@
+numnero = int(input("ingresa un numero: "))
+numero2  = int(input("ingresa otro numero: "))
+
+print("suma")  
+print(numnero  + numero2)
+print("resta:")
+print( numnero - numero2)
+print("multiplicador:")
+print(numnero * numero2)
+print("divisor:")
+print( numnero / numero2)

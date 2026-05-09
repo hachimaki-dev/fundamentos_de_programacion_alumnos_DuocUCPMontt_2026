@@ -23,10 +23,10 @@ while True:
         votos_de_a += 1
     elif votos_realizados == "c":
         votos_de_c += 1
-        votos_realizados += 1
-    
     else:
         print("Voto nulo (no es A ni C)")
+
+    votos_realizados += 1
 if votos_de_a > votos_de_c:
     print(f"Ganó A con {votos_de_a} votos. ¡Felicidades!")
 elif votos_de_c > votos_de_a:
