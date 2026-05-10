@@ -1,24 +1,25 @@
-'''Ejercicio 1: Servicio de Energía Eléctrica
-MEDIUM
-Desarrolle un programa en Python que calcule el valor final de la cuenta mensual de energía eléctrica y el valor final del cargo por servicio de medición.
+'''Desarrolle un programa en Python que calcule el valor final de la cuenta mensual de energía eléctrica y el valor final del cargo por servicio de medición.
 
 Valores base:
 
-Cuenta mensual: $45.000
-Cargo de medición: $6.000
+    Cuenta mensual: $45.000
+    Cargo de medición: $6.000
+
 Reglas de descuento para la cuenta:
 
-Si el consumo es mayor o igual a 500 kWh:
-Tarifa A o B → 20% descuento
-Tarifa C o D → 14% descuento
-Si el consumo está entre 200 y 499 kWh:
-Tarifa A o B → 12% descuento
-Tarifa C o D → 8% descuento
-Si el consumo es menor a 200 kWh → sin descuento.
+    Si el consumo es mayor o igual a 500 kWh:
+        Tarifa A o B → 20% descuento
+        Tarifa C o D → 14% descuento
+    Si el consumo está entre 200 y 499 kWh:
+        Tarifa A o B → 12% descuento
+        Tarifa C o D → 8% descuento
+    Si el consumo es menor a 200 kWh → sin descuento.
+
 Reglas para el cargo de medición:
 
-Tarifa A o B → 10% descuento.
-Si además el consumo es mayor o igual a 400 kWh → 5% adicional.
+    Tarifa A o B → 10% descuento.
+    Si además el consumo es mayor o igual a 400 kWh → 5% adicional.
+
 Debe mostrar ambos valores finales.'''
 
 
@@ -43,12 +44,13 @@ elif consumo <= 499 and consumo >= 200:
     else:
         descuento_cuenta = cuenta_mensual * 0.08
         cuenta_mensual -= descuento_cuenta
+
 if tarifa == 'A' or 'B':
     descuento_medicion = medicion * 0.1
     medicion -= descuento_medicion
     if consumo >= 400:
-        descuento_medicion = medicion * 0.5
-        cuenta_mensual -= descuento_medicion
+        descuento_medicion = medicion * 0.05
+        medicion -= descuento_medicion
 
 print(int(cuenta_mensual))
 print(int(medicion))
