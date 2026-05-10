@@ -14,7 +14,6 @@ ventas={
     "LocalB": 300,
     "LocalC": 100
 }
-
-for ganancia in ventas.values():
-    total=total+ganancia
+for valor in ventas.values():
+    total=total+valor
 print(total)
