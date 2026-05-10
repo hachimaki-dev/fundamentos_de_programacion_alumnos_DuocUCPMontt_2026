@@ -16,6 +16,10 @@
   <script src="../js/theme-selector.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="../css/social-dashboard.css" />
+  <!-- Prism.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
   <style>
     .dojo-commit-row {
       display: flex;
@@ -107,20 +111,7 @@
   <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
   <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
 
-  <!-- Top Nav Bar -->
-  <nav class="top-nav"
-    style="position:fixed;top:0;left:0;right:0;height:4rem;background:var(--t-glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--t-glass-border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:1000;box-shadow:0 4px 20px var(--t-shadow);">
-    <div class="nav-brand"
-      style="font-size:1.25rem;font-weight:800;color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">💻
-      <span class="hidden-mobile">Academia hachimaki</span></div>
-    <div id="auth-nav" style="display:flex;align-items:center;gap:0.5rem;">
-      <a href="../index.html" class="nav-auth-btn" style="padding:0.4rem 1rem;background:transparent;border:none;">🏠
-        Home</a>
-      <a href="dashboard.html" class="nav-auth-btn" style="padding:0.4rem 1rem;">Dashboard</a>
-    </div>
-  </nav>
-
-  <div id="app" class="relative z-10" style="max-width:1100px;margin:0 auto;padding:6rem 1rem 6rem;">
+  <div id="app" class="relative z-10" style="max-width:1280px;margin:0 auto;padding:1rem 1rem 3rem;">
 
     <!-- Loading global -->
     <div id="loading-screen" v-if="loading">
@@ -131,24 +122,26 @@
     </div>
 
     <template v-else>
-      <!-- HEADER -->
-      <div class="sd-card fade-in-up" style="margin-bottom: 1.5rem;">
-        <div class="flex items-center gap-2 mb-2" v-if="currentView !== 'list'">
-          <button @click="goToList" class="back-btn m-0"
-            style="background:transparent;border:none;cursor:pointer;color:var(--t-accent);padding:0;">← Volver a
-            competencias</button>
-        </div>
-        <h1 class="text-xl font-bold" style="color: var(--t-accent); display: flex; align-items: center; gap: 0.5rem;">
-          {{ currentView === 'list' ? '🏆 Competencias' : '🏆 ' + viewComp.title }}
-        </h1>
+      <!-- BREADCRUMB NAV (replaces top-nav) -->
+      <div class="dojo-breadcrumb fade-in-up" style="margin-bottom:0.75rem;">
+        <a href="../index.html">🏠 Home</a><span class="sep">›</span>
+        <a href="dashboard.html">Dashboard</a><span class="sep">›</span>
+        <template v-if="currentView === 'list'">
+          <span style="color:var(--t-accent);font-weight:600;">🥋 Dojo</span>
+        </template>
+        <template v-else>
+          <a href="#" @click.prevent="goToList">🥋 Dojo</a><span class="sep">›</span>
+          <span style="color:var(--t-accent);font-weight:600;">{{ viewComp.title }}</span>
+        </template>
       </div>
 
       <!-- ==============================================
            VIEW: LISTADO DE COMPETENCIAS
            ============================================== -->
       <div v-if="currentView === 'list'" class="fade-in-up" style="max-width: 900px; margin: 0 auto;">
+        <h1 class="text-xl font-bold mb-4" style="color:var(--t-accent);display:flex;align-items:center;gap:0.5rem;">🥋 Dojo de Competencias</h1>
         <!-- Barra de búsqueda e invitación -->
-        <div class="sd-card flex flex-col sm:flex-row gap-3 mb-6" style="padding: 1rem;">
+        <div class="sd-card flex flex-col sm:flex-row gap-3 mb-4" style="padding: 1rem;">
           <div class="search-input-wrap flex-1" style="margin:0;">
             <span class="icon">🔍</span>
             <input type="text" class="search-input" placeholder="Buscar competencia..." v-model="searchQuery" />
@@ -162,50 +155,44 @@
               @click="joinByCode">Unirse</button>
           </div>
         </div>
-
         <!-- Filtros -->
         <div class="tag-filters mb-4">
           <button class="tag-pill" :class="{ active: filter === 'all' }" @click="filter = 'all'">✨ Todas</button>
-          <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢
-            Activas</button>
-          <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅
-            Finalizadas</button>
-          <button class="tag-pill" :class="{ active: filter === 'my' }" @click="filter = 'my'">👤 Mis
-            Competencias</button>
+          <button class="tag-pill" :class="{ active: filter === 'active' }" @click="filter = 'active'">🟢 Activas</button>
+          <button class="tag-pill" :class="{ active: filter === 'finished' }" @click="filter = 'finished'">✅ Finalizadas</button>
+          <button class="tag-pill" :class="{ active: filter === 'my' }" @click="filter = 'my'">👤 Mis Competencias</button>
         </div>
-
-        <!-- Lista -->
+        <!-- Lista Mejorada -->
         <div v-if="filteredComps.length" style="display:flex;flex-direction:column;gap:1rem;">
-          <div v-for="(comp, idx) in filteredComps" :key="comp.id" class="sd-card fade-in-up"
-            :style="{ animationDelay: (idx * 0.05) + 's' }">
+          <div v-for="(comp, idx) in filteredComps" :key="comp.id" class="dojo-comp-card fade-in-up" :style="{ animationDelay: (idx * 0.05) + 's' }">
             <div class="flex items-start justify-between gap-3">
-              <div>
-                <span class="comp-status" :class="comp.status">{{ statusLabel(comp.status) }}</span>
-                <h3 class="text-lg font-bold mt-2" style="color:var(--t-accent);">{{ comp.title }}</h3>
-                <p class="text-sm mt-1"
-                  style="color:var(--t-text-secondary); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
-                  {{ comp.description }}</p>
-                <div class="flex gap-3 mt-3 text-xs" style="color:var(--t-text-muted);">
-                  <span>⏰ Cierra: {{ formatDate(comp.deadline) }}</span>
-                  <span v-if="comp.created_by === profile.id">👑 Creada por ti</span>
+              <div style="flex:1;min-width:0;">
+                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                  <span class="dojo-comp-status" :class="comp.status">{{ statusLabel(comp.status) }}</span>
+                  <span v-if="comp.created_by === profile.id" class="sd-pill" style="background:var(--t-accent-subtle);color:var(--t-accent);font-size:8px;">👑 Creador</span>
+                  <span v-if="hasJoined(comp.id)" class="sd-pill" style="background:var(--t-correct-bg);color:var(--t-correct-text);font-size:8px;">✅ Unido</span>
+                </div>
+                <h3 class="text-lg font-bold" style="color:var(--t-text);margin-bottom:4px;">{{ comp.title }}</h3>
+                <p class="text-sm" style="color:var(--t-text-secondary);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ comp.description }}</p>
+                <div class="flex gap-4 mt-3 text-xs flex-wrap" style="color:var(--t-text-muted);">
+                  <span>⏰ {{ formatDate(comp.deadline) }}</span>
+                  <span v-if="comp.status === 'active'">{{ getTimeLeft(comp.deadline) }}</span>
                 </div>
               </div>
             </div>
-            <div class="flex gap-3 mt-4">
+            <div class="flex gap-3 mt-4 items-center">
               <button v-if="comp.status === 'active' && !hasJoined(comp.id) && comp.created_by !== profile.id"
                 class="sd-btn-accent" style="flex:1;padding:0.6rem;" @click="joinComp(comp)">¡Unirme! 🚀</button>
-              <button class="sd-btn-sm" style="flex:1;padding:0.6rem;" @click="openComp(comp)">{{ hasJoined(comp.id) ||
-                comp.created_by === profile.id ? 'Entrar al dojo 🥋' : 'Ver detalles 👁️' }}</button>
+              <button class="sd-btn-sm" style="flex:1;padding:0.6rem;" @click="openComp(comp)">{{ hasJoined(comp.id) || comp.created_by === profile.id ? 'Entrar al dojo 🥋' : 'Ver detalles 👁️' }}</button>
             </div>
           </div>
         </div>
         <div v-else class="sd-card">
           <div class="sd-empty">
-            <div class="sd-empty-icon">🏆</div>
-            <div class="sd-empty-text">No hay competencias disponibles.</div>
+            <div class="sd-empty-icon">🥋</div>
+            <div class="sd-empty-text">No hay competencias disponibles. ¡Crea la primera!</div>
           </div>
         </div>
-
         <!-- FAB Crear -->
         <button class="diary-fab" @click="showCreateModal = true" title="Crear competencia">+</button>
       </div>
@@ -288,8 +275,8 @@
                   @click="detailTab = 'submissions'">📂 Soluciones</button>
                 <button class="sd-tab-btn" :class="{ active: detailTab === 'ranking' }"
                   @click="detailTab = 'ranking'">🏆 Ranking</button>
-                <button class="sd-tab-btn" :class="{ active: detailTab === 'muro' }" @click="detailTab = 'muro'">💬 Muro
-                  Social</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'muro' }" @click="detailTab = 'muro'">💬 Muro</button>
+                <button class="sd-tab-btn" :class="{ active: detailTab === 'wanted' }" @click="detailTab = 'wanted'; loadWantedList()">🏴‍☠️ WANTED</button>
               </div>
 
               <div style="padding: 1.25rem;">
@@ -428,6 +415,7 @@
                                 <span class="dojo-commit-spacer"></span>
                                 <button class="dojo-file-pill" @click="downloadSolution(sub)">⬇ {{ sub.file_name
                                   }}</button>
+                                <button class="dojo-action-btn" :class="{ active: expandedCodeId === sub.id }" @click.stop="toggleCodePreview(sub)" title="Ver código">👁️ Código</button>
 
                                 <div class="flex items-center gap-1 ml-2 mr-1">
                                   <button class="sd-action" :class="{ liked: hasVoted(sub.id) === 1 }"
@@ -441,6 +429,16 @@
                                 </div>
 
                                 <span class="dojo-commit-time">{{ timeAgo(sub.submitted_at) }}</span>
+                              </div>
+
+                              <!-- Code Preview (expandable) -->
+                              <div v-if="expandedCodeId === sub.id" class="dojo-code-preview fade-in" style="margin-left:14px;margin-right:14px;margin-bottom:8px;">
+                                <div class="dojo-code-toolbar">
+                                  <span class="dojo-code-filename">🐍 {{ sub.file_name }}</span>
+                                  <button class="dojo-code-copy" @click="copyCode(sub.id)">📋 Copiar</button>
+                                </div>
+                                <div v-if="loadingCode" class="dojo-code-loading">Cargando código...</div>
+                                <pre v-else class="dojo-code-content"><code class="language-python">{{ solutionCodeCache[sub.id] || '' }}</code></pre>
                               </div>
 
                               <!-- Comentarios Solución -->
@@ -594,7 +592,7 @@
                   </div>
                 </div>
 
-                <!-- TAB: MURO SOCIAL -->
+                <!-- TAB: MURO SOCIAL (Enhanced with Likes) -->
                 <div v-if="detailTab === 'muro'">
                   <div class="sd-composer mb-6"
                     style="background: var(--t-surface-alt); padding: 1rem; border-radius: 12px;">
@@ -605,16 +603,50 @@
                         @click="postToWall">Publicar 🚀</button>
                     </div>
                   </div>
-                  <div v-for="post in muroPosts" :key="post.id" class="sd-card mb-3 border-dashed"
-                    style="background: var(--t-surface-alt);">
+                  <div v-for="post in muroPosts" :key="post.id" class="dojo-wall-card mb-3">
                     <div class="flex gap-3 mb-2">
                       <div class="sd-av" style="width:32px;height:32px;"><img :src="getAvatar(post.profiles)" /></div>
                       <div>
                         <div class="font-bold text-sm" style="color:var(--t-text);">{{ post.profiles?.nickname }}</div>
-                        <div class="text-xs" style="color:var(--t-text-muted);">{{ formatDate(post.created_at) }}</div>
+                        <div class="text-xs" style="color:var(--t-text-muted);">{{ timeAgo(post.created_at) }}</div>
                       </div>
+                      <button v-if="post.user_id === profile.id" @click="deletePost(post.id)" class="ml-auto"
+                        style="background:none;border:none;color:var(--t-text-muted);cursor:pointer;font-size:10px;">✕</button>
                     </div>
                     <p class="text-sm" style="color:var(--t-text-secondary);">{{ post.content }}</p>
+                    <div class="dojo-wall-likes">
+                      <button class="dojo-wall-like-btn" :class="{ liked: myWallLikes.includes(post.id) }"
+                        @click="toggleWallPostLike(post.id)">
+                        ❤️ {{ wallLikeCounts[post.id] || 0 }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB: WANTED (One Piece Bounty Board) -->
+                <div v-if="detailTab === 'wanted'">
+                  <div class="text-center mb-4">
+                    <h2 style="font-size:1.8rem;font-weight:900;letter-spacing:3px;color:var(--t-text);">🏴‍☠️ WANTED</h2>
+                    <p class="text-xs" style="color:var(--t-text-muted);">Los 10 hackers más buscados del Dojo. Clasificados por total de soluciones + XP acumulado.</p>
+                  </div>
+                  <div v-if="wantedList.length === 0" class="sd-empty">
+                    <div class="sd-empty-icon">🏴‍☠️</div>
+                    <div class="sd-empty-text">Aún no hay datos suficientes.</div>
+                  </div>
+                  <div v-else class="dojo-wanted-grid">
+                    <a v-for="(w, idx) in wantedList" :key="w.id" :href="'profile.html?id='+w.id"
+                      class="dojo-wanted-poster" :class="{ 'rank-1': idx === 0 }" style="position:relative;">
+                      <div v-if="w.faction_name" class="dojo-wanted-faction">{{ w.faction_name }}</div>
+                      <div class="dojo-wanted-header">WANTED</div>
+                      <div class="dojo-wanted-subtitle">DEAD OR ALIVE</div>
+                      <img :src="getAvatarUrl(w)" class="dojo-wanted-img" :alt="w.nickname" />
+                      <div class="dojo-wanted-name">{{ w.nickname }}</div>
+                      <div class="dojo-wanted-bounty">REWARD</div>
+                      <div class="dojo-wanted-amount">
+                        <span style="font-size:0.7em;">XP</span> {{ (w.xp || 0).toLocaleString() }}
+                      </div>
+                      <div style="font-size:0.55rem;color:#664d36;margin-top:4px;">📁 {{ w.total_submissions }} soluciones</div>
+                    </a>
                   </div>
                 </div>
 
@@ -624,6 +656,29 @@
 
           <!-- RIGHT: SIDEBAR -->
           <div class="sd-col-sidebar">
+            <!-- Countdown Timer -->
+            <div v-if="viewComp.status === 'active'" class="sd-card" style="text-align:center;">
+              <h3 class="sd-sec">⏱️ Tiempo Restante</h3>
+              <div class="dojo-countdown" :class="{ urgent: deadlineCountdown.days === 0 && deadlineCountdown.hours < 6 }">
+                <div class="dojo-countdown-unit">
+                  <div class="dojo-countdown-num">{{ deadlineCountdown.days }}</div>
+                  <div class="dojo-countdown-label">Días</div>
+                </div>
+                <div class="dojo-countdown-unit">
+                  <div class="dojo-countdown-num">{{ deadlineCountdown.hours }}</div>
+                  <div class="dojo-countdown-label">Hrs</div>
+                </div>
+                <div class="dojo-countdown-unit">
+                  <div class="dojo-countdown-num">{{ deadlineCountdown.mins }}</div>
+                  <div class="dojo-countdown-label">Min</div>
+                </div>
+                <div class="dojo-countdown-unit">
+                  <div class="dojo-countdown-num">{{ deadlineCountdown.secs }}</div>
+                  <div class="dojo-countdown-label">Seg</div>
+                </div>
+              </div>
+            </div>
+
             <div class="sd-card">
               <h3 class="sd-sec">📊 Estadísticas</h3>
               <div class="sd-stat-row">
@@ -796,7 +851,7 @@
 
           // Detalle
           viewComp: null,
-          detailTab: 'problems', // 'problems' | 'submissions' | 'ranking'
+          detailTab: 'problems', // 'problems' | 'submissions' | 'ranking' | 'muro' | 'wanted'
           selectedProblemId: null, // ID del problema seleccionado
           compProblems: [],
           compSubmissions: [],
@@ -812,10 +867,24 @@
           subView: 'byExercise', // 'byExercise' | 'byPerson'
           expandedSubGroups: {}, // { 'ex-123': true, 'usr-456': false }
 
-          // Muro Social (Local State Mock for now)
+          // Code Preview
+          expandedCodeId: null, // submission ID with code expanded
+          solutionCodeCache: {}, // { submissionId: 'code text' }
+          loadingCode: false,
+
+          // Muro Social
           muroPosts: [],
           newWallPost: '',
           activityFeed: [], // Feed de actividad reciente
+          wallLikeCounts: {}, // { postId: count }
+          myWallLikes: [], // post IDs I've liked
+
+          // WANTED Board
+          wantedList: [], // top 10 users
+
+          // Countdown
+          deadlineCountdown: { days: 0, hours: 0, mins: 0, secs: 0 },
+          countdownInterval: null,
 
           // Crear Modal
           showCreateModal: false,
@@ -1084,6 +1153,10 @@
             this.selectedProblemId = this.compProblems[0].id;
           }
 
+          // Dojo v2: Load wall likes & start countdown
+          await this.loadWallLikes();
+          if (comp.status === 'active') this.startCountdown();
+
           this.currentView = 'detail';
           this.loading = false;
         },
@@ -1094,6 +1167,10 @@
         goToList() {
           this.currentView = 'list';
           this.viewComp = null;
+          // Dojo v2: cleanup
+          if (this.countdownInterval) clearInterval(this.countdownInterval);
+          this.expandedCodeId = null;
+          this.solutionCodeCache = {};
         },
         isSolved(probId) {
           return !!this.getMySubmission(probId);
@@ -1391,6 +1468,151 @@
         removeProblemFields(idx) {
           this.createForm.problems.splice(idx, 1);
         },
+
+        // ═══════════════════════════════════════
+        //  DOJO V2: WANTED BOARD
+        // ═══════════════════════════════════════
+        async loadWantedList() {
+          const client = SupabaseManager.getClient();
+          // Aggregate: top 10 users by XP who have submitted solutions across ALL competitions
+          const { data: subs } = await client.from('competition_submissions')
+            .select('user_id');
+          // Count submissions per user
+          const subCounts = {};
+          (subs || []).forEach(s => {
+            subCounts[s.user_id] = (subCounts[s.user_id] || 0) + 1;
+          });
+          const userIds = Object.keys(subCounts);
+          if (userIds.length === 0) { this.wantedList = []; return; }
+
+          const { data: profiles } = await client.from('profiles')
+            .select('id, nickname, avatar_id, avatar_source, avatar_custom_url, xp, level, factions(faction_name)')
+            .in('id', userIds);
+
+          if (!profiles) { this.wantedList = []; return; }
+
+          // Score = XP + (submissions * 50)
+          this.wantedList = profiles.map(p => ({
+            ...p,
+            faction_name: p.factions?.faction_name || null,
+            total_submissions: subCounts[p.id] || 0,
+            score: (p.xp || 0) + ((subCounts[p.id] || 0) * 50)
+          })).sort((a, b) => b.score - a.score).slice(0, 10);
+        },
+
+        getAvatarUrl(profile) {
+          return SupabaseManager.getAvatarUrl(profile);
+        },
+
+        // ═══════════════════════════════════════
+        //  DOJO V2: WALL LIKES
+        // ═══════════════════════════════════════
+        async loadWallLikes() {
+          if (!this.viewComp) return;
+          const client = SupabaseManager.getClient();
+          const postIds = this.muroPosts.map(p => p.id);
+          if (postIds.length === 0) return;
+
+          const { data: likes } = await client.from('competition_wall_likes')
+            .select('post_id, user_id')
+            .in('post_id', postIds);
+
+          const counts = {};
+          const myLikes = [];
+          (likes || []).forEach(l => {
+            counts[l.post_id] = (counts[l.post_id] || 0) + 1;
+            if (l.user_id === this.profile.id) myLikes.push(l.post_id);
+          });
+          this.wallLikeCounts = counts;
+          this.myWallLikes = myLikes;
+        },
+
+        async toggleWallPostLike(postId) {
+          await SupabaseManager.toggleWallLike(postId);
+          // Optimistic update
+          if (this.myWallLikes.includes(postId)) {
+            this.myWallLikes = this.myWallLikes.filter(id => id !== postId);
+            this.wallLikeCounts[postId] = Math.max(0, (this.wallLikeCounts[postId] || 1) - 1);
+          } else {
+            this.myWallLikes.push(postId);
+            this.wallLikeCounts[postId] = (this.wallLikeCounts[postId] || 0) + 1;
+          }
+        },
+
+        // ═══════════════════════════════════════
+        //  DOJO V2: CODE PREVIEW
+        // ═══════════════════════════════════════
+        async toggleCodePreview(sub) {
+          if (this.expandedCodeId === sub.id) {
+            this.expandedCodeId = null;
+            return;
+          }
+          this.expandedCodeId = sub.id;
+          if (this.solutionCodeCache[sub.id]) return;
+
+          this.loadingCode = true;
+          const { content } = await SupabaseManager.getSolutionFileContent(sub.id, sub.file_path);
+          if (content) {
+            this.solutionCodeCache[sub.id] = content;
+          } else {
+            this.solutionCodeCache[sub.id] = '// No se pudo cargar el código';
+          }
+          this.loadingCode = false;
+          // Trigger Prism highlight after Vue updates DOM
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+          });
+        },
+
+        getCodeLines(subId) {
+          const code = this.solutionCodeCache[subId] || '';
+          return code.split('\n');
+        },
+
+        async copyCode(subId) {
+          const code = this.solutionCodeCache[subId];
+          if (code) {
+            await navigator.clipboard.writeText(code);
+            SupabaseManager.showToast('Código copiado al portapapeles', 'success');
+          }
+        },
+
+        // ═══════════════════════════════════════
+        //  DOJO V2: COUNTDOWN
+        // ═══════════════════════════════════════
+        startCountdown() {
+          if (this.countdownInterval) clearInterval(this.countdownInterval);
+          this.updateCountdown();
+          this.countdownInterval = setInterval(() => this.updateCountdown(), 1000);
+        },
+
+        updateCountdown() {
+          if (!this.viewComp?.deadline) return;
+          const diff = new Date(this.viewComp.deadline) - Date.now();
+          if (diff <= 0) {
+            this.deadlineCountdown = { days: 0, hours: 0, mins: 0, secs: 0 };
+            if (this.countdownInterval) clearInterval(this.countdownInterval);
+            return;
+          }
+          this.deadlineCountdown = {
+            days: Math.floor(diff / 86400000),
+            hours: Math.floor((diff % 86400000) / 3600000),
+            mins: Math.floor((diff % 3600000) / 60000),
+            secs: Math.floor((diff % 60000) / 1000)
+          };
+        },
+
+        getTimeLeft(deadline) {
+          if (!deadline) return '';
+          const diff = new Date(deadline) - Date.now();
+          if (diff <= 0) return '⏰ Finalizado';
+          const days = Math.floor(diff / 86400000);
+          const hours = Math.floor((diff % 86400000) / 3600000);
+          if (days > 0) return `⏳ ${days}d ${hours}h restantes`;
+          const mins = Math.floor((diff % 3600000) / 60000);
+          return `⏳ ${hours}h ${mins}m restantes`;
+        },
+
         async submitCompetition() {
           if (!this.createForm.title.trim()) return SupabaseManager.showToast('El título es requerido', 'warning');
           const validProbs = this.createForm.problems.filter(p => p.title.trim() && p.description.trim());

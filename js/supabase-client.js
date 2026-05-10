@@ -511,6 +511,49 @@ const SupabaseManager = (() => {
   }
 
   // ═══════════════════════════════════════════
+  //  SOLUTION CODE PREVIEW HELPERS
+  // ═══════════════════════════════════════════
+
+  /**
+   * Get the text content of a .py solution file.
+   * First checks code_content column (fast). If null, downloads from Storage
+   * and saves to code_content for future use.
+   * @param {string} submissionId — UUID of the submission
+   * @param {string} filePath — path in Storage bucket
+   * @returns {{ content: string|null, error: any }}
+   */
+  async function getSolutionFileContent(submissionId, filePath) {
+    const client = getClient();
+
+    // 1. Try cached code_content first
+    const { data: sub } = await client.from('competition_submissions')
+      .select('code_content')
+      .eq('id', submissionId)
+      .single();
+
+    if (sub && sub.code_content) {
+      return { content: sub.code_content, error: null };
+    }
+
+    // 2. Download from Storage
+    const { data: blob, error } = await client.storage
+      .from('competition-solutions')
+      .download(filePath);
+
+    if (error) return { content: null, error };
+
+    const text = await blob.text();
+
+    // 3. Cache in DB for future fast access (fire and forget)
+    client.from('competition_submissions')
+      .update({ code_content: text })
+      .eq('id', submissionId)
+      .then(() => {});
+
+    return { content: text, error: null };
+  }
+
+  // ═══════════════════════════════════════════
   //  PROFILE FOLLOWERS (SISTEMA DE SEGUIMIENTO)
   // ═══════════════════════════════════════════
 
@@ -653,6 +696,7 @@ const SupabaseManager = (() => {
     // Competitions
     uploadSolutionFile,
     getSolutionDownloadUrl,
+    getSolutionFileContent,
     voteOnSubmission,
     // Competition Wall
     postToCompetitionWall,
