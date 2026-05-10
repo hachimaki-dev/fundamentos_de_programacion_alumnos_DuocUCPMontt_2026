@@ -50,5 +50,5 @@ if plan == 1 or 2:
         descuento_casillero = casillero * 0.05
         casillero -= descuento_casillero
         
-print(int(membresia))
-print(int(casillero))
+print(f"Membresia: {int(membresia)}")
+print(f"Casillero: {int(casillero)}")
