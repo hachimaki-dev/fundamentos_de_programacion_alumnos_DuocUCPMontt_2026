@@ -10,7 +10,20 @@
 #  actualiza tus variables guardando ese nuevo récord y guardando el `'id'` de ese rival. 
 # Imprime solo el id del rival elegido al final
 
+# Pista de Ayuda:
+# Inicializa diferencia_minima = 9999 y rival_escogido = None antes del ciclo
+
 mis_puntos = 1500
 rivales = [{'id': 1, 'elo': 1200}, {'id': 2, 'elo': 1490}, {'id': 3, 'elo': 1800}]
 diferencia_minima = 9999
+rival_escogido = None
+
+for rival in rivales:
+    diferencia_actual = abs(mis_puntos - rival['elo'])
+    if diferencia_actual < diferencia_minima:
+        diferencia_minima = diferencia_actual
+        rival_escogido = rival['id']
+
+print(rival_escogido)
+
 
