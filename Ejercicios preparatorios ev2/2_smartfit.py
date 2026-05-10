@@ -21,9 +21,10 @@ while True:
     else:
         membresia=membresia
     if plan  == 1 or plan == 2:
+        casillero -= casillero*0.15
         if meses >= 9:
-            casillero -= casillero*0.2
-        else:    
-            casillero -= casillero*0.15
-    print(f'El valor de su membresia es: ${membresia}\nEl precio de su casillero es: {casillero}')
+            casillero -= casillero*0.05
+            
+        
+    print(f'El valor de su membresia es: ${int(membresia)}\nEl precio de su casillero es: {int(casillero)}')
     break                            

@@ -8,6 +8,25 @@ while True:
         print('Opcion no valida')
         continue
     if edad_niñx <= 18:
-        if nivel in range(1,2):
+        if nivel == 1 or nivel == 2:
             descuento = 0.2
-        elif     
+        elif nivel == 3 or nivel == 4:
+            descuento = 0.14
+    elif 18 < edad_niñx  <= 36:
+        if nivel == 1 or nivel == 2:
+            descuento = 0.12
+        elif nivel == 3 or nivel == 4:
+            descuento = 0.07
+  
+    mensualidad = mensualidad - (mensualidad*descuento)
+    # kit
+    if nivel == 1 or nivel == 2:
+        kit = kit - (kit*0.1)
+        if edad_niñx <= 12:
+            kit = kit - (kit*0.05)
+        
+    print(f'Su mensualidad es ${int(mensualidad)}') 
+    print(f'El costo de los materiales es ${int(kit)}')
+    break                     
+            
+                      

@@ -21,10 +21,10 @@ while True:
         cuenta_mensual= cuenta_mensual
     #cargo de medicion
     if tarifa == 'A' or tarifa == 'B':
+        cargo_medicion = cargo_medicion - cargo_medicion*0.1
         if consumo >= 400:
-            cargo_medicion = cargo_medicion - cargo_medicion*0.15
-        else:
-            cargo_medicion = cargo_medicion - cargo_medicion*0.1             
+            cargo_medicion = cargo_medicion - cargo_medicion*0.05
+                    
     print(f'Su cuenta mensual es ${int(cuenta_mensual)}') 
     print(f'Su cargo de medicion es ${int(cargo_medicion)}')
     break         
