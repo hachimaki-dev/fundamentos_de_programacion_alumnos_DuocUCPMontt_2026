@@ -1,11 +1,6 @@
-monedas = {"BTC": 0.5, "ETH": 2.0}
-metodo_de_pago = "SOLANO"
+criptos = {'BTC': 0.5, 'ETH': 2.0}
 
-for moneda in monedas:
-    if moneda == metodo_de_pago:
-        print("Pagado con exito")
-        import sys
-        sys.exit()
-    else:
-        continue
-print("Moneda no soportada")
+if 'SOL' in criptos:
+    print('Procesando')
+else:
+    print('Moneda no soportada')
