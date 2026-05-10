@@ -1,0 +1,22 @@
+carrito = [
+    {"item": "mouse", "qty": 2, "precio": 15000},
+    {"item": "teclado", "qty": 1, "precio": 30000}
+]
+
+
+total = 0
+
+for producto in carrito:
+
+
+    subtotal = producto ["qty"] * producto["precio"]
+
+
+    total += subtotal
+
+
+if total > 50000:
+    total = total - (total * 0.10)
+
+
+print(total)

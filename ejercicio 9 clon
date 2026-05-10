@@ -1,0 +1,17 @@
+import random
+
+numero = random.randint(1,50)
+ajustado = (numero // 5) * 5
+print("Advina el multiplo de 5")
+
+for intento in range(1,4):
+    respuesta = int(input(f"Intento {intento}:"))
+
+    if respuesta == ajustado:
+        print("¡Correcto!")
+        break
+    else:
+        print("Incorrecto")
+
+else:
+    print("Perdiste. El numero era:", ajustado)

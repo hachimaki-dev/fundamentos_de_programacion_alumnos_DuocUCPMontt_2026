@@ -1,0 +1,30 @@
+import random
+
+inicio = 1
+fin = 20
+
+
+numero = random.randint(inicio, fin)
+
+    
+if numero % 2 == 0:
+    if numero + 1 <= fin:
+        numero += 1
+    else:
+        numero -= 1
+
+
+print("Adivina el numero impar")
+
+for intento in range(1,4):
+    respuesta = int(input(f"Intento{intento}: "))
+
+    if respuesta == numero:
+        print("¡Correcto!")
+    else:
+        print("Incorrecto")
+
+else:
+
+    print("Perdiste. El numero era:", numero)
+    
