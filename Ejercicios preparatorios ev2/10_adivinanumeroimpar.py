@@ -3,7 +3,7 @@ rango1=int(input('INGRESE UN NUMERO: '))
 rango2=int(input('INGRESE OTRO NUMERO: '))
 numerorandom=random.randint(rango1,rango2)
 if numerorandom % 2 == 0:
-    if numerorandom + 1 not in range(rango1,rango2):
+    if numerorandom + 1 in range(rango1,rango2):
         numerorandom += 1
     else:
         numerorandom -=1
