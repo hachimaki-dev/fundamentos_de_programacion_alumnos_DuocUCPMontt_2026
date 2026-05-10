@@ -15,3 +15,4 @@ random.choice(["rojo", "azul", "verde"])
 # Barajar una lista
 lista = [1, 2, 3, 4, 5]
 random.shuffle(lista)
+
