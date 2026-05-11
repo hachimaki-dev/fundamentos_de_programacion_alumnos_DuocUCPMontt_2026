@@ -48,7 +48,7 @@ while intentos < 3:
             print("El numero es menor")
             if num_ingresado - 1 == numero_aleatorio:
                 print("estas muy cerca")
-            elif num_ingresado - 2 or 3 != numero_aleatorio:
+            elif num_ingresado - 2 != numero_aleatorio or num_ingresado - 3 != numero_aleatorio:
                 print("estas cerca")
             else:
                 print("estas un poco lejos")
@@ -56,7 +56,7 @@ while intentos < 3:
             print("El numero es mayor")
             if num_ingresado + 1 == numero_aleatorio:
                 print("estas muy cerca")
-            elif num_ingresado + 2 or 3 != numero_aleatorio:
+            elif num_ingresado + 2 != numero_aleatorio or num_ingresado + 3 != numero_aleatorio:
                 print("estas cerca")
             else:
                 print("estas un poco lejos")
