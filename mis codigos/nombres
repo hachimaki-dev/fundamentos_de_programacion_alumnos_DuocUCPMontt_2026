@@ -1,0 +1,11 @@
+nombre = input("como te llamas: ").lower()
+if nombre == "michelle":
+    print("hola mish tqm")
+if nombre == "benja":
+    print("vete a la mierda")
+if nombre == "francisca":
+    print("hola fran tqm")
+if nombre == "josip":
+    print("ola manooooo")
+if nombre == "jorge":
+    print("hola bro")
