@@ -12,9 +12,9 @@ if saldo_a_sacar > 200000:
     print("excede limite diario")
 elif saldo_a_sacar > 50000:
     print("saldo insuficiente")
-elif saldo_a_sacar % 5000 == 0:
+elif saldo_a_sacar % 5000 != 0:
     saldo_usuario -= saldo_a_sacar
-    print(saldo_usuario)
+    print(f"tu saldo queda en {saldo_usuario}")
 else:
     print("monto invalido")
 
