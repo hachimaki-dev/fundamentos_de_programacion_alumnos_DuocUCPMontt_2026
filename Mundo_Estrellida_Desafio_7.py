@@ -48,8 +48,10 @@ Esta es la parte que más va a hacer pensar.
 Al imprimir, necesitas un contador de posición (1°, 2°, 3°...) que avance junto con el recorrido de la lista ordenada.
 
 Cuatro fases encadenadas, ninguna ayuda en el código, solo los datos. Si llegas al resultado correcto, realmente ya no eres principiante.'''
-from os import P_NOWAIT
+
 import time
+
+Contador = 0
 
 Partidos = [
 
@@ -67,6 +69,8 @@ Partidos = [
 
             ]
 
+Cantidad_Puntajes = 0
+
 Lista_de_Scores = []
 
 Puntajes = [
@@ -79,14 +83,15 @@ Puntajes = [
 
             ]
 
-for x in Puntajes:
-    Lista_de_Scores.append(x.values())
+Resultados_Finales = {
 
+    'Iguales' : 10,
 
+    'Distintos' : 0,
 
+    'Algunos Iguales' : -1
 
-
-
+                      }
 
 
 Categoria_De_Resultado = {
@@ -136,11 +141,93 @@ for Datos in Partidos:
 
                 Puntajes[X][Datos['Local']] += Categoria_De_Resultado['Empate']
 
+for Datucos in Puntajes:
+
+    for Datos in Datucos.values():
+
+        Lista_de_Scores.append(Datos)
+
+Cantidad_de_Veces_que_se_Repite = 0
+
+Alarma = 0
+
+Todos_los_valores_son_Iguales = False
+
+Todos_los_valores_son_Distintos = False
+
+Algunos_son_Iguales = False
+
+Lista_de_Scores.sort(reverse=True)
+
+for X in Lista_de_Scores:
+
+    for Y in range(len(Lista_de_Scores)):
+
+        if X == Lista_de_Scores[Y]:
+
+            Cantidad_de_Veces_que_se_Repite += 1
+
+    if Cantidad_de_Veces_que_se_Repite == 1:
+
+        Alarma += Resultados_Finales['Distintos']
+
+    elif Cantidad_de_Veces_que_se_Repite == len(Lista_de_Scores):
+
+        Alarma += Resultados_Finales['Iguales']
+
+    else: 
+
+        Alarma += Resultados_Finales['Algunos Iguales']
+
+    Cantidad_de_Veces_que_se_Repite = 0
+
+if Alarma == Resultados_Finales['Distintos']:
+
+    Todos_los_valores_son_Distintos = True
+
+elif Alarma == (len(Lista_de_Scores) * Resultados_Finales['Iguales']):
+
+    Todos_los_valores_son_Iguales = True
+
+elif Alarma == (len(Lista_de_Scores) * Resultados_Finales['Algunos Iguales']):
+
+    Algunos_son_Iguales = True
+
+if Todos_los_valores_son_Distintos == True:
+
+    while Cantidad_Puntajes < (len(Puntajes)):
+
+        for Datucos in Puntajes:
+
+            for Llaves, Valores in Datucos.items():
+
+                if Valores == Lista_de_Scores[Cantidad_Puntajes]:
+                    
+                    print(f'{Cantidad_Puntajes + 1}* {Llaves}')
 
 
+        Cantidad_Puntajes += 1
 
 
-print(Puntajes)
-print(Lista_de_Scores)
+elif Todos_los_valores_son_Iguales == True:
 
-                
+    for Datucos in Puntajes:
+
+        for Llaves, Valores in Datucos.items():
+
+            time.sleep(0.5)
+
+            print(f'{Llaves}: {Valores} Puntos')
+
+            Contador += 1
+
+    if Contador == len(Puntajes):
+
+        time.sleep(1)
+
+        print('TODOS EMPATARON! ! !')
+
+
+elif Algunos_son_Iguales == True:
+
+    print('No hay presupuesto para este calculo')
