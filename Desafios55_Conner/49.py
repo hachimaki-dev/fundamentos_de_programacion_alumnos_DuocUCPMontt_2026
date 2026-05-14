@@ -18,3 +18,4 @@ if admin["permisos"]["EC2"]==True:
     print("Creando Instancia")
 else:
     print("Acceso denegado")
+
