@@ -47,4 +47,5 @@ while protagonista["hp"] > 0 and monstruo["hp"] > 0:
 if protagonista["hp"] <=0:
     HelloWorld("te moriste wey")    
 elif monstruo["hp"] <=0:
-    HelloWorld("Sobreviviste")    
+    HelloWorld("Sobreviviste")   
+ #lmao    
