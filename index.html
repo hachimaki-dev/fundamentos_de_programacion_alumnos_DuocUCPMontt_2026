@@ -91,7 +91,44 @@
       </div>
     </div>
 
-    <!-- ─── EA2 Section (expanded) ─── -->
+    <!-- ─── EA3 Section (expanded) ─── -->
+    <div v-if="ea3Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
+      <div class="unit-section" style="margin-bottom: 0;">
+        <div class="unit-header" @click="ea3Open = !ea3Open"
+          style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
+          <span class="unit-chevron" :class="{ open: ea3Open }">▶</span>
+          <span class="unit-badge ea3">EA3</span>
+          <span class="unit-title">Unidad 3 — Funciones en Python</span>
+          <span class="unit-count">{{ ea3Entries.length }} entradas</span>
+        </div>
+        <div class="unit-body" :class="ea3Open ? 'expanded' : 'collapsed'"
+          :style="ea3Open ? 'max-height:' + (ea3Entries.length * 250) + 'px' : ''">
+          <div style="padding: 0 1rem 1rem;">
+            <a v-for="(entry, idx) in ea3Entries" :key="entry.id" :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up"
+              :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
+              :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+              @click="entry.page === '#' && $event.preventDefault()">
+              <div class="entry-date">{{ formatDate(entry.date) }}</div>
+              <div class="entry-title">
+                <span class="entry-emoji">{{ entry.emoji }}</span>
+                {{ entry.title }}
+                <span v-if="entry.isOptional" class="entry-tag" style="margin-left: 0.3rem; background: rgba(192,132,252,0.15); color: #c084fc; border: 1px solid rgba(192,132,252,0.3); font-size: 0.65rem;">⭐ OPCIONAL</span>
+                <span v-if="entry.page === '#'" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+              </div>
+              <div class="entry-desc">{{ entry.description }}</div>
+              <div class="entry-tags">
+                <span v-for="tag in entry.tags" :key="tag" class="entry-tag" :class="tag">
+                  {{ tagLabels[tag] || tag }}
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── EA2 Section ─── -->
     <div v-if="ea2Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
       <div class="unit-section" style="margin-bottom: 0;">
         <div class="unit-header" @click="ea2Open = !ea2Open"
@@ -164,7 +201,7 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0" class="empty-state"
+    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0 && ea3Entries.length === 0" class="empty-state"
       style="max-width:700px;margin:0 auto;">
       <div class="emoji">🔍</div>
       <p>No se encontraron entradas con ese filtro.</p>
@@ -245,7 +282,8 @@
           searchQuery: '',
           activeFilter: 'all',
           ea1Open: false,
-          ea2Open: true,
+          ea2Open: false,
+          ea3Open: true,
           tagLabels: {
             python: 'Python',
             flow: 'Diagramas',
@@ -311,6 +349,9 @@
         },
         ea2Entries() {
           return this.filteredEntries.filter(e => e.unit === 'ea2');
+        },
+        ea3Entries() {
+          return this.filteredEntries.filter(e => e.unit === 'ea3');
         },
         totalEntries() {
           return this.entries.length;

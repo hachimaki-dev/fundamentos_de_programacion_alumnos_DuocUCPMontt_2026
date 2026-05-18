@@ -28,4 +28,7 @@ const diaryEntries = [
   { id:'proyecto-aplicaciones-consola', date:'2026-04-28', emoji:'💻', title:'Proyecto: Aplicaciones de Consola en Python', description:'Guía y rúbrica para el proyecto individual de desarrollo CLI y documentación técnica.', tags:['python', 'docs'], page:'pages/presentacion-proyecto.html', isNew:false, unit:'ea2' },
   { id:'evaluacion-2-speedrunner', date:'2026-04-30', emoji:'⏱️', title:'Modo Speed Runner: Práctica Intensiva', description:'15 desafíos estilo Codewars para prepararte para la evaluación. Mide tu tiempo, completa el código y vence al reloj.', tags:['python'], page:'pages/speed-runner.html', isNew:true, unit:'ea2' },
   { id:'desafio-50-logica', date:'2026-05-04', emoji:'🏋️‍♂️', title:'50 Desafíos de Lógica', description:'Entrenamiento intensivo: 50 ejercicios de programación desde lo más básico hasta algoritmos avanzados, pensados para la vida real, finanzas y gaming.', tags:['python', 'docs'], page:'pages/desafio-50-ejercicios.html', isNew:true, unit:'ea2' },
+
+  // ── EA3 — Unidad 3: Funciones en Python ──
+  { id:'taller-dungeon-rpg', date:'2026-05-17', emoji:'🏰', title:'Taller Opcional: Dungeon RPG en Python', description:'Construye un RPG de mazmorras paso a paso usando funciones. 10 bloques guiados: desde convenciones hasta refactorización. ¡Taller práctico opcional!', tags:['python', 'docs'], page:'taller_dungeon_rpg.html', isNew:true, unit:'ea3', isOptional:true },
 ];

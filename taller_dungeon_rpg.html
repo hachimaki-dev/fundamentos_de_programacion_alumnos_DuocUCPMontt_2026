@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller: Dungeon RPG en Python</title>
+
+<!-- Highlight.js para sintaxis de código -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ─── VARIABLES ─────────────────────────────────────────── */
+  :root {
+    --bg:        #0f0f0f;
+    --surface:   #161616;
+    --border:    #252525;
+    --muted:     #3a3a3a;
+    --text:      #e8e8e8;
+    --dim:       #888;
+    --accent:    #f0b429;
+    --accent2:   #e07b39;
+    --green:     #4ade80;
+    --red:       #f87171;
+    --blue:      #60a5fa;
+    --purple:    #c084fc;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Sora', sans-serif;
+    --radius:    6px;
+  }
+
+  /* ─── RESET ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── LAYOUT ─────────────────────────────────────────────── */
+  .shell {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ─── SIDEBAR ────────────────────────────────────────────── */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  .sidebar-logo .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .sidebar-logo h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  /* Barra de progreso general */
+  .progress-wrap {
+    padding: 0 20px 16px;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--dim);
+    font-family: var(--mono);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* Nav items */
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
+    font-size: 12.5px;
+    color: var(--dim);
+    user-select: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(240,180,41,0.05); }
+  .nav-item.done { color: var(--green); }
+  .nav-item.done .nav-dot { background: var(--green); }
+
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+
+  .nav-item.active .nav-dot { background: var(--accent); }
+
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ─── MAIN ───────────────────────────────────────────────── */
+  .main {
+    max-width: 820px;
+    padding: 60px 48px;
+  }
+
+  /* ─── INTRO ──────────────────────────────────────────────── */
+  .intro {
+    margin-bottom: 72px;
+  }
+
+  .intro-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .intro h1 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+
+  .intro h1 span { color: var(--accent); }
+
+  .intro-lead {
+    font-size: 15px;
+    color: var(--dim);
+    max-width: 560px;
+    line-height: 1.8;
+  }
+
+  .intro-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+  }
+
+  .intro-meta span b { color: var(--text); }
+
+  /* ─── BLOQUE ─────────────────────────────────────────────── */
+  .bloque {
+    margin-bottom: 96px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .bloque.visible { opacity: 1; transform: none; }
+
+  /* Header del bloque */
+  .bloque-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bloque-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(240,180,41,0.08);
+    border: 1px solid rgba(240,180,41,0.2);
+    border-radius: 4px;
+    padding: 4px 10px;
+    flex-shrink: 0;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .bloque-title { flex: 1; }
+  .bloque-title h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+  }
+
+  .bloque-title .subtitle {
+    font-size: 13px;
+    color: var(--dim);
+    margin-top: 4px;
+    font-family: var(--mono);
+  }
+
+  /* ─── TARJETAS DE ETAPA ──────────────────────────────────── */
+  .etapa {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .etapa-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .etapa-header:hover { background: #1c1c1c; }
+
+  .etapa-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  .tag-objetivo  { background: rgba(96,165,250,0.12); color: var(--blue); }
+  .tag-desarrollo{ background: rgba(240,180,41,0.10); color: var(--accent); }
+  .tag-cierre    { background: rgba(74,222,128,0.10); color: var(--green); }
+  .tag-reto      { background: rgba(192,132,252,0.12); color: var(--purple); }
+  .tag-debug     { background: rgba(248,113,113,0.10); color: var(--red); }
+  .tag-checkpoint{ background: rgba(74,222,128,0.10); color: var(--green); }
+
+  .etapa-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .etapa-toggle {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--dim);
+    transition: transform 0.2s;
+  }
+
+  .etapa-body {
+    padding: 20px 20px 24px;
+    background: var(--bg);
+    display: none;
+  }
+
+  .etapa.open .etapa-body { display: block; }
+  .etapa.open .etapa-toggle { transform: rotate(180deg); }
+
+  /* ─── VOZ DEL PROFE ──────────────────────────────────────── */
+  .profe {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .profe-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .profe-bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 8px 8px 8px;
+    padding: 14px 16px;
+    font-size: 14px;
+    color: #ccc;
+    line-height: 1.75;
+    flex: 1;
+  }
+
+  .profe-bubble strong { color: var(--text); }
+  .profe-bubble em { color: var(--accent); font-style: normal; font-weight: 600; }
+  .profe-bubble .why {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .profe-bubble .why::before {
+    content: "¿Por qué? ";
+    color: var(--accent2);
+    font-weight: 600;
+  }
+
+  /* ─── CÓDIGO ─────────────────────────────────────────────── */
+  .code-wrap {
+    position: relative;
+    margin: 16px 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    background: #1a1a1a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .copy-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--muted);
+    border-radius: 3px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+
+  .copy-btn:hover { color: var(--text); border-color: var(--dim); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  .code-wrap pre {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    padding: 16px !important;
+  }
+
+  /* ─── TIPS, ALERTS ───────────────────────────────────────── */
+  .callout {
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 13.5px;
+    margin: 16px 0;
+    display: flex;
+    gap: 10px;
+    line-height: 1.65;
+  }
+
+  .callout-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+
+  .callout.info    { background: rgba(96,165,250,0.07);  border-left: 3px solid var(--blue);   color: #aac4f0; }
+  .callout.warn    { background: rgba(240,180,41,0.07);  border-left: 3px solid var(--accent); color: #d9a84a; }
+  .callout.success { background: rgba(74,222,128,0.07);  border-left: 3px solid var(--green);  color: #7dd9a0; }
+  .callout.danger  { background: rgba(248,113,113,0.07); border-left: 3px solid var(--red);    color: #f0a5a5; }
+
+  /* ─── CHECKLIST ──────────────────────────────────────────── */
+  .checklist {
+    list-style: none;
+    margin: 12px 0;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 13.5px;
+    color: #bbb;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--muted);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    font-size: 10px;
+  }
+
+  .checklist li.checked { color: var(--green); }
+  .checklist li.checked .check-box {
+    background: var(--green);
+    border-color: var(--green);
+    color: #000;
+  }
+
+  /* ─── CONVENCIONES ───────────────────────────────────────── */
+  .conv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  .conv-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  .conv-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .conv-example {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .conv-bad {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red);
+    text-decoration: line-through;
+  }
+
+  /* ─── RETO CREATIVO ──────────────────────────────────────── */
+  .reto-box {
+    border: 1px dashed rgba(192,132,252,0.4);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    background: rgba(192,132,252,0.04);
+    margin-top: 16px;
+  }
+
+  .reto-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reto-box p {
+    font-size: 13.5px;
+    color: #bbb;
+    line-height: 1.7;
+  }
+
+  .reto-box ul {
+    margin: 10px 0 0 16px;
+    font-size: 13px;
+    color: #bbb;
+    line-height: 2;
+  }
+
+  /* ─── BLOQUE RESUMEN ─────────────────────────────────────── */
+  .resumen-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+
+  .resumen-tabla th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .resumen-tabla td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    color: #bbb;
+  }
+
+  .resumen-tabla td:first-child {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  /* ─── NAVEGACIÓN ENTRE BLOQUES ───────────────────────────── */
+  .bloque-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-nav {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-nav:hover { color: var(--text); border-color: var(--muted); }
+
+  .btn-nav.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .btn-nav.primary:hover { opacity: 0.9; }
+
+  /* ─── DONE BADGE ─────────────────────────────────────────── */
+  .done-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--green);
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 99px;
+    padding: 3px 10px;
+    margin-left: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .done-badge.visible { opacity: 1; }
+
+  /* ─── SCROLL SUAVE ───────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 32px 20px; }
+  }
+
+  /* ─── INLINE CODE ────────────────────────────────────────── */
+  code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--accent);
+  }
+
+  p { margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ─── SEPARADOR ──────────────────────────────────────────── */
+  .sep {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* ─── INPUT AREA ─────────────────────────────────────────── */
+  .input-area {
+    margin: 12px 0;
+  }
+
+  .input-area label {
+    display: block;
+    font-size: 12px;
+    color: var(--dim);
+    font-family: var(--mono);
+    margin-bottom: 6px;
+  }
+
+  .input-area textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 10px 12px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  .input-area textarea:focus { border-color: var(--accent); }
+  .input-area textarea::placeholder { color: var(--muted); }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── SIDEBAR ──────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="tag">Python · Modular</span>
+      <h2>Dungeon RPG<br>Workshop</h2>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progreso</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <nav id="sidebar-nav">
+      <div class="nav-item active" data-target="bloque-0" onclick="goTo('bloque-0')">
+        <span class="nav-dot"></span>
+        <span>Convenciones</span>
+        <span class="nav-num">00</span>
+      </div>
+      <div class="nav-item" data-target="bloque-1" onclick="goTo('bloque-1')">
+        <span class="nav-dot"></span>
+        <span>El jugador</span>
+        <span class="nav-num">01</span>
+      </div>
+      <div class="nav-item" data-target="bloque-2" onclick="goTo('bloque-2')">
+        <span class="nav-dot"></span>
+        <span>Mostrar estado</span>
+        <span class="nav-num">02</span>
+      </div>
+      <div class="nav-item" data-target="bloque-3" onclick="goTo('bloque-3')">
+        <span class="nav-dot"></span>
+        <span>El enemigo</span>
+        <span class="nav-num">03</span>
+      </div>
+      <div class="nav-item" data-target="bloque-4" onclick="goTo('bloque-4')">
+        <span class="nav-dot"></span>
+        <span>Combate</span>
+        <span class="nav-num">04</span>
+      </div>
+      <div class="nav-item" data-target="bloque-5" onclick="goTo('bloque-5')">
+        <span class="nav-dot"></span>
+        <span>La poción</span>
+        <span class="nav-num">05</span>
+      </div>
+      <div class="nav-item" data-target="bloque-6" onclick="goTo('bloque-6')">
+        <span class="nav-dot"></span>
+        <span>El menú</span>
+        <span class="nav-num">06</span>
+      </div>
+      <div class="nav-item" data-target="bloque-7" onclick="goTo('bloque-7')">
+        <span class="nav-dot"></span>
+        <span>Bucle de combate</span>
+        <span class="nav-num">07</span>
+      </div>
+      <div class="nav-item" data-target="bloque-8" onclick="goTo('bloque-8')">
+        <span class="nav-dot"></span>
+        <span>Juego completo</span>
+        <span class="nav-num">08</span>
+      </div>
+      <div class="nav-item" data-target="bloque-9" onclick="goTo('bloque-9')">
+        <span class="nav-dot"></span>
+        <span>Refactorización</span>
+        <span class="nav-num">09</span>
+      </div>
+      <div class="nav-item" data-target="bloque-10" onclick="goTo('bloque-10')">
+        <span class="nav-dot"></span>
+        <span>Cierre final</span>
+        <span class="nav-num">10</span>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ── MAIN CONTENT ──────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- INTRO -->
+    <div class="intro">
+      <div class="intro-eyebrow">Taller de programación · Nivel I</div>
+      <h1>Dungeon RPG<br>en <span>Python</span></h1>
+      <p class="intro-lead">
+        Hoy no vamos a copiar código. Vamos a <em style="color:var(--accent);font-style:normal;">construir</em> un juego real, 
+        pieza por pieza, exactamente como lo hace un programador de verdad. 
+        Cada bloque tiene un propósito. Cada línea que escribas, la vas a entender.
+      </p>
+      <div class="intro-meta">
+        <span><b>10</b> bloques</span>
+        <span><b>~3h</b> estimado</span>
+        <span><b>Python 3</b></span>
+        <span><b>Nivel</b> novatillo avanzado</span>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 0 — Convenciones -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-0">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 00</div>
+        <div class="bloque-title">
+          <h2>Las reglas del juego <em style="color:var(--dim);font-weight:300;font-size:18px;">(antes de escribir código)</em></h2>
+          <div class="subtitle">convenciones · nomenclatura · depuración</div>
+        </div>
+        <span id="done-0" class="done-badge">✓ completado</span>
+      </div>
+
+      <!-- OBJETIVO -->
+      <div class="etapa open" id="etapa-0-obj">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">¿Por qué empezamos aquí y no con código?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Antes de que toquen el teclado quiero que entiendan algo: <strong>el código que van a escribir hoy lo van a tener que leer mañana</strong>. Y si está todo mezclado con nombres raros como <code>x1</code>, <code>tmp</code> o <code>cosa</code>, no van a entender nada. Así que vamos a acordar las reglas de escritura <em>ahora</em>, y las vamos a seguir durante todo el taller.
+              <div class="why">Los ingenieros de software trabajan en equipo. Si tú escribes código que solo tú entiendes, eres un problema para el equipo. Estas convenciones existen para que cualquier persona pueda leer tu código y entenderlo sin preguntarte.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESARROLLO -->
+      <div class="etapa open" id="etapa-0-dev">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Las tres reglas que van a seguir siempre</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Abran un archivo nuevo llamado <code>convenciones.py</code>. No lo van a usar en el juego, es solo para practicar esto cinco minutos.
+            </div>
+          </div>
+
+          <div class="conv-grid">
+            <div class="conv-card">
+              <div class="conv-label">Variables y funciones → snake_case</div>
+              <div class="conv-example">nombre_jugador = "Ana"</div>
+              <div class="conv-example">vida_maxima = 20</div>
+              <div class="conv-example">def crear_jugador():</div>
+              <div style="margin-top:8px">
+                <div class="conv-bad">nombreJugador</div>
+                <div class="conv-bad">def CrearJugador():</div>
+              </div>
+            </div>
+            <div class="conv-card">
+              <div class="conv-label">Constantes → UPPER_SNAKE_CASE</div>
+              <div class="conv-example">HP_INICIAL = 20</div>
+              <div class="conv-example">SALAS_TOTALES = 3</div>
+              <div class="conv-example">DANO_HUIDA = 2</div>
+              <div style="margin-top:8px">
+                <div class="conv-bad">hpInicial</div>
+                <div class="conv-bad">salasTotales</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profe" style="margin-top:20px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              La tercera regla es la más importante para aprender a depurar: <strong>los prints de diagnóstico tienen etiqueta</strong>. Así puedes saber inmediatamente si un print es para el jugador o para ti como programador.
+              <div class="why">Cuando el programa falla, no puedes ver lo que pasa adentro. Los prints etiquetados son tu microscopio. Son temporales: cuando el programa esté terminado y funcionando, los borras.</div>
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header">
+              <span class="code-lang">python</span>
+              <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+            </div>
+            <pre><code class="language-python"># ✅ Prints con etiqueta — fácil de identificar y borrar después
+print("[DEBUG] Entrando a la función atacar")
+print(f"[DEBUG] Valor de dano calculado: {dano}")
+print("[INFO] Jugador creado correctamente")
+print("[ERROR] El inventario está vacío cuando no debería")</code></pre>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-icon">⚠️</span>
+            <span>Un <code>print("aqui")</code> sin contexto no te sirve de nada. ¿Cuántas veces llegaste a ese print? ¿Qué valor tenía la variable que querías revisar? El etiquetado te obliga a ser preciso.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RETO CREATIVO -->
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Dale personalidad a tu proyecto</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Antes de escribir una sola línea de juego, crea tu archivo <code>dungeon_rpg.py</code> y escribe en comentarios: el nombre de tu juego, tu nombre, la fecha, y <strong>en dos líneas, de qué va tu mazmorra</strong>. No tiene que ser "Dungeon RPG", puede llamarse como quieras. Un estudiante el año pasado llamó el suyo "El Metro de Santiago". Completamente válido.
+            </div>
+          </div>
+
+          <div class="reto-box">
+            <h4>🎨 Reto de identidad</h4>
+            <p>Decide ahora mismo tres cosas de tu juego:</p>
+            <ul>
+              <li>¿Cómo se llama tu mazmorra / mundo?</li>
+              <li>¿Qué tipo de héroe es el jugador? (no tiene que ser un guerrero)</li>
+              <li>¿Qué tipo de enemigos va a enfrentar? (pueden ser jefes de oficina, bugs gigantes, lo que quieras)</li>
+            </ul>
+            <p style="margin-top:12px;">Escríbelo en comentarios al inicio de tu archivo. Eso lo convierte en <em style="color:var(--purple);font-style:normal;">tu</em> juego.</p>
+          </div>
+
+          <div class="input-area" style="margin-top:16px">
+            <label>📝 Escribe aquí tu concepto (para que no se te olvide)</label>
+            <textarea placeholder="Ej: Mi juego se llama 'El Ministerio del Caos'. El jugador es un funcionario público que debe sobrevivir reuniones interminables y jefes imposibles..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- CIERRE -->
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-cierre">Cierre</span>
+          <span class="etapa-title">Checkpoint: el archivo base funciona</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Antes de avanzar al siguiente bloque, tu archivo debe tener: comentarios con el nombre del juego, tu nombre y tu concepto. Ejecútalo y debe salir sin ningún error. Si sale un <code>SyntaxError</code>, hay una comilla o paréntesis desparejado. Si no sale nada, perfecto.
+            </div>
+          </div>
+          <ul class="checklist" id="check-0">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi archivo tiene el nombre de mi juego en un comentario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi archivo tiene mi nombre y la fecha</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Ejecuto <code>python dungeon_rpg.py</code> y no hay errores</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Entiendo la diferencia entre snake_case y UPPER_SNAKE_CASE</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <div></div>
+        <button class="btn-nav primary" onclick="markDone(0); goTo('bloque-1')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 1 — El jugador -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-1">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 01</div>
+        <div class="bloque-title">
+          <h2>El jugador como diccionario</h2>
+          <div class="subtitle">estructuras de datos · funciones · return</div>
+        </div>
+        <span id="done-1" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">¿Por qué un diccionario y no variables sueltas?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Imaginen que tienen que pasarle la información del jugador a una función. Con variables sueltas tendrían que hacer esto: <code>atacar(nombre, vida, ataque, oro, inventario)</code>. Cinco parámetros para <em>una sola cosa</em>. Y si mañana agregan "experiencia", tienen que modificar cada función del programa. Con un diccionario, la función recibe <em>un solo objeto</em> que representa al jugador completo. Agregar un campo no rompe nada más.
+              <div class="why">En programación, agrupar datos que pertenecen juntos se llama <strong>cohesión</strong>. Un jugador tiene nombre, vida, ataque, oro — todo eso junto forma una unidad. El diccionario es la forma más natural de expresar eso en Python.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Escribe la función crear_jugador</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Primero escriban esto arriba del todo en su archivo. Las constantes van primero, porque son la "configuración" del juego. Si mañana quieren cambiar la vida inicial de 20 a 30, lo cambian en <em>un solo lugar</em>.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">import random
+
+# ═══════════════════════════════════════════
+# CONSTANTES DEL JUEGO
+# ═══════════════════════════════════════════
+HP_INICIAL    = 20
+ATK_INICIAL   = 5
+SALAS_TOTALES = 3
+
+# ═══════════════════════════════════════════
+# FUNCIONES DE CREACIÓN
+# ═══════════════════════════════════════════
+
+def crear_jugador(nombre):
+    """
+    Recibe un nombre (string) y devuelve un diccionario
+    con todos los datos iniciales del jugador.
+    """
+    print(f"[DEBUG] Creando jugador con nombre: {nombre}")
+
+    jugador = {
+        "nombre":    nombre,
+        "hp":        HP_INICIAL,
+        "hp_max":    HP_INICIAL,
+        "atk":       ATK_INICIAL,
+        "oro":       0,
+        "inventario": ["Poción"]
+    }
+
+    print(f"[DEBUG] Jugador creado → {jugador}")
+    return jugador
+
+
+# ═══════════════════════════════════════════
+# PRUEBA TEMPORAL (lo borraremos después)
+# ═══════════════════════════════════════════
+nombre_ingresado = input("¿Cómo se llama tu héroe? ")
+mi_jugador = crear_jugador(nombre_ingresado)
+print("\n[INFO] Resultado final:")
+print(mi_jugador)</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Ahora noten algo: el <code>[DEBUG]</code> dentro de la función les dice exactamente qué datos entran (<em>nombre</em>) y qué sale (<em>el diccionario completo</em>). Eso les permite verificar que la función hace lo que ustedes creen que hace. Sin ese print, estarían adivinando.
+            </div>
+          </div>
+
+          <div class="callout info">
+            <span class="callout-icon">💡</span>
+            <span>Fíjense que <code>import random</code> va al principio del archivo, antes que todo. Python necesita saber qué librerías va a usar antes de ejecutar cualquier función que las use.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-debug">Depuración</span>
+          <span class="etapa-title">Aprende a romper las cosas a propósito</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Hagan esto ahora. Cambien <code>return jugador</code> por simplemente no poner return. Ejecuten. ¿Qué imprime? ¿Por qué? <strong>Luego vuélvanlo a poner.</strong> Romper el código a propósito es la forma más rápida de entender qué hace cada línea.
+              <div class="why">Cuando Python no encuentra un <code>return</code>, devuelve <code>None</code>. Si luego intentas acceder a <code>mi_jugador["hp"]</code>, Python lanza un <code>TypeError: 'NoneType' object is not subscriptable</code>. Ese error significa exactamente eso: intentaste usar <code>None</code> como si fuera un diccionario.</div>
+            </div>
+          </div>
+
+          <div class="callout danger">
+            <span class="callout-icon">🐛</span>
+            <span>Si en algún momento ven <code>NoneType object is not subscriptable</code> en un proyecto real, lo primero que buscan es una función a la que le falta el <code>return</code>.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Personaliza los datos de tu jugador</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              El diccionario del jugador que les dí tiene lo básico. Pero <em>su</em> juego tiene un concepto propio. Agréguenle <strong>al menos un campo más</strong> que tenga sentido para su historia. Si su héroe es un periodista, tal vez tiene "credibilidad". Si es un chef, tiene "recetas". Si es un estudiante, tiene "cafeine_level". Lo que sea que tenga sentido en <em>su</em> universo.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: campo propio</h4>
+            <p>Agrega <strong>un campo inventado</strong> al diccionario del jugador que represente algo de tu concepto. Tiene que:</p>
+            <ul>
+              <li>Tener un nombre en <code>snake_case</code></li>
+              <li>Tener un valor inicial que tenga sentido</li>
+              <li>Aparecer en el <code>[DEBUG]</code> de creación</li>
+            </ul>
+          </div>
+          <div class="input-area" style="margin-top:14px">
+            <label>¿Qué campo agregaste y qué significa en tu juego?</label>
+            <textarea placeholder='Ej: "cafeine_level": 100 → El héroe es un programador que necesita cafeína para funcionar. Si llega a 0, no puede atacar...'></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 01</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Ejecuten el programa y escriban su nombre de héroe. Deben ver los dos mensajes <code>[DEBUG]</code> y el diccionario completo. Si el nombre que escribieron aparece dentro del diccionario, la función funciona.
+            </div>
+          </div>
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El <code>[DEBUG]</code> muestra el nombre que escribí</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El diccionario tiene <code>hp</code>, <code>hp_max</code>, <code>atk</code>, <code>oro</code> e <code>inventario</code></li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El <code>hp</code> es exactamente <code>HP_INICIAL</code> (20)</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi campo personalizado aparece en el diccionario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Probé qué pasa si borro el <code>return</code> y lo entendí</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-0')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(1); goTo('bloque-2')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 2 — Mostrar estado -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-2">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 02</div>
+        <div class="bloque-title">
+          <h2>Mostrar el estado del jugador</h2>
+          <div class="subtitle">separación de responsabilidades · interfaz vs lógica</div>
+        </div>
+        <span id="done-2" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">Separar lo que el juego hace de lo que el jugador ve</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Presten atención a esto porque es un principio que van a usar toda la carrera: <strong>una función debe hacer una sola cosa</strong>. La función de atacar calcula daño — no imprime nada. La función de mostrar estado imprime — no calcula nada. Si mezclan las dos, cuando quieran cambiar cómo se ve la pantalla, van a tener que tocar la función de combate. Y eso es un desastre.
+              <div class="why">En ingeniería de software esto se llama <strong>principio de responsabilidad única</strong>. No es un capricho: cuando los proyectos crecen a miles de líneas, las funciones que hacen muchas cosas se vuelven imposibles de mantener.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Escribe mostrar_estado_jugador</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Agreguen esta función <strong>debajo de <code>crear_jugador</code></strong>. Lean el código antes de copiarlo. Quiero que noten que esta función <em>no devuelve nada</em>. No tiene <code>return</code>. ¿Por qué? Porque su único trabajo es imprimir. No produce ningún dato nuevo.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">def mostrar_estado_jugador(jugador):
+    """
+    Recibe el diccionario del jugador y muestra su
+    estado actual por pantalla. No devuelve nada.
+    """
+    print("\n" + "=" * 40)
+    print(f"  Héroe:   {jugador['nombre']}")
+    print(f"  Vida:    {jugador['hp']}/{jugador['hp_max']}")
+    print(f"  Ataque:  {jugador['atk']}")
+    print(f"  Oro:     {jugador['oro']}")
+    print(f"  Items:   {jugador['inventario']}")
+    print("=" * 40)</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Ahora actualicen la prueba temporal al final del archivo para usar esta función:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># ═══════════════════════════════════════════
+# PRUEBA TEMPORAL
+# ═══════════════════════════════════════════
+nombre_ingresado = input("¿Cómo se llama tu héroe? ")
+mi_jugador = crear_jugador(nombre_ingresado)
+
+print("\n[INFO] Mostrando estado inicial:")
+mostrar_estado_jugador(mi_jugador)</code></pre>
+          </div>
+
+          <div class="callout success" style="margin-top:16px">
+            <span class="callout-icon">✅</span>
+            <span>Si ejecutan y ven el panel con los datos del jugador bien alineados, el bloque está completo. Los <code>[DEBUG]</code> de creación pueden seguir apareciendo — es normal, los controlaremos más adelante.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Diseña cómo se ve tu pantalla</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              El panel que les dí es funcional pero aburrido. <strong>Es su juego. Que se vea como su juego.</strong> Modifiquen <code>mostrar_estado_jugador</code> para que muestre también el campo que inventaron en el bloque anterior. Y si quieren cambiar los separadores, los emojis, los textos — adelante. Lo único que no puede cambiar es que se muestre toda la información del jugador.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: panel propio</h4>
+            <p>Tu función <code>mostrar_estado_jugador</code> debe:</p>
+            <ul>
+              <li>Mostrar tu campo personalizado del Bloque 01</li>
+              <li>Tener algún detalle visual que la distinga (puede ser tan simple como cambiar el separador <code>=</code> por <code>─</code> o <code>★</code>)</li>
+              <li>Que al verla, cualquiera sepa que fue tuya</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 02</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>La función <code>mostrar_estado_jugador</code> no tiene <code>return</code> (no necesita)</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El panel muestra todos los campos del jugador, incluido mi campo inventado</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Si cambio <code>HP_INICIAL</code> a 30 arriba, el panel muestra 30/30 automáticamente</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Entiendo por qué esta función no calcula nada</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-1')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(2); goTo('bloque-3')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 3 — El enemigo -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-3">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 03</div>
+        <div class="bloque-title">
+          <h2>El enemigo</h2>
+          <div class="subtitle">listas de diccionarios · random · debug controlado</div>
+        </div>
+        <span id="done-3" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">Por qué los enemigos también son diccionarios</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Noten algo importante: el jugador y el enemigo tienen la misma estructura base — ambos tienen <code>hp</code> y <code>atk</code>. Eso no es casualidad. Más adelante van a escribir una función <code>esta_vivo(personaje)</code> que funciona igual para el jugador y para el enemigo, porque los dos tienen <code>hp</code>. <strong>Cuando los datos tienen la misma forma, el código se simplifica.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Escribe crear_enemigo y el panel de combate</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Agreguen esta función. Noten que la lista de enemigos posibles está <em>dentro</em> de la función, en mayúsculas porque es constante local. Y usan <code>random.choice()</code> para elegir uno al azar — eso es exactamente lo que hace ese método: elegir un elemento aleatorio de una lista.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">def crear_enemigo():
+    """
+    Elige aleatoriamente un enemigo de la lista
+    y devuelve su diccionario de datos.
+    """
+    ENEMIGOS_DISPONIBLES = [
+        {"nombre": "Rata Gigante", "hp": 8,  "atk": 2, "oro": 3},
+        {"nombre": "Goblin",       "hp": 10, "atk": 3, "oro": 5},
+        {"nombre": "Esqueleto",    "hp": 12, "atk": 4, "oro": 7},
+    ]
+
+    enemigo = random.choice(ENEMIGOS_DISPONIBLES)
+    print(f"[DEBUG] Enemigo generado: {enemigo['nombre']} (HP: {enemigo['hp']})")
+    return enemigo
+
+
+def mostrar_estado_combate(jugador, enemigo):
+    """Muestra el estado de ambos luchadores durante el combate."""
+    mostrar_estado_jugador(jugador)
+    print(f"\n  Enemigo: {enemigo['nombre']} | HP: {enemigo['hp']}")
+    print("-" * 40)</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Actualicen la prueba temporal:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># ═══════════════════════════════════════════
+# PRUEBA TEMPORAL
+# ═══════════════════════════════════════════
+nombre_ingresado = input("¿Cómo se llama tu héroe? ")
+mi_jugador  = crear_jugador(nombre_ingresado)
+mi_enemigo  = crear_enemigo()
+
+print("\n[INFO] Estado inicial del combate:")
+mostrar_estado_combate(mi_jugador, mi_enemigo)</code></pre>
+          </div>
+
+          <div class="callout warn" style="margin-top:14px">
+            <span class="callout-icon">🔎</span>
+            <span><strong>Experimento guiado:</strong> Cambien <code>random.choice(ENEMIGOS_DISPONIBLES)</code> por <code>ENEMIGOS_DISPONIBLES[0]</code>. Ejecuten 3 veces. ¿Siempre sale la Rata Gigante? Eso sirve cuando quieres probar sin azar. Cuando el combate no funciona bien, a veces es útil fijar el enemigo para que sea siempre el mismo mientras depuras. Luego vuélvanlo a <code>random.choice</code>.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Crea tus propios enemigos</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Reemplaza los tres enemigos que vienen por defecto por los tuyos propios. Si tu mazmorra es una oficina, tus enemigos pueden ser "El Auditor", "La Reunión Interminable" y "El Jefe en Viernes". Lo que quieras. Tienen que seguir teniendo <code>nombre</code>, <code>hp</code>, <code>atk</code> y <code>oro</code> — pero los valores y nombres son completamente tuyos.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: tu bestiario</h4>
+            <p>Diseña <strong>3 enemigos propios</strong> con dificultad progresiva (el primero más débil, el último más fuerte). Dales nombres que tengan sentido en tu universo.</p>
+            <div class="input-area" style="margin-top:12px">
+              <label>¿Cuáles son tus tres enemigos?</label>
+              <textarea placeholder="Enemigo 1: ..., HP: ..., ATK: ..., ORO: ...&#10;Enemigo 2: ...&#10;Enemigo 3: ..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 03</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Ejecuté el programa 3 veces y al menos una vez cambió el enemigo</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El panel de combate muestra jugador Y enemigo</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mis 3 enemigos personalizados están en la lista</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Probé fijar el índice [0] para depurar y entendí por qué sirve</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-2')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(3); goTo('bloque-4')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 4 — Combate -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-4">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 04</div>
+        <div class="bloque-title">
+          <h2>Las mecánicas de combate</h2>
+          <div class="subtitle">funciones que devuelven valores · mutación de datos · esta_vivo</div>
+        </div>
+        <span id="done-4" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">¿Por qué atacar devuelve el daño en vez de imprimirlo?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Imaginen que <code>jugador_ataca()</code> imprimiera el daño directamente. ¿Qué pasa si mañana quieren mostrar el mensaje diferente según si el golpe fue crítico? Tendrían que modificar la función de ataque. Pero si la función <em>devuelve</em> el daño, la función de flujo decide cómo mostrarlo. <strong>Las funciones de lógica calculan. Las funciones de interfaz muestran. Nunca las dos.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Cuatro funciones de mecánica</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Lean cada función antes de copiarla. En especial <code>esta_vivo</code>: recibe <em>cualquier</em> personaje con <code>hp</code> — jugador o enemigo. Eso es posible porque ambos usan la misma clave. Es un ejemplo pequeño de un principio muy poderoso.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">def jugador_ataca(jugador, enemigo):
+    """El jugador golpea al enemigo. Devuelve el daño causado."""
+    dano = jugador["atk"] + random.randint(0, 3)
+    enemigo["hp"] -= dano
+    print(f"[DEBUG] Jugador ataca → daño: {dano} | HP enemigo: {enemigo['hp']}")
+    return dano
+
+
+def enemigo_ataca(jugador, enemigo):
+    """El enemigo golpea al jugador. Devuelve el daño causado."""
+    dano = enemigo["atk"] + random.randint(0, 2)
+    jugador["hp"] -= dano
+    print(f"[DEBUG] Enemigo ataca → daño: {dano} | HP jugador: {jugador['hp']}")
+    return dano
+
+
+def esta_vivo(personaje):
+    """
+    Recibe un jugador O un enemigo (ambos tienen 'hp').
+    Devuelve True si sigue vivo, False si no.
+    """
+    return personaje["hp"] > 0
+
+
+def dar_recompensa(jugador, enemigo):
+    """
+    Otorga oro y posiblemente una poción al ganar.
+    Devuelve True si hubo poción, False si no.
+    """
+    jugador["oro"] += enemigo["oro"]
+    encontro_pocion = random.random() < 0.5   # 50% de probabilidad
+
+    if encontro_pocion:
+        jugador["inventario"].append("Poción")
+
+    print(f"[DEBUG] Recompensa: +{enemigo['oro']} oro | ¿Poción?: {encontro_pocion}")
+    return encontro_pocion</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Actualicen la prueba temporal para verificar el combate directo:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># ═══════════════════════════════════════════
+# PRUEBA TEMPORAL — combate directo sin menú
+# ═══════════════════════════════════════════
+nombre_ingresado = input("¿Cómo se llama tu héroe? ")
+mi_jugador = crear_jugador(nombre_ingresado)
+mi_enemigo = crear_enemigo()
+
+print(f"\n[INFO] HP jugador antes: {mi_jugador['hp']}")
+print(f"[INFO] HP enemigo antes:  {mi_enemigo['hp']}")
+
+dano_al_enemigo = jugador_ataca(mi_jugador, mi_enemigo)
+dano_al_jugador = enemigo_ataca(mi_jugador, mi_enemigo)
+
+print(f"\n[INFO] HP jugador después: {mi_jugador['hp']}")
+print(f"[INFO] HP enemigo después:  {mi_enemigo['hp']}")
+print(f"[INFO] ¿Jugador vivo?  {esta_vivo(mi_jugador)}")
+print(f"[INFO] ¿Enemigo vivo?  {esta_vivo(mi_enemigo)}")</code></pre>
+          </div>
+
+          <div class="callout danger" style="margin-top:14px">
+            <span class="callout-icon">🐛</span>
+            <span><strong>Bug intencional para entender:</strong> ¿Qué pasa si el daño supera el HP del enemigo? El HP queda negativo. <code>esta_vivo</code> devuelve <code>False</code> igual porque <code>-3 &gt; 0</code> es False. Así que funciona. Pero si mañana quieren mostrar una barra de vida, un HP negativo es un problema. Discútanlo: ¿deberían usar <code>max(0, hp - daño)</code>? ¿Cuándo importa y cuándo no?</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Agrega variación a los ataques</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Ahora tienen la mecánica base. El reto: modifiquen <code>jugador_ataca</code> para que tenga una probabilidad de <strong>golpe crítico</strong>. Un 20% de las veces, el daño se duplica. Si ocurre, el <code>[DEBUG]</code> debe decir <code>[DEBUG] ¡CRÍTICO!</code>. Pista: <code>random.random() &lt; 0.2</code> es verdadero el 20% de las veces.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: golpe crítico</h4>
+            <p>Implementa un 20% de probabilidad de golpe crítico que duplique el daño. El mensaje debe cambiar si fue crítico. Ejecuta 10 veces la prueba temporal y verifica que al menos una vez salga crítico.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 04</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El HP del enemigo bajó exactamente el daño que imprimió el <code>[DEBUG]</code></li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span><code>esta_vivo(mi_jugador)</code> devuelve <code>True</code> o <code>False</code> (no un número)</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>La misma función <code>esta_vivo</code> sirve para jugador Y enemigo</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Implementé el golpe crítico y lo verifiqué ejecutando varias veces</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-3')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(4); goTo('bloque-5')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 5 — La poción -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-5">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 05</div>
+        <div class="bloque-title">
+          <h2>La poción y el inventario</h2>
+          <div class="subtitle">condiciones · casos borde · retorno booleano</div>
+        </div>
+        <span id="done-5" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">Pensar en todos los casos, no solo el feliz</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Un programador novato escribe el caso cuando todo va bien. Un programador serio escribe primero los casos cuando algo falla. ¿Qué pasa si el jugador usa la poción y no tiene ninguna? ¿Qué pasa si usa la poción con la vida al máximo? ¿Qué pasa si usa dos pociones seguidas? Esas son las preguntas que deben hacerse antes de escribir la función.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Escribe usar_pocion con todos los casos cubiertos</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Esta función devuelve <code>True</code> si pudo usarla, <code>False</code> si no. Eso le permite al código que la llama decidir qué hacer en cada caso. Noten también la línea <code>if jugador["hp"] > jugador["hp_max"]</code> — eso es cubrir el caso donde la poción haría superar el máximo.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">HP_POCION = 8   # ← constante arriba del todo con las demás
+
+def usar_pocion(jugador):
+    """
+    Si el jugador tiene una Poción, la usa y recupera HP_POCION de vida.
+    No puede superar hp_max. Devuelve True si pudo, False si no tenía.
+    """
+    if "Poción" in jugador["inventario"]:
+        jugador["inventario"].remove("Poción")
+
+        hp_antes = jugador["hp"]
+        jugador["hp"] += HP_POCION
+
+        # Caso borde: no puede superar el máximo
+        if jugador["hp"] > jugador["hp_max"]:
+            jugador["hp"] = jugador["hp_max"]
+
+        print(f"[DEBUG] Poción usada → HP: {hp_antes} → {jugador['hp']}")
+        return True
+
+    print("[DEBUG] No había poción en el inventario.")
+    return False</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Prueba de casos borde — hagan exactamente esto en la prueba temporal:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># PRUEBA TEMPORAL — casos borde de la poción
+mi_jugador = crear_jugador("Tester")
+
+# Caso 1: vida baja, hay poción
+mi_jugador["hp"] = 5
+print("\n--- CASO 1: vida baja ---")
+resultado = usar_pocion(mi_jugador)
+print(f"¿Funcionó? {resultado} | HP: {mi_jugador['hp']} | Items: {mi_jugador['inventario']}")
+
+# Caso 2: sin poción
+print("\n--- CASO 2: sin poción ---")
+resultado = usar_pocion(mi_jugador)
+print(f"¿Funcionó? {resultado}")
+
+# Caso 3: vida casi llena (caso borde del máximo)
+mi_jugador["inventario"].append("Poción")
+mi_jugador["hp"] = 17
+print("\n--- CASO 3: vida casi llena ---")
+usar_pocion(mi_jugador)
+print(f"HP resultante: {mi_jugador['hp']} (no debe superar {mi_jugador['hp_max']})")</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Agrega tu objeto especial</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              La poción es el objeto básico. Pero su mazmorra tiene un universo propio. Agrega <strong>un segundo objeto</strong> al juego. Puede ser un escudo temporal, una bomba, una trampa, un café doble si tu héroe es un programador. Lo que quieran. Solo necesita existir en el inventario y tener una función <code>usar_X(jugador)</code> que lo consuma.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: tu objeto especial</h4>
+            <p>Crea una función <code>usar_[tu_objeto](jugador)</code> que:</p>
+            <ul>
+              <li>Verifique si el objeto está en el inventario</li>
+              <li>Lo consuma si está (<code>.remove()</code>)</li>
+              <li>Tenga un efecto interesante (no tiene que ser curación)</li>
+              <li>Devuelva <code>True</code>/<code>False</code></li>
+            </ul>
+            <div class="input-area" style="margin-top:12px">
+              <label>¿Qué objeto creaste y qué hace?</label>
+              <textarea placeholder="Mi objeto se llama '...' y cuando lo usas..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 05</span>
+          <span class="etapa-title">Verifica los tres casos</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Caso 1: HP sube 8 puntos y la poción desaparece del inventario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Caso 2: sin poción devuelve <code>False</code> y no falla con error</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Caso 3: con HP 17, la poción sube solo hasta 20 (no a 25)</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial está implementado y probado</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-4')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(5); goTo('bloque-6')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 6 — El menú -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-6">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 06</div>
+        <div class="bloque-title">
+          <h2>El menú de combate</h2>
+          <div class="subtitle">input robusto · strip · manejo de entrada inválida</div>
+        </div>
+        <span id="done-6" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">Los usuarios no escriben lo que esperas</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Hagan esto ahora mismo con input normal: <code>input("Opción: ")</code> y luego comparen con <code>== "1"</code>. Escriban <code>1</code> con un espacio al final. ¿Funciona? No. ¿Por qué? Porque <code>"1 " != "1"</code>. Los usuarios siempre van a escribir cosas inesperadas — espacios, mayúsculas, letras en vez de números. La función <code>.strip()</code> elimina los espacios al inicio y al final. Es el mínimo de limpieza que deben hacer siempre.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">Escribe mostrar_menu_combate</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">def mostrar_menu_combate():
+    """
+    Muestra las opciones de combate.
+    Devuelve la opción elegida como string limpio.
+    """
+    print("\n  ¿Qué haces?")
+    print("  [1] Atacar")
+    print("  [2] Usar poción")
+    print("  [3] Huir  (cuesta 2 HP)")
+
+    opcion = input("  → Opción: ").strip()
+    print(f"[DEBUG] Opción recibida: '{opcion}'")
+    return opcion</code></pre>
+          </div>
+
+          <div class="callout warn" style="margin-top:14px">
+            <span class="callout-icon">🔎</span>
+            <span><strong>Experimento:</strong> Quiten el <code>.strip()</code> y ejecuten. Escriban <code>1</code> con un espacio al final. ¿Funciona la comparación <code>== "1"</code>? Luego vuélvanlo a poner. Así entienden por qué existe.</span>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Noten que si el jugador tiene su objeto especial del bloque anterior, necesitan agregar una opción <strong>[4]</strong> para usarlo. El menú no es fijo — evoluciona con el juego.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Agrega tu objeto especial al menú</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Modifiquen <code>mostrar_menu_combate</code> para que incluya la opción de usar su objeto especial del Bloque 05. La opción solo debe aparecer si el jugador tiene el objeto en el inventario — no tiene sentido mostrar "Usar café" si el inventario está vacío. Para eso, la función necesita recibir el jugador como parámetro.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: menú dinámico</h4>
+            <p>Modifica la firma de la función a <code>mostrar_menu_combate(jugador)</code> y haz que la opción de tu objeto solo aparezca si está en el inventario. Imprime algo como <code>[4] Usar café  (tienes 2)</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 06</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Escribo <code>1 </code> (con espacio) y la comparación <code>== "1"</code> funciona igual</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El <code>[DEBUG]</code> muestra exactamente lo que escribí, con las comillas</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial aparece en el menú cuando está en el inventario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial NO aparece cuando el inventario está vacío</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-5')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(6); goTo('bloque-7')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 7 — Bucle de combate -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-7">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 07</div>
+        <div class="bloque-title">
+          <h2>El bucle de combate</h2>
+          <div class="subtitle">while · break · flujo de decisión · combate completo</div>
+        </div>
+        <span id="done-7" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">Unir todo lo construido en un combate real</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Llegaron al momento más importante del taller. La función <code>combate()</code> es donde se unen todas las piezas. Si siguieron los pasos anteriores correctamente, esta función es casi escritura mecánica — solo están uniendo lo que ya funciona. Si algo falla aquí, el problema está en un bloque anterior. <strong>No arreglen la función <code>combate()</code> — busquen cuál pieza previa está rota.</strong>
+              <div class="why">Este es el valor real de construir por bloques: cuando algo falla, el problema está aislado. Si hubieran escrito todo en una función gigante, no sabrían por dónde empezar a buscar.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">La función combate completa — léanla primero</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Antes de copiar este código, léanlo completo. Busquen: ¿cuántos <code>break</code> hay y por qué? ¿En qué condición el enemigo no contraataca? ¿Qué devuelve la función si el jugador muere?
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">DANO_HUIDA = 2   # ← va arriba con las constantes
+
+def combate(jugador, enemigo):
+    """
+    Maneja un combate completo turno a turno.
+    Devuelve True si el jugador sobrevivió, False si fue derrotado.
+    """
+    print(f"\n[INFO] Comienza el combate vs {enemigo['nombre']}!")
+
+    while esta_vivo(jugador) and esta_vivo(enemigo):
+
+        mostrar_estado_combate(jugador, enemigo)
+        opcion = mostrar_menu_combate()   # o mostrar_menu_combate(jugador) si lo modificaron
+
+        # ── ATACAR ────────────────────────────────────────────
+        if opcion == "1":
+            dano = jugador_ataca(jugador, enemigo)
+            print(f"  Golpeas y haces {dano} de daño.")
+
+            if not esta_vivo(enemigo):
+                print(f"  Derrotaste a {enemigo['nombre']}!")
+                encontro = dar_recompensa(jugador, enemigo)
+                print(f"  Ganas {enemigo['oro']} de oro.")
+                if encontro:
+                    print("  Encontraste una poción.")
+                break   # ← combate terminado, sale del while
+
+            dano_r = enemigo_ataca(jugador, enemigo)
+            print(f"  {enemigo['nombre']} te hace {dano_r} de daño.")
+
+        # ── USAR POCIÓN ───────────────────────────────────────
+        elif opcion == "2":
+            if usar_pocion(jugador):
+                print("  Usas una poción y recuperas vida.")
+            else:
+                print("  No tienes pociones. Turno perdido.")
+
+            if esta_vivo(enemigo):
+                dano_r = enemigo_ataca(jugador, enemigo)
+                print(f"  {enemigo['nombre']} te hace {dano_r} de daño.")
+
+        # ── HUIR ──────────────────────────────────────────────
+        elif opcion == "3":
+            jugador["hp"] -= DANO_HUIDA
+            print(f"  Huyes. Pierdes {DANO_HUIDA} HP. HP: {jugador['hp']}")
+            break
+
+        # ── OPCIÓN INVÁLIDA ───────────────────────────────────
+        else:
+            print(f"  Opción '{opcion}' inválida. Elige 1, 2 o 3.")
+            # No hay break ni enemigo_ataca → el jugador no pierde el turno
+
+    return esta_vivo(jugador)</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Actualicen la prueba temporal:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># PRUEBA TEMPORAL — un combate completo
+nombre_ingresado = input("¿Cómo se llama tu héroe? ")
+mi_jugador = crear_jugador(nombre_ingresado)
+mi_enemigo = crear_enemigo()
+
+sobrevivio = combate(mi_jugador, mi_enemigo)
+print(f"\n[INFO] ¿Sobrevivió el jugador? {sobrevivio}")
+mostrar_estado_jugador(mi_jugador)</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Agrega tu objeto especial al combate</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Si implementaron el menú dinámico del bloque anterior, ahora toca conectarlo. Agreguen el <code>elif opcion == "4"</code> (o el número que eligieron) dentro del bucle de combate que llame a la función de su objeto especial. Consideren: ¿el enemigo contraataca si usas el objeto? ¿O es instantáneo?
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: tu objeto en combate</h4>
+            <p>Conecta tu objeto especial al bucle de combate con una nueva rama <code>elif</code>. Decide conscientemente si el enemigo contraataca después de usarlo o no, y escribe un comentario explicando por qué elegiste eso.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 07 — El grande</span>
+          <span class="etapa-title">Juega un combate completo y verifica todo</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Jueguen un combate completo probando <em>todas</em> las opciones. Luego jueguen otro dejándose morir a propósito. Quiero que vean los dos caminos del código.
+            </div>
+          </div>
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Opción 1: el HP del enemigo baja y el enemigo contraataca</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Opción 2: la poción se consume del inventario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Opción 3: pierdo 2 HP y el combate termina</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Opción inválida: el juego pide de nuevo sin perder el turno</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Al ganar: aparece el oro ganado y la función devuelve <code>True</code></li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Al morir: la función devuelve <code>False</code></li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial funciona en combate</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-6')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(7); goTo('bloque-8')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 8 — Juego completo -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-8">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 08</div>
+        <div class="bloque-title">
+          <h2>El juego completo</h2>
+          <div class="subtitle">flujo principal · múltiples salas · if __name__</div>
+        </div>
+        <span id="done-8" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">¿Qué es if __name__ == "__main__" y por qué importa?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Cuando Python ejecuta un archivo directamente, la variable especial <code>__name__</code> vale <code>"__main__"</code>. Cuando otro archivo importa ese módulo, <code>__name__</code> vale el nombre del archivo. Así que <code>if __name__ == "__main__"</code> es una forma de decir: "esto solo se ejecuta si corren este archivo directamente, no si alguien lo importa". En el bloque siguiente van a importar funciones entre archivos — sin esta línea, todo el juego se ejecutaría solo con importar.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">La función jugar y el punto de entrada</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Eliminen todo el código de "PRUEBA TEMPORAL" que tenían al final. Reemplácenlo con esto. La función <code>jugar()</code> es la que ahora lleva el hilo de toda la historia.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python">def jugar():
+    """
+    Función principal. Flujo completo: presentación
+    → exploración de salas → resultado final.
+    """
+    # ── PRESENTACIÓN ──────────────────────────────────────
+    print("\n" + "=" * 45)
+    print("      ⚔  DUNGEON RPG  ⚔")
+    print("=" * 45)
+
+    nombre = input("Ingresa el nombre de tu héroe: ").strip()
+    if nombre == "":
+        nombre = "Héroe Anónimo"
+        print("[INFO] Nombre vacío → usando 'Héroe Anónimo'")
+
+    jugador    = crear_jugador(nombre)
+    sala_actual = 1
+
+    # ── EXPLORACIÓN DE SALAS ──────────────────────────────
+    while sala_actual <= SALAS_TOTALES and esta_vivo(jugador):
+        print(f"\n{'─' * 45}")
+        print(f"  SALA {sala_actual} de {SALAS_TOTALES}")
+        print(f"{'─' * 45}")
+        print(f"[DEBUG] Inicio sala {sala_actual} | HP: {jugador['hp']}")
+
+        enemigo    = crear_enemigo()
+        sobrevivio = combate(jugador, enemigo)
+
+        if not sobrevivio:
+            print(f"[INFO] Jugador derrotado en sala {sala_actual}.")
+            break
+
+        print(f"[DEBUG] Sala {sala_actual} completada | HP: {jugador['hp']}")
+        sala_actual += 1
+
+        if sala_actual <= SALAS_TOTALES:
+            input("\n  [Presiona ENTER para continuar...]")
+
+    # ── RESULTADO FINAL ───────────────────────────────────
+    print("\n" + "=" * 45)
+    if esta_vivo(jugador):
+        print("  VICTORIA — Limpiaste la mazmorra.")
+        print(f"  Héroe:  {jugador['nombre']}")
+        print(f"  Oro:    {jugador['oro']}")
+        print(f"  Vida:   {jugador['hp']}/{jugador['hp_max']}")
+        print(f"  Items:  {jugador['inventario']}")
+    else:
+        print("  DERROTA — Caíste en las sombras.")
+        print(f"  Llegaste hasta la sala {sala_actual} de {SALAS_TOTALES}.")
+    print("=" * 45)
+
+
+# ─── PUNTO DE ENTRADA ──────────────────────────────────────
+if __name__ == "__main__":
+    jugar()</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Añade algo entre salas</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Entre el final de una sala y el inicio de la siguiente hay un <code>input(ENTER)</code>. Ese momento es perfecto para agregar algo: un mensaje narrativo que ambienta, una tienda donde gastar oro, una curación parcial automática. Lo que quieran. Ese espacio entre salas es <em>su</em> decisión de diseño.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: entre salas</h4>
+            <p>Agrega <strong>uno</strong> de estos elementos entre salas (o inventa el tuyo):</p>
+            <ul>
+              <li>Un mensaje narrativo distinto para cada sala</li>
+              <li>Recuperación de 3 HP al terminar cada sala</li>
+              <li>Una tienda mínima: gastar 5 oro para comprar una poción</li>
+              <li>Un evento aleatorio: 30% de probabilidad de encontrar algo</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 08 — Partida completa</span>
+          <span class="etapa-title">Juega dos partidas completas</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El juego pasa por las 3 salas con enemigos distintos</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El oro se acumula entre salas</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Si muero en la sala 2, el juego termina (no sigue a la 3)</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Si gano, muestra el estado final con oro e inventario</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi elemento entre salas está funcionando</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Escribir nombre vacío usa "Héroe Anónimo"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-7')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(8); goTo('bloque-9')">Siguiente bloque →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 9 — Refactorización -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-9">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 09</div>
+        <div class="bloque-title">
+          <h2>Refactorización en módulos</h2>
+          <div class="subtitle">carpetas · import · separación de responsabilidades</div>
+        </div>
+        <span id="done-9" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Objetivo</span>
+          <span class="etapa-title">¿Por qué no queda todo en un archivo?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Su archivo tiene ahora unas 150 líneas. Parece manejable. Pero un proyecto real puede tener 10.000 líneas. Si todo está en un archivo, ¿cómo encuentran la función que quieren modificar? ¿Cómo saben qué parte puede romper otra? La solución es dividir por responsabilidades: <strong>un archivo para crear cosas, uno para las mecánicas, uno para la interfaz, uno para el flujo</strong>. Cada archivo hace una sola cosa. Si mañana quieren cambiar cómo se ven los menús, solo abren <code>interfaz.py</code>.
+              <div class="why">La regla de oro de la refactorización: el juego debe funcionar exactamente igual antes y después. Si cambia el comportamiento, cometiste un error. Solo cambia la organización.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-desarrollo">Desarrollo</span>
+          <span class="etapa-title">La nueva estructura de carpetas</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Creen una carpeta nueva llamada <code>dungeon_rpg/</code>. Dentro, esta estructura. El archivo <code>__init__.py</code> puede estar vacío — su sola existencia le dice a Python que esa carpeta es un módulo.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">text</span></div>
+            <pre><code>dungeon_rpg/
+├── main.py               ← solo llama a jugar()
+└── game/
+    ├── __init__.py       ← vacío
+    ├── creacion.py       ← crear_jugador, crear_enemigo
+    ├── interfaz.py       ← mostrar_estado, mostrar_menu
+    ├── mecanicas.py      ← atacar, usar_pocion, esta_vivo, recompensa
+    └── flujo.py          ← combate(), jugar()</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:16px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              El <code>main.py</code> debe tener <em>solo esto</em>. Si tiene más, algo está mal.
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python — main.py</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># main.py — punto de entrada. Solo importa y llama. Nada más.
+from game.flujo import jugar
+
+if __name__ == "__main__":
+    jugar()</code></pre>
+          </div>
+
+          <div class="profe" style="margin-top:14px">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Y el inicio de <code>flujo.py</code> para que vean cómo se importa entre archivos:
+            </div>
+          </div>
+
+          <div class="code-wrap">
+            <div class="code-header"><span class="code-lang">python — game/flujo.py (cabecera)</span><button class="copy-btn" onclick="copyCode(this)">copiar</button></div>
+            <pre><code class="language-python"># game/flujo.py — flujo principal del juego
+from game.creacion  import crear_jugador, crear_enemigo
+from game.interfaz  import mostrar_estado_combate, mostrar_menu_combate
+from game.mecanicas import (
+    jugador_ataca, enemigo_ataca,
+    esta_vivo, usar_pocion, dar_recompensa
+)
+
+SALAS_TOTALES = 3
+DANO_HUIDA    = 2
+
+# ... aquí van combate() y jugar() exactamente igual que antes</code></pre>
+          </div>
+
+          <div class="callout success" style="margin-top:14px">
+            <span class="callout-icon">✅</span>
+            <span>Ejecuten con <code>python main.py</code> desde la carpeta <code>dungeon_rpg/</code>. Si funciona igual que antes, la refactorización fue exitosa.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">✦ Tu turno</span>
+          <span class="etapa-title">Mueve tu código a la estructura modular</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              El reto final de este bloque: muevan todo el código que crearon — incluyendo su objeto especial, sus enemigos propios, su campo inventado — a la estructura modular. Cada función va al archivo que le corresponde según su responsabilidad. Si dudan dónde va algo, pregúntense: "¿esto muestra información o toma una decisión?".
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎨 Reto: módulo propio</h4>
+            <p>Si tu objeto especial tiene suficiente lógica (usar, crear, verificar cantidad), considera crear un archivo <code>game/objetos.py</code> solo para eso. Así demuestras que entiendes la separación, no solo que puedes copiarla.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint 09</span>
+          <span class="etapa-title">Verifica antes de continuar</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span><code>python main.py</code> funciona exactamente igual que antes</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span><code>main.py</code> tiene máximo 4 líneas útiles</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Cada archivo solo importa lo que necesita</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial y mis enemigos personalizados están en el archivo correcto</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Si modifico el daño de la poción en <code>mecanicas.py</code>, el cambio se refleja en el juego</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-8')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(9); goTo('bloque-10')">Cierre final →</button>
+      </div>
+    </section>
+
+
+    <!-- ════════════════════════════════════════════════════ -->
+    <!-- BLOQUE 10 — Cierre final -->
+    <!-- ════════════════════════════════════════════════════ -->
+    <section class="bloque" id="bloque-10">
+      <div class="bloque-header">
+        <div class="bloque-num">BLOQUE 10</div>
+        <div class="bloque-title">
+          <h2>Cierre del taller</h2>
+          <div class="subtitle">resumen · reflexión · siguientes pasos</div>
+        </div>
+        <span id="done-10" class="done-badge">✓ completado</span>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-cierre">Reflexión final</span>
+          <span class="etapa-title">¿Qué construyeron hoy realmente?</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Hicieron un juego de rol por consola. Pero lo más importante no es el juego — es cómo lo construyeron. Lo construyeron <em>piezas por pieza</em>, probando cada pieza antes de agregar la siguiente. Separaron la interfaz de la lógica. Nombraron las cosas con claridad. Depuraron con prints etiquetados. Y al final, organizaron todo en módulos como lo hace cualquier proyecto profesional. <strong>Eso es exactamente lo que hace un ingeniero de software.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa open">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-objetivo">Lo que aprendieron hoy</span>
+          <span class="etapa-title">Resumen de conceptos</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <table class="resumen-tabla">
+            <thead><tr><th>Concepto</th><th>Dónde lo usaron</th></tr></thead>
+            <tbody>
+              <tr><td>snake_case / UPPER_SNAKE_CASE</td><td>Todos los nombres del proyecto</td></tr>
+              <tr><td>Diccionarios como modelos de datos</td><td>jugador, enemigo</td></tr>
+              <tr><td>Funciones con una responsabilidad</td><td>atacar ≠ mostrar ≠ decidir</td></tr>
+              <tr><td>return True/False como señal</td><td>usar_pocion, esta_vivo, combate</td></tr>
+              <tr><td>[DEBUG] para depuración</td><td>Dentro de cada función importante</td></tr>
+              <tr><td>Separar interfaz de lógica</td><td>interfaz.py vs mecanicas.py</td></tr>
+              <tr><td>import entre archivos</td><td>from game.mecanicas import...</td></tr>
+              <tr><td>if __name__ == "__main__"</td><td>main.py</td></tr>
+              <tr><td>Casos borde</td><td>HP máximo, inventario vacío</td></tr>
+              <tr><td>Refactorización</td><td>Mismo comportamiento, mejor forma</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-reto">Para la próxima clase</span>
+          <span class="etapa-title">Retos para seguir creciendo</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Su juego tiene personalidad propia. Ahora elijan <strong>uno</strong> de estos retos para desarrollar antes de la próxima clase. No los hagan todos — elijan el que más les llame la atención y háganlo bien.
+            </div>
+          </div>
+          <div class="reto-box">
+            <h4>🎯 Nivel 1 — Fácil</h4>
+            <ul>
+              <li>Agregar un cuarto enemigo más poderoso (el jefe final en la sala 3)</li>
+              <li>Mostrar una barra visual de vida con caracteres: <code>████░░░░</code></li>
+              <li>Agregar un contador de turnos por combate</li>
+            </ul>
+          </div>
+          <div class="reto-box" style="margin-top:10px">
+            <h4>🎯 Nivel 2 — Medio</h4>
+            <ul>
+              <li>Sistema de experiencia y nivel: cada X XP el jugador sube de nivel y gana +1 de ataque</li>
+              <li>Una tienda entre salas donde gastar oro</li>
+              <li>Tres tipos de sala distintos (combate, tesoro, trampa) elegidos aleatoriamente</li>
+            </ul>
+          </div>
+          <div class="reto-box" style="margin-top:10px">
+            <h4>🎯 Nivel 3 — Difícil</h4>
+            <ul>
+              <li>Guardar el estado del jugador en un archivo <code>.json</code> al terminar</li>
+              <li>Cargar la partida guardada al iniciar</li>
+              <li>Múltiples héroe disponibles al inicio, cada uno con estadísticas distintas</li>
+            </ul>
+          </div>
+
+          <div class="input-area" style="margin-top:16px">
+            <label>¿Cuál reto elegiste y cómo planeas abordarlo?</label>
+            <textarea placeholder="Elegí el reto de... porque... Mi plan es..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-header" onclick="toggleEtapa(this)">
+          <span class="etapa-tag tag-checkpoint">Checkpoint final</span>
+          <span class="etapa-title">Tu juego tiene identidad propia</span>
+          <span class="etapa-toggle">▼</span>
+        </div>
+        <div class="etapa-body">
+          <div class="profe">
+            <div class="profe-avatar">👨‍🏫</div>
+            <div class="profe-bubble">
+              Antes de cerrar el taller, quiero que cada uno ejecute su juego y me responda esto: si un compañero jugara su juego sin leer el código, ¿notaría que tiene personalidad propia? ¿Los enemigos son suyos? ¿El campo extra tiene sentido? ¿El objeto especial se siente bien integrado? Si la respuesta es sí, terminaron el taller de verdad.
+            </div>
+          </div>
+          <ul class="checklist">
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi juego tiene un nombre propio en los comentarios</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mis enemigos no son "Rata/Goblin/Esqueleto" — son míos</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El diccionario del jugador tiene mi campo inventado</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Mi objeto especial está funcionando en el combate</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>El proyecto está en carpetas con la estructura modular</li>
+            <li onclick="toggleCheck(this)"><span class="check-box">✓</span>Elegí un reto para la próxima clase</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque-nav">
+        <button class="btn-nav" onclick="goTo('bloque-9')">← Anterior</button>
+        <button class="btn-nav primary" onclick="markDone(10); celebrar()">Finalizar taller 🎉</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ── SCRIPTS ──────────────────────────────────────────────── -->
+<script>
+  // Init highlight.js
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+    initObserver();
+    updateProgress();
+  });
+
+  // Estado de bloques completados
+  const totalBloques = 11; // 0-10
+  let doneBlocks = new Set();
+
+  function markDone(n) {
+    doneBlocks.add(n);
+    const badge = document.getElementById(`done-${n}`);
+    if (badge) badge.classList.add('visible');
+    const navItem = document.querySelector(`[data-target="bloque-${n}"]`);
+    if (navItem) navItem.classList.add('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const pct = Math.round((doneBlocks.size / totalBloques) * 100);
+    document.getElementById('prog-pct').textContent = pct + '%';
+    document.getElementById('prog-fill').style.width = pct + '%';
+  }
+
+  // Navegación
+  function goTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Actualizar nav activo
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.toggle('active', item.dataset.target === id);
+    });
+  }
+
+  // Toggle etapas (acordeón)
+  function toggleEtapa(header) {
+    const etapa = header.parentElement;
+    etapa.classList.toggle('open');
+  }
+
+  // Checklist
+  function toggleCheck(li) {
+    li.classList.toggle('checked');
+  }
+
+  // Copiar código
+  async function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('code');
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      btn.textContent = '✓ copiado';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copiar';
+        btn.classList.remove('copied');
+      }, 2000);
+    } catch(e) {
+      btn.textContent = 'error';
+    }
+  }
+
+  // Intersection Observer para animación de entrada
+  function initObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Actualizar nav activo al hacer scroll
+          const id = entry.target.id;
+          document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.target === id);
+          });
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.bloque').forEach(b => observer.observe(b));
+  }
+
+  // Celebración al terminar
+  function celebrar() {
+    markDone(10);
+    // Confetti simple con canvas
+    const canvas = document.createElement('canvas');
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pieces = Array.from({length:80}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * -canvas.height,
+      w: 6 + Math.random() * 6,
+      h: 10 + Math.random() * 8,
+      color: ['#f0b429','#4ade80','#60a5fa','#c084fc','#f87171'][Math.floor(Math.random()*5)],
+      rot: Math.random() * Math.PI * 2,
+      vx: (Math.random()-0.5) * 2,
+      vy: 2 + Math.random() * 3,
+      vr: (Math.random()-0.5) * 0.15
+    }));
+
+    let frame;
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(p => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      });
+      if (pieces.some(p => p.y < canvas.height + 20)) {
+        frame = requestAnimationFrame(draw);
+      } else {
+        canvas.remove();
+      }
+    }
+    draw();
+    setTimeout(() => { cancelAnimationFrame(frame); canvas.remove(); }, 4000);
+  }
+</script>
+
+</body>
+</html>

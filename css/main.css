@@ -718,6 +718,12 @@ code[class*="language-"] {
   border: 1px solid var(--t-info-border);
 }
 
+.unit-badge.ea3 {
+  background: var(--t-correct-bg);
+  color: var(--t-correct-text);
+  border: 1px solid var(--t-correct-border);
+}
+
 .unit-header .unit-title {
   font-weight: 700;
   font-size: 1.15rem;
