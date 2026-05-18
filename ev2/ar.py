@@ -18,18 +18,14 @@
 #Tarifa A o B → 10% descuento.
 #Si además el consumo es mayor o igual a 400 kWh → 5% adicional.
 #Debe mostrar ambos valores finales.
-
+ 
 cuenta_mensual = 45000
 cargo_medicion = 6000
 
-consumo = int(input("¿cuanto ha consumido en kwh? :"))
+consumo = int(input())
 
-print("Eliga la tarifa:")
-print("Tarifa A")
-print("Tarifa B")
-print("Tarifa C")
-print("Tarifa D")
-tarifa = input("ingrese su tarifa:")
+
+tarifa = input()
 
 if consumo >= 500: 
     if tarifa in ["A","B"]:
@@ -51,6 +47,15 @@ valor_final_cuenta = cuenta_mensual - (cuenta_mensual * descuento_cuenta)
 
 if tarifa in ["A","B"]:
     descuento_medicion = 0.10
+    if consumo >= 400:
+        descuento_cuenta = 0.05
+    else:
+        descuento_medicion = 0
+        
+valor_final_medicion =cargo_medicion - (cargo_medicion * descuento_medicion)
+
+print(valor_final_cuenta)
+print(valor_final_medicion)
     
 
 
