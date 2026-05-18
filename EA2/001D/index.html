@@ -1,0 +1,245 @@
+import React, { useMemo, useState } from "react";
+import { Plus, Trash2, Wallet, TrendingDown, PiggyBank, BarChart3 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+const formatMoney = (value) =>
+  new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
+    maximumFractionDigits: 0,
+  }).format(value || 0);
+
+const initialCategories = [
+  { id: crypto.randomUUID(), name: "🙏 Diezmo", budget: 65000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "🏠 Aporte hogar", budget: 100000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "🚗 Transporte", budget: 40000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "🍔 Comida personal", budget: 60000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "☁️ iCloud / Suscripciones", budget: 1000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "🎮 Entretenimiento / Amigos", budget: 20000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "🎧 Ocio / artículos personales", budget: 84000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "👕 Ropa", budget: 50000, type: "gasto" },
+  { id: crypto.randomUUID(), name: "💵 Ahorro personal", budget: 100000, type: "ahorro" },
+  { id: crypto.randomUUID(), name: "🏡 Ahorro hogar", budget: 50000, type: "ahorro" },
+  { id: crypto.randomUUID(), name: "🚨 Fondo emergencia", budget: 100000, type: "ahorro" },
+];
+
+const initialMovements = [
+  { id: crypto.randomUUID(), date: "2026-05-05", description: "Pampipan Spa", category: "🍔 Comida personal", amount: 4100, type: "gasto" },
+  { id: crypto.randomUUID(), date: "2026-05-05", description: "Apple", category: "☁️ iCloud / Suscripciones", amount: 990, type: "gasto" },
+  { id: crypto.randomUUID(), date: "2026-05-05", description: "Aporte hogar", category: "🏠 Aporte hogar", amount: 100000, type: "gasto" },
+  { id: crypto.randomUUID(), date: "2026-05-11", description: "Ahorro personal", category: "💵 Ahorro personal", amount: 100000, type: "ahorro" },
+  { id: crypto.randomUUID(), date: "2026-05-15", description: "Ahorro hogar", category: "🏡 Ahorro hogar", amount: 50000, type: "ahorro" },
+];
+
+export default function App() {
+  const [income, setIncome] = useState(741934);
+  const [daysLeft, setDaysLeft] = useState(13);
+  const [categories, setCategories] = useState(initialCategories);
+  const [movements, setMovements] = useState(initialMovements);
+
+  const [newMovement, setNewMovement] = useState({
+    date: new Date().toISOString().slice(0, 10),
+    description: "",
+    category: initialCategories[0].name,
+    amount: "",
+    type: "gasto",
+  });
+
+  const [newCategory, setNewCategory] = useState({ name: "", budget: "", type: "gasto" });
+
+  const totals = useMemo(() => {
+    const gastos = movements.filter((m) => m.type === "gasto").reduce((sum, m) => sum + Number(m.amount), 0);
+    const ahorros = movements.filter((m) => m.type === "ahorro").reduce((sum, m) => sum + Number(m.amount), 0);
+    const ingresosExtra = movements.filter((m) => m.type === "ingreso").reduce((sum, m) => sum + Number(m.amount), 0);
+    const totalIncome = Number(income) + ingresosExtra;
+    const disponible = totalIncome - gastos - ahorros;
+    return { gastos, ahorros, ingresosExtra, totalIncome, disponible };
+  }, [movements, income]);
+
+  const categoryRows = useMemo(() => {
+    return categories.map((cat) => {
+      const used = movements
+        .filter((m) => m.category === cat.name && m.type === cat.type)
+        .reduce((sum, m) => sum + Number(m.amount), 0);
+      const available = Number(cat.budget) - used;
+      const percent = Number(cat.budget) > 0 ? Math.min((used / Number(cat.budget)) * 100, 999) : 0;
+      return { ...cat, used, available, percent };
+    });
+  }, [categories, movements]);
+
+  const addMovement = () => {
+    if (!newMovement.description || !newMovement.amount || Number(newMovement.amount) <= 0) return;
+    setMovements([
+      { ...newMovement, id: crypto.randomUUID(), amount: Number(newMovement.amount) },
+      ...movements,
+    ]);
+    setNewMovement({ ...newMovement, description: "", amount: "" });
+  };
+
+  const addCategory = () => {
+    if (!newCategory.name || !newCategory.budget) return;
+    const icon = newCategory.type === "ahorro" ? "💰" : "🧾";
+    setCategories([
+      ...categories,
+      {
+        id: crypto.randomUUID(),
+        name: `${icon} ${newCategory.name}`,
+        budget: Number(newCategory.budget),
+        type: newCategory.type,
+      },
+    ]);
+    setNewCategory({ name: "", budget: "", type: "gasto" });
+  };
+
+  const deleteMovement = (id) => setMovements(movements.filter((m) => m.id !== id));
+
+  return (
+    <div className="min-h-screen bg-slate-100 p-4 md:p-8 text-slate-900">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <header className="rounded-3xl bg-slate-950 text-white p-6 shadow-xl">
+          <p className="text-sm opacity-80">Control financiero personal</p>
+          <h1 className="text-3xl md:text-4xl font-bold mt-1">📊 Planilla de Gastos Digital</h1>
+          <p className="mt-2 text-slate-300">Agrega compras, ingresos, ahorros y nuevas categorías. Todo se descuenta automáticamente.</p>
+        </header>
+
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Kpi icon={<Wallet />} title="Ingresos totales" value={formatMoney(totals.totalIncome)} />
+          <Kpi icon={<TrendingDown />} title="Gastos" value={formatMoney(totals.gastos)} />
+          <Kpi icon={<PiggyBank />} title="Ahorros" value={formatMoney(totals.ahorros)} />
+          <Kpi icon={<BarChart3 />} title="Disponible" value={formatMoney(totals.disponible)} highlight />
+        </section>
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="rounded-3xl shadow-md lg:col-span-1">
+            <CardContent className="p-5 space-y-4">
+              <h2 className="text-xl font-bold">⚙️ Configuración</h2>
+              <label className="block text-sm font-medium">Ingreso mensual base</label>
+              <input className="input" type="number" value={income} onChange={(e) => setIncome(Number(e.target.value))} />
+              <label className="block text-sm font-medium">Días restantes del mes</label>
+              <input className="input" type="number" value={daysLeft} onChange={(e) => setDaysLeft(Number(e.target.value))} />
+              <div className="rounded-2xl bg-emerald-50 p-4 border border-emerald-200">
+                <p className="font-semibold">Gasto diario posible</p>
+                <p className="text-2xl font-bold">{formatMoney(daysLeft > 0 ? totals.disponible / daysLeft : totals.disponible)}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl shadow-md lg:col-span-2">
+            <CardContent className="p-5 space-y-4">
+              <h2 className="text-xl font-bold">➕ Agregar compra / ingreso / ahorro</h2>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <input className="input" type="date" value={newMovement.date} onChange={(e) => setNewMovement({ ...newMovement, date: e.target.value })} />
+                <input className="input md:col-span-2" placeholder="Descripción" value={newMovement.description} onChange={(e) => setNewMovement({ ...newMovement, description: e.target.value })} />
+                <input className="input" type="number" placeholder="Monto" value={newMovement.amount} onChange={(e) => setNewMovement({ ...newMovement, amount: e.target.value })} />
+                <select className="input" value={newMovement.type} onChange={(e) => setNewMovement({ ...newMovement, type: e.target.value })}>
+                  <option value="gasto">Gasto</option>
+                  <option value="ahorro">Ahorro</option>
+                  <option value="ingreso">Ingreso</option>
+                </select>
+              </div>
+              <select className="input" value={newMovement.category} onChange={(e) => setNewMovement({ ...newMovement, category: e.target.value })}>
+                {categories.map((cat) => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
+                <option value="💵 Ingreso">💵 Ingreso</option>
+              </select>
+              <Button onClick={addMovement} className="rounded-2xl w-full md:w-auto"><Plus className="w-4 h-4 mr-2" />Agregar movimiento</Button>
+            </CardContent>
+          </Card>
+        </section>
+
+        <Card className="rounded-3xl shadow-md">
+          <CardContent className="p-5">
+            <h2 className="text-xl font-bold mb-4">🧾 Presupuesto por categoría</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-slate-900 text-white">
+                    <th className="th">Categoría</th>
+                    <th className="th">Presupuesto</th>
+                    <th className="th">Gastado / Ahorrado</th>
+                    <th className="th">Disponible</th>
+                    <th className="th">% usado</th>
+                    <th className="th">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {categoryRows.map((row) => (
+                    <tr key={row.id} className="border-b bg-white">
+                      <td className="td font-semibold">{row.name}</td>
+                      <td className="td">{formatMoney(row.budget)}</td>
+                      <td className="td">{formatMoney(row.used)}</td>
+                      <td className={`td font-bold ${row.available < 0 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(row.available)}</td>
+                      <td className="td min-w-[180px]">
+                        <div className="w-full bg-slate-200 rounded-full h-3">
+                          <div className={`h-3 rounded-full ${row.percent >= 100 ? "bg-red-600" : row.percent >= 85 ? "bg-amber-500" : "bg-emerald-600"}`} style={{ width: `${Math.min(row.percent, 100)}%` }} />
+                        </div>
+                        <span className="text-xs">{row.percent.toFixed(1)}%</span>
+                      </td>
+                      <td className="td">{row.available < 0 ? "🔴 Sobregastado" : row.percent >= 85 ? "🟠 Cuidado" : "🟢 OK"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="rounded-3xl shadow-md">
+            <CardContent className="p-5 space-y-3">
+              <h2 className="text-xl font-bold">➕ Crear nueva categoría</h2>
+              <input className="input" placeholder="Nombre categoría" value={newCategory.name} onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} />
+              <input className="input" type="number" placeholder="Presupuesto mensual" value={newCategory.budget} onChange={(e) => setNewCategory({ ...newCategory, budget: e.target.value })} />
+              <select className="input" value={newCategory.type} onChange={(e) => setNewCategory({ ...newCategory, type: e.target.value })}>
+                <option value="gasto">Gasto</option>
+                <option value="ahorro">Ahorro</option>
+              </select>
+              <Button onClick={addCategory} className="rounded-2xl w-full"><Plus className="w-4 h-4 mr-2" />Agregar categoría</Button>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl shadow-md lg:col-span-2">
+            <CardContent className="p-5">
+              <h2 className="text-xl font-bold mb-4">📋 Últimos movimientos</h2>
+              <div className="space-y-2 max-h-[420px] overflow-y-auto pr-2">
+                {movements.map((m) => (
+                  <div key={m.id} className="flex items-center justify-between gap-3 bg-white rounded-2xl border p-3">
+                    <div>
+                      <p className="font-semibold">{m.description}</p>
+                      <p className="text-xs text-slate-500">{m.date} · {m.category} · {m.type}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <p className="font-bold">{formatMoney(m.amount)}</p>
+                      <button onClick={() => deleteMovement(m.id)} className="text-red-600 hover:bg-red-50 rounded-xl p-2"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+
+      <style>{`
+        .input { width: 100%; border: 1px solid #cbd5e1; border-radius: 16px; padding: 10px 12px; background: white; outline: none; }
+        .input:focus { border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15); }
+        .th { padding: 12px; text-align: left; white-space: nowrap; }
+        .td { padding: 12px; vertical-align: middle; }
+      `}</style>
+    </div>
+  );
+}
+
+function Kpi({ icon, title, value, highlight }) {
+  return (
+    <Card className={`rounded-3xl shadow-md ${highlight ? "bg-emerald-900 text-white" : "bg-white"}`}>
+      <CardContent className="p-5 flex items-center gap-4">
+        <div className={`p-3 rounded-2xl ${highlight ? "bg-emerald-700" : "bg-slate-100"}`}>{icon}</div>
+        <div>
+          <p className={`text-sm ${highlight ? "text-emerald-100" : "text-slate-500"}`}>{title}</p>
+          <p className="text-2xl font-bold">{value}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
