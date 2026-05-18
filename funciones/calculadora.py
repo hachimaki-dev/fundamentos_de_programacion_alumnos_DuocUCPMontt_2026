@@ -47,6 +47,7 @@ while True:
             continue
         else:
             break
+            
         
     except ValueError:
         print("Ingresa un valor valido.")
