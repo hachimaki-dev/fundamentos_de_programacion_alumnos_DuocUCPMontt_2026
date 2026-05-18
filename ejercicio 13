@@ -1,8 +1,0 @@
-salario = 800000
-años_en_banco = 6
-deudas = 0
-
-if salario > 1000000 or (años_en_banco >= 5 and deudas == 0):
-    print("Cliente VIP")
-else:
-    print("cliente normal")

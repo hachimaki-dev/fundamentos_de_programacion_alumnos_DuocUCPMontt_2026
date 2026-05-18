@@ -21,6 +21,8 @@ for intento in range(1,4):
 
     if respuesta == numero:
         print("¡Correcto!")
+        break
+
     else:
         print("Incorrecto")
 
