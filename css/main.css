@@ -835,3 +835,221 @@ code[class*="language-"] {
     display: none;
   }
 }
+
+/* ─── Tooltip Styles ─── */
+.tooltip-word {
+  border-bottom: 2px dashed var(--t-accent);
+  position: relative !important;
+  cursor: help;
+  display: inline-block !important;
+  color: var(--t-accent);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.tooltip-word:hover {
+  background: var(--t-accent-bg);
+  border-bottom-style: solid;
+}
+.tooltip-word .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  max-width: 280px;
+  background-color: var(--t-deep-bg);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.6rem;
+  position: absolute;
+  z-index: 9999;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  font-size: 0.8rem;
+  font-weight: normal;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+  pointer-events: none;
+  line-height: 1.4;
+}
+.tooltip-word .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--t-deep-bg) transparent transparent transparent;
+}
+.tooltip-word:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─── FAQ Accordion ─── */
+.faq-accordion {
+  border: 2px solid var(--t-glass-border);
+  border-radius: var(--t-radius);
+  margin-bottom: 1rem;
+  background: var(--t-surface);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.faq-accordion:hover {
+  border-color: var(--t-accent-subtle);
+  box-shadow: 0 4px 15px var(--t-shadow);
+}
+.faq-header {
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: var(--t-text);
+  background: var(--t-glass-bg);
+  transition: background 0.3s;
+}
+.faq-header:hover {
+  background: var(--t-surface-hover);
+}
+.faq-icon {
+  transition: transform 0.3s ease;
+  color: var(--t-accent);
+}
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+  background: var(--t-bg-primary);
+}
+.faq-content-inner {
+  padding: 1.2rem;
+  border-top: 1px solid var(--t-glass-border);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.faq-accordion.open .faq-content {
+  max-height: 1000px;
+  transition: max-height 0.6s ease-in-out;
+}
+.faq-accordion.open .faq-icon {
+  transform: rotate(180deg);
+}
+
+/* ─── Animations ─── */
+@keyframes data-flow {
+  0% { transform: translateX(0) scale(1); opacity: 0.8; }
+  50% { transform: translateX(50px) scale(1.2); opacity: 1; }
+  100% { transform: translateX(100px) scale(1); opacity: 0; }
+}
+.animate-flow {
+  display: inline-block;
+  animation: data-flow 2s infinite ease-in-out;
+}
+
+/* ─── Dynamite Timer ─── */
+.dynamite-container {
+  width: 100%;
+  height: 24px;
+  background-color: var(--t-deep-bg);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}
+.dynamite-fuse {
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #ff5252,
+    #ff5252 10px,
+    #ff1744 10px,
+    #ff1744 20px
+  );
+  width: 100%;
+  transition: width 1s linear, background 0.3s;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 12px;
+}
+.dynamite-spark {
+  margin-right: -10px;
+  font-size: 1.5rem;
+  line-height: 1;
+  animation: spark-burn 0.15s infinite alternate;
+  filter: drop-shadow(0 0 8px #ffeb3b);
+}
+@keyframes spark-burn {
+  0% { transform: scale(1) rotate(-10deg); opacity: 1; }
+  100% { transform: scale(1.3) rotate(10deg); opacity: 0.8; }
+}
+
+/* ─── Kahoot Style Buttons ─── */
+.kahoot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+@media (max-width: 600px) {
+  .kahoot-grid { grid-template-columns: 1fr; }
+}
+.kahoot-btn {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  border-radius: 6px;
+  color: white;
+  font-weight: 800;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.2);
+  transition: transform 0.1s, filter 0.3s, opacity 0.3s;
+  text-align: left;
+  line-height: 1.3;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+.kahoot-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.kahoot-btn:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: inset 0 0 0 rgba(0,0,0,0.2);
+}
+.kahoot-btn:disabled {
+  cursor: default;
+}
+.kahoot-red { background-color: #e21b3c; }
+.kahoot-blue { background-color: #1368ce; }
+.kahoot-yellow { background-color: #d89e00; }
+.kahoot-green { background-color: #26890c; }
+.kahoot-icon {
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+}
+
+@keyframes shake-wrong {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+.animate-wrong { animation: shake-wrong 0.5s ease-in-out; }
+
+@keyframes pop-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-correct { animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }

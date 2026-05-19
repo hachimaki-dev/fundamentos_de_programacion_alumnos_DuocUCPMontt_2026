@@ -30,5 +30,6 @@ const diaryEntries = [
   { id:'desafio-50-logica', date:'2026-05-04', emoji:'🏋️‍♂️', title:'50 Desafíos de Lógica', description:'Entrenamiento intensivo: 50 ejercicios de programación desde lo más básico hasta algoritmos avanzados, pensados para la vida real, finanzas y gaming.', tags:['python', 'docs'], page:'pages/desafio-50-ejercicios.html', isNew:true, unit:'ea2' },
 
   // ── EA3 — Unidad 3: Funciones en Python ──
+  { id:'intro-funciones', date:'2026-05-19', emoji:'🛠️', title:'Funciones en Python', description:'Dile adiós al código espagueti. Aprende a crear bloques reutilizables con def, parámetros, argumentos y return. ¡Incluye 15 retos funcionales!', tags:['python','docs'], page:'pages/funciones.html', isNew:true, unit:'ea3' },
   { id:'taller-dungeon-rpg', date:'2026-05-17', emoji:'🏰', title:'Taller Opcional: Dungeon RPG en Python', description:'Construye un RPG de mazmorras paso a paso usando funciones. 10 bloques guiados: desde convenciones hasta refactorización. ¡Taller práctico opcional!', tags:['python', 'docs'], page:'taller_dungeon_rpg.html', isNew:true, unit:'ea3', isOptional:true },
 ];
