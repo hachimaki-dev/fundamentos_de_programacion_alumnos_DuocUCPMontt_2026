@@ -15,15 +15,40 @@
 
 #Calculadora 
 
-def sumar (numero_1 , numero_2):
+#def sumar (numero_1 , numero_2):
+    #resultado = numero_1 + numero_2
+    #return resultado
+#def resta (numero_1 , numero_2):
+    #resultado = numero_1 - numero_2
+    #return resultado
+#def multiplicar(numero_1,numero_2):
+    #resultado = numero_1 * numero_2
+    #return resultado
+#def division(numero1,numero_2):
+    #resultado = numero_1 // numero_2
+    #return resultado
+
+#Tarea : Implementar esta calculadora con un menu
+def suma (numero_1 , numero_2):
     resultado = numero_1 + numero_2
     return resultado
-def resta (numero_1 , numero_2):
-    resultado = numero_1 - numero_2
-    return resultado
-def multiplicar(numero_1,numero_2):
-    resultado = numero_1 * numero_2
-    return resultado
-def division(numero1,numero_2):
-    resultado = numero_1 // numero_2
-    return resultado
+opcion_ingresada = 0
+while opcion_ingresada != 6:
+    
+    print("1 . Suma")
+    print("2 . Resta")
+    print("3. multiplica")
+    print("4 . division")
+    print("5 . salir")
+    opcion_ingresada = int(input("Ingrese opcion :"))
+    numero_1 = int(input("Ingrese numero"))
+    numero_2 = int(input("Ingrese otro numero"))
+    if opcion_ingresada == 1:
+        def sumar (numero_1 , numero_2):
+            resultado = numero_1 + numero_2
+            return resultado
+    elif opcion_ingresada == 2:
+        def resta(numero_1 , numero_2):
+            resultado = numero_1 - numero_2
+            return resultado
+print(resultado)
