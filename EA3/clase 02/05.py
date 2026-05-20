@@ -3,8 +3,9 @@
 def contar_vocales(texto):
     vocales = "AEIOUaeiou"
     contador =  0
-    for vocal in vocales:
-        contador += 1
+    for letra in texto:
+        if letra in vocales:
+            contador += 1
     return contador
 
-print(contar_vocales("Zobeiba"))
+print(contar_vocales("elefante"))
