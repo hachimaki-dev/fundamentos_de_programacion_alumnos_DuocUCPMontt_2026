@@ -4,7 +4,6 @@ email = input("Introduce tu email: ")
 
 def es_email_valido(email):
     #Usa in para que el programa verifique que se encuentren dentro del email
-    for caracter in email:
         if "@" in email and "." in email:
             return True
         else:
