@@ -1,0 +1,10 @@
+def filtrar_pares(lista_numeros):
+    pares = []
+    for numero in lista_numeros:
+        if numero % 2 == 0:
+            pares.append(numero)
+    return pares
+
+numeros = [1,2,4,13,8,10,15,7,6,12]
+
+print(filtrar_pares(numeros))
