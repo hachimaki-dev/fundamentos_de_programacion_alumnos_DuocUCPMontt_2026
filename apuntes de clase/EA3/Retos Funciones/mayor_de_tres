@@ -1,0 +1,11 @@
+def mayor_de_tres(a, b, c):
+    numeros = [a, b, c]
+    ordenados = sorted(numeros)
+    ordenados.reverse()
+    return print(f"El numero mayor es: {ordenados[0]}")
+
+a = int(input("Ingrese el primer numero: "))
+b = int(input("Ingrese el segundo numero: "))
+c = int(input("Ingrese el tercer numero: "))
+
+mayor_de_tres(a, b, c)
