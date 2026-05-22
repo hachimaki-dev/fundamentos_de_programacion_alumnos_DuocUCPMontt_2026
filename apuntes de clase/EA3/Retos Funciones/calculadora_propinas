@@ -1,0 +1,8 @@
+def calcular_propina(total, porcentaje=10):
+    propina = total * (porcentaje / 100)
+    return print(f"El total a pagar es: {int(total + propina)} (Propina: {int(propina)})")
+
+
+total = int(input("Ingresa el total de la cuenta: "))
+porcentaje = int(input("Ingresa el porcentaje de propina (por defecto es 10%): ") or 10)
+calcular_propina(total, porcentaje)
