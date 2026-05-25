@@ -25,6 +25,9 @@ elif edad<=30 and (tramo=="C" or tramo=="D"):
 elif edad>=31 and (edad<=60 and tramo=="A" or tramo=="B"):
     medicamentos=medicamentos*0.88
     total=total+medicamentos+envio
+    #if edad>=55:
+    #    envio*=0.85
+    #    medicamentos*=0.88
     print(f"Elegiste tramo el tramo {tramo} con eso tu precio en medicamentos ahora sera de\nMedicamentos {medicamentos}")
     print(f"Envio {envio}")
     print(f"Total {total}")
