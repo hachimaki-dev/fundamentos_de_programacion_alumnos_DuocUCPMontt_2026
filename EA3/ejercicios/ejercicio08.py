@@ -6,6 +6,3 @@ def filtrar_pares(lista_numeros: list):
             lista_pares.append(i)
     return lista_pares
             
-resultado = filtrar_pares([2,3,6,3,5,2,7,8])            
-
-print(resultado)
