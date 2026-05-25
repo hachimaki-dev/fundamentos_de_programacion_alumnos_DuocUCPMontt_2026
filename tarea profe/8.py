@@ -1,3 +1,3 @@
-cosas = ["lampara" , "cama","lampara"]
-lamparas = cosas.count("lampara")
-print(lamparas)
+cosas = ["lampara" , "cama","television"]
+cantidad_de_camas = cosas.index("cama")
+print(cantidad_de_camas)
