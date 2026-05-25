@@ -1,0 +1,1 @@
+# Dentro de la funcion existe el scope existe lo que es global y local , global quiere decir que todos lo conocen la variable , mientras que lo local solamente vive dentro de una funcion , no puedes sacarlo a MENOS QUE la mandes a llamar con "nombre_de_funcion()"
