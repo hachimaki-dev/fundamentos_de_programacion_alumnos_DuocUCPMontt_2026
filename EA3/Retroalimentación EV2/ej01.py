@@ -3,8 +3,24 @@ medicamentos = 60000
 despacho = 8000
 
 #Se le pide información al usuario
-edad_usuario = int(input("Ingrese su edad: "))
-tramo = input("Ingrese su tramo: ").upper()
+while True:
+    try:
+        edad_usuario = int(input("Ingrese su edad: "))
+        break
+    except ValueError:
+            print("Ingresa un número válido")
+
+while True:
+    try:
+        tramo = input("Ingrese su tramo (A, B, C o D): ").upper()
+        
+        if tramo in ['A', 'B', 'C', 'D']:
+            break
+        else:
+            print("Ingresa una letra valida")
+    except ValueError: 
+        print("Ingresa solo la letra de tu tramo (A, B, C o D)")
+
 
 #Reglas del descuento en medicamentos
 if (edad_usuario <= 30) and (tramo == 'A' or tramo == 'B'):
