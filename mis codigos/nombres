@@ -9,3 +9,5 @@ if nombre == "josip":
     print("ola manooooo")
 if nombre == "jorge":
     print("hola bro")
+if nombre == "diego":
+    print("hola hermanito")
