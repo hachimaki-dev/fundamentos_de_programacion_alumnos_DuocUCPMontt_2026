@@ -28,6 +28,10 @@ frutas = ["manzana" , "banana" , "naranja"]
 
 frutas.append("pera") # imprime ["manzana" , "banana" , "naranja" , "pera"]
 
+frutas.clear() # imprime lista vacia 
+
+frutas.copy() # hace una copia de la lista y pueden imprimirse nuevamente
+
 frutas.insert(1 , "uva") # imprime ["manzana" , "uva" , "banana" , "naranja" , "pera"]
 
 frutas.remove("banana") # imprime ["manzana" . "uva" , "naranja" , "pera"]
