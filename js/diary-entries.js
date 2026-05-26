@@ -32,4 +32,5 @@ const diaryEntries = [
   // ── EA3 — Unidad 3: Funciones en Python ──
   { id:'intro-funciones', date:'2026-05-19', emoji:'🛠️', title:'Funciones en Python', description:'Dile adiós al código espagueti. Aprende a crear bloques reutilizables con def, parámetros, argumentos y return. ¡Incluye 15 retos funcionales!', tags:['python','docs'], page:'pages/funciones.html', isNew:true, unit:'ea3' },
   { id:'taller-dungeon-rpg', date:'2026-05-17', emoji:'🏰', title:'Taller Opcional: Dungeon RPG en Python', description:'Construye un RPG de mazmorras paso a paso usando funciones. 10 bloques guiados: desde convenciones hasta refactorización. ¡Taller práctico opcional!', tags:['python', 'docs'], page:'taller_dungeon_rpg.html', isNew:true, unit:'ea3', isOptional:true },
+  { id:'presentacion-ejercicio-2', date:'2026-05-26', emoji:'🎯', title:'Presentación: Juego de Adivinanza (Ej 2)', description:'Presentación interactiva para clase: paso a paso de diagramas a código del Ejercicio 2 de la evaluación, analizando 3 lógicas de solución.', tags:['python','flow','docs'], page:'pages/presentacion-ej2.html', isNew:true, unit:'ea3' },
 ];
