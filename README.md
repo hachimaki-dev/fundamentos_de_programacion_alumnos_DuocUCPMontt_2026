@@ -13,14 +13,22 @@
 
 ## 📁 Contenido del Repositorio
 
-El material está organizado en las siguientes carpetas:
+El material está organizado de manera estructurada en las siguientes carpetas:
 
-- **[`Muchos ejercicios de ejemplo`](./Muchos%20ejercicios%20de%20ejemplo)**: Contiene **41 archivos de Python** numerados que recorren todo el semestre.
+- **[📂 ejemplos/](./ejemplos)**: Contiene **41 archivos de Python** numerados para seguir los conceptos de clase paso a paso:
     - **00-11**: Básicos (Print, Variables, Input, Operadores).
     - **12-26**: Medios (Condicionales, Lógica, Strings).
     - **27-40**: Avanzados (Ciclos While, Ciclos For, Algoritmos).
-- **[`Apuntes de todas las clases`](./Apuntes%20de%20todas%20las%20clases)**: Guías teóricas y resúmenes de cada sesión.
-- **[`Mis codigos personales (estudiante)`](./Mis%20codigos%20personales%20(estudiante))**: Espacio dedicado para que los alumnos practiquen sus propios desarrollos.
+- **[📂 guias/](./guias)**: Guías teóricas en Markdown (`.md`) para profundizar en conceptos claves, desafíos élite y prácticas de evaluación:
+    - [Guía de Diccionarios](./guias/diccionarios.md)
+    - [Ejercicios preparatorios Evaluación 3](./guias/ejercicios_preparatorios_ev3.md)
+    - [Desafíos Élite (Post-55)](./guias/mundo_estrellida.md)
+    - [Reto 20 Ejercicios](./guias/reto_20_ejercicios.md)
+    - [Guía Boletería Terminal de Buses](./guias/boleteria_terminal_de_buses.md)
+- **[📂 ejercicios/](./ejercicios)**: Ejercicios de práctica, laboratorios y preparación de evaluaciones:
+    - [Boletería (Evaluación 1)](./ejercicios/ev1_boleteria/)
+    - [Diccionario (EA2)](./ejercicios/EA2/)
+    - [Juego del Héroe](./ejercicios/juego_heroe/)
 
 ---
 
@@ -33,9 +41,9 @@ git clone https://github.com/hachimaki-dev/fundamentos_de_programacion_alumnos_D
 ```
 
 ### 2. Ejecutar los ejercicios
-Cada archivo en la carpeta de ejemplos es independiente. Puedes ejecutarlos directamente con Python:
+Cada archivo en la carpeta de ejemplos y ejercicios es independiente. Puedes ejecutarlos directamente con Python:
 ```bash
-python "Muchos ejercicios de ejemplo/00 - hola_mundo_basico.py"
+python ejemplos/00\ -\ hola_mundo_basico.py
 ```
 *Tip: Asegúrate de tener instalado Python 3.10 o superior.*
 
