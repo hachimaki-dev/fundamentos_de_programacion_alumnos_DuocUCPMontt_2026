@@ -1,0 +1,43 @@
+from random import randint
+
+
+limite_inferior = int(input("Ingrese limite inferior:"))
+limite_superior = int(input("Ingrese imite superior:"))
+numero_aleatorio_generado = randint(limite_inferior, limite_superior)
+
+intento_1_guardado = 0
+intento_2_guardado = 0
+contador_de_intentos = 0
+
+if numero_aleatorio_generado % 2 != 0:
+    if numero_aleatorio_generado == limite_superior:
+        numero_aleatorio_generado -= 1
+    else:
+        numero_aleatorio_generado += 1
+
+for numero_de_intento in range(1,4):
+    adivinando_intento = int(input("Intente adivinar:"))
+    if adivinando_intento == numero_aleatorio_generado:
+        print("Felicidades, ganaste eres el mas mejor:")
+        break
+    elif adivinando_intento != numero_aleatorio_generado:
+        if contador_de_intentos == 0:
+            print("INCORRECTO")
+            contador_de_intentos += 1
+            intento_1_guardado = adivinando_intento
+            if intento_1_guardado < numero_aleatorio_generado:
+                print("El numero aleatorio generado es mayor:")
+            else:
+                print("El numero aleatorio generado es menor:")
+        elif contador_de_intentos == 1:
+            print("INCORRECTO")
+            contador_de_intentos += 1
+            intento_2_guardado = adivinando_intento
+            if intento_2_guardado < numero_aleatorio_generado:
+                print("El numero aleatorio generado es mayor:")
+            else:
+                print("El numero aleatorio generado es menor:")
+        elif contador_de_intentos == 2:
+            print("INCORRECTO")
+            print("El numero aleatorio generado era: ", numero_aleatorio_generado)
+            break

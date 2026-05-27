@@ -1,0 +1,24 @@
+valor_mensual_medicamentos = 60000
+valor_despacho_domicilio = 8000
+try:
+    edad_usuario = int(input("Ingrese su edad: "))
+    tramo_usuario = input("Ingrese su tramo (A, B, C, D): ").upper()
+
+    if edad_usuario <= 30 and tramo_usuario in ("A", "B"):
+        valor_mensual_medicamentos *= 0.82
+        valor_despacho_domicilio *= 0.9
+    elif edad_usuario <= 30 and tramo_usuario in ("C", "D"):
+        valor_mensual_medicamentos *= 0.95
+    elif 31 <= edad_usuario <= 60 and tramo_usuario in ("A", "B"):
+        valor_mensual_medicamentos *= 0.88
+    elif 31 <= edad_usuario <= 60 and tramo_usuario in ("C", "D"):
+        valor_mensual_medicamentos *= 0.92
+
+    print("Valor mensual medicamentos:", valor_mensual_medicamentos)
+    print("Valor despacho domicilio:", valor_despacho_domicilio)
+
+except ValueError:
+    print(" Error: debe ingresar un numero valido para la edad.")
+except Exception as e:
+    print("Ocurrio un error:", e)
+

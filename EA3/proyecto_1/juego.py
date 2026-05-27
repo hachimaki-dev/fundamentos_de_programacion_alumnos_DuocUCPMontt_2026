@@ -402,6 +402,12 @@ def jugar():
 
 if __name__ == "__main__":
     jugar()
+
+#Elegí el reto del sistema de experiencia y niveles porque quería que el jugador sintiera progreso durante la aventura.
+
+#Mi plan fue agregar experiencia a los enemigos y crear una función que aumentara el nivel del jugador cuando alcanzara cierta cantidad de XP.
+
+#Cuando el jugador sube de nivel, aumenta su ataque, su vida máxima y recupera toda la vida.
     
 
 
