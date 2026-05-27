@@ -38,5 +38,5 @@ if plan == 1 or plan == 2:
     casillero *= 0.85
     if meses >= 9:
         casillero *= 0.95
-print (f"membresia es {membresia} \n casillero es {casillero}")
+print (f"membresia {membresia} \n casillero {casillero}")
 
