@@ -2,44 +2,39 @@ from random import randint
 
 limite_inferior = int(input("Ingrese el límite inferior del rango: "))
 limite_superior = int(input("Ingrese el límite superior del rango: "))
-numero_secreto = randint(limite_inferior, limite_superior)
-numero_intento1 = 0
-numero_intento2 = 0
-mas_cercano = 0
-mas_lejano = 0
-intentos = 3
+numero_aleatorio_generado = randint(limite_inferior, limite_superior)
+intento_1_guardado = 0
+intento_2_guardado = 0
 
-if numero_secreto % 2 != 0:
-    if numero_secreto + 1 <= limite_superior:
-        numero_secreto += 1
-    else:
-        numero_secreto -= 1
+if numero_aleatorio_generado % 2 != 0:
+    if numero_aleatorio_generado == limite_superior:
+        numero_aleatorio_generado -= 1
+    elif numero_aleatorio_generado != limite_superior:
+        numero_aleatorio_generado += 1
 
-while intentos > 0:
-    numero_ingresado = int(input(f"Adivine el número par dentro del rango {limite_inferior, limite_superior}: "))
-    if numero_ingresado == numero_secreto:
-        print("Felicitaciones, pudiste adivinar")
-        break
-    else:
-        intentos -= 1
-        if intentos == 2:
-            numero_intento1 = numero_ingresado
-            if numero_secreto > numero_ingresado:
-                print("El número secreto es mayor al número ingresado")
+# Como sabemos la cantidad de vueltas es más conveniente usar for
+for contador_de_intentos in range(1,4):
+    intento_del_usuario = int(input("Intente adivinar: "))
+    if intento_del_usuario == numero_aleatorio_generado:
+        print("Adivinaste, eres el mejor <3 tqm")
+    elif intento_del_usuario != numero_aleatorio_generado:
+        print("Fallaste")
+        if contador_de_intentos == 1:
+            intento_1_guardado = intento_del_usuario
+            if intento_1_guardado < numero_aleatorio_generado:
+                print("El numero aleatorio generado es mayor que el intento")
             else:
-                print("El número secreto es menor al número ingresado")
-        elif intentos == 1:
-            numero_intento2 = numero_ingresado
-            if abs(numero_secreto - numero_intento1) > abs(numero_secreto - numero_intento2):
-                mas_cercano = numero_intento2
-                mas_lejano = numero_intento1
+                print("El numero aleatorio generado es menor que el intento")
+        elif contador_de_intentos == 2:
+            intento_2_guardado = intento_del_usuario
+            if abs(numero_aleatorio_generado - intento_1_guardado) < abs(numero_aleatorio_generado - intento_2_guardado):
+                print("El intento 1 esta mas cerca que el intento 2")
+                print(f"El intento 1 es {intento_1_guardado}")
+                print(f"El intento 2 es {intento_2_guardado}")
             else:
-                mas_cercano = numero_intento1
-                mas_lejano = numero_intento2            
-            if numero_secreto > numero_ingresado:
-                print("El número secreto es mayor al número ingresado")
-            else:
-                print("El número secreto es menor al número ingresado")
-            print(f"Te daré una pista: el número que buscas está más cerca de {mas_cercano} que de {mas_lejano}")
-        else:
-            print(f"No te quedan intentos. Perdiste. El número secreto era {numero_secreto}")  
+                print("El intento 2 esta mas cerca que el intento 1")
+                print(f"El intento 1 es {intento_1_guardado}")
+                print(f"El intento 2 es {intento_2_guardado}")
+        elif contador_de_intentos == 3:
+            print(f"Fallaste. El numero era {numero_aleatorio_generado}")
+            break
