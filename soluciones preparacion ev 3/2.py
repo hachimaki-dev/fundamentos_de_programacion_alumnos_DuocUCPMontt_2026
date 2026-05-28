@@ -1,14 +1,14 @@
-numero_pasajeros = 0
+medicamentos_disponibles = 0
 
-while numero_pasajeros <= 0 :
+while medicamentos_disponibles <= 0 :
     try :
-        numero_pasajeros = int(input("Ingrese la cantidad de pasajeros: "))
+        medicamentos_disponibles = int(input("Ingrese la cantidad de medicamentos disponibles: "))
 
-        if numero_pasajeros > 0 :
+        if medicamentos_disponibles > 0 :
             break
         else :
-            print("Error: ingresa un número entero positivo de pasajeros.")
+            print("Dato inválido. Ingresa un entero positivo para el stock.")
     except ValueError :
-        print("Error: ingresa un número entero positivo de pasajeros.")
+        print("Dato inválido. Ingresa un entero positivo para el stock.")
 
-print(f"Vuelo registrado con {numero_pasajeros} pasajeros.")
+print(f"Stock registrado: {medicamentos_disponibles} unidades disponibles.")
