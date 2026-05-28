@@ -1,23 +1,24 @@
-#Ejercicio 1B — Registro de pasajeros en un vuelo
-#Una aerolínea necesita saber cuántos pasajeros abordaron un vuelo. El número debe ser mayor que cero (no puede haber un vuelo con cero o menos pasajeros).
+#Ejercicio 2 — Stock de una farmacia
+#Una farmacia necesita ingresar la cantidad de unidades disponibles de un medicamento. No puede ser cero ni negativo (una farmacia con stock negativo no tiene sentido).
 
-#Escribe un programa que pida el número de pasajeros y que no avance hasta recibir un entero positivo. Si el dato es inválido, muestra:
+#Escribe un programa que pida la cantidad de unidades. Si es inválida, muestra:
 
-#"Error: ingresa un número entero positivo de pasajeros."
-#Cuando el dato sea válido, muestra el valor que el usuario ingresó:
+#"Dato inválido. Ingresa un entero positivo para el stock."
+#Cuando sea válido, muestra el valor que el usuario ingresó:
 
-#"Vuelo registrado con {pasajeros} pasajeros."
-#(Ejemplo: si el usuario ingresa 142, se muestra "Vuelo registrado con 142 pasajeros.")
+#"Stock registrado: {cantidad} unidades disponibles."
+#(Ejemplo: si el usuario ingresa 350, se muestra "Stock registrado: 350 unidades disponibles.")
 
-#Casos de prueba que debes intentar: 0, -5, "abc", 3.7, 200
+#Piensa: ¿Qué diferencia hay entre capturar ValueError y validar con > 0? ¿Necesitas ambas cosas?
 
-while True:
-    try:   
-        pasajeros=int(input("\nIngresa el número de pasajeros: "))
-        if pasajeros>0:
-            print(f"Vuelo registrado con {pasajeros} pasajeros\n")
-            break
-        else:
-            print("Error: ingresa un número entero positivo de pasajeros")
-    except ValueError:
-        print("Error: ingresa un número entero positivo de pasajeros")
+#Capturar ValueError es importante para manejar entradas no numéricas, mientras que validar con > 0 asegura que el número sea positivo. 
+#Ambas validaciones son necesarias para garantizar la integridad de los datos.       
+
+try:
+    stock_medicamento=int(input("\nIngresa la cantidad de unidades disponibles del medicamento: "))
+    if stock_medicamento>0:
+        print(f"Stock registrado: {stock_medicamento} unidades disponibles.\n")
+    else:
+        print("Dato inválido. Ingresa un entero positivo para el stock.\n")
+except ValueError:
+    print("Dato inválido. Ingresa un entero positivo para el stock.\n")
