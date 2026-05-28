@@ -4,6 +4,7 @@ while True:
 
         if cantidad_de_medicamentos > 0:
             print(f"Stock registrado: {cantidad_de_medicamentos} unidades disponibles")
+            break
         else:
             print("No se puede tener este stock deve ser un numero positivo, por favor intenta de nuevo.")
 
