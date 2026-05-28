@@ -1,10 +1,10 @@
 while True:
     try:
-        numero_pasajeros = int(input("ingresa el numero de pasajeros: "))
-        if numero_pasajeros > 0:
-            print(f"Vuelo registrado la cantidad de pasajeros es {numero_pasajeros}")
+        stock_medicamentos = int(input("Ingresa el stock de medicamentos: "))
+        if stock_medicamentos > 0:
+            print(f"Stock registrado: {stock_medicamentos} unidades disponibles.")
             break
         elif numero_pasajeros < 0:
-            print("Error: ingresa un numero positivo de pasajeros")
+            print("Dato invalido. Ingresa un entero positivo para el stock.")
     except:
-        print("Error: ingresa un numero positivo de pasajeros")
+        print("Dato invalido. Ingresa un entero positivo para el stock.")
