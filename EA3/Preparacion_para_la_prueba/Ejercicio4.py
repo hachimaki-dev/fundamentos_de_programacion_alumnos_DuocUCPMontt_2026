@@ -15,12 +15,11 @@
 while True:
     usuario_ingresado = input("Cree su usuario: ")
 
-    if len(usuario_ingresado) < 6:
-        print("Nombre inválido. Debe tener al menos 6 caracteres y no contener espacios.")
+    if " " in usuario_ingresado:
+        print("Nombre inválido. No debe contener espacios.")
 
-    elif " " in usuario_ingresado:
+    elif len(usuario_ingresado) < 6:
         print("Nombre inválido. Debe tener al menos 6 caracteres y no contener espacios.")
-
     else:
         print(f"Usuario creado: {usuario_ingresado}")
         break
