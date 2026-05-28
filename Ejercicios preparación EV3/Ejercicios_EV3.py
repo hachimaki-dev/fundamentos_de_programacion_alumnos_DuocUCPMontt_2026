@@ -29,8 +29,16 @@ while True:
 continuar()
 while True:
     try:
-        cantidad = int(input("Ingrese la cantidad de pasajeros para el vuelo"))
+        cantidad = int(input("Ingrese el stock de la farmacia"))
         print(f"Stock registrado: {cantidad} unidades disponibles.")
         break
     except ValueError:
         print("Dato inválido. Ingresa un entero positivo para el stock.")
+continuar()
+    try:
+        edad = int(input("¿Qué edad tiene?"))
+        print(f"La edad registrada es: {edad} años")
+        break
+    except ValueError:
+        print("Dato inválido")
+continuar()
