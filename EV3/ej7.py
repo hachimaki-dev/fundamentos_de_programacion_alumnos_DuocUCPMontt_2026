@@ -5,10 +5,12 @@ classification = {
 }
 
 for i in range(5):
-    try:
-        degree = float(input(f"Temperatura {i + 1} (C°): "))
-    except ValueError:
-        print("Error: Ingresa un número entero o decimal")
+    while True:
+        try:
+            degree = float(input(f"Temperatura {i + 1} (C°): "))
+            break
+        except ValueError:
+            print("Error: Ingresa un número entero o decimal")
 
     if degree > 80:
         classification["critic"] += 1
