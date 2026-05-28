@@ -22,9 +22,15 @@ continuar()
 while True:
     try:
         pasajeros = int(input("Ingrese la cantidad de pasajeros para el vuelo"))
-        print("Vuelo registrado con {pasajeros} pasajeros.")
-        print(f"Número recibido: {valor}")
+        print(f"Vuelo registrado con {pasajeros} pasajeros.")
         break
     except ValueError:
         print("Error: ingresa un número entero positivo de pasajeros.")
 continuar()
+while True:
+    try:
+        cantidad = int(input("Ingrese la cantidad de pasajeros para el vuelo"))
+        print(f"Stock registrado: {cantidad} unidades disponibles.")
+        break
+    except ValueError:
+        print("Dato inválido. Ingresa un entero positivo para el stock.")
