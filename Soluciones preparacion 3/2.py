@@ -1,13 +1,12 @@
+
 while True:
     try:
-        pasajeros = int(input("Ingrese el número de pasajeros"))
-        
-        if pasajeros < 0:
+        cantidad = int(input("Ingrese cantidad de unidades"))
+        if cantidad < 0:
             print("Porfavor ingrese una cantidad valida")
             continue
         else:
+            print(f"Stock registrado: {cantidad} unidades disponibles.")
             break
-
-    except:
-        print("Error: ingresa un número entero positivo de pasajeros.")
-
+    except ValueError:
+        print("Dato inválido. Ingresa un entero positivo para el stock.")

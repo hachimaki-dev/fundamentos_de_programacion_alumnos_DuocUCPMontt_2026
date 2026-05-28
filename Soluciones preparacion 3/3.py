@@ -1,12 +1,13 @@
 
 while True:
     try:
-        cantidad = int(input("Ingrese cantidad de unidades"))
-        if cantidad < 0:
-            print("Porfavor ingrese una cantidad valida")
+        edad_conductor = int(input("Ingrese su edad, porfavor."))
+        if edad_conductor < 0:
+            print("Porfavor una edad valida")
             continue
         else:
-            print(f"Stock registrado: {cantidad} unidades disponibles.")
+            print(f"Edad registrada : {edad_conductor}")
             break
     except ValueError:
-        print("Dato inválido. Ingresa un entero positivo para el stock.")
+        print("Dato inválido. Ingresa un entero positivo.")
+
