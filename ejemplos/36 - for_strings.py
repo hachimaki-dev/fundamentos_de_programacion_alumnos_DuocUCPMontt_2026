@@ -1,12 +1,12 @@
 # ============================================
-# 36 - CICLO FOR (CON STRINGS)
+# 36 ~ CICLO FOR (CON STRINGS)
 # Tema: Recorrer texto carácter por carácter
 # Nivel: ⭐⭐ Medio
 # ============================================
 # El for puede recorrer directamente un string.
 # Cada iteración toma un carácter.
 
-# --- Recorrer un string ---
+# ~~~ Recorrer un string ~~~
 print("=== RECORRER STRING ===")
 texto_simple = input("Escribe una palabra: ")
 
@@ -16,7 +16,7 @@ for car in texto_simple:
 
 print()
 
-# --- Contar vocales ---
+# ~~~ Contar vocales ~~~
 print("=== CONTAR VOCALES ===")
 frase_vocal = input("Escribe un texto: ").lower()
 lista_vocales = "aeiouáéíóú"
@@ -30,7 +30,7 @@ print(f"El texto tiene {total_vocales} vocales")
 
 print()
 
-# --- Invertir texto ---
+# ~~~ Invertir texto ~~~
 print("=== INVERTIR TEXTO ===")
 txt_original = input("Texto a invertir: ")
 txt_invertido = ""
@@ -49,7 +49,7 @@ if clean_orig == clean_inv and len(clean_orig) > 0:
 
 print()
 
-# --- Censurar palabras ---
+# ~~~ Censurar palabras ~~~
 print("=== CENSURAR LETRAS ===")
 msg_input = input("Escribe un mensaje: ")
 chars_censura = input("¿Qué letras censurar? ")
@@ -65,7 +65,7 @@ print(f"Censurado: {msg_final}")
 
 print()
 
-# --- Recorrer con índice ---
+# ~~~ Recorrer con índice ~~~
 print("=== CON ÍNDICE ===")
 palabra_idx = input("Palabra: ")
 

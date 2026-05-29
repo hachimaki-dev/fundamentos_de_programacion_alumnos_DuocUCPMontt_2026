@@ -1,5 +1,5 @@
 # ============================================
-# 32 - CICLO WHILE (AVANZADO)
+# 32 ~ CICLO WHILE (AVANZADO)
 # Tema: Sistema de menú interactivo
 # Nivel: ⭐⭐⭐⭐⭐ Avanzado
 # ============================================
@@ -42,7 +42,7 @@ while True:
         elif monto > saldo:
             print(f"  ❌ Fondos insuficientes. Tu saldo es ${saldo:,}")
         else:
-            saldo -= monto
+            saldo ~= monto
             print(f"  ✅ Retiro exitoso. Nuevo saldo: ${saldo:,}")
             
     elif opcion == "4":

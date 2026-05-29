@@ -1,5 +1,5 @@
 # ============================================
-# 17 - OPERADORES DE COMPARACIÓN (BÁSICO)
+# 17 ~ OPERADORES DE COMPARACIÓN (BÁSICO)
 # Tema: Comparar valores
 # Nivel: ⭐ Básico
 # ============================================
@@ -10,7 +10,7 @@ a = 10
 b = 20
 
 print(f"a = {a}, b = {b}")
-print("-" * 30)
+print("~" * 30)
 
 print(f"a == b  (igual)          → {a == b}")     # False
 print(f"a != b  (diferente)      → {a != b}")     # True
@@ -21,7 +21,7 @@ print(f"a <= b  (menor o igual)  → {a <= b}")     # True
 
 print()
 
-# --- Comparar con input ---
+# ~~~ Comparar con input ~~~
 numero = int(input("Ingresa un número: "))
 
 print(f"\n¿{numero} es mayor que 100?     {numero > 100}")
@@ -31,7 +31,7 @@ print(f"¿{numero} está entre 1 y 10?    {1 <= numero <= 10}")
 
 print()
 
-# --- Comparar textos ---
+# ~~~ Comparar textos ~~~
 nombre1 = "carlos"
 nombre2 = "Carlos"
 print(f"'{nombre1}' == '{nombre2}' → {nombre1 == nombre2}")   # False (mayúsculas importan)

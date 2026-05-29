@@ -1,12 +1,12 @@
 # ============================================
-# 39 - CICLO FOR (AVANZADO)
+# 39 ~ CICLO FOR (AVANZADO)
 # Tema: enumerate(), zip(), y comprensiones de vista previa
 # Nivel: ⭐⭐⭐⭐⭐ Avanzado
 # ============================================
 # Python tiene funciones que hacen el for más poderoso.
 # Esto es preparación para cuando vean listas en profundidad.
 
-# --- enumerate(): obtener índice y valor ---
+# ~~~ enumerate(): obtener índice y valor ~~~
 print("=== ENUMERATE ===")
 frutas = ["manzana", "naranja", "plátano", "uva", "fresa"]
 
@@ -24,13 +24,13 @@ for numero, fruta in enumerate(frutas, start=1):
 
 print()
 
-# --- zip(): recorrer dos secuencias en paralelo ---
+# ~~~ zip(): recorrer dos secuencias en paralelo ~~~
 print("=== ZIP ===")
 nombres = ["Carlos", "Ana", "Pedro", "María", "Luis"]
 notas = [6.5, 5.8, 4.2, 7.0, 3.9]
 
 print(f"{'Nombre':<12} {'Nota':>5} {'Estado':<12}")
-print("-" * 32)
+print("~" * 32)
 
 for nombre, nota in zip(nombres, notas):
     estado = "Aprobado ✅" if nota >= 4.0 else "Reprobado ❌"
@@ -38,17 +38,17 @@ for nombre, nota in zip(nombres, notas):
 
 print()
 
-# --- Combinar enumerate y zip ---
+# ~~~ Combinar enumerate y zip ~~~
 print("=== ENUMERATE + ZIP ===")
 materias = ["Programación", "Base de Datos", "Redes", "Matemáticas"]
 profesores = ["Prof. García", "Prof. López", "Prof. Muñoz", "Prof. Díaz"]
 
 for i, (materia, profesor) in enumerate(zip(materias, profesores), start=1):
-    print(f"  {i}. {materia} - {profesor}")
+    print(f"  {i}. {materia} ~ {profesor}")
 
 print()
 
-# --- Recorrer un string con enumerate ---
+# ~~~ Recorrer un string con enumerate ~~~
 print("=== BUSCAR POSICIONES ===")
 texto = input("Escribe un texto: ")
 buscar = input("¿Qué carácter buscas? ")
@@ -65,7 +65,7 @@ else:
 
 print()
 
-# --- Vista previa: list comprehension ---
+# ~~~ Vista previa: list comprehension ~~~
 print("=== VISTA PREVIA: COMPRENSIONES ===")
 numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 

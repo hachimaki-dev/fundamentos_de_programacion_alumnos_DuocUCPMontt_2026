@@ -1,5 +1,5 @@
 # ============================================
-# 40 - CICLO FOR (PROFUNDO)
+# 40 ~ CICLO FOR (PROFUNDO)
 # Tema: itertools, patrones complejos y preparación
 #       para listas/funciones/objetos
 # Nivel: ⭐⭐⭐⭐⭐⭐⭐ Profundo
@@ -10,7 +10,7 @@
 import itertools
 import random
 
-# --- itertools.count: contador infinito ---
+# ~~~ itertools.count: contador infinito ~~~
 print("=== ITERTOOLS.COUNT ===")
 print("Primeros 10 números empezando desde 100, de 5 en 5:")
 for num in itertools.islice(itertools.count(100, 5), 10):
@@ -19,7 +19,7 @@ print()
 
 print()
 
-# --- itertools.chain: encadenar secuencias ---
+# ~~~ itertools.chain: encadenar secuencias ~~~
 print("=== ITERTOOLS.CHAIN ===")
 letras = "ABC"
 numeros = "123"
@@ -31,7 +31,7 @@ print()
 
 print()
 
-# --- itertools.product: producto cartesiano ---
+# ~~~ itertools.product: producto cartesiano ~~~
 print("=== COMBINACIONES DE CARTAS ===")
 palos = ["♠", "♥", "♦", "♣"]
 valores = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -46,9 +46,9 @@ print(f"\n  ... (total: {len(valores) * len(palos)} cartas)")
 
 print()
 
-# --- Programa integrador: Quiz interactivo ---
+# ~~~ Programa integrador: Quiz interactivo ~~~
 print("=" * 50)
-print("  🎓 QUIZ DE PYTHON - Preparación Final")
+print("  🎓 QUIZ DE PYTHON ~ Preparación Final")
 print("=" * 50)
 
 preguntas = [
@@ -90,7 +90,7 @@ print("=" * 50)
 
 print()
 
-# --- Vista previa: patrón que parece un "objeto" ---
+# ~~~ Vista previa: patrón que parece un "objeto" ~~~
 print("=== PREPARACIÓN PARA OBJETOS ===")
 print("(Los diccionarios son la antesala de los objetos)")
 
@@ -102,7 +102,7 @@ alumno3 = {"nombre": "Pedro", "nota": 4.0}
 alumnos = [alumno1, alumno2, alumno3]
 
 print(f"\n{'Nombre':<12} {'Nota':>6} {'Estado':<12}")
-print("-" * 32)
+print("~" * 32)
 
 for alumno in alumnos:
     estado = "Aprobado ✅" if alumno["nota"] >= 4.0 else "Reprobado ❌"

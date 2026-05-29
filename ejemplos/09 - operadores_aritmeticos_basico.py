@@ -1,5 +1,5 @@
 # ============================================
-# 09 - OPERADORES ARITMÉTICOS (BÁSICO)
+# 09 ~ OPERADORES ARITMÉTICOS (BÁSICO)
 # Tema: Operaciones matemáticas básicas
 # Nivel: ⭐ Básico
 # ============================================
@@ -11,10 +11,10 @@ b = 4
 
 print(f"a = {a}")
 print(f"b = {b}")
-print("-" * 30)
+print("~" * 30)
 
 print(f"Suma:            a + b = {a + b}")       # 19
-print(f"Resta:           a - b = {a - b}")       # 11
+print(f"Resta:           a ~ b = {a ~ b}")       # 11
 print(f"Multiplicación:  a * b = {a * b}")       # 60
 print(f"División:        a / b = {a / b}")       # 3.75  (siempre retorna float)
 print(f"División entera: a // b = {a // b}")     # 3     (solo la parte entera)

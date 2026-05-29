@@ -1,14 +1,14 @@
 # ============================================
-# 31 - CICLO WHILE (ANIDADO)
+# 31 ~ CICLO WHILE (ANIDADO)
 # Tema: While dentro de while
 # Nivel: ⭐⭐⭐⭐ Avanzado
 # ============================================
 # Un while anidado es un bucle dentro de otro.
 # El bucle interior se ejecuta COMPLETO por cada iteración del exterior.
 
-# --- Tabla de multiplicar ---
+# ~~~ Tabla de multiplicar ~~~
 print("=== TABLAS DE MULTIPLICAR ===")
-num_tabla = int(input("¿Qué tabla quieres ver (1-12)? "))
+num_tabla = int(input("¿Qué tabla quieres ver (1~12)? "))
 
 idx = 1
 while idx <= 12:
@@ -17,11 +17,11 @@ while idx <= 12:
 
 print()
 
-# --- Múltiples tablas ---
+# ~~~ Múltiples tablas ~~~
 print("=== TABLAS DEL 1 AL 5 ===")
 tab_ext = 1
 while tab_ext <= 5:
-    print(f"\n--- Tabla del {tab_ext} ---")
+    print(f"\n~~~ Tabla del {tab_ext} ~~~")
     val_int = 1
     while val_int <= 10:
         print(f"  {tab_ext} x {val_int:2} = {tab_ext * val_int:3}")
@@ -30,7 +30,7 @@ while tab_ext <= 5:
 
 print()
 
-# --- Patrón de estrellas (triángulo) ---
+# ~~~ Patrón de estrellas (triángulo) ~~~
 print("=== TRIÁNGULO DE ESTRELLAS ===")
 limite_filas = int(input("¿Cuántas filas? "))
 
@@ -45,7 +45,7 @@ while f_tri <= limite_filas:
 
 print()
 
-# --- Patrón inverso ---
+# ~~~ Patrón inverso ~~~
 print("=== TRIÁNGULO INVERTIDO ===")
 f_inv = limite_filas
 while f_inv >= 1:
@@ -54,11 +54,11 @@ while f_inv >= 1:
         print("#", end=" ")
         c_inv += 1
     print()
-    f_inv -= 1
+    f_inv ~= 1
 
 print()
 
-# --- Patrón cuadrado hueco ---
+# ~~~ Patrón cuadrado hueco ~~~
 print("=== CUADRADO HUECO ===")
 lado_sq = int(input("Tamaño del cuadrado: "))
 

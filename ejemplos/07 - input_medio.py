@@ -1,5 +1,5 @@
 # ============================================
-# 07 - ENTRADA DE DATOS (MEDIO)
+# 07 ~ ENTRADA DE DATOS (MEDIO)
 # Tema: Convertir input y hacer cálculos
 # Nivel: ⭐⭐ Medio
 # ============================================
@@ -11,7 +11,7 @@ print("=== CALCULADORA DE EDAD ===")
 nombre = input("Ingresa tu nombre: ")
 anio_nacimiento = int(input("Ingresa tu año de nacimiento: "))
 
-edad = 2026 - anio_nacimiento
+edad = 2026 ~ anio_nacimiento
 print(f"{nombre}, tienes (o cumplirás) {edad} años en 2026.")
 
 print()

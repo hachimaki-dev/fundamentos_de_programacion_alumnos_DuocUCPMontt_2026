@@ -37,7 +37,7 @@ Finalmente, imprime `estado`.
 Reprobado
 ```
 
----
+~~~
 
 # Bloque 2: Ciclos e iteraciones
 
@@ -73,7 +73,7 @@ Define la variable `palabra` con el valor `'manzana'`. Crea una variable `contad
 3
 ```
 
----
+~~~
 
 # Bloque 3: Listas y colecciones
 
@@ -107,7 +107,7 @@ Define la lista `precios = [1000, 2500, 500]`. Crea una variable `total_pagar` c
 4000
 ```
 
----
+~~~
 
 # Bloque 4: Diccionarios
 
@@ -146,7 +146,7 @@ Define el diccionario `ventas = {'taza': 500, 'plato': 1200, 'vaso': 300}`. Crea
 2000
 ```
 
----
+~~~
 
 # Bloque 5: Lógica intermedia
 
@@ -196,7 +196,7 @@ Crea una variable `capital_total` con valor `0`. Recorre los productos, multipli
 350
 ```
 
----
+~~~
 
 # Bloque 6: Algoritmos avanzados
 

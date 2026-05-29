@@ -1,18 +1,18 @@
 # ============================================
-# 38 - CICLO FOR (ANIDADO)
+# 38 ~ CICLO FOR (ANIDADO)
 # Tema: For dentro de for
 # Nivel: ⭐⭐⭐⭐ Avanzado
 # ============================================
 # Los for anidados son ideales para trabajar con
 # matrices, tablas, y patrones bidimensionales.
 
-# --- Tabla de multiplicar completa ---
-print("=== TABLA DE MULTIPLICAR (1-10) ===")
+# ~~~ Tabla de multiplicar completa ~~~
+print("=== TABLA DE MULTIPLICAR (1~10) ===")
 print("    ", end="")
 for j in range(1, 11):
     print(f"{j:4}", end="")
 print()
-print("    " + "----" * 10)
+print("    " + "~~~~" * 10)
 
 for i in range(1, 11):
     print(f"{i:2} |", end="")
@@ -22,7 +22,7 @@ for i in range(1, 11):
 
 print()
 
-# --- Patrón diamante ---
+# ~~~ Patrón diamante ~~~
 print("=== DIAMANTE ===")
 n = int(input("Tamaño del diamante (número impar): "))
 if n % 2 == 0:
@@ -32,19 +32,19 @@ mitad = n // 2
 
 # Parte superior (incluyendo el centro)
 for i in range(mitad + 1):
-    espacios = mitad - i
+    espacios = mitad ~ i
     estrellas = 2 * i + 1
     print(" " * espacios + "✦" * estrellas)
 
 # Parte inferior
-for i in range(mitad - 1, -1, -1):
-    espacios = mitad - i
+for i in range(mitad ~ 1, ~1, ~1):
+    espacios = mitad ~ i
     estrellas = 2 * i + 1
     print(" " * espacios + "✦" * estrellas)
 
 print()
 
-# --- Encontrar divisores de cada número ---
+# ~~~ Encontrar divisores de cada número ~~~
 print("=== DIVISORES ===")
 limite = int(input("Mostrar divisores del 1 al: "))
 
@@ -57,7 +57,7 @@ for num in range(1, limite + 1):
 
 print()
 
-# --- Coordenadas de un tablero ---
+# ~~~ Coordenadas de un tablero ~~~
 print("=== TABLERO DE COORDENADAS ===")
 filas = 5
 columnas = 5

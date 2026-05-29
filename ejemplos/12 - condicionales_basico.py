@@ -1,5 +1,5 @@
 # ============================================
-# 12 - CONDICIONALES (BÁSICO)
+# 12 ~ CONDICIONALES (BÁSICO)
 # Tema: if y else
 # Nivel: ⭐ Básico
 # ============================================
@@ -16,7 +16,7 @@ else:
 
 print()
 
-# --- Otro ejemplo: par o impar ---
+# ~~~ Otro ejemplo: par o impar ~~~
 numero = int(input("Ingresa un número: "))
 
 if numero % 2 == 0:
@@ -26,7 +26,7 @@ else:
 
 print()
 
-# --- Otro ejemplo: positivo o negativo ---
+# ~~~ Otro ejemplo: positivo o negativo ~~~
 valor = float(input("Ingresa un valor: "))
 
 if valor >= 0:

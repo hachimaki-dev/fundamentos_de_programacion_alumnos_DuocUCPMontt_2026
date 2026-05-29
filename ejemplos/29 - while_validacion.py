@@ -1,12 +1,12 @@
 # ============================================
-# 29 - CICLO WHILE (MEDIO)
+# 29 ~ CICLO WHILE (MEDIO)
 # Tema: Validación de entrada con while
 # Nivel: ⭐⭐ Medio
 # ============================================
 # Uno de los usos más comunes del while es validar
 # que el usuario ingrese datos correctos.
 
-# --- Validar que sea un número positivo ---
+# ~~~ Validar que sea un número positivo ~~~
 print("=== VALIDAR NÚMERO POSITIVO ===")
 
 numero = int(input("Ingresa un número positivo: "))
@@ -19,7 +19,7 @@ print(f"✅ Ingresaste: {numero}")
 
 print()
 
-# --- Validar opción de menú ---
+# ~~~ Validar opción de menú ~~~
 print("=== VALIDAR OPCIÓN ===")
 print("Elige un sabor:")
 print("  1. Chocolate")
@@ -37,7 +37,7 @@ print(f"✅ Elegiste: {sabores[opcion]}")
 
 print()
 
-# --- Validar texto no vacío ---
+# ~~~ Validar texto no vacío ~~~
 print("=== VALIDAR TEXTO ===")
 
 nombre = input("Ingresa tu nombre: ").strip()
@@ -50,14 +50,14 @@ print(f"✅ Hola, {nombre}!")
 
 print()
 
-# --- Validar rango con reintentos contados ---
-print("=== ADIVINA EL NÚMERO (1-10) ===")
+# ~~~ Validar rango con reintentos contados ~~~
+print("=== ADIVINA EL NÚMERO (1~10) ===")
 secreto = 7  # número secreto
 intentos = 0
 max_intentos = 3
 
 while intentos < max_intentos:
-    intento = int(input(f"Intento {intentos + 1}/{max_intentos}: Adivina (1-10): "))
+    intento = int(input(f"Intento {intentos + 1}/{max_intentos}: Adivina (1~10): "))
     intentos += 1
     
     if intento == secreto:

@@ -113,23 +113,23 @@ while True:
             atacar = int(input("es hora,elige tu ataque: ")) 
                             
             if atacar == 1:
-                print(f"haz elegido blandir espada, le haz quitado 10 de vida, le queda un total de {vida_rey_demonio -10} vida\n el rey demonio ataca con hachazo,te quita 25 te queda {vida_heroe-25}vida")
-                vida_rey_demonio -=  10
-                vida_heroe -=  25
+                print(f"haz elegido blandir espada, le haz quitado 10 de vida, le queda un total de {vida_rey_demonio ~10} vida\n el rey demonio ataca con hachazo,te quita 25 te queda {vida_heroe~25}vida")
+                vida_rey_demonio ~=  10
+                vida_heroe ~=  25
                 print(f"vida heroe: {vida_heroe}")
                 print(f"vida rey demonio: {vida_rey_demonio}")
 
             elif atacar == 2:
-                print(f"haz elegido[2], le haz quitado 20 de vida, le queda un total de {vida_rey_demonio-20} vida\nel rey demonio te ataca con espada oscura te quita 30 de vida te queda un total de {vida_heroe-30} vida")
-                vida_heroe -= 30
-                vida_rey_demonio -= 20
+                print(f"haz elegido[2], le haz quitado 20 de vida, le queda un total de {vida_rey_demonio~20} vida\nel rey demonio te ataca con espada oscura te quita 30 de vida te queda un total de {vida_heroe~30} vida")
+                vida_heroe ~= 30
+                vida_rey_demonio ~= 20
                 print(f"vida heroe: {vida_heroe}")
                 print(f"vida rey demonio: {vida_rey_demonio}")
 
             elif atacar == 3:
-                print(f"haz elegido golpe de puño le haz quitado 5 de vida, le queda un total de {vida_rey_demonio-5} vida\n el rey demonio te ataca con puño somnbra y te quita 25 de vida, te queda un total de{vida_heroe-25}vida")
-                vida_rey_demonio -=  5
-                vida_heroe -=  25
+                print(f"haz elegido golpe de puño le haz quitado 5 de vida, le queda un total de {vida_rey_demonio~5} vida\n el rey demonio te ataca con puño somnbra y te quita 25 de vida, te queda un total de{vida_heroe~25}vida")
+                vida_rey_demonio ~=  5
+                vida_heroe ~=  25
                 print(f"vida heroe: {vida_heroe}")
                 print(f"vida rey demonio: {vida_rey_demonio}")
                     
@@ -148,7 +148,7 @@ while True:
                 blandir_doble = input("quieres usar blandir doble: si/no: ").strip().lower()
                 if blandir_doble == "si":
                     vida_rey_demonio =  0
-                    print(f"te levantas debilmente decides tomar el item y usarlo tu vida tu status se reinicia miras fijamente al demonio\nte resplandece un aura brillante activas blandir doble ejecutas el ataque\ndas un golpe de 100 hits la vida del rey demonio cae rapidamente\n ha sido derrotado al fin\n quieres verificar si realmente esta muerto su vida llego a {vida_rey_demonio-vida_rey_demonio} vida")
+                    print(f"te levantas debilmente decides tomar el item y usarlo tu vida tu status se reinicia miras fijamente al demonio\nte resplandece un aura brillante activas blandir doble ejecutas el ataque\ndas un golpe de 100 hits la vida del rey demonio cae rapidamente\n ha sido derrotado al fin\n quieres verificar si realmente esta muerto su vida llego a {vida_rey_demonio~vida_rey_demonio} vida")
                     if vida_rey_demonio <= 0:
                         print("haz derrotado al rey demonio, al fin la humanidad vvira la paz que tanto anhelaba")
                         continue

@@ -1,5 +1,5 @@
 # ============================================
-# 15 - CONDICIONALES (AVANZADO)
+# 15 ~ CONDICIONALES (AVANZADO)
 # Tema: Condiciones complejas con and, or, not
 # Nivel: ⭐⭐⭐⭐ Avanzado
 # ============================================
@@ -8,15 +8,15 @@
 # or  = al menos una debe ser verdadera
 # not = invierte el resultado
 
-# --- Ejemplo: Requisitos para una beca ---
+# ~~~ Ejemplo: Requisitos para una beca ~~~
 print("=== SISTEMA DE POSTULACIÓN A BECA ===")
 print("Requisitos:")
-print("  - Promedio >= 5.5")
-print("  - Asistencia >= 80%")
-print("  - Sin deuda pendiente")
+print("  ~ Promedio >= 5.5")
+print("  ~ Asistencia >= 80%")
+print("  ~ Sin deuda pendiente")
 print()
 
-promedio = float(input("Ingresa tu promedio (1.0 - 7.0): "))
+promedio = float(input("Ingresa tu promedio (1.0 ~ 7.0): "))
 asistencia = int(input("Ingresa tu % de asistencia: "))
 tiene_deuda = input("¿Tienes deuda pendiente? (si/no): ").lower() == "si"
 
@@ -30,14 +30,14 @@ else:
     print("\n❌ No cumples los requisitos mínimos.")
 
 # Detalle de cada requisito
-print("\n--- Detalle ---")
+print("\n~~~ Detalle ~~~")
 print(f"Promedio >= 5.5:     {'✅' if promedio >= 5.5 else '❌'} ({promedio})")
 print(f"Asistencia >= 80%:   {'✅' if asistencia >= 80 else '❌'} ({asistencia}%)")
 print(f"Sin deuda:           {'✅' if not tiene_deuda else '❌'}")
 
 print()
 
-# --- Ejemplo: Calculadora de metabolismo basal ---
+# ~~~ Ejemplo: Calculadora de metabolismo basal ~~~
 print("=== CLASIFICACIÓN DE PRESIÓN ARTERIAL ===")
 sistolica = int(input("Presión sistólica (número superior): "))
 diastolica = int(input("Presión diastólica (número inferior): "))

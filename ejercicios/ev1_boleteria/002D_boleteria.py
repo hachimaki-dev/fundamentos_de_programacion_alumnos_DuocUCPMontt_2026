@@ -22,9 +22,9 @@ while True:
 
 
     print("Por favor ingrese su destino")
-    print(f"1. Puerto Varas    - ${precio_destino_1}")
-    print(f"2. Frutillar       - ${precio_destino_2}")
-    print(f"3. Osorno          - ${precio_destino_3}")
+    print(f"1. Puerto Varas    ~ ${precio_destino_1}")
+    print(f"2. Frutillar       ~ ${precio_destino_2}")
+    print(f"3. Osorno          ~ ${precio_destino_3}")
 
     destino_seleccionado =  int(input("Seleccione su destino") )
 

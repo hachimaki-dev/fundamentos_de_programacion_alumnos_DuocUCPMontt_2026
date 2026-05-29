@@ -1,5 +1,5 @@
 # ============================================
-# 27 - CICLO WHILE (BÁSICO)
+# 27 ~ CICLO WHILE (BÁSICO)
 # Tema: Tu primer bucle
 # Nivel: ⭐ Básico
 # ============================================
@@ -7,7 +7,7 @@
 # una condición sea verdadera (True).
 # ¡CUIDADO! Si la condición nunca es False, el programa se queda pegado.
 
-# --- Contar del 1 al 5 ---
+# ~~~ Contar del 1 al 5 ~~~
 print("=== CONTAR DEL 1 AL 5 ===")
 contador = 1
 
@@ -19,19 +19,19 @@ print("¡Fin del conteo!")
 
 print()
 
-# --- Cuenta regresiva ---
+# ~~~ Cuenta regresiva ~~~
 print("=== CUENTA REGRESIVA ===")
 numero = 10
 
 while numero > 0:
     print(numero, end="... ")
-    numero -= 1
+    numero ~= 1
 
 print("🚀 ¡Despegue!")
 
 print()
 
-# --- Repetir un mensaje ---
+# ~~~ Repetir un mensaje ~~~
 print("=== REPETIR MENSAJE ===")
 veces = int(input("¿Cuántas veces quieres saludar? "))
 i = 0

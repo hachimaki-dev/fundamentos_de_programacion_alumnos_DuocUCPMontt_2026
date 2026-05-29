@@ -1,5 +1,5 @@
 # ============================================
-# 33 - CICLO WHILE (PROFUNDO)
+# 33 ~ CICLO WHILE (PROFUNDO)
 # Tema: Patrones algorítmicos y simulaciones
 # Nivel: ⭐⭐⭐⭐⭐⭐ Profundo
 # ============================================
@@ -9,7 +9,7 @@
 import time
 import random
 
-# --- Algoritmo de Euclides (MCD) ---
+# ~~~ Algoritmo de Euclides (MCD) ~~~
 print("=== MÁXIMO COMÚN DIVISOR (Algoritmo de Euclides) ===")
 a = int(input("Número 1: "))
 b = int(input("Número 2: "))
@@ -28,7 +28,7 @@ print(f"MCD({original_a}, {original_b}) = {mcd}")
 
 print()
 
-# --- Número primo ---
+# ~~~ Número primo ~~~
 print("=== ¿ES PRIMO? ===")
 numero = int(input("Ingresa un número: "))
 
@@ -47,7 +47,7 @@ print(f"{numero} {'SÍ' if es_primo else 'NO'} es primo")
 
 print()
 
-# --- Sucesión de Fibonacci ---
+# ~~~ Sucesión de Fibonacci ~~~
 print("=== FIBONACCI ===")
 n = int(input("¿Cuántos términos de Fibonacci? "))
 
@@ -61,7 +61,7 @@ print()
 
 print()
 
-# --- Conversión de decimal a binario ---
+# ~~~ Conversión de decimal a binario ~~~
 print("=== DECIMAL A BINARIO ===")
 decimal = int(input("Ingresa un número decimal: "))
 original = decimal
@@ -80,7 +80,7 @@ print(f"Verificación con bin(): {bin(original)}")
 
 print()
 
-# --- Simulación: lanzar dados hasta sacar doble ---
+# ~~~ Simulación: lanzar dados hasta sacar doble ~~~
 print("=== SIMULACIÓN: LANZAR DADOS ===")
 print("Lanzando dos dados hasta obtener un doble (par)...")
 
@@ -91,8 +91,8 @@ while True:
     dado2 = random.randint(1, 6)
     lanzamientos += 1
     
-    emoji1 = "⚀⚁⚂⚃⚄⚅"[dado1 - 1]
-    emoji2 = "⚀⚁⚂⚃⚄⚅"[dado2 - 1]
+    emoji1 = "⚀⚁⚂⚃⚄⚅"[dado1 ~ 1]
+    emoji2 = "⚀⚁⚂⚃⚄⚅"[dado2 ~ 1]
     
     if dado1 == dado2:
         print(f"  Lanzamiento {lanzamientos}: {emoji1} {emoji2} ({dado1}, {dado2}) ← ¡DOBLE! 🎉")

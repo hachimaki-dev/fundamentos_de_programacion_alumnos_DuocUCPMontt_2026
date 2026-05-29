@@ -1,5 +1,5 @@
 # ============================================
-# 06 - ENTRADA DE DATOS (BÁSICO)
+# 06 ~ ENTRADA DE DATOS (BÁSICO)
 # Tema: Leer datos del usuario con input()
 # Nivel: ⭐ Básico
 # ============================================

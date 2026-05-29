@@ -1,12 +1,12 @@
 # ============================================
-# 08 - ENTRADA DE DATOS (PROFUNDO)
+# 08 ~ ENTRADA DE DATOS (PROFUNDO)
 # Tema: Validación de input y manejo de errores
 # Nivel: ⭐⭐⭐ Profundo
 # ============================================
 # ¿Qué pasa si el usuario escribe "hola" cuando pides un número?
 # Python lanza un error (ValueError). Podemos manejarlo con try/except.
 
-# --- Manejo básico de errores ---
+# ~~~ Manejo básico de errores ~~~
 print("=== INGRESO SEGURO DE NÚMERO ===")
 
 try:
@@ -18,7 +18,7 @@ except ValueError:
 
 print()
 
-# --- Validación con while + try/except ---
+# ~~~ Validación con while + try/except ~~~
 print("=== INGRESO CON REINTENTO ===")
 
 while True:
@@ -32,7 +32,7 @@ print(f"Tu edad es: {edad}")
 
 print()
 
-# --- Validar rango ---
+# ~~~ Validar rango ~~~
 print("=== INGRESO CON RANGO VÁLIDO ===")
 
 while True:
@@ -49,7 +49,7 @@ print(f"Nota registrada: {nota}")
 
 print()
 
-# --- Múltiples valores en una línea con split() ---
+# ~~~ Múltiples valores en una línea con split() ~~~
 print("=== MÚLTIPLES VALORES ===")
 entrada = input("Ingresa 3 números separados por espacio: ")
 partes = entrada.split()  # Divide el texto por espacios

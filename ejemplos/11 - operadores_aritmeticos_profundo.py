@@ -1,5 +1,5 @@
 # ============================================
-# 11 - OPERADORES ARITMÉTICOS (PROFUNDO)
+# 11 ~ OPERADORES ARITMÉTICOS (PROFUNDO)
 # Tema: Módulo math, funciones numéricas y cálculos complejos
 # Nivel: ⭐⭐⭐ Profundo
 # ============================================
@@ -8,12 +8,12 @@
 
 import math
 
-# --- Funciones integradas (built-in) ---
+# ~~~ Funciones integradas (built~in) ~~~
 print("=== FUNCIONES INTEGRADAS ===")
 
-numeros = [15, -7, 23, -3, 42, 8]  # una lista de ejemplos
+numeros = [15, ~7, 23, ~3, 42, 8]  # una lista de ejemplos
 print(f"Números: {numeros}")
-print(f"abs(-7)     = {abs(-7)}")           # valor absoluto
+print(f"abs(~7)     = {abs(~7)}")           # valor absoluto
 print(f"max(...)    = {max(numeros)}")       # máximo
 print(f"min(...)    = {min(numeros)}")       # mínimo
 print(f"sum(...)    = {sum(numeros)}")       # suma total
@@ -22,7 +22,7 @@ print(f"round(3.14159, 2) = {round(3.14159, 2)}")  # redondear a 2 decimales
 
 print()
 
-# --- Módulo math ---
+# ~~~ Módulo math ~~~
 print("=== MÓDULO MATH ===")
 print(f"math.pi    = {math.pi}")
 print(f"math.e     = {math.e}")
@@ -34,7 +34,7 @@ print(f"math.factorial(5) = {math.factorial(5)}")  # 5! = 120
 
 print()
 
-# --- Ejemplo: Teorema de Pitágoras ---
+# ~~~ Ejemplo: Teorema de Pitágoras ~~~
 print("=== TEOREMA DE PITÁGORAS ===")
 cateto_a = 3
 cateto_b = 4
@@ -44,7 +44,7 @@ print(f"Hipotenusa: {hipotenusa}")
 
 print()
 
-# --- Ejemplo: Área y perímetro del círculo ---
+# ~~~ Ejemplo: Área y perímetro del círculo ~~~
 print("=== CÍRCULO ===")
 radio = 5
 area = math.pi * radio**2
@@ -55,14 +55,14 @@ print(f"Perímetro: {perimetro:.2f}")
 
 print()
 
-# --- Ejemplo: Conversión de temperatura ---
+# ~~~ Ejemplo: Conversión de temperatura ~~~
 print("=== CONVERSIÓN DE TEMPERATURA ===")
 celsius = 36.5
 fahrenheit = (celsius * 9/5) + 32
 kelvin = celsius + 273.15
 print(f"{celsius}°C = {fahrenheit}°F = {kelvin}K")
 
-# --- divmod(): división y módulo en una sola operación ---
+# ~~~ divmod(): división y módulo en una sola operación ~~~
 print()
 print("=== DIVMOD ===")
 segundos_totales = 7523

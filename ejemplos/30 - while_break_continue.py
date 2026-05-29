@@ -1,5 +1,5 @@
 # ============================================
-# 30 - CICLO WHILE (BREAK Y CONTINUE)
+# 30 ~ CICLO WHILE (BREAK Y CONTINUE)
 # Tema: Controlar el flujo del bucle
 # Nivel: ⭐⭐⭐ Intermedio
 # ============================================
@@ -7,7 +7,7 @@
 # continue = salta al siguiente ciclo (no ejecuta lo que sigue)
 # else     = se ejecuta si el while terminó normalmente (sin break)
 
-# --- BREAK: salir del bucle ---
+# ~~~ BREAK: salir del bucle ~~~
 print("=== BREAK ===")
 print("Escribe palabras. Escribe 'salir' para terminar.")
 
@@ -20,7 +20,7 @@ while True:  # bucle "infinito" controlado con break
 
 print()
 
-# --- CONTINUE: saltar iteración ---
+# ~~~ CONTINUE: saltar iteración ~~~
 print("=== CONTINUE ===")
 print("Números del 1 al 10, saltando los múltiplos de 3:")
 
@@ -34,9 +34,9 @@ while i < 10:
 print()  # nueva línea
 print()
 
-# --- Ejemplo combinado: filtrar números ---
+# ~~~ Ejemplo combinado: filtrar números ~~~
 print("=== FILTRAR NÚMEROS ===")
-print("Ingresa números. Solo sumaré los positivos. Escribe -999 para terminar.")
+print("Ingresa números. Solo sumaré los positivos. Escribe ~999 para terminar.")
 
 suma_positivos = 0
 negativos_saltados = 0
@@ -44,7 +44,7 @@ negativos_saltados = 0
 while True:
     num = int(input("Número: "))
     
-    if num == -999:
+    if num == ~999:
         break           # señal de salida
     
     if num < 0:
@@ -58,7 +58,7 @@ print(f"Negativos ignorados: {negativos_saltados}")
 
 print()
 
-# --- WHILE...ELSE ---
+# ~~~ WHILE...ELSE ~~~
 print("=== WHILE...ELSE ===")
 print("Buscando el primer múltiplo de 7 entre tus números...")
 print("(Ingresa 0 para dejar de buscar)")

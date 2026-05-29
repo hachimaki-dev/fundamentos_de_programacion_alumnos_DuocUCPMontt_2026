@@ -1,5 +1,5 @@
 # ============================================
-# 13 - CONDICIONALES (MEDIO)
+# 13 ~ CONDICIONALES (MEDIO)
 # Tema: if / elif / else
 # Nivel: ⭐⭐ Medio
 # ============================================
@@ -22,9 +22,9 @@ else:
 
 print()
 
-# --- Ejemplo: Estaciones del año ---
+# ~~~ Ejemplo: Estaciones del año ~~~
 print("=== ESTACIÓN DEL AÑO ===")
-mes = int(input("Ingresa el número del mes (1-12): "))
+mes = int(input("Ingresa el número del mes (1~12): "))
 
 if mes in (12, 1, 2):
     print("🌞 Es verano (en Chile)")
@@ -39,7 +39,7 @@ else:
 
 print()
 
-# --- Ejemplo: Categoría de entrada ---
+# ~~~ Ejemplo: Categoría de entrada ~~~
 print("=== CATEGORÍA DE EDAD ===")
 edad = int(input("Ingresa tu edad: "))
 

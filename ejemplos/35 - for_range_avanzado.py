@@ -1,12 +1,12 @@
 # ============================================
-# 35 - CICLO FOR (RANGE AVANZADO)
+# 35 ~ CICLO FOR (RANGE AVANZADO)
 # Tema: Dominar range() y acumuladores con for
-# Nivel: ⭐⭐ Básico-Medio
+# Nivel: ⭐⭐ Básico~Medio
 # ============================================
 # range() es más versátil de lo que parece.
 # Combinado con acumuladores, resuelve muchos problemas.
 
-# --- Tabla de multiplicar ---
+# ~~~ Tabla de multiplicar ~~~
 print("=== TABLA DE MULTIPLICAR ===")
 tabla = int(input("¿Qué tabla quieres? "))
 
@@ -15,7 +15,7 @@ for i in range(1, 13):
 
 print()
 
-# --- Sumar números del 1 al N ---
+# ~~~ Sumar números del 1 al N ~~~
 print("=== SUMA DEL 1 AL N ===")
 n = int(input("Ingresa N: "))
 suma = 0
@@ -28,7 +28,7 @@ print(f"Verificación con fórmula: {n * (n + 1) // 2}")
 
 print()
 
-# --- Factorial ---
+# ~~~ Factorial ~~~
 print("=== FACTORIAL ===")
 n = int(input("Ingresa un número para calcular su factorial: "))
 factorial = 1
@@ -40,7 +40,7 @@ print(f"{n}! = {factorial}")
 
 print()
 
-# --- Números pares en un rango ---
+# ~~~ Números pares en un rango ~~~
 print("=== NÚMEROS PARES ===")
 inicio = int(input("Desde: "))
 fin = int(input("Hasta: "))
@@ -53,7 +53,7 @@ print()
 
 print()
 
-# --- Potencias de 2 ---
+# ~~~ Potencias de 2 ~~~
 print("=== POTENCIAS DE 2 ===")
 for i in range(11):
     print(f"  2^{i:2} = {2**i:5}")

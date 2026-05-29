@@ -1,14 +1,14 @@
 # ============================================
-# 37 - CICLO FOR (BREAK Y CONTINUE)
+# 37 ~ CICLO FOR (BREAK Y CONTINUE)
 # Tema: Control de flujo en for
 # Nivel: ⭐⭐⭐ Intermedio
 # ============================================
 # break y continue funcionan igual que en while.
 # for también tiene el bloque else.
 
-# --- BREAK: salir del bucle al encontrar algo ---
+# ~~~ BREAK: salir del bucle al encontrar algo ~~~
 print("=== BREAK: BUSCAR NÚMERO ===")
-n_buscar = input("¿Qué número buscas (1-20)? ")
+n_buscar = input("¿Qué número buscas (1~20)? ")
 numero_a_buscar = int(n_buscar) if n_buscar.isdigit() else 0
 
 obj_encontrado = False
@@ -19,11 +19,11 @@ for n in range(1, 21):
         break
 
 if not obj_encontrado:
-    print(f"{numero_a_buscar} no se encontró en el rango 1-20")
+    print(f"{numero_a_buscar} no se encontró en el rango 1~20")
 
 print()
 
-# --- CONTINUE: saltar iteraciones ---
+# ~~~ CONTINUE: saltar iteraciones ~~~
 print("=== CONTINUE: SALTAR MÚLTIPLOS DE 3 ===")
 print("Números del 1 al 20, saltando múltiplos de 3:")
 for num_cont in range(1, 21):
@@ -32,7 +32,7 @@ for num_cont in range(1, 21):
     print(num_cont, end=" ")
 print("\n")
 
-# --- Combinando break y continue ---
+# ~~~ Combinando break y continue ~~~
 print("=== COMBINADO: FILTRAR Y BUSCAR ===")
 print("Buscando el primer impar divisible por 7 entre 1 y 50")
 
@@ -46,7 +46,7 @@ for k in range(1, 51):
 
 print()
 
-# --- FOR...ELSE ---
+# ~~~ FOR...ELSE ~~~
 print("=== FOR...ELSE ===")
 print("El bloque 'else' se ejecuta si el for termina sin break")
 
@@ -68,7 +68,7 @@ else:
 
 print()
 
-# --- Ejemplo práctico: procesar notas ---
+# ~~~ Ejemplo práctico: procesar notas ~~~
 print("=== PROCESAR NOTAS ===")
 print("Ingresa 5 notas (1.0 a 7.0). Las inválidas se ignorarán.")
 
@@ -85,7 +85,7 @@ for i_nota in range(5):
             suma_total = suma_total + val_nota
             n_validas = n_validas + 1
         else:
-            print("    Fuera de rango (1.0 - 7.0), se ignora")
+            print("    Fuera de rango (1.0 ~ 7.0), se ignora")
             continue
             
     except ValueError:

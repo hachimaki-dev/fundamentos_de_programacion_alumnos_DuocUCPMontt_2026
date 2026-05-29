@@ -1,13 +1,13 @@
 # ============================================
-# 28 - CICLO WHILE (CONTADOR Y ACUMULADOR)
+# 28 ~ CICLO WHILE (CONTADOR Y ACUMULADOR)
 # Tema: Patrones comunes con while
-# Nivel: ⭐⭐ Básico-Medio
+# Nivel: ⭐⭐ Básico~Medio
 # ============================================
 # Dos patrones fundamentales de programación:
-# - CONTADOR: cuenta cuántas veces pasa algo
-# - ACUMULADOR: va sumando valores
+# ~ CONTADOR: cuenta cuántas veces pasa algo
+# ~ ACUMULADOR: va sumando valores
 
-# --- Acumulador: sumar números ---
+# ~~~ Acumulador: sumar números ~~~
 print("=== ACUMULADOR: SUMA ===")
 print("Ingresa números para sumar. Escribe 0 para terminar.")
 
@@ -29,7 +29,7 @@ if contador > 0:
 
 print()
 
-# --- Contador: contar pares e impares ---
+# ~~~ Contador: contar pares e impares ~~~
 print("=== CONTADOR: PARES E IMPARES ===")
 cantidad = int(input("¿Cuántos números vas a ingresar? "))
 
@@ -50,7 +50,7 @@ print(f"Impares: {impares}")
 
 print()
 
-# --- Encontrar el mayor y menor ---
+# ~~~ Encontrar el mayor y menor ~~~
 print("=== MAYOR Y MENOR ===")
 n = int(input("¿Cuántos números ingresarás? "))
 

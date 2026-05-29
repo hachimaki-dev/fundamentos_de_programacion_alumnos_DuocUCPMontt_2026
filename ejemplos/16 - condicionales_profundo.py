@@ -1,12 +1,12 @@
 # ============================================
-# 16 - CONDICIONALES (PROFUNDO)
+# 16 ~ CONDICIONALES (PROFUNDO)
 # Tema: Operador ternario, match/case, y patrones avanzados
 # Nivel: ⭐⭐⭐⭐⭐ Profundo
 # ============================================
 # Python tiene formas más concisas de escribir condicionales.
 # También veremos match/case (Python 3.10+).
 
-# --- Operador ternario (condicional en una línea) ---
+# ~~~ Operador ternario (condicional en una línea) ~~~
 print("=== OPERADOR TERNARIO ===")
 edad = int(input("Ingresa tu edad: "))
 
@@ -26,7 +26,7 @@ print(resultado)
 
 print()
 
-# --- match/case (switch moderno, Python 3.10+) ---
+# ~~~ match/case (switch moderno, Python 3.10+) ~~~
 print("=== MATCH/CASE (MENÚ) ===")
 print("1. Ver saldo")
 print("2. Depositar")
@@ -48,15 +48,15 @@ match opcion:
 
 print()
 
-# --- Condicionales con múltiples retornos simulados ---
+# ~~~ Condicionales con múltiples retornos simulados ~~~
 print("=== CALCULADORA CON VALIDACIÓN ===")
 num1 = float(input("Número 1: "))
-operador = input("Operador (+, -, *, /): ")
+operador = input("Operador (+, ~, *, /): ")
 num2 = float(input("Número 2: "))
 
 # Usar diccionario como alternativa a múltiples if/elif
 # (preparación para cuando vean diccionarios)
-es_valido = operador in ("+", "-", "*", "/")
+es_valido = operador in ("+", "~", "*", "/")
 es_division_cero = operador == "/" and num2 == 0
 
 if not es_valido:
@@ -66,8 +66,8 @@ elif es_division_cero:
 else:
     if operador == "+":
         resultado = num1 + num2
-    elif operador == "-":
-        resultado = num1 - num2
+    elif operador == "~":
+        resultado = num1 ~ num2
     elif operador == "*":
         resultado = num1 * num2
     else:
@@ -77,7 +77,7 @@ else:
 
 print()
 
-# --- Encadenamiento de comparaciones (pythonic) ---
+# ~~~ Encadenamiento de comparaciones (pythonic) ~~~
 print("=== RANGOS PYTHONIC ===")
 temperatura = float(input("Temperatura actual (°C): "))
 
@@ -86,7 +86,7 @@ if 15 <= temperatura <= 25:
     print("🌡️ Temperatura agradable")
 elif 0 <= temperatura < 15:
     print("🧥 Hace frío, abrígate")
-elif -10 <= temperatura < 0:
+elif ~10 <= temperatura < 0:
     print("🥶 ¡Hace mucho frío!")
 elif temperatura > 25:
     print("🔥 ¡Hace calor!")

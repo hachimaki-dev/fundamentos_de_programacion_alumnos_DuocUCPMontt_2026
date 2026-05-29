@@ -1,5 +1,5 @@
 # ============================================
-# 18 - OPERADORES LÓGICOS (MEDIO)
+# 18 ~ OPERADORES LÓGICOS (MEDIO)
 # Tema: and, or, not
 # Nivel: ⭐⭐ Medio
 # ============================================
@@ -28,7 +28,7 @@ print(f"not False = {not False}")
 
 print()
 
-# --- Ejemplo práctico: ¿Puede entrar al cine? ---
+# ~~~ Ejemplo práctico: ¿Puede entrar al cine? ~~~
 print("=== ¿PUEDES ENTRAR AL CINE? ===")
 edad = int(input("¿Cuántos años tienes? "))
 tiene_permiso = input("¿Tienes permiso de tus padres? (si/no): ").lower() == "si"
@@ -44,7 +44,7 @@ else:
 
 print()
 
-# --- Ejemplo: Validación de contraseña ---
+# ~~~ Ejemplo: Validación de contraseña ~~~
 print("=== VALIDACIÓN DE CONTRASEÑA ===")
 clave = input("Crea una contraseña: ")
 

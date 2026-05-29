@@ -27,10 +27,10 @@ while True:
             seguir_vendiendo = False
 
     seguir_vendiendo = True
-    print("    -    Elija su destino")
-    print("    -        1.Puerto Varas  $3.000")
-    print("    -        2.Frutillar     $5.000")
-    print("    -        3.Osorno        $7.000")
+    print("    ~    Elija su destino")
+    print("    ~        1.Puerto Varas  $3.000")
+    print("    ~        2.Frutillar     $5.000")
+    print("    ~        3.Osorno        $7.000")
 
     opcion_destino =  int(input("Por favor ingrese su destino \n"))
 

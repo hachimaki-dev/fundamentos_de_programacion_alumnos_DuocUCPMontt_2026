@@ -1,12 +1,12 @@
 # ============================================
-# 19 - OPERADORES LÓGICOS (COMBINADOS)
+# 19 ~ OPERADORES LÓGICOS (COMBINADOS)
 # Tema: Combinando comparaciones y lógica
 # Nivel: ⭐⭐⭐ Intermedio
 # ============================================
 # En la vida real, las decisiones dependen de múltiples factores.
 # Aquí practicamos combinaciones más complejas.
 
-# --- Ejemplo: Sistema de préstamo bancario ---
+# ~~~ Ejemplo: Sistema de préstamo bancario ~~~
 print("=== SIMULADOR DE PRÉSTAMO ===")
 print("Requisitos:")
 print("  1. Edad entre 21 y 65 años")
@@ -25,15 +25,15 @@ requisito_antecedentes = antecedentes_limpios
 
 aprobado = requisito_edad and requisito_ingresos and requisito_antecedentes
 
-print("\n--- Evaluación ---")
-print(f"  Edad válida (21-65):         {'✅' if requisito_edad else '❌'}")
+print("\n~~~ Evaluación ~~~")
+print(f"  Edad válida (21~65):         {'✅' if requisito_edad else '❌'}")
 print(f"  Ingresos suficientes o aval: {'✅' if requisito_ingresos else '❌'}")
 print(f"  Antecedentes limpios:        {'✅' if requisito_antecedentes else '❌'}")
 print(f"\n{'✅ PRÉSTAMO APROBADO' if aprobado else '❌ PRÉSTAMO RECHAZADO'}")
 
 print()
 
-# --- Ejemplo: Diagnóstico simple ---
+# ~~~ Ejemplo: Diagnóstico simple ~~~
 print("=== DIAGNÓSTICO DE SÍNTOMAS ===")
 fiebre = input("¿Tienes fiebre? (si/no): ").lower() == "si"
 tos = input("¿Tienes tos? (si/no): ").lower() == "si"

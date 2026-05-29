@@ -1,5 +1,5 @@
 # ============================================
-# 21 - OPERADORES LÓGICOS (PROFUNDO)
+# 21 ~ OPERADORES LÓGICOS (PROFUNDO)
 # Tema: Módulo operator, all(), any(), y buenas prácticas
 # Nivel: ⭐⭐⭐⭐⭐ Profundo
 # ============================================
@@ -8,7 +8,7 @@
 
 import operator
 
-# --- Módulo operator: operadores como funciones ---
+# ~~~ Módulo operator: operadores como funciones ~~~
 print("=== MÓDULO OPERATOR ===")
 a, b = 10, 20
 
@@ -24,7 +24,7 @@ print(f"operator.not_(True)        = {operator.not_(True)}")
 
 print()
 
-# --- all() y any() ---
+# ~~~ all() y any() ~~~
 print("=== ALL() Y ANY() ===")
 # all() = True si TODOS son True (como and encadenado)
 # any() = True si AL MENOS UNO es True (como or encadenado)
@@ -42,7 +42,7 @@ print(f"¿Alguna reprobada (< 4.0)? {alguna_reprobada}")
 
 print()
 
-# --- Validación completa con all() ---
+# ~~~ Validación completa con all() ~~~
 print("=== VALIDACIÓN DE FORMULARIO ===")
 nombre = input("Nombre: ")
 email = input("Email: ")
@@ -55,7 +55,7 @@ validaciones = {
     "Edad es número": edad_txt.isdigit(),
 }
 
-print("\n--- Resultado de validación ---")
+print("\n~~~ Resultado de validación ~~~")
 for campo, valido in validaciones.items():
     print(f"  {campo}: {'✅' if valido else '❌'}")
 
@@ -67,7 +67,7 @@ else:
 
 print()
 
-# --- Operador in para verificar pertenencia ---
+# ~~~ Operador in para verificar pertenencia ~~~
 print("=== OPERADOR 'IN' ===")
 frutas_disponibles = "manzana, naranja, plátano, uva, fresa"
 buscar = input("¿Qué fruta buscas? ").lower()

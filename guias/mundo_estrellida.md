@@ -1,10 +1,10 @@
-# 🏆 7 Desafíos Élite — Post-55
+# 🏆 7 Desafíos Élite — Post~55
 
 > Para quienes ya conquistaron los 55 ejercicios. Estos retos no tienen una sola respuesta obvia: requieren que conectes varios conceptos a la vez y pienses antes de escribir. Sin herramientas nuevas, solo lo que ya sabes.
 >
 > Los desafíos 6 y 7 son de otra categoría. No son imposibles, pero sí van a hacerte pensar de verdad.
 
----
+~~~
 
 ## Desafío 1: El Clasificador de Torneos 🎮
 
@@ -33,7 +33,7 @@ Oro: 2
 
 **Lo que lo hace difícil:** Necesitas un diccionario de contadores que empiece en cero, un `for` para recorrer jugadores, condicionales para clasificar, y actualizar el conteo en cada vuelta. Son cuatro piezas que deben funcionar juntas.
 
----
+~~~
 
 ## Desafío 2: El Resumen de Ventas 🏪
 
@@ -63,7 +63,7 @@ Ganador: Carlos con 45000
 
 **Lo que lo hace difícil:** Debes construir un diccionario de totales mientras recorres la lista. Para encontrar al ganador, necesitas recorrer ese diccionario con otro `for`, rastreando el máximo con variables auxiliares, igual que hiciste en el matchmaking de ELO, pero esta vez tú decides la estructura de datos.
 
----
+~~~
 
 ## Desafío 3: El Simulador de Cola de Banco 🏦
 
@@ -91,15 +91,15 @@ Sin atender: ['Ignacia']
 
 **Lo que lo hace difícil:** Necesitas un acumulador de tiempo, dos listas que se van llenando según una condición, y entender que no es un filtro simple: una vez que el tiempo se agota, todos los siguientes van automáticamente a `sin_atender` sin ni siquiera revisar su tiempo.
 
----
+~~~
 
 ## Desafío 4: El Motor de Descuentos por Categoría 🛒
 
 Una tienda online aplica descuentos distintos según la categoría del producto. Las reglas son:
 
-- `'tecnología'` → 15% de descuento
-- `'ropa'` → 25% de descuento
-- `'alimentos'` → sin descuento
+~ `'tecnología'` → 15% de descuento
+~ `'ropa'` → 25% de descuento
+~ `'alimentos'` → sin descuento
 
 ```python
 carrito = [
@@ -127,7 +127,7 @@ Total: 590500.0
 
 **Lo que lo hace difícil:** El truco no está en los números: está en que las reglas de descuento están en un diccionario separado que tú debes crear, y dentro del `for` debes consultarlo dinámicamente usando la categoría del producto como llave. Es la primera vez que usas un diccionario como tabla de configuración.
 
----
+~~~
 
 ## Desafío 5: El Analizador de Partidas 🕹️
 
@@ -164,9 +164,9 @@ Promedio victorias: 38.33 minutos
 
 **Lo que lo hace difícil:** Todo debe salir de un único recorrido. Necesitas mantener al menos cinco variables acumuladoras en paralelo, actualizar las correctas en cada iteración según la condición, y calcular el promedio recién al final, fuera del ciclo. Si lo haces con varios `for`, estás repitiendo trabajo: el desafío es resolverlo todo de una pasada.
 
----
+~~~
 
----
+~~~
 
 ## Desafío 6: El Sistema de Reputación ⭐
 
@@ -201,7 +201,7 @@ Empate en reputación
 
 **Lo que lo hace difícil:** Aquí no te damos la estructura de los diccionarios lista. Tú debes inicializar las llaves dinámicamente: antes de sumar, tienes que revisar si el anfitrión ya existe en el diccionario; si no existe, crearlo con valor inicial. Es el patrón más importante en el manejo de datos agrupados, y para resolverlo necesitas coordinar dos diccionarios en paralelo dentro del mismo ciclo, más un segundo recorrido para calcular promedios y detectar empates. Son más de seis decisiones de lógica en cadena.
 
----
+~~~
 
 ## Desafío 7: El Simulador de Ligas 🏟️
 
@@ -209,18 +209,18 @@ Este es el más complejo del set. Tienes los resultados de todos los partidos de
 
 ```python
 partidos = [
-    {'local': 'Colo-Colo', 'visita': 'La U',      'goles_local': 3, 'goles_visita': 1},
+    {'local': 'Colo~Colo', 'visita': 'La U',      'goles_local': 3, 'goles_visita': 1},
     {'local': 'La U',      'visita': 'Audax',      'goles_local': 0, 'goles_visita': 0},
-    {'local': 'Audax',     'visita': 'Colo-Colo',  'goles_local': 1, 'goles_visita': 2},
-    {'local': 'Colo-Colo', 'visita': 'Audax',      'goles_local': 1, 'goles_visita': 1},
-    {'local': 'La U',      'visita': 'Colo-Colo',  'goles_local': 2, 'goles_visita': 2},
+    {'local': 'Audax',     'visita': 'Colo~Colo',  'goles_local': 1, 'goles_visita': 2},
+    {'local': 'Colo~Colo', 'visita': 'Audax',      'goles_local': 1, 'goles_visita': 1},
+    {'local': 'La U',      'visita': 'Colo~Colo',  'goles_local': 2, 'goles_visita': 2},
     {'local': 'Audax',     'visita': 'La U',        'goles_local': 0, 'goles_visita': 3},
 ]
 ```
 
 **Las reglas de puntuación son las del fútbol real:**
-- Victoria → 3 puntos para el ganador, 0 para el perdedor.
-- Empate → 1 punto para cada equipo.
+~ Victoria → 3 puntos para el ganador, 0 para el perdedor.
+~ Empate → 1 punto para cada equipo.
 
 **Lo que debes lograr:**
 
@@ -228,10 +228,10 @@ Construye la tabla de posiciones de la liga desde cero. Al final, imprime los eq
 
 **Resultado esperado en consola:**
 ```
-1. Colo-Colo — 7 pts
+1. Colo~Colo — 7 pts
 2. La U — 5 pts
 3. Audax — 1 pts
-Campeón: Colo-Colo
+Campeón: Colo~Colo
 ```
 
 **Lo que lo hace difícil:** Este desafío tiene cuatro fases y ninguna es trivial.
@@ -246,6 +246,6 @@ Campeón: Colo-Colo
 
 Cuatro fases encadenadas, ninguna ayuda en el código, solo los datos. Si llegas al resultado correcto, realmente ya no eres principiante.
 
----
+~~~
 
-*Hecho con 🔥 para Fundamentos de Programación 2026 — Nivel Post-55*
+*Hecho con 🔥 para Fundamentos de Programación 2026 — Nivel Post~55*

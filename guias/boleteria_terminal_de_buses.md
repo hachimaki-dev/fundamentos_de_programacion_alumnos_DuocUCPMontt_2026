@@ -1,4 +1,4 @@
-# 🚌 Ejercicio: Sistema de Ventas - Terminal de Buses
+# 🚌 Ejercicio: Sistema de Ventas ~ Terminal de Buses
 
 ## 🎯 Objetivo
 Desarrollar un programa en Python que gestione la venta de pasajes, aplicando lógica de control de flujo y cálculos matemáticos básicos.
@@ -9,19 +9,19 @@ Desarrollar un programa en Python que gestione la venta de pasajes, aplicando l�
 * **Bucles:** `while` (para el flujo principal) y `for` (para la impresión de boletos)
 * **Aritmética:** Acumuladores y cálculo de porcentajes.
 
----
+~~~
 
 ## 📋 Instrucciones del Proyecto
 
 ### 1. Configuración Inicial
 * Inicializar una variable `total_dia` en **0** fuera del bucle principal.
-* Mostrar un mensaje de bienvenida: `--- Bienvenido a la Boletería ---`.
+* Mostrar un mensaje de bienvenida: `~~~ Bienvenido a la Boletería ~~~`.
 
 ### 2. Estructura de Selección (Destinos)
 El sistema debe permitir elegir entre los siguientes destinos:
 
 | ID | Destino | Precio Unitario |
-| :--- | :--- | :--- |
+| :~~~ | :~~~ | :~~~ |
 | **1** | Puerto Varas | $3.000 |
 | **2** | Osorno | $7.000 |
 | **3** | Frutillar | $5.000 |
@@ -47,7 +47,7 @@ Al finalizar cada venta, el programa debe preguntar:
 * Si la respuesta es `"si"`, el ciclo se reinicia.
 * Si la respuesta es `"no"`, el ciclo termina y se muestra el cierre de caja.
 
----
+~~~
 
 ## 🔄 Extra: Simulación de Impresión
 Para darle más realismo, utiliza un bucle `for` con `range()` para simular la impresión física de cada boleto vendido al cliente actual:

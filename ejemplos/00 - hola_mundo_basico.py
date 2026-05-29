@@ -1,5 +1,5 @@
 # ============================================
-# 00 - HOLA MUNDO (BÁSICO)
+# 00 ~ HOLA MUNDO (BÁSICO)
 # Tema: Tu primer programa en Python
 # Nivel: ⭐ Básico
 # ============================================
