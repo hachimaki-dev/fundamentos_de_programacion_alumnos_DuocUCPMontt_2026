@@ -22,9 +22,7 @@ for solicitudes in range(1, 9):
 
         try:
 
-            score_crediticio_del_solicitante = int(
-                input(f"Ingrese el score N°{solicitudes}: ")
-            )
+            score_crediticio_del_solicitante = int(input(f"Ingrese el score N°{solicitudes}: "))
 
             if 0 <= score_crediticio_del_solicitante <= 1000:
                 break
