@@ -1,6 +1,7 @@
 while True:
     try:
-        int(input("ingrese un numero: "))
+        valor = int(input("ingrese un numero: "))
+        print(f"numero recibido: {valor}")
         break
     
     except ValueError:
