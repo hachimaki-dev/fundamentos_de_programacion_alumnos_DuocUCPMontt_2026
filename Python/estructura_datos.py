@@ -25,9 +25,14 @@ print(frutas[-3]) #imprime "manzana"
 ##ejemplo
 
 frutas = ["manzana" , "banana" , "naranja"]
-
+mas_frutas = ["sandia" , "mango"]
+frutas.extend(mas_frutas)
+print(frutas) # imagina que es append pero ahora es super sayayin 2
 frutas.append("pera") # imprime ["manzana" , "banana" , "naranja" , "pera"]
-
+frutas = ["manzana", "banana", "naranja"]
+ultima = frutas.pop()    # "naramja" se elimina y se guarda en la variable "ultima"
+# frutas ahora es ["manzana", "banana"]
+frutas.insert(1 , "mango") # inserta en la posicion 1 que seria desplazo por mango y quedaria como ["manzana" , "mango" , "banana" , "naranaja"]
 frutas.clear() # imprime lista vacia 
 
 frutas.copy() # hace una copia de la lista y pueden imprimirse nuevamente
@@ -44,4 +49,9 @@ frutas.sort()
 print(frutas) # imprime ["manzana" , "pera" , "uva"]
 
 frutas.reverse()
-print(frutas) # imprime ["uva" , "pera" , "manzana"]
+print(frutas) # imprime ["naranja" , "pera" , "manzana"]
+
+
+numeros = [5, 2, 9, 1, 56]
+numeros.sort()
+print(numeros)  #  ordena la lista de menor a mayor salida: [1, 2, 5, 9, 56]

@@ -5,3 +5,4 @@ while True:
         resultado = numero1 / numero2
     except ZeroDivisionError:
         print("Ocurrio un error de division")
+        break
