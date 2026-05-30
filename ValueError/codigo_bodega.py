@@ -8,7 +8,7 @@
 # "Producto registrado con código: PROD7X"
 # Ejercicio de análisis: ¿Qué función de Python usarías para detectar si hay espacios? Hay al menos dos formas distintas. Encuentra ambas.
 codigos_de_bodega = []
-
+# Hay dos diferencias aqui , y es que utilizo las listas , se que no se pueden mutar y es preferible un diccionario pero para mostrar en ambos casos y colocar un upper() para que siempre lo que escriba el usuario sea en mayuscula
 try :
     codigo_ingresado = str(input("Ingrese el codigo ")).upper()
     if len(codigo_ingresado) >= 6 and " " not in codigo_ingresado:
