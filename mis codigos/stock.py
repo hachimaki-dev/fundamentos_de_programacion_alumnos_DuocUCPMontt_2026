@@ -7,5 +7,5 @@ while True:
         elif stock < 0:
             print("no se aceptan numeros negativos")
             continue
-    except:
+    except ValueError:
         print("no se acpetan fracciones ni letras")
