@@ -12,12 +12,19 @@ while True:
 
 
 for i in range(cantidad_de_estudiantes):
-    try:
-        nota_cada_estudiante = int(input("Ingrese su nota :  "))
-        sumar_notas += nota_cada_estudiante     
-    except ValueError:
-        print("Ingrese una opcion valida")
-        continue
+    while True:
+        try:
+            nota_cada_estudiante = int(input("Ingrese su nota :  "))
+            if nota_cada_estudiante < 0:
+                print("La nota debe de ser un numero entero positivo")
+                continue
+            else:
+                sumar_notas += nota_cada_estudiante  
+                break   
+        except ValueError:
+            print("Ingrese una opcion valida")
+            continue
+
     if nota_cada_estudiante >= 4:
         aprobados += 1
     else:
