@@ -250,21 +250,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Nivel (si existe)
-            const levelBadge = state.level ? \`<span class="presence-level-badge">Lvl \${state.level}</span>\` : '';
+            const levelBadge = state.level ? `<span class="presence-level-badge">Lvl ${state.level}</span>` : '';
 
-            return \`
-            <div class="presence-user" title="\${state.activity}">
+            return `
+            <div class="presence-user" title="${state.activity}">
                 <div class="presence-avatar-wrap">
-                    <img src="\${avatarSrc}" class="presence-avatar" alt="\${state.nickname}">
+                    <img src="${avatarSrc}" class="presence-avatar" alt="${state.nickname}">
                     <div class="online-dot"></div>
                 </div>
                 <div class="presence-info">
-                    <span class="presence-name">\${state.nickname} \${levelBadge}</span>
-                    <span class="presence-activity">\${state.activity}</span>
-                    <span class="presence-section">Sección \${state.section || 'N/A'}</span>
+                    <span class="presence-name">${state.nickname} ${levelBadge}</span>
+                    <span class="presence-activity">${state.activity}</span>
+                    <span class="presence-section">Sección ${state.section || 'N/A'}</span>
                 </div>
             </div>
-            \`;
+            `;
         }).join('');
     };
 

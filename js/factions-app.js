@@ -12,6 +12,23 @@ createApp({
       factions: [],
       rawVictories: [],
       avatarCatalog: SupabaseManager.getAvatarCatalog(),
+      
+      // 🔄 FASE 2: Desafíos Intra-Facción
+      activeTab: 'overview', // 'overview', 'challenges', 'wall'
+      challenges: [],
+      newChallenge: {
+        title: '',
+        description: '',
+        target_xp: 500,
+        days: 3,
+      },
+      showNewChallengeForm: false,
+      
+      // 🔄 FASE 3: Mural de Facción
+      wallMessages: [],
+      newWallMessage: '',
+      loadingWall: false,
+      loadingChallenges: false,
     };
   },
 
@@ -40,15 +57,49 @@ createApp({
 
     const client = SupabaseManager.getClient();
 
-    await Promise.allSettled([
-      this.loadFactions(client),
-      this.loadRecentActivity(client)
-    ]);
+    // 🔧 Promise with timeout to prevent infinite loading
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Load timeout')), 10000)
+    );
+
+    try {
+      await Promise.race([
+        Promise.allSettled([
+          this.loadFactions(client),
+          this.loadRecentActivity(client),
+          this.loadChallenges(client),
+          this.loadWallMessages(client)
+        ]),
+        timeoutPromise
+      ]);
+    } catch (e) {
+      console.warn('[Factions] Loading timeout or error:', e);
+      // Continue anyway - show what we have
+    }
 
     this.loading = false;
+
+    // 🔗 Setup profile navigation
+    this.$nextTick(() => {
+      this.setupProfileNavigation();
+    });
+
+    // 🔄 Setup real-time updates
+    this.$nextTick(() => {
+      this.setupRealtimeUpdates(client);
+    });
   },
 
   methods: {
+    // 🔗 Enable profile navigation on faction member avatars
+    setupProfileNavigation() {
+      document.querySelectorAll('[data-faction-member]').forEach(avatar => {
+        const userId = avatar.getAttribute('data-user-id');
+        if (userId) {
+          UserNav.makeClickable(avatar, userId, 'factions');
+        }
+      });
+    },
     async loadFactions(client) {
       try {
         // Fetch all factions
@@ -78,35 +129,53 @@ createApp({
     },
 
     async loadRecentActivity(client) {
-      // Get recent github syncs
+      // Get recent github syncs with graceful fallback
+      try {
+        // Try to use the view first (faster, better RLS)
+        const { data, error } = await client
+          .from('faction_activity_feed')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+        
+        if (!error && data && data.length) {
+          this.rawVictories = data.map(row => ({
+            id: 'gh-' + row.id,
+            faction_id: row.faction_id,
+            xp: row.xp_awarded,
+            reason: row.activity_text,
+            createdAt: new Date(row.created_at),
+            nickname: row.nickname,
+            avatar_id: row.avatar_id
+          }));
+          return;
+        }
+      } catch (e) {
+        console.warn('[Factions] faction_activity_feed not available, fallback to direct query', e);
+      }
+
+      // Fallback: Query github_sync_history directly with proper joins
       try {
         const { data } = await client
           .from('github_sync_history')
-          .select('*, profiles(faction_id)')
+          .select('id, user_id, repo_name, xp_awarded, created_at, profiles:user_id(faction_id, nickname, avatar_id)')
           .order('created_at', { ascending: false })
           .limit(10);
           
         if (data && data.length) {
-          const vics = [];
-          for (let row of data) {
-            const fId = row.profiles?.faction_id;
-            if (fId) {
-               // We need the faction name. For simplicity we'll resolve it via the state later.
-               vics.push({
-                 id: 'gh-' + row.id,
-                 faction_id: fId,
-                 xp: row.xp_awarded,
-                 reason: 'Commits en ' + row.repo_name,
-                 createdAt: new Date(row.created_at)
-               });
-            }
-          }
-          // We will resolve faction names after this.factions is loaded (since Promise.allSettled runs them concurrently, 
-          // we wait until mounting finishes to render, but let's bind it safely)
-          this.rawVictories = vics;
+          this.rawVictories = data.map(row => ({
+            id: 'gh-' + row.id,
+            faction_id: row.profiles?.faction_id,
+            xp: row.xp_awarded,
+            reason: 'Commits en ' + row.repo_name,
+            createdAt: new Date(row.created_at),
+            nickname: row.profiles?.nickname
+          })).filter(v => v.faction_id); // Solo mostrar si tiene facción
         }
       } catch (e) {
-        console.error('Error loading recent activity', e);
+        console.error('[Factions] Error loading recent activity', e);
+        // Silently fail - show empty activity
+        this.rawVictories = [];
       }
     },
 
@@ -163,6 +232,163 @@ createApp({
       if (hours < 24) return `${hours} h`;
       const days = Math.floor(hours / 24);
       return `${days} d`;
+    },
+
+    // 🔄 FASE 1: Real-time Dashboard Updates
+    setupRealtimeUpdates(client) {
+      if (!client) return;
+
+      // Subscribe to faction XP changes
+      const subscription = client
+        .channel('public:factions')
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'factions' },
+          (payload) => {
+            const idx = this.factions.findIndex(f => f.id === payload.new.id);
+            if (idx !== -1) {
+              this.$set(this.factions, idx, { 
+                ...this.factions[idx], 
+                total_xp: payload.new.total_xp 
+              });
+            }
+          }
+        )
+        .subscribe();
+
+      // Subscribe to new github syncs for activity feed
+      client
+        .channel('public:github_sync_history')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'github_sync_history' },
+          (payload) => {
+            // Reload recent activity to show new entries
+            this.loadRecentActivity(client);
+          }
+        )
+        .subscribe();
+    },
+
+    // 🔧 FASE 2: Desafíos Intra-Facción
+    async loadChallenges(client) {
+      if (!this.myFaction) return;
+      
+      this.loadingChallenges = true;
+      try {
+        const { data, error } = await client
+          .from('faction_challenges_with_progress')
+          .select('*')
+          .eq('faction_id', this.myFaction.id)
+          .order('created_at', { ascending: false });
+        
+        if (!error && data) {
+          this.challenges = data;
+        }
+      } catch (e) {
+        console.error('[Factions] Error loading challenges', e);
+      } finally {
+        this.loadingChallenges = false;
+      }
+    },
+
+    async submitChallenge(client) {
+      if (!this.myFaction || !this.newChallenge.title.trim()) {
+        alert('Título requerido');
+        return;
+      }
+
+      try {
+        const deadline = new Date();
+        deadline.setDate(deadline.getDate() + this.newChallenge.days);
+
+        const { error } = await client.from('faction_challenges').insert([{
+          faction_id: this.myFaction.id,
+          created_by: this.profile.id,
+          title: this.newChallenge.title,
+          description: this.newChallenge.description,
+          target_xp: parseInt(this.newChallenge.target_xp),
+          deadline: deadline.toISOString(),
+          reward_xp: Math.max(50, Math.floor(parseInt(this.newChallenge.target_xp) / 10)),
+        }]);
+
+        if (error) throw error;
+
+        // Reset form and reload
+        this.newChallenge = { title: '', description: '', target_xp: 500, days: 3 };
+        this.showNewChallengeForm = false;
+        await this.loadChallenges(client);
+      } catch (e) {
+        console.error('[Factions] Error creating challenge', e);
+        alert('Error al crear desafío');
+      }
+    },
+
+    // 🔧 FASE 3: Mural de Facción
+    async loadWallMessages(client) {
+      if (!this.myFaction) return;
+      
+      this.loadingWall = true;
+      try {
+        const { data, error } = await client
+          .from('faction_wall_feed')
+          .select('*')
+          .eq('faction_id', this.myFaction.id)
+          .order('created_at', { ascending: false })
+          .limit(50);
+        
+        if (!error && data) {
+          this.wallMessages = data;
+        }
+      } catch (e) {
+        console.error('[Factions] Error loading wall messages', e);
+      } finally {
+        this.loadingWall = false;
+      }
+    },
+
+    async submitWallMessage(client) {
+      if (!this.myFaction || !this.newWallMessage.trim()) {
+        alert('Mensaje requerido');
+        return;
+      }
+
+      if (this.newWallMessage.trim().length > 500) {
+        alert('Máximo 500 caracteres');
+        return;
+      }
+
+      try {
+        const { error } = await client.from('faction_wall').insert([{
+          faction_id: this.myFaction.id,
+          user_id: this.profile.id,
+          message: this.newWallMessage.trim(),
+        }]);
+
+        if (error) throw error;
+
+        // Reset and reload
+        this.newWallMessage = '';
+        await this.loadWallMessages(client);
+      } catch (e) {
+        console.error('[Factions] Error posting wall message', e);
+        alert('Error al publicar mensaje');
+      }
+    },
+
+    deleteWallMessage(client, messageId) {
+      if (!confirm('¿Eliminar este mensaje?')) return;
+
+      client.from('faction_wall')
+        .delete()
+        .eq('id', messageId)
+        .then(() => {
+          this.loadWallMessages(client);
+        })
+        .catch(e => {
+          console.error('[Factions] Error deleting message', e);
+          alert('Error al eliminar');
+        });
     }
   },
 }).mount('#app');

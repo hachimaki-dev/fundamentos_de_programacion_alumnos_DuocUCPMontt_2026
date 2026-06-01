@@ -28,6 +28,18 @@ createApp({
       newPostContent: '',
       postingNew: false,
 
+      // 💬 Comments
+      expandedComments: {}, // { [item._key]: boolean }
+      newCommentText: {}, // { [item._key]: string }
+      loadingSubmit: {}, // { [item._key]: boolean }
+
+      // 😊 Reactions & Edit/Delete
+      expandedReactions: {}, // { [item._key]: boolean }
+      editingPost: null, // { _key, content }
+      deletingPost: null, // { _key, id }
+      availableReactions: ['❤️', '🔥', '👏', '😱', '🤔'],
+      userReactions: {}, // { [entry_id]: { [emoji]: true } }
+
       // Sidebar Right
       activeCompData: null,
       notifications: [],
@@ -35,9 +47,14 @@ createApp({
       suggestions: [],
       githubXp: 0,
       syncingGithub: false,
+      showNotifications: false,
+      unreadCount: 0,
       
       // Floating Banner
       activeCompetitionsList: [],
+
+      // Real-time
+      realtimeSubscriptions: {},
 
       avatarCatalog: SupabaseManager.getAvatarCatalog(),
     };
@@ -98,6 +115,9 @@ createApp({
 
     const client = SupabaseManager.getClient();
 
+    // Setup real-time subscriptions
+    this.setupRealtimeSubscriptions(client);
+
     // Fire all queries in parallel
     await Promise.allSettled([
       this.loadSidebarLeft(client, profile),
@@ -107,9 +127,66 @@ createApp({
     ]);
 
     this.loading = false;
+
+    // 🔗 Setup profile navigation
+    this.$nextTick(() => {
+      this.setupProfileNavigation();
+    });
   },
 
   methods: {
+    // 🔗 Setup profile navigation on avatars
+    setupProfileNavigation() {
+      // Feed avatars (post authors)
+      document.querySelectorAll('[data-feed-avatar]').forEach(avatar => {
+        const userId = avatar.getAttribute('data-user-id');
+        if (userId) {
+          UserNav.makeClickable(avatar, userId, 'dashboard');
+        }
+      });
+
+      // Comment avatars
+      document.querySelectorAll('[data-comment-avatar]').forEach(avatar => {
+        const userId = avatar.getAttribute('data-user-id');
+        if (userId) {
+          UserNav.makeClickable(avatar, userId, 'dashboard');
+        }
+      });
+    },
+
+    // 📡 Setup real-time subscriptions
+    setupRealtimeSubscriptions(client) {
+      // Suscribirse a reacciones en tiempo real
+      const reactionsUnsubscribe = client
+        .channel('diary_reactions_changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'diary_reactions' },
+          (payload) => {
+            console.log('Reaction changed:', payload);
+            // Recargar feed cuando hay cambios en reacciones
+            this.loadFeed(client, this.profile);
+          }
+        )
+        .subscribe();
+
+      // Suscribirse a notificaciones
+      const notificationsUnsubscribe = client
+        .channel('notifications_changes')
+        .on('postgres_changes',
+          { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${this.profile.id}` },
+          (payload) => {
+            console.log('New notification:', payload);
+            this.loadNotifications(client, this.profile);
+          }
+        )
+        .subscribe();
+
+      this.realtimeSubscriptions = {
+        reactions: reactionsUnsubscribe,
+        notifications: notificationsUnsubscribe,
+      };
+    },
+
     // ─── Sidebar Left ───
     async loadSidebarLeft(client, profile) {
       // Diary count
@@ -278,7 +355,6 @@ createApp({
                 _sortDate: new Date(entry.created_at).getTime(),
                 _commentsCount: entryComments.length,
                 _topComment: entryComments[0] || null,
-                _liked: false,
               });
             });
           }
@@ -305,7 +381,6 @@ createApp({
                     _sortDate: new Date(entry.created_at).getTime(),
                     _commentsCount: 0,
                     _topComment: null,
-                    _liked: false,
                   });
                 }
               });
@@ -384,6 +459,36 @@ createApp({
 
       // Sort all by date desc
       items.sort((a, b) => b._sortDate - a._sortDate);
+
+      // Cargar reacciones del usuario actual
+      if (profile.id) {
+        try {
+          const { data: userReactions } = await client.from('diary_reactions')
+            .select('entry_id, reaction')
+            .eq('user_id', profile.id);
+          
+          if (userReactions) {
+            // Mapear reacciones por entrada
+            const reactionsMap = {};
+            userReactions.forEach(r => {
+              if (!reactionsMap[r.entry_id]) reactionsMap[r.entry_id] = {};
+              reactionsMap[r.entry_id][r.reaction] = true;
+            });
+            this.userReactions = reactionsMap;
+
+            // Marcar items con reacciones
+            items.forEach(item => {
+              if (item._type === 'diary' && reactionsMap[item.id]) {
+                item._userReactions = reactionsMap[item.id];
+              }
+            });
+          }
+        } catch (e) {
+          // Silencioso si la tabla no existe aún
+          console.debug('Tabla diary_reactions aún no disponible');
+        }
+      }
+
       this.feedItems = items;
     },
 
@@ -445,6 +550,11 @@ createApp({
           this.githubXp = data.reduce((sum, r) => sum + (r.xp_awarded || 0), 0);
         }
       } catch (e) { /* */ }
+
+      // Setup profile navigation for new avatars
+      this.$nextTick(() => {
+        this.setupProfileNavigation();
+      });
     },
 
     async loadNotifications(client, profile) {
@@ -534,15 +644,18 @@ createApp({
                .eq('competition_id', comp.id);
                
              if (subs) {
-                const uniqueProfiles = [];
+                const uniqueSubmitters = [];
                 const seenIds = new Set();
                 subs.forEach(s => {
                   if (s.profiles && !seenIds.has(s.user_id)) {
                     seenIds.add(s.user_id);
-                    uniqueProfiles.push(s.profiles);
+                    uniqueSubmitters.push({
+                      user_id: s.user_id,
+                      profiles: s.profiles,
+                    });
                   }
                 });
-                comp._submitters = uniqueProfiles;
+                comp._submitters = uniqueSubmitters;
              } else {
                comp._submitters = [];
              }
@@ -550,6 +663,11 @@ createApp({
           }
           this.activeCompetitionsList = comps;
         }
+
+        // Setup profile navigation for banner avatars
+        this.$nextTick(() => {
+          this.setupProfileNavigation();
+        });
       } catch (e) {
          console.error('Error loading active competitions banner', e);
       }
@@ -600,6 +718,62 @@ createApp({
       this.postingNew = false;
     },
 
+    // 💬 COMMENTS SECTION
+    toggleCommentForm(itemKey) {
+      this.expandedComments[itemKey] = !this.expandedComments[itemKey];
+      if (this.expandedComments[itemKey]) {
+        this.$nextTick(() => {
+          const input = document.querySelector(`[data-comment-input="${itemKey}"]`);
+          if (input) input.focus();
+        });
+      }
+    },
+
+    async submitComment(item) {
+      const text = (this.newCommentText[item._key] || '').trim();
+      
+      // Validación
+      if (!text || text.length < 2 || text.length > 500) {
+        SupabaseManager.showToast('Comentario debe tener entre 2 y 500 caracteres', 'warning');
+        return;
+      }
+
+      this.loadingSubmit[item._key] = true;
+
+      try {
+        const client = SupabaseManager.getClient();
+        const { data, error } = await client.from('diary_comments').insert([{
+          entry_id: item.id,
+          user_id: this.profile.id,
+          content: text,
+        }]).select('*, profiles(id, nickname, avatar_id, avatar_source, avatar_custom_url)').single();
+
+        if (error) throw error;
+
+        // Actualizar estado del feed
+        if (!item._comments) item._comments = [];
+        item._comments.unshift(data);
+        item._commentsCount = item._comments.length;
+        item._topComment = item._comments[0];
+        
+        // Limpiar input
+        this.newCommentText[item._key] = '';
+        
+        // Feedback
+        SupabaseManager.showToast('Comentario enviado ✓', 'success');
+      } catch (e) {
+        console.error('Error enviando comentario:', e);
+        SupabaseManager.showToast('Error al enviar comentario: ' + e.message, 'error');
+      } finally {
+        this.loadingSubmit[item._key] = false;
+      }
+    },
+
+    getRemainingChars(itemKey) {
+      const text = this.newCommentText[itemKey] || '';
+      return Math.max(0, 500 - text.length);
+    },
+
     async toggleFollowSuggestion(user) {
       const client = SupabaseManager.getClient();
       if (user._followed) {
@@ -617,7 +791,153 @@ createApp({
       }
     },
 
+    async toggleReaction(item, emoji) {
+      // Solo procesar reacciones en entradas de diario
+      if (item._type !== 'diary') return;
+      
+      const client = SupabaseManager.getClient();
+      
+      try {
+        // Verificar si el usuario ya tiene esta reacción
+        const hasReaction = item._userReactions?.[emoji];
+        
+        if (hasReaction) {
+          // Remover reacción
+          await client.from('diary_reactions')
+            .delete()
+            .eq('user_id', this.profile.id)
+            .eq('entry_id', item.id)
+            .eq('reaction', emoji);
+          
+          if (!item._userReactions) item._userReactions = {};
+          delete item._userReactions[emoji];
+        } else {
+          // Agregar reacción
+          await client.from('diary_reactions')
+            .insert({
+              user_id: this.profile.id,
+              entry_id: item.id,
+              reaction: emoji,
+            });
+          
+          if (!item._userReactions) item._userReactions = {};
+          item._userReactions[emoji] = true;
+        }
+      } catch (e) {
+        console.error('Error en reacción:', e);
+        if (e.code === '23505') {
+          // Constraint violation - already has this reaction
+          SupabaseManager.showToast(`Ya reaccionaste con ${emoji}`, 'info');
+        } else {
+          SupabaseManager.showToast('Error al procesar reacción', 'error');
+        }
+      }
+    },
+
+    async editPost(item) {
+      if (item.user_id !== this.profile.id) {
+        SupabaseManager.showToast('No puedes editar posts de otros usuarios', 'warning');
+        return;
+      }
+      
+      this.editingPost = {
+        _key: item._key,
+        id: item.id,
+        content: item.content,
+        isSubmitting: false,
+      };
+    },
+
+    async savePostEdit(item) {
+      if (!this.editingPost || !this.editingPost.content.trim()) {
+        SupabaseManager.showToast('El contenido no puede estar vacío', 'warning');
+        return;
+      }
+
+      this.editingPost.isSubmitting = true;
+
+      try {
+        const client = SupabaseManager.getClient();
+        const { error } = await client.from('diary_entries')
+          .update({
+            content: this.editingPost.content,
+          })
+          .eq('id', this.editingPost.id)
+          .eq('user_id', this.profile.id);
+
+        if (error) throw error;
+
+        // Actualizar en UI
+        item.content = this.editingPost.content;
+        this.editingPost = null;
+        SupabaseManager.showToast('Post actualizado ✓', 'success');
+      } catch (e) {
+        console.error('Error editando post:', e);
+        SupabaseManager.showToast('Error al editar post: ' + e.message, 'error');
+      } finally {
+        this.editingPost.isSubmitting = false;
+      }
+    },
+
+    cancelEditPost() {
+      this.editingPost = null;
+    },
+
+    async deletePost(item) {
+      if (item.user_id !== this.profile.id) {
+        SupabaseManager.showToast('No puedes eliminar posts de otros usuarios', 'warning');
+        return;
+      }
+
+      if (!window.confirm('¿Estás seguro de que quieres eliminar este post?')) {
+        return;
+      }
+
+      this.deletingPost = { _key: item._key, id: item.id, isDeleting: true };
+
+      try {
+        const client = SupabaseManager.getClient();
+        const { error } = await client.from('diary_entries')
+          .update({ is_deleted: true })
+          .eq('id', item.id)
+          .eq('user_id', this.profile.id);
+
+        if (error) throw error;
+
+        // Remover del feed
+        this.feedItems = this.feedItems.filter(i => i.id !== item.id);
+        this.diaryCount = Math.max(0, this.diaryCount - 1);
+        SupabaseManager.showToast('Post eliminado ✓', 'success');
+      } catch (e) {
+        console.error('Error eliminando post:', e);
+        SupabaseManager.showToast('Error al eliminar post: ' + e.message, 'error');
+      } finally {
+        this.deletingPost = null;
+      }
+    },
+
+    getReactionCount(item, emoji) {
+      if (!item.reactions_data) return 0;
+      return item.reactions_data[emoji] || 0;
+    },
+
     async syncGitHub() {
+      if (!this.profile.github_username) {
+        SupabaseManager.showToast('No tienes GitHub configurado en tu perfil', 'warning');
+        return;
+      }
+      this.syncingGithub = true;
+      try {
+        const res = await fetch(`https://api.github.com/users/${this.profile.github_username}/events/public`);
+        if (!res.ok) throw new Error('Error al conectar con GitHub.');
+        const events = await res.json();
+        const targetEvents = events.filter(e =>
+          e.type === 'PushEvent' && e.repo && e.repo.name.toLowerCase().includes('fundamentos')
+        );
+
+        if (targetEvents.length === 0) {
+          SupabaseManager.showToast('No tienes commits recientes en repos "fundamentos..."', 'info');
+          this.syncingGithub = false;
       if (!this.profile.github_username) {
         SupabaseManager.showToast('No tienes GitHub configurado en tu perfil', 'warning');
         return;

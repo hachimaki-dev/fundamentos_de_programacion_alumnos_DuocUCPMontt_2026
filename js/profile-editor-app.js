@@ -94,14 +94,9 @@ createApp({
   },
 
   async mounted() {
-    // Verificar autenticación
-    this.currentUser = await SupabaseManager.getUser();
-
-    if (!this.currentUser) {
-      this.isAuthenticated = false;
-      this.loading = false;
-      return;
-    }
+    // 🛡️ Unified Auth Guard
+    this.currentUser = await SupabaseManager.requireProfile('setup-profile.html');
+    if (!this.currentUser) return;
 
     this.isAuthenticated = true;
 

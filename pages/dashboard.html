@@ -15,6 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="../js/user-navigation.js"></script>
   <script src="../js/theme-selector.js" defer></script>
 </head>
 
@@ -230,7 +231,7 @@
               <!-- DIARY POST -->
               <template v-if="item._type === 'diary'">
                 <div class="sd-post-header">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles)" />
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles)" :data-user-id="item.profiles?.id" data-feed-avatar />
                   </div>
                   <div class="sd-post-meta">
                     <div class="sd-post-author">{{ item.profiles?.nickname || '?' }} <span v-if="item.profiles?.level"
@@ -249,15 +250,113 @@
                     style="background:var(--t-accent-subtle);color:var(--t-accent)">{{ tag }}</span>
                 </div>
                 <hr class="sd-divider">
-                <div class="sd-post-actions">
-                  <button class="sd-action" :class="{liked: item._liked}">♥ {{ item.likes_count || 0 }}</button>
-                  <button class="sd-action">💬 {{ item._commentsCount || 0 }} comentarios</button>
-                  <a :href="'diary.html'" class="sd-action">🔁 ver diario</a>
+                
+                <!-- Reactions -->
+                <div style="display:flex;gap:4px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+                  <div 
+                    v-for="emoji in availableReactions" 
+                    :key="emoji" 
+                    class="sd-reaction-btn"
+                    :class="{active: item._userReactions?.[emoji]}"
+                    @click="toggleReaction(item, emoji)"
+                    style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:1px solid var(--t-border);border-radius:4px;cursor:pointer;background:var(--t-surface);font-size:14px;transition:all 0.2s"
+                  >
+                    <span>{{ emoji }}</span>
+                    <span style="font-size:10px;color:var(--t-text-muted)">{{ getReactionCount(item, emoji) }}</span>
+                  </div>
+                  <button 
+                    class="sd-action" 
+                    @click="expandedReactions[item._key] = !expandedReactions[item._key]"
+                    style="padding:4px 8px;font-size:10px"
+                  >{{ expandedReactions[item._key] ? 'cerrar' : '+' }}</button>
                 </div>
-                <!-- Inline comment preview -->
-                <div v-if="item._topComment" class="sd-inline-comment">
+
+                <!-- Post Actions -->
+                <div class="sd-post-actions">
+                  <button class="sd-action" @click="toggleCommentForm(item._key)">💬 {{ item._commentsCount || 0 }}</button>
+                  <a :href="'diary.html'" class="sd-action">🔁 ver</a>
+                  
+                  <!-- Edit/Delete buttons (solo para dueño) -->
+                  <div v-if="item.user_id === profile.id" style="display:flex;gap:4px;margin-left:auto">
+                    <button class="sd-action" @click="editPost(item)" style="font-size:11px;padding:4px 8px">✏️ editar</button>
+                    <button class="sd-action" @click="deletePost(item)" style="font-size:11px;padding:4px 8px;color:var(--t-wrong-text)">🗑️ borrar</button>
+                  </div>
+                </div>
+
+                <!-- Edit Mode -->
+                <div v-if="editingPost && editingPost._key === item._key" style="margin-top:12px;padding:12px;background:var(--t-surface-alt);border-radius:4px;border:1px solid var(--t-border)">
+                  <textarea 
+                    v-model="editingPost.content"
+                    rows="4"
+                    style="width:100%;padding:8px;border:1px solid var(--t-border);border-radius:4px;font-size:12px;font-family:inherit;resize:vertical;box-sizing:border-box;margin-bottom:8px"
+                  ></textarea>
+                  <div style="display:flex;gap:8px">
+                    <button @click="savePostEdit(item)" :disabled="editingPost.isSubmitting" style="padding:6px 12px;background:var(--t-correct-bg);color:var(--t-correct-text);border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600">
+                      {{ editingPost.isSubmitting ? 'guardando...' : 'guardar' }}
+                    </button>
+                    <button @click="cancelEditPost()" style="padding:6px 12px;background:var(--t-surface);border:1px solid var(--t-border);border-radius:4px;cursor:pointer;font-size:11px">cancelar</button>
+                  </div>
+                </div>
+
+                <!-- 💬 COMENTARIOS EXPANDIBLES -->
+                <div v-if="expandedComments[item._key]" style="margin-top:12px;border-top:1px solid var(--t-border);padding-top:12px">
+                  
+                  <!-- Lista de comentarios existentes -->
+                  <div v-if="item._comments && item._comments.length" style="margin-bottom:12px;max-height:300px;overflow-y:auto">
+                    <div 
+                      v-for="comment in item._comments" 
+                      :key="comment.id"
+                      class="sd-inline-comment"
+                      style="margin-bottom:10px"
+                    >
+                      <img 
+                        :src="getAvatar(comment.profiles)"
+                        :data-user-id="comment.profiles?.id"
+                        data-comment-avatar
+                        style="width:22px;height:22px;border-radius:50%"
+                      />
+                      <div class="sd-comment-bubble">
+                        <span class="sd-comment-author">{{ comment.profiles?.nickname }}</span>
+                        <span class="sd-comment-text">{{ comment.content }}</span>
+                        <div style="font-size:9px;color:var(--t-text-muted);margin-top:2px">
+                          {{ new Date(comment.created_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else style="font-size:11px;color:var(--t-text-muted);margin-bottom:12px">No hay comentarios aún</div>
+
+                  <!-- Form para nuevo comentario -->
+                  <div style="display:flex;gap:8px">
+                    <img :src="avatarSrc" style="width:32px;height:32px;border-radius:50%;" />
+                    <div style="flex:1">
+                      <textarea
+                        v-model="newCommentText[item._key]"
+                        :data-comment-input="item._key"
+                        rows="2"
+                        placeholder="Añade un comentario..."
+                        maxlength="500"
+                        style="width:100%;padding:8px;border:1px solid var(--t-border);border-radius:4px;font-size:12px;font-family:inherit;resize:vertical;box-sizing:border-box"
+                      ></textarea>
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:10px;color:var(--t-text-muted)">
+                        <span>{{ getRemainingChars(item._key) }} caracteres</span>
+                        <button
+                          @click="submitComment(item)"
+                          :disabled="!newCommentText[item._key]?.trim() || newCommentText[item._key].length < 2 || loadingSubmit[item._key]"
+                          style="padding:6px 12px;background:var(--t-accent);color:white;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.2s"
+                          :style="{opacity: newCommentText[item._key]?.trim() && newCommentText[item._key].length >= 2 ? 1 : 0.5}"
+                        >
+                          {{ loadingSubmit[item._key] ? '⏳ Enviando...' : '✓ Enviar' }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Preview de top comment (si NO está expandido) -->
+                <div v-else-if="item._topComment" class="sd-inline-comment" style="margin-top:12px">
                   <div class="sd-av" style="width:22px;height:22px"><img
-                      :src="getAvatar(item._topComment.profiles)" /></div>
+                      :src="getAvatar(item._topComment.profiles)" :data-user-id="item._topComment.profiles?.id" data-comment-avatar /></div>
                   <div class="sd-comment-bubble">
                     <span class="sd-comment-author">{{ item._topComment.profiles?.nickname }} </span>
                     <span class="sd-comment-text">{{ item._topComment.content }}</span>
@@ -300,7 +399,7 @@
               <!-- GITHUB ACTIVITY -->
               <template v-if="item._type === 'github'">
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles)" />
+                  <div class="sd-av" style="width:34px;height:34px"><img :src="getAvatar(item.profiles?.avatar_id)" />
                   </div>
                   <div>
                     <div style="font-size:13px;font-weight:600;color:var(--t-text)">{{ item.profiles?.nickname }}</div>
@@ -366,7 +465,7 @@
               <div v-for="(p,i) in leaderboard" :key="p.id" class="sd-lb-row"
                 :class="{'sd-lb-you': p.id === profile.id}">
                 <span class="sd-lb-rank" :class="{gold:i===0,silver:i===1,bronze:i===2}">{{ i+1 }}</span>
-                <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p)" /></div>
+                <div class="sd-av" style="width:24px;height:24px"><img :src="getAvatar(p.avatar_id)" :data-user-id="p.id" data-feed-avatar /></div>
                 <span class="sd-lb-name">{{ p.id === profile.id ? 'Tú' : p.nickname }}</span>
                 <span class="sd-lb-xp">{{ (p.xp||0).toLocaleString() }} xp</span>
               </div>
@@ -378,7 +477,7 @@
             <div class="sd-sec">Sugeridos para seguir</div>
             <div style="display:flex;flex-direction:column;gap:8px">
               <div v-for="s in suggestions" :key="s.id" class="sd-follow-row">
-                <div class="sd-av" style="width:28px;height:28px"><img :src="getAvatar(s)" /></div>
+                <div class="sd-av" style="width:28px;height:28px"><img :src="getAvatar(s.avatar_id)" :data-user-id="s.id" data-feed-avatar /></div>
                 <div class="sd-follow-info">
                   <div class="sd-follow-name">{{ s.nickname }}</div>
                   <div class="sd-follow-sub">{{ (s.xp||0) }} XP · Lv {{ s.level||1 }}</div>
@@ -426,7 +525,7 @@
             <div v-if="comp._submitters && comp._submitters.length" class="sd-banner-avatars">
               <div v-for="(submitter, i) in comp._submitters.slice(0, 5)" :key="i" class="sd-av sd-banner-av"
                 :style="{ zIndex: 5 - i }">
-                <img :src="getAvatar(submitter)" />
+                <img :src="getAvatar(submitter.profiles)" :data-user-id="submitter.user_id" data-feed-avatar />
               </div>
               <div v-if="comp._submitters.length >= 5" class="sd-banner-av-more">+</div>
             </div>
@@ -440,6 +539,7 @@
   </div>
 
   <script src="../js/supabase-client.js"></script>
+  <script src="../js/user-navigation.js"></script>
   <script src="../js/dashboard-app.js"></script>
 </body>
 

@@ -76,8 +76,12 @@ const SupabaseManager = (() => {
 
   /** Get the profile for the current user */
   async function getProfile() {
+    console.log('[SupabaseManager] Fetching profile...');
     const user = await getUser();
-    if (!user) return { profile: null, error: 'Not authenticated' };
+    if (!user) {
+      console.warn('[SupabaseManager] getProfile: No user session found.');
+      return { profile: null, error: 'Not authenticated' };
+    }
 
     const client = getClient();
     const { data, error } = await client
@@ -85,6 +89,12 @@ const SupabaseManager = (() => {
       .select('*')
       .eq('id', user.id)
       .single();
+
+    if (error) {
+      console.warn('[SupabaseManager] getProfile error:', error.message);
+    } else {
+      console.log('[SupabaseManager] Profile loaded:', data?.nickname || 'no-nickname');
+    }
 
     return { profile: data, error };
   }
@@ -129,12 +139,36 @@ const SupabaseManager = (() => {
    * If not logged in → redirect to login.html
    * Returns the user if authenticated.
    */
-  async function requireAuth(loginPath = 'login.html') {
-    const user = await getUser();
-    if (!user) {
-      window.location.href = loginPath;
-      return null;
+  /**
+   * Helper to resolve paths regardless of being in /pages/ or root
+   */
+  function resolvePath(path) {
+    const isPagesDir = window.location.pathname.includes('/pages/');
+    if (isPagesDir) {
+      // If we are in /pages/, we don't need the prefix for other files in /pages/
+      return path;
     }
+    // If we are in root, prefix with pages/
+    return `pages/${path}`;
+  }
+
+  /**
+   * Bloquea el acceso si no hay usuario autenticado
+   * @param {string} loginPath - Ruta al login
+   */
+  async function requireAuth(loginPath = 'login.html') {
+    console.log('[SupabaseManager] Guard: requireAuth checking...');
+    const user = await getUser();
+    
+    if (!user) {
+      const finalPath = resolvePath(loginPath);
+      console.warn('[SupabaseManager] Guard: No user found. Redirecting to:', finalPath);
+      window.location.href = finalPath;
+      // Return a promise that never resolves to stop execution of calling code
+      return new Promise(() => {}); 
+    }
+    
+    console.log('[SupabaseManager] Guard: User authenticated:', user.email);
     return user;
   }
 
@@ -144,21 +178,31 @@ const SupabaseManager = (() => {
    * Returns the profile if complete.
    */
   async function requireProfile(setupPath = 'setup-profile.html') {
-    const user = await requireAuth();
+    console.log('[SupabaseManager] Guard: requireProfile checking...');
+    const user = await requireAuth(); // requireAuth already handles redirect if no user
     if (!user) return null;
 
-    const { profile } = await getProfile();
-    if (!profile || !profile.profile_completed) {
-      window.location.href = setupPath;
-      return null;
-    }
+    const { profile, error } = await getProfile();
     
+    if (error) {
+      console.error('[SupabaseManager] Error fetching profile during guard:', error);
+    }
+
+    if (!profile || !profile.profile_completed) {
+      const finalPath = resolvePath(setupPath);
+      console.warn('[SupabaseManager] Guard: Profile incomplete or missing. Redirecting to:', finalPath);
+      window.location.href = finalPath;
+      return new Promise(() => {});
+    }
+
+    console.log('[SupabaseManager] Guard: Profile verified for:', profile.nickname);
+
     // Iniciar escucha de logros si no está iniciada
     if (!window._sbProfileListenerStarted) {
       listenForProfileChanges(profile);
       window._sbProfileListenerStarted = true;
     }
-    
+
     return profile;
   }
 
@@ -171,9 +215,15 @@ const SupabaseManager = (() => {
     if (user) {
       const { profile } = await getProfile();
       if (profile && profile.profile_completed) {
-        window.location.href = dashboardPath;
+        // If dashboardPath is already a full URL or starts with /, keep it.
+        // Otherwise resolve it.
+        const finalDashboard = (dashboardPath.includes('/') || dashboardPath.includes('.html')) 
+          ? resolvePath(dashboardPath) 
+          : resolvePath('dashboard.html');
+          
+        window.location.href = finalDashboard;
       } else {
-        window.location.href = 'setup-profile.html';
+        window.location.href = resolvePath('setup-profile.html');
       }
       return true;
     }

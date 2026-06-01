@@ -18,6 +18,7 @@
 
   <!-- DOMPurify para evitar ataques XSS con JS, pero permitiremos estilos y html básico -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+  <script src="../js/user-navigation.js"></script>
 
   <style>
     .myspace-container {
@@ -324,10 +325,10 @@
         // Obtenemos el usuario logueado
         this.currentUser = await SupabaseManager.getUser();
 
-        // Determinar qué perfil cargar (por URL param ?nickname=... o ?id=...)
+        // Determinar qué perfil cargar (por URL param ?nickname=... o ?id=... o ?user=...)
         const urlParams = new URLSearchParams(window.location.search);
         let queryNickname = urlParams.get('nickname');
-        let queryId = urlParams.get('id');
+        let queryId = urlParams.get('id') || urlParams.get('user'); // 🔗 Support ?user= from navigation
 
         // Si no hay parámetros, cargar el perfil del usuario actual
         if (!queryNickname && !queryId) {
