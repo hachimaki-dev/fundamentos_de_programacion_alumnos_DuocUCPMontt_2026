@@ -30,8 +30,9 @@ while True:
     
     elif menu == "2":
         for i in range(len(vengadores)):
-            print(i , avenger)
-        vengadores [i] = vengadores[i].upper()
+            for valor in vengadores.keys():
+                print(vengadores(i) ,(vengadores.upper()) )
+        
     
     elif menu == "3":
         break 

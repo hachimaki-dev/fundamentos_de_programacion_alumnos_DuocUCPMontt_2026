@@ -11,7 +11,7 @@ suma 1 a tus intentos fallidos.
 Restricciones: Usa un bloque `if/else`. Como en este caso la clave está mal, 
 imprime exactamente: `'Intentos fallidos: '` seguido del número de intentos."""
 
-clave = [Admin123]
+clave = ["Admin123"]
 intentos = 0
 while True:
     clave_correcta = input("ingresa tu clave")
