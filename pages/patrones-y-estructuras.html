@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🧱 Taller: Patrones y Estructuras de Datos</title>
+  <meta name="description" content="Guía práctica integradora: validación, menús interactivos, listas de diccionarios y operaciones CRUD en Python." />
+
+  <!-- PrismJS for code highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+    .section-pill .pill-count { display:inline-flex; align-items:center; justify-content:center; background:var(--t-accent-bg); color:var(--t-accent); font-size:0.7rem; font-weight:700; width:1.3rem; height:1.3rem; border-radius:50%; margin-left:0.3rem; }
+    .section-pill.active .pill-count { background:var(--t-surface); }
+    
+    .tf-btn { padding:0.8rem 2rem; border-radius:0.8rem; border:2px solid var(--t-glass-border); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; min-width:140px; }
+    .tf-btn:hover:not(.disabled) { transform:scale(1.03); }
+    .tf-btn.true-btn:hover:not(.disabled) { background:var(--t-shape-3); border-color:var(--t-correct); }
+    .tf-btn.false-btn:hover:not(.disabled) { background:var(--t-wrong-bg); border-color:var(--t-wrong); }
+    .tf-btn.selected-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
+    .tf-btn.selected-wrong { background:var(--t-wrong-bg); border-color:var(--t-wrong); color:var(--t-wrong-text); }
+    .tf-btn.reveal-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
+    .tf-btn.disabled { cursor:default; opacity:0.7; }
+
+    .score-summary { background:var(--t-score-bg); border:2px solid var(--t-score-border); border-radius:1.2rem; padding:1.5rem; text-align:center; }
+    .score-big { font-size:3rem; font-weight:700; color:var(--t-accent); line-height:1; }
+    
+    /* Guide styles */
+    .fase-badge { display:inline-block; padding:0.3rem 0.8rem; border-radius:1rem; font-size:0.75rem; font-weight:700; text-transform:uppercase; margin-bottom:0.5rem; }
+    .badge-fase1 { background:#e3f2fd; color:#0d47a1; }
+    .badge-fase2 { background:#fff3e0; color:#e65100; }
+    .badge-fase3 { background:#f3e5f5; color:#4a148c; }
+    .badge-fase4 { background:#e8f5e9; color:#1b5e20; }
+
+    .solution-details {
+      margin-top: 1.2rem;
+      border: 2px solid var(--t-glass-border);
+      border-radius: 0.8rem;
+      background: var(--t-surface);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .solution-details[open] {
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-color: var(--t-purple);
+    }
+    .solution-summary {
+      padding: 0.8rem 1.2rem;
+      font-weight: 700;
+      color: var(--t-accent);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      background: var(--t-surface-hover);
+    }
+    .solution-summary::-webkit-details-marker {
+      display: none;
+    }
+    .solution-summary::after {
+      content: '👇 Ver Solución Python';
+      font-size: 0.8rem;
+      background: var(--t-accent-bg);
+      color: var(--t-accent);
+      padding: 0.3rem 0.7rem;
+      border-radius: 0.5rem;
+      transition: transform 0.2s;
+    }
+    .solution-details[open] .solution-summary::after {
+      content: '👆 Ocultar Solución';
+      background: var(--t-purple-bg);
+      color: var(--t-purple);
+    }
+    .solution-content {
+      padding: 1.2rem;
+      border-top: 1px solid var(--t-glass-border);
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">🏠 Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🧱 Patrones y Estructuras de Datos</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          ¡Felicitaciones por llegar aquí! Esta guía práctica integra patrones fundamentales de validación, menús interactivos y operaciones CRUD sobre colecciones en Python. Explora los 12 retos resueltos y pon a prueba tu lógica en las secciones interactivas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-3xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">🧱 Guía y Retos</button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">🙋 Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">✅ V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">🐛 Depurar <span class="pill-count">{{ errorExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">✏️ Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">📋 Trazar <span class="pill-count">{{ traceData.length }}</span></button>
+      </div>
+    </div>
+
+    <!-- --- GUÍA Y RETOS --- -->
+    <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      
+      <!-- FASE 1 -->
+      <div class="doc-section">
+        <span class="fase-badge badge-fase1">Fase 1</span>
+        <h2>Fundamentos de Control de Flujo y Validación</h2>
+        <p class="text-sm text-kawaii-text/80 mb-6">Aprende a blindar tus programas contra entradas erróneas del usuario usando bucles de re-intento y control de excepciones.</p>
+
+        <!-- Ejercicio 1 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 1 — Formulario básico de validación</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Estás construyendo un formulario de registro básico.<br>
+          <strong>Lo que debe hacer el programa:</strong> Pide la edad. Debe ser un entero positivo (> 0). Si ingresa texto, 0 o negativo, avisa: <code>"Entrada inválida. Ingresa un número entero positivo."</code> y vuelve a preguntar. Si es válido, muestra: <code>"Edad registrada: X años."</code></p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        edad = int(input("Ingresa tu edad: "))
+        if edad > 0:
+            break
+        else:
+            print("Entrada inválida. Ingresa un número entero positivo.")
+    except ValueError:
+        print("Entrada inválida. Ingresa un número entero positivo.")
+
+print(f"Edad registrada: {edad} años.")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 2 — Clasificación y contadores</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Un sistema escolar necesita clasificar notas de alumnos.<br>
+          <strong>Lo que debe hacer el programa:</strong> Pide cuántos alumnos registrar. Por cada alumno pide nota (1-100). Clasifica: nota > 59 aprobado, <= 59 reprobado. Cuenta totales y muestra al final: <code>"Resultado: X aprobados y Y reprobados."</code></p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        cantidad = int(input("¿Cuántos alumnos? "))
+        if cantidad > 0:
+            break
+        print("Ingresa un número mayor a 0.")
+    except ValueError:
+        print("Entrada inválida.")
+
+aprobados = 0
+reprobados = 0
+
+for i in range(cantidad):
+    while True:
+        try:
+            nota = int(input(f"Nota alumno {i+1}: "))
+            if 1 <= nota <= 100:
+                break
+            print("La nota debe estar entre 1 y 100.")
+        except ValueError:
+            print("Ingresa una nota entera válida.")
+            
+    if nota > 59:
+        print("→ Aprobado")
+        aprobados += 1
+    else:
+        print("→ Reprobado")
+        reprobados += 1
+
+print(f"Resultado: {aprobados} aprobados y {reprobados} reprobados.")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 3 -->
+        <div class="card p-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 3 — Sistema de registro de atletas</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> El Centro Deportivo Nacional necesita registrar atletas de nueva incorporación.<br>
+          <strong>Lo que debe hacer el programa:</strong> Pide cantidad de atletas (valida positivo). Por cada uno pide: Código (mínimo 5 caracteres, sin espacios y alfanumérico) y Puntaje (positivo). Clasifica: puntaje > 70 atleta Élite, <= 70 regular. Al final muestra balance con "Atletas Regulares".</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        cantidad = int(input("¿Cuántos atletas? "))
+        if cantidad > 0:
+            break
+        print("¡Dato inválido! Ingresa un entero positivo para continuar.")
+    except ValueError:
+        print("¡Dato inválido! Ingresa un entero positivo para continuar.")
+
+elites = 0
+regulares = 0
+
+for i in range(cantidad):
+    print(f"\n--- Atleta {i+1} ---")
+    while True:
+        codigo = input("Código de atleta: ")
+        if len(codigo) >= 5 and " " not in codigo and codigo.isalnum():
+            break
+        print("Código inválido. Debe tener al menos 5 caracteres, sin espacios y solo letras o números.")
+        
+    while True:
+        try:
+            puntaje = int(input("Puntaje de rendimiento: "))
+            if puntaje > 0:
+                break
+            print("¡Error! Ingresa un número entero positivo para el puntaje.")
+        except ValueError:
+            print("¡Error! Ingresa un número entero positivo para el puntaje.")
+            
+    if puntaje > 70:
+        elites += 1
+        print("→ Atleta Élite")
+    else:
+        regulares += 1
+        print("→ Atleta Regular")
+
+print(f"\n¡El centro cuenta con {elites} Atletas Élite y {regulares} Atletas Regulares! ¡Registro completado!")</code></pre>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- FASE 2 -->
+      <div class="doc-section">
+        <span class="fase-badge badge-fase2">Fase 2</span>
+        <h2>Menús Interactivos y Estado del Programa</h2>
+        <p class="text-sm text-kawaii-text/80 mb-6">Domina la gestión de menús con opciones cíclicas y variables de estado acumulativas.</p>
+
+        <!-- Ejercicio 4 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 4 — Menú interactivo (Calculadora)</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Una calculadora de sesión simple.<br>
+          <strong>Lo que debe hacer el programa:</strong> Menú repetitivo con: 1-Sumar al total, 2-Ver total, 3-Reiniciar total, 4-Salir. Valida que las entradas de números a sumar sean enteras.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">total = 0
+while True:
+    print("\n=== CALCULADORA ===")
+    print("1. Sumar número al total")
+    print("2. Ver total acumulado")
+    print("3. Reiniciar total")
+    print("4. Salir")
+    
+    op = input("Elige una opción: ")
+    
+    if op == "1":
+        while True:
+            try:
+                num = int(input("Ingresa un número entero: "))
+                total += num
+                break
+            except ValueError:
+                print("Entrada inválida. Debe ser un entero.")
+    elif op == "2":
+        print(f"Total actual: {total}")
+    elif op == "3":
+        total = 0
+        print("Total reiniciado.")
+    elif op == "4":
+        print("Hasta luego.")
+        break
+    else:
+        print("Opción no reconocida. Intenta de nuevo.")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 5 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 5 — Sistema de gestión de biblioteca</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Biblioteca Central. Inicia con 30 libros. Capacidad máxima 30.<br>
+          <strong>Lo que debe hacer el programa:</strong> Menú: 1-Disponibles, 2-Préstamo (resta del stock, acumula en historial), 3-Devolución (suma a stock, valida no exceder cap max), 4-Movimientos netos, 5-Salir.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">disponibles = 30
+CAPACIDAD_MAX = 30
+historial_neto = 0
+
+print("¡Bienvenido al sistema de préstamos de la Biblioteca Central!")
+while True:
+    print("\n=== MENÚ PRINCIPAL ===")
+    print("1. Libros disponibles")
+    print("2. Registrar préstamo")
+    print("3. Registrar devolución")
+    print("4. Movimientos de la sesión")
+    print("5. Salir")
+    
+    op = input("Elige una opción: ")
+    
+    if op == "1":
+        print(f"Libros disponibles actualmente: {disponibles}")
+    elif op == "2":
+        while True:
+            try:
+                prestamo = int(input("Cantidad de libros a prestar: "))
+                if prestamo <= 0:
+                    print("Ingresa un número positivo.")
+                elif prestamo > disponibles:
+                    print(f"No hay suficientes libros. Solo quedan {disponibles} disponibles.")
+                    break
+                else:
+                    disponibles -= prestamo
+                    historial_neto += prestamo
+                    print("Préstamo registrado exitosamente.")
+                    break
+            except ValueError:
+                print("Ingresa un número entero válido.")
+    elif op == "3":
+        while True:
+            try:
+                devolucion = int(input("Cantidad de libros a devolver: "))
+                if devolucion <= 0:
+                    print("Ingresa un número positivo.")
+                elif disponibles + devolucion > CAPACIDAD_MAX:
+                    print(f"Operación inválida. Superaría el límite máximo de {CAPACIDAD_MAX} libros.")
+                    break
+                else:
+                    disponibles += devolucion
+                    historial_neto -= devolucion
+                    print("Devolución registrada exitosamente.")
+                    break
+            except ValueError:
+                print("Ingresa un número entero válido.")
+    elif op == "4":
+        print(f"Historial neto de la sesión (Préstamos - Devoluciones): {historial_neto}")
+    elif op == "5":
+        print("Gracias por usar el sistema de la biblioteca. ¡Hasta pronto!")
+        break
+    else:
+        print("Opción no válida. Elige entre 1 y 5.")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 6 -->
+        <div class="card p-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 6 — Sistema de gestión de estacionamiento</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Estacionamiento público con capacidad para 20 vehículos.<br>
+          <strong>Lo que debe hacer el programa:</strong> Controlar entradas (resta de disponibles) y salidas (suma a disponibles). Valida límites y calcula vehículos totales en el día.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">espacios_disponibles = 20
+CAPACIDAD_MAX = 20
+jornada_neta = 0
+
+print("¡Bienvenido al sistema de control del Estacionamiento Central!")
+while True:
+    print("\n=== PANEL DE CONTROL ===")
+    print("1. Espacios disponibles")
+    print("2. Registrar entrada de vehículo")
+    print("3. Registrar salida de vehículo")
+    print("4. Resumen de la jornada")
+    print("5. Salir")
+    
+    op = input("Selecciona una opción (1-5): ")
+    
+    if op == "1":
+        print(f"Espacios libres actuales: {espacios_disponibles}")
+    elif op == "2":
+        while True:
+            try:
+                entradas = int(input("Vehículos que ingresan: "))
+                if entradas <= 0:
+                    print("Debe ser mayor a 0.")
+                elif entradas > espacios_disponibles:
+                    print(f"No hay suficientes espacios. Solo quedan {espacios_disponibles} lugares.")
+                    break
+                else:
+                    espacios_disponibles -= entradas
+                    jornada_neta += entradas
+                    print(f"Registro exitoso. Entraron {entradas} vehículos.")
+                    break
+            except ValueError:
+                print("Ingresa un entero válido.")
+    elif op == "3":
+        while True:
+            try:
+                salidas = int(input("Vehículos que salen: "))
+                if salidas <= 0:
+                    print("Debe ser mayor a 0.")
+                elif espacios_disponibles + salidas > CAPACIDAD_MAX:
+                    print("Operación inválida. Se superaría la capacidad máxima del estacionamiento.")
+                    break
+                else:
+                    espacios_disponibles += salidas
+                    jornada_neta -= salidas
+                    print(f"Registro exitoso. Salieron {salidas} vehículos.")
+                    break
+            except ValueError:
+                print("Ingresa un entero válido.")
+    elif op == "4":
+        print(f"Balance neto de vehículos ingresados hoy: {jornada_neta}")
+    elif op == "5":
+        print("Cerrando sistema. ¡Hasta mañana!")
+        break
+    else:
+        print("Opción no reconocida. Selecciona del 1 al 5.")</code></pre>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- FASE 3 -->
+      <div class="doc-section">
+        <span class="fase-badge badge-fase3">Fase 3</span>
+        <h2>Estructuras de Datos (Listas y Diccionarios)</h2>
+        <p class="text-sm text-kawaii-text/80 mb-6">Combina colecciones secuenciales con objetos etiquetados para estructurar base de datos en memoria.</p>
+
+        <!-- Ejercicio 7 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 7 — Crear y recorrer una lista de diccionarios (Fijo)</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Registro de pacientes en clínica.<br>
+          <strong>Lo que debe hacer el programa:</strong> Pide ingresar exactamente 3 pacientes (Nombre y Edad). Guarda cada uno como <code>{"nombre": nombre, "edad": edad}</code> en una lista y recórrelos al final.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">pacientes = []
+
+for i in range(3):
+    print(f"\n--- Registrar Paciente {i+1} ---")
+    while True:
+        nombre = input("Nombre: ").strip()
+        if len(nombre) > 0:
+            break
+        print("El nombre no puede estar vacío.")
+        
+    while True:
+        try:
+            edad = int(input("Edad: "))
+            if edad > 0:
+                break
+            print("La edad debe ser mayor a 0.")
+        except ValueError:
+            print("Entrada inválida. Ingresa un entero.")
+            
+    paciente = {"nombre": nombre, "edad": edad}
+    pacientes.append(paciente)
+
+print("\n--- Lista de Pacientes ---")
+for p in pacientes:
+    print(f"Nombre: {p['nombre']} | Edad: {p['edad']}")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 8 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 8 — Inventario dinámico de productos</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Inventario de tienda comercial.<br>
+          <strong>Lo que debe hacer el programa:</strong> Pide cantidad dinámica de productos. Valida nombre (mínimo 3 letras, sin espacios) y precio (positivo). Guarda en lista de diccionarios y formatea como moneda.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        cantidad = int(input("¿Cuántos productos registrar? "))
+        if cantidad > 0:
+            break
+        print("Ingresa un entero positivo.")
+    except ValueError:
+        print("Ingresa un entero válido.")
+
+inventario = []
+
+for i in range(cantidad):
+    print(f"\n--- Producto {i+1} ---")
+    while True:
+        nombre = input("Nombre del producto: ").strip()
+        if len(nombre) >= 3 and " " not in nombre:
+            break
+        print("Código inválido. Mínimo 3 caracteres y sin espacios.")
+        
+    while True:
+        try:
+            precio = int(input("Precio: "))
+            if precio > 0:
+                break
+            print("El precio debe ser un número positivo.")
+        except ValueError:
+            print("Ingresa un número entero válido.")
+            
+    producto = {"nombre": nombre, "precio": precio}
+    inventario.append(producto)
+
+print("\n--- Inventario ---")
+for p in inventario:
+    print(f"Producto: {p['nombre']} | Precio: ${p['precio']}")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 9 -->
+        <div class="card p-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 9 — Registro y clasificación de voluntarios</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Registro de voluntarios en ONG.<br>
+          <strong>Lo que debe hacer el programa:</strong> Solicita voluntarios, valida nombre clave (mínimo 4 caracteres, sin espacios y alfanumérico) y horas semanales. Clasifica a los voluntarios como "Dedicados" (> 20 hrs) o "Casuales" (<= 20 hrs) e insértalo en el diccionario.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        cantidad = int(input("¿Cuántos voluntarios registrar? "))
+        if cantidad > 0:
+            break
+        print("Debe ser mayor a 0.")
+    except ValueError:
+        print("Ingresa un número entero válido.")
+
+voluntarios = []
+dedicados = 0
+casuales = 0
+
+for i in range(cantidad):
+    print(f"\n--- Voluntario {i+1} ---")
+    while True:
+        nombre = input("Nombre clave: ").strip()
+        if len(nombre) >= 4 and " " not in nombre and nombre.isalnum():
+            break
+        print("Código inválido. Mínimo 4 caracteres, sin espacios y alfanumérico.")
+        
+    while True:
+        try:
+            horas = int(input("Horas disponibles por semana: "))
+            if horas > 0:
+                break
+            print("Las horas deben ser mayor a 0.")
+        except ValueError:
+            print("Ingresa un número entero válido.")
+            
+    if horas > 20:
+        categoria = "Voluntario Dedicado"
+        dedicados += 1
+    else:
+        categoria = "Voluntario Casual"
+        casuales += 1
+        
+    vol = {"nombre": nombre, "horas": horas, "categoria": categoria}
+    voluntarios.append(vol)
+
+print(f"\nLa ONG tiene {dedicados} Voluntarios Dedicados y {casuales} Voluntarios Casuales. ¡Gracias por su apoyo!")</code></pre>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- FASE 4 -->
+      <div class="doc-section">
+        <span class="fase-badge badge-fase4">Fase 4</span>
+        <h2>Operaciones Avanzadas (Búsqueda, Filtros y CRUD)</h2>
+        <p class="text-sm text-kawaii-text/80 mb-6">Implementa lógica avanzada de filtrado, búsquedas seguras insensible a mayúsculas y operaciones CRUD.</p>
+
+        <!-- Ejercicio 10 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 10 — Búsqueda en una lista de diccionarios</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Buscador de pacientes de clínica.<br>
+          <strong>Lo que debe hacer el programa:</strong> Busca un nombre ingresado en la lista de pacientes normalizando ambos con <code>.lower()</code> para evitar fallos de coincidencia.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">pacientes = [
+    {"nombre": "Ana", "edad": 34},
+    {"nombre": "Luis", "edad": 28},
+    {"nombre": "María", "edad": 45}
+]
+
+busqueda = input("¿Qué nombre deseas buscar? ").strip()
+encontrado = False
+
+for p in pacientes:
+    if p["nombre"].lower() == busqueda.lower():
+        print(f"Paciente encontrado → Nombre: {p['nombre']} | Edad: {p['edad']}")
+        encontrado = True
+        break
+
+if not encontrado:
+    print("Paciente no encontrado.")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 11 -->
+        <div class="card p-6 mb-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 11 — Filtrar y promediar desde una lista</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Análisis de miembros en un gimnasio.<br>
+          <strong>Lo que debe hacer el programa:</strong> Registra dinámicamente miembros (nombre y meses). Muestra todos los miembros, filtra solo los frecuentes (> 6 meses) y calcula el promedio con 2 decimales.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">while True:
+    try:
+        cantidad = int(input("¿Cuántos miembros registrar? "))
+        if cantidad > 0:
+            break
+        print("Ingresa un entero positivo.")
+    except ValueError:
+        print("Ingresa un entero válido.")
+
+miembros = []
+for i in range(cantidad):
+    print(f"\n--- Miembro {i+1} ---")
+    while True:
+        nombre = input("Nombre clave: ").strip()
+        if len(nombre) > 0:
+            break
+        print("El nombre no puede estar vacío.")
+        
+    while True:
+        try:
+            meses = int(input("Meses de membresía: "))
+            if meses > 0:
+                break
+            print("Los meses deben ser mayor a 0.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+            
+    miembros.append({"nombre": nombre, "meses": meses})
+
+print("\n--- Todos los Miembros ---")
+suma_meses = 0
+for m in miembros:
+    print(f"Nombre: {m['nombre']} | Membresía: {m['meses']} meses")
+    suma_meses += m["meses"]
+
+print("\n--- Miembros frecuentes (más de 6 meses) ---")
+for m in miembros:
+    if m["meses"] > 6:
+        print(f"Nombre: {m['nombre']} | Membresía: {m['meses']} meses")
+
+promedio = suma_meses / len(miembros) if len(miembros) > 0 else 0
+print(f"\nPromedio de membresía: {promedio:.2f} meses")</code></pre>
+            </div>
+          </details>
+        </div>
+
+        <!-- Ejercicio 12 -->
+        <div class="card p-6">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 12 — Modificar y eliminar (CRUD) en listas</h3>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Gestión de productos en almacén.<br>
+          <strong>Lo que debe hacer el programa:</strong> Menú repetitivo: 1-Ver todos, 2-Actualizar stock, 3-Eliminar producto por nombre. Modifica y elimina elementos de la lista por su índice de forma segura usando <code>enumerate</code> y <code>break</code>.</p>
+          
+          <details class="solution-details">
+            <summary class="solution-summary">Solución Propuesta</summary>
+            <div class="solution-content">
+              <pre class="!mt-0"><code class="language-python">productos = [
+    {"nombre": "Arroz", "stock": 50},
+    {"nombre": "Aceite", "stock": 20},
+    {"nombre": "Harina", "stock": 35}
+]
+
+while True:
+    print("\n=== GESTIÓN DE PRODUCTOS ===")
+    print("1. Ver todos los productos")
+    print("2. Actualizar stock de un producto")
+    print("3. Eliminar un producto")
+    print("4. Salir")
+    
+    op = input("Opción: ")
+    
+    if op == "1":
+        print("\n--- Productos en Stock ---")
+        for p in productos:
+            print(f"Producto: {p['nombre']} | Stock: {p['stock']}")
+            
+    elif op == "2":
+        buscar = input("Nombre del producto a actualizar: ").strip()
+        encontrado = False
+        for i, p in enumerate(productos):
+            if p["nombre"].lower() == buscar.lower():
+                while True:
+                    try:
+                        nuevo_stock = int(input(f"Nuevo stock para {p['nombre']}: "))
+                        if nuevo_stock >= 0:
+                            productos[i]["stock"] = nuevo_stock
+                            print("Stock actualizado exitosamente.")
+                            encontrado = True
+                            break
+                        print("El stock debe ser 0 o superior.")
+                    except ValueError:
+                        print("Ingresa un entero válido.")
+                break
+        if not encontrado:
+            print("Producto no encontrado.")
+            
+    elif op == "3":
+        buscar = input("Nombre del producto a eliminar: ").strip()
+        encontrado = False
+        for i, p in enumerate(productos):
+            if p["nombre"].lower() == buscar.lower():
+                eliminado = productos.pop(i)
+                print(f"Producto {eliminado['nombre']} eliminado exitosamente.")
+                encontrado = True
+                break
+        if not encontrado:
+            print("Producto no encontrado.")
+            
+    elif op == "4":
+        print("Saliendo del panel de gestión.")
+        break
+    else:
+        print("Opción no reconocida. Selecciona del 1 al 4.")</code></pre>
+            </div>
+          </details>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- --- SELECCIÓN MÚLTIPLE --- -->
+    <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🙋</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Preguntas de Selección</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #ff8a80, #ff5252)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in choiceExercises" :key="'choice-'+idx" class="card p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-rose flex items-center justify-center text-white font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base" v-html="ex.question"></p>
+        <div class="space-y-2 text-sm">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full"
+                  :class="{
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-rose': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi
+                  }"
+                  @click="answerQuiz('choiceExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- VERDADERO O FALSO --- -->
+    <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✅</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #a5d6a7, #66bb6a)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in tfExercises" :key="'tf-'+idx" class="card p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-mint flex items-center justify-center text-green-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-4 text-sm md:text-base" v-html="ex.statement"></p>
+        <div class="flex gap-4">
+          <button class="tf-btn true-btn flex-1"
+                  :class="{
+                    'selected-correct': ex.answered && ex.correct === true && ex.selected === true,
+                    'selected-wrong': ex.answered && ex.correct === false && ex.selected === true,
+                    'reveal-correct': ex.answered && ex.correct === true && ex.selected !== true,
+                    'disabled': ex.answered
+                  }"
+                  @click="answerTF(idx, true)" :disabled="ex.answered">👍 Verdadero</button>
+          <button class="tf-btn false-btn flex-1"
+                  :class="{
+                    'selected-correct': ex.answered && ex.correct === false && ex.selected === false,
+                    'selected-wrong': ex.answered && ex.correct === true && ex.selected === false,
+                    'reveal-correct': ex.answered && ex.correct === false && ex.selected !== false,
+                    'disabled': ex.answered
+                  }"
+                  @click="answerTF(idx, false)" :disabled="ex.answered">👎 Falso</button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- DEPURACIÓN (ERRORES) --- -->
+    <div v-show="currentSection === 'error'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🐛</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Modo Depuración</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ errorScore }} / {{ errorExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-peach rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: errorProgress + '%', background: 'linear-gradient(90deg, #ffcc80, #ffa726)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in errorExercises" :key="'error-'+idx" class="card p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Código Python con Bug</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2 text-sm">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full"
+                  :class="{
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi
+                  }"
+                  @click="answerQuiz('errorExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- COMPLETAR CÓDIGO --- -->
+    <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✏️</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ completeScore }} / {{ completeExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: completeProgress + '%', background: 'linear-gradient(90deg, #ffd54f, #ffb300)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in completeExercises" :key="'complete-'+idx" class="card p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-cream flex items-center justify-center text-yellow-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>✏️</span><span>Completa los espacios _____</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full"
+                  :class="{
+                    'border-gray-200 bg-gray-50 hover:border-yellow-200': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi
+                  }"
+                  @click="answerQuiz('completeExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- TRAZAR CÓDIGO --- -->
+    <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">📋</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Trazado</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue la ejecución paso a paso para deducir el valor de las variables.</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-peach rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #e040fb, #aa00ff)' }"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="(ex, idx) in traceData" :key="'trace-'+idx" class="card p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-purple-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🐍</span><span>Trazar Código</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full"
+                  :class="{
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi
+                  }"
+                  @click="answerQuiz('traceData',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- RESUMEN FINAL --- -->
+    <div v-if="currentSection !== 'ref' && allAnswered" class="max-w-md mx-auto px-4 pb-8">
+      <div class="score-summary fade-in-up">
+        <p class="text-4xl mb-2">🎉</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta parte interactiva</p>
+        <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
+        <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
+      </div>
+    </div>
+
+    <footer class="site-footer">Hecho con 💖 para Academia hachimaki</footer>
+  </div>
+
+  <!-- Data files -->
+  <script src="../data/patrones-y-estructuras-data.js"></script>
+
+  <!-- External & Shared Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
+  <script src="../js/app.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+    const app = createApp({
+      mixins: [QuizXP.vueMixin('patrones-y-estructuras')],
+      data() {
+        return {
+          currentSection: 'ref',
+          xpResult: '',
+          choiceExercises: typeof patronesChoiceExercises !== 'undefined' ? patronesChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          tfExercises: typeof patronesTfExercises !== 'undefined' ? patronesTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          errorExercises: typeof patronesErrorExercises !== 'undefined' ? patronesErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          completeExercises: typeof patronesCompleteExercises !== 'undefined' ? patronesCompleteExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          traceData: typeof patronesTraceExercises !== 'undefined' ? patronesTraceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+        };
+      },
+      computed: {
+        choiceScore() { return this.choiceExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        choiceProgress() { const a = this.choiceExercises.filter(e => e.answered).length; return this.choiceExercises.length ? Math.round(a / this.choiceExercises.length * 100) : 0; },
+        tfScore() { return this.tfExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        tfProgress() { const a = this.tfExercises.filter(e => e.answered).length; return this.tfExercises.length ? Math.round(a / this.tfExercises.length * 100) : 0; },
+        errorScore() { return this.errorExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        errorProgress() { const a = this.errorExercises.filter(e => e.answered).length; return this.errorExercises.length ? Math.round(a / this.errorExercises.length * 100) : 0; },
+        completeScore() { return this.completeExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        completeProgress() { const a = this.completeExercises.filter(e => e.answered).length; return this.completeExercises.length ? Math.round(a / this.completeExercises.length * 100) : 0; },
+        traceScore() { return this.traceData.filter(e => e.answered && e.selected === e.correct).length; },
+        traceProgress() { const a = this.traceData.filter(e => e.answered).length; return this.traceData.length ? Math.round(a / this.traceData.length * 100) : 0; },
+        
+        sectionScore() {
+          const m = { choice: this.choiceScore, tf: this.tfScore, error: this.errorScore, complete: this.completeScore, trace: this.traceScore };
+          return m[this.currentSection] || 0;
+        },
+        sectionTotal() {
+          const m = { choice: this.choiceExercises.length, tf: this.tfExercises.length, error: this.errorExercises.length, complete: this.completeExercises.length, trace: this.traceData.length };
+          return m[this.currentSection] || 0;
+        },
+        allAnswered() {
+          const m = { choice: this.choiceExercises, tf: this.tfExercises, error: this.errorExercises, complete: this.completeExercises, trace: this.traceData };
+          const arr = m[this.currentSection];
+          return arr ? arr.every(e => e.answered) : false;
+        },
+        scoreMessage() {
+          const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
+          if (pct === 1) return '🌟 ¡Asombroso! Conocimiento sellado 🌟';
+          if (pct >= 0.8) return '¡Casi perfecto! Excelente trabajo 🔥';
+          if (pct >= 0.6) return '¡Bien! El concepto se va afianzando 💪';
+          if (pct >= 0.4) return 'Buena pelea. ¡Un repaso no viene mal! 📖';
+          return 'No desanimes, el código se domina practicando 🧗';
+        },
+      },
+      methods: {
+        highlightCode(code) { return typeof highlightPython === 'function' ? highlightPython(code) : code; },
+        goToSection(section) { 
+          this.currentSection = section; 
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') {
+              Prism.highlightAll();
+            }
+          });
+        },
+        answerQuiz(arrName, idx, oi) { 
+          const ex = this[arrName][idx]; 
+          if (ex.answered) return; 
+          ex.selected = oi; 
+          ex.answered = true; 
+        },
+        answerTF(idx, value) { 
+          const ex = this.tfExercises[idx]; 
+          if (ex.answered) return; 
+          ex.selected = value; 
+          ex.answered = true; 
+        },
+      },
+      mounted() {
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+          }
+        });
+      }
+    });
+    app.mount('#app');
+  </script>
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>
