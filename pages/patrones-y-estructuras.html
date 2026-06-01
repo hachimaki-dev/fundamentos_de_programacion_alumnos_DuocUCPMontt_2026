@@ -138,7 +138,7 @@
       <div class="doc-section">
         <span class="fase-badge badge-fase1">Fase 1</span>
         <h2>Fundamentos de Control de Flujo y Validación</h2>
-        <p class="text-sm text-kawaii-text/80 mb-6">Aprende a blindar tus programas contra entradas erróneas del usuario usando bucles de re-intento y control de excepciones.</p>
+        <p class="text-sm text-kawaii-text/80 mb-6">Aprende a proteger tus programas: ¿qué pasa si el usuario escribe letras cuando esperas un número? Aquí aprenderás a manejar esos errores sin que el programa se caiga.</p>
 
         <!-- Ejercicio 1 -->
         <div class="card p-6 mb-6">
@@ -168,7 +168,7 @@ print(f"Edad registrada: {edad} años.")</code></pre>
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 2 — Clasificación y contadores</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Un sistema escolar necesita clasificar notas de alumnos.<br>
-          <strong>Lo que debe hacer el programa:</strong> Pide cuántos alumnos registrar. Por cada alumno pide nota (1-100). Clasifica: nota > 59 aprobado, <= 59 reprobado. Cuenta totales y muestra al final: <code>"Resultado: X aprobados y Y reprobados."</code></p>
+          <strong>Lo que debe hacer el programa:</strong> Primero pregunta cuántos alumnos hay. Luego, para cada alumno, pide su nota (un número entre 1 y 100). Si la nota es mayor a 59, muestra <code>"Aprobado"</code>; si es 59 o menor, muestra <code>"Reprobado"</code>. Al terminar todos los alumnos, muestra cuántos aprobaron y cuántos reprobaron: <code>"Resultado: X aprobados y Y reprobados."</code></p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -211,7 +211,11 @@ print(f"Resultado: {aprobados} aprobados y {reprobados} reprobados.")</code></pr
         <div class="card p-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 3 — Sistema de registro de atletas</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> El Centro Deportivo Nacional necesita registrar atletas de nueva incorporación.<br>
-          <strong>Lo que debe hacer el programa:</strong> Pide cantidad de atletas (valida positivo). Por cada uno pide: Código (mínimo 5 caracteres, sin espacios y alfanumérico) y Puntaje (positivo). Clasifica: puntaje > 70 atleta Élite, <= 70 regular. Al final muestra balance con "Atletas Regulares".</p>
+          <strong>Lo que debe hacer el programa:</strong> Pregunta cuántos atletas registrar (si escribe letras o un número negativo, vuelve a preguntar). Por cada atleta:<br>
+          1) Pide un <strong>código</strong> (debe tener al menos 5 caracteres, sin espacios, solo letras y números — si no cumple, repregunta).<br>
+          2) Pide su <strong>puntaje de rendimiento</strong> (entero positivo).<br>
+          3) Si el puntaje es mayor a 70 → muestra <code>"Atleta Élite"</code>. Si es 70 o menor → muestra <code>"Atleta Regular"</code>.<br>
+          Al final muestra cuántos de cada tipo hay.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -262,13 +266,13 @@ print(f"\n¡El centro cuenta con {elites} Atletas Élite y {regulares} Atletas R
       <div class="doc-section">
         <span class="fase-badge badge-fase2">Fase 2</span>
         <h2>Menús Interactivos y Estado del Programa</h2>
-        <p class="text-sm text-kawaii-text/80 mb-6">Domina la gestión de menús con opciones cíclicas y variables de estado acumulativas.</p>
+        <p class="text-sm text-kawaii-text/80 mb-6">Crea programas con menú que se repiten hasta que el usuario decida salir, llevando el control de datos como totales y cantidades.</p>
 
         <!-- Ejercicio 4 -->
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 4 — Menú interactivo (Calculadora)</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Una calculadora de sesión simple.<br>
-          <strong>Lo que debe hacer el programa:</strong> Menú repetitivo con: 1-Sumar al total, 2-Ver total, 3-Reiniciar total, 4-Salir. Valida que las entradas de números a sumar sean enteras.</p>
+          <strong>Lo que debe hacer el programa:</strong> Crea una calculadora que funciona con un menú. El programa lleva un <strong>total que empieza en 0</strong>. Muestra 4 opciones: 1) Pide un número y lo suma al total, 2) Muestra el total actual, 3) Reinicia el total a 0, 4) Sale del programa. Si elige algo que no existe, avisa y vuelve a mostrar el menú.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -308,8 +312,8 @@ while True:
         <!-- Ejercicio 5 -->
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 5 — Sistema de gestión de biblioteca</h3>
-          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Biblioteca Central. Inicia con 30 libros. Capacidad máxima 30.<br>
-          <strong>Lo que debe hacer el programa:</strong> Menú: 1-Disponibles, 2-Préstamo (resta del stock, acumula en historial), 3-Devolución (suma a stock, valida no exceder cap max), 4-Movimientos netos, 5-Salir.</p>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Una biblioteca tiene <strong>30 libros</strong> disponibles (esa es su capacidad máxima).<br>
+          <strong>Lo que debe hacer el programa:</strong> Menú con 5 opciones: 1) Muestra cuántos libros quedan disponibles. 2) <strong>Préstamo:</strong> pide cuántos libros prestar y los descuenta de los disponibles (no se pueden prestar más de los que hay). 3) <strong>Devolución:</strong> pide cuántos libros devolver y los suma a los disponibles (no puede pasar de 30). 4) Muestra un resumen: cuántos libros se prestaron en total menos los devueltos. 5) Sale del programa.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -377,8 +381,8 @@ while True:
         <!-- Ejercicio 6 -->
         <div class="card p-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 6 — Sistema de gestión de estacionamiento</h3>
-          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Estacionamiento público con capacidad para 20 vehículos.<br>
-          <strong>Lo que debe hacer el programa:</strong> Controlar entradas (resta de disponibles) y salidas (suma a disponibles). Valida límites y calcula vehículos totales en el día.</p>
+          <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Un estacionamiento tiene <strong>20 espacios</strong> disponibles.<br>
+          <strong>Lo que debe hacer el programa:</strong> Menú con 5 opciones: 1) Muestra cuántos espacios libres hay. 2) <strong>Entrada:</strong> pide cuántos autos entran y los resta de los espacios libres (no pueden entrar más de los que caben). 3) <strong>Salida:</strong> pide cuántos autos salen y los suma a los espacios libres (no puede haber más de 20 espacios). 4) Muestra cuántos autos entraron en total durante el día. 5) Sale del programa.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -448,13 +452,13 @@ while True:
       <div class="doc-section">
         <span class="fase-badge badge-fase3">Fase 3</span>
         <h2>Estructuras de Datos (Listas y Diccionarios)</h2>
-        <p class="text-sm text-kawaii-text/80 mb-6">Combina colecciones secuenciales con objetos etiquetados para estructurar base de datos en memoria.</p>
+        <p class="text-sm text-kawaii-text/80 mb-6">Aprende a guardar información organizada (como fichas de pacientes o productos) usando listas y diccionarios juntos.</p>
 
         <!-- Ejercicio 7 -->
         <div class="card p-6 mb-6">
-          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 7 — Crear y recorrer una lista de diccionarios (Fijo)</h3>
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 7 — Crear y recorrer una lista de diccionarios</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Registro de pacientes en clínica.<br>
-          <strong>Lo que debe hacer el programa:</strong> Pide ingresar exactamente 3 pacientes (Nombre y Edad). Guarda cada uno como <code>{"nombre": nombre, "edad": edad}</code> en una lista y recórrelos al final.</p>
+          <strong>Lo que debe hacer el programa:</strong> Pide los datos de exactamente <strong>3 pacientes</strong>: nombre (que no esté vacío) y edad (entero positivo). Guarda cada paciente en una lista, como si fuera una ficha. Al terminar, muestra la lista completa con el nombre y edad de cada uno.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -492,7 +496,7 @@ for p in pacientes:
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 8 — Inventario dinámico de productos</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Inventario de tienda comercial.<br>
-          <strong>Lo que debe hacer el programa:</strong> Pide cantidad dinámica de productos. Valida nombre (mínimo 3 letras, sin espacios) y precio (positivo). Guarda en lista de diccionarios y formatea como moneda.</p>
+          <strong>Lo que debe hacer el programa:</strong> Pregunta cuántos productos quieres registrar. Por cada producto, pide su <strong>nombre</strong> (al menos 3 caracteres, sin espacios — para simplificar, usa nombres de una sola palabra como "Manzana") y su <strong>precio</strong> (entero positivo). Guarda todos en una lista y al final muestra cada producto con su precio en formato <code>$</code>.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -514,7 +518,7 @@ for i in range(cantidad):
         nombre = input("Nombre del producto: ").strip()
         if len(nombre) >= 3 and " " not in nombre:
             break
-        print("Código inválido. Mínimo 3 caracteres y sin espacios.")
+        print("Nombre inválido. Mínimo 3 caracteres y sin espacios (usa una sola palabra).")
         
     while True:
         try:
@@ -539,7 +543,7 @@ for p in inventario:
         <div class="card p-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 9 — Registro y clasificación de voluntarios</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Registro de voluntarios en ONG.<br>
-          <strong>Lo que debe hacer el programa:</strong> Solicita voluntarios, valida nombre clave (mínimo 4 caracteres, sin espacios y alfanumérico) y horas semanales. Clasifica a los voluntarios como "Dedicados" (> 20 hrs) o "Casuales" (<= 20 hrs) e insértalo en el diccionario.</p>
+          <strong>Lo que debe hacer el programa:</strong> Pregunta cuántos voluntarios registrar. Por cada uno, pide un <strong>nombre clave</strong> (mínimo 4 caracteres, sin espacios, solo letras y números) y las <strong>horas que puede trabajar por semana</strong> (entero positivo). Si ofrece más de 20 horas → <code>"Voluntario Dedicado"</code>; si son 20 o menos → <code>"Voluntario Casual"</code>. Guarda toda la info en una lista. Al final muestra cuántos hay de cada tipo.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -594,13 +598,13 @@ print(f"\nLa ONG tiene {dedicados} Voluntarios Dedicados y {casuales} Voluntario
       <div class="doc-section">
         <span class="fase-badge badge-fase4">Fase 4</span>
         <h2>Operaciones Avanzadas (Búsqueda, Filtros y CRUD)</h2>
-        <p class="text-sm text-kawaii-text/80 mb-6">Implementa lógica avanzada de filtrado, búsquedas seguras insensible a mayúsculas y operaciones CRUD.</p>
+        <p class="text-sm text-kawaii-text/80 mb-6">¡Busca, filtra, modifica y elimina datos de tus listas! Las operaciones esenciales de cualquier sistema real.</p>
 
         <!-- Ejercicio 10 -->
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 10 — Búsqueda en una lista de diccionarios</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Buscador de pacientes de clínica.<br>
-          <strong>Lo que debe hacer el programa:</strong> Busca un nombre ingresado en la lista de pacientes normalizando ambos con <code>.lower()</code> para evitar fallos de coincidencia.</p>
+          <strong>Lo que debe hacer el programa:</strong> Primero registra 3 pacientes con nombre y edad (igual que el Ejercicio 7). Después, el programa pregunta un nombre para buscar. Debe encontrarlo <strong>sin importar si el usuario escribió en mayúsculas o minúsculas</strong> (por ejemplo, "ana" y "Ana" deben coincidir). Si lo encuentra, muestra sus datos. Si no, muestra <code>"Paciente no encontrado."</code></p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -630,7 +634,10 @@ if not encontrado:
         <div class="card p-6 mb-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 11 — Filtrar y promediar desde una lista</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Análisis de miembros en un gimnasio.<br>
-          <strong>Lo que debe hacer el programa:</strong> Registra dinámicamente miembros (nombre y meses). Muestra todos los miembros, filtra solo los frecuentes (> 6 meses) y calcula el promedio con 2 decimales.</p>
+          <strong>Lo que debe hacer el programa:</strong> Pregunta cuántos miembros del gimnasio quieres registrar. Por cada uno, pide su nombre y cuántos meses lleva inscrito. Al final muestra:<br>
+          1) La lista completa de todos los miembros.<br>
+          2) Solo los que llevan <strong>más de 6 meses</strong> (miembros frecuentes).<br>
+          3) El <strong>promedio de meses</strong> de todos los miembros, redondeado a 2 decimales.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>
@@ -685,7 +692,11 @@ print(f"\nPromedio de membresía: {promedio:.2f} meses")</code></pre>
         <div class="card p-6">
           <h3 class="font-bold text-lg text-kawaii-deep mb-2">Ejercicio 12 — Modificar y eliminar (CRUD) en listas</h3>
           <p class="text-sm text-gray-700 mb-4"><strong>Contexto:</strong> Gestión de productos en almacén.<br>
-          <strong>Lo que debe hacer el programa:</strong> Menú repetitivo: 1-Ver todos, 2-Actualizar stock, 3-Eliminar producto por nombre. Modifica y elimina elementos de la lista por su índice de forma segura usando <code>enumerate</code> y <code>break</code>.</p>
+          <strong>Lo que debe hacer el programa:</strong> El programa ya tiene 3 productos cargados: Arroz (stock 50), Aceite (stock 20), Harina (stock 35). Muestra un menú con 4 opciones:<br>
+          1) <strong>Ver todos</strong> los productos con su stock.<br>
+          2) <strong>Actualizar stock:</strong> pide el nombre del producto y el nuevo stock. Si no existe, avisa.<br>
+          3) <strong>Eliminar:</strong> pide el nombre del producto y lo borra de la lista. Si no existe, avisa.<br>
+          4) Salir.</p>
           
           <details class="solution-details">
             <summary class="solution-summary">Solución Propuesta</summary>

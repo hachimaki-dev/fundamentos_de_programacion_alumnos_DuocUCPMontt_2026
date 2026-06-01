@@ -310,7 +310,7 @@ Nombre: María | Edad: 45
 **Lo que debe hacer el programa:**
 Pide al usuario cuántos productos desea registrar. Por cada producto solicita:
 
-* **Nombre** del producto (mínimo 3 caracteres, sin espacios)
+* **Nombre** del producto (mínimo 3 caracteres, sin espacios — para simplificar, usa nombres de una sola palabra como "Manzana")
 * **Precio** (número entero positivo)
 
 Guarda cada producto como un diccionario dentro de una lista. Al finalizar, muestra todos los productos registrados en este formato:

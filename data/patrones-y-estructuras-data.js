@@ -8,7 +8,7 @@
 const patronesChoiceExercises = [
   {
     title: "Validación de Entradas",
-    question: "¿Por qué es importante colocar la conversión `int(input())` dentro de un bloque `try`?",
+    question: "¿Qué pasa si el usuario escribe letras y usamos <code>int(input())</code> sin un bloque <code>try</code>? ¿Por qué necesitamos ese bloque?",
     options: [
       "Porque acelera la velocidad de ejecución de Python.",
       "Para capturar un potencial ValueError y evitar que el programa se caiga (crash) si el usuario escribe letras.",
@@ -68,10 +68,10 @@ const patronesChoiceExercises = [
   },
   {
     title: "La regla de oro de .pop()",
-    question: "Al realizar una operación de eliminación en una lista por su índice (`lista.pop(i)`) dentro de un ciclo `for` de búsqueda, ¿por qué es crítico ejecutar un `break` inmediatamente después?",
+    question: "Al eliminar un elemento de una lista con <code>lista.pop(i)</code> dentro de un ciclo <code>for</code>, ¿por qué debemos poner un <code>break</code> justo después?",
     options: [
       "Porque `.pop()` devuelve el elemento y el programa fallará si no se guarda.",
-      "Porque al eliminar un elemento, los índices de los elementos restantes se desplazan a la izquierda, lo que arruina el orden de iteración del bucle activo y causa errores o saltos de elementos.",
+      "Porque al borrar un elemento, los que vienen después se mueven de posición. Si el bucle sigue recorriendo con los números de posición viejos, puede saltarse elementos o dar error.",
       "Para que el sistema operativo libere memoria RAM de inmediato.",
       "Para obligar a Python a ordenar la lista alfabéticamente."
     ],
@@ -84,7 +84,7 @@ const patronesChoiceExercises = [
 const patronesTfExercises = [
   {
     title: "Doble validación isalnum y espacios",
-    statement: "Si utilizas `codigo.isalnum()` para validar una entrada, la validación `\" \" not in codigo` es técnicamente redundante porque los espacios en blanco no son caracteres alfanuméricos.",
+    statement: "Si utilizas <code>codigo.isalnum()</code> para validar una entrada, la validación <code>' ' not in codigo</code> no es necesaria, porque los espacios no cuentan como letras ni números, así que <code>.isalnum()</code> ya los rechaza.",
     correct: true,
     explanation: "¡Verdadero! Los caracteres alfanuméricos en Python son únicamente letras (a-z, A-Z) y números (0-9). Un espacio en blanco ' ' no es alfanumérico, por lo que `isalnum()` ya garantiza que no habrá espacios."
   },
@@ -96,13 +96,13 @@ const patronesTfExercises = [
   },
   {
     title: "Diferencia lógica entre biblioteca y estacionamiento",
-    statement: "En el sistema de biblioteca (Ejercicio 5) y el de estacionamiento (Ejercicio 6), registrar un préstamo de libro y registrar una entrada de auto tienen comportamientos opuestos sobre la variable de stock disponible.",
+    statement: "En el sistema de biblioteca (Ejercicio 5) y el de estacionamiento (Ejercicio 6), registrar un préstamo de libro y registrar una entrada de auto hacen cosas opuestas con los espacios/libros disponibles: uno los aumenta y el otro los disminuye.",
     correct: false,
     explanation: "¡Falso! Ambos eventos disminuyen el stock disponible. El préstamo reduce los libros disponibles en biblioteca y la entrada de un auto reduce los espacios de estacionamiento libres. Tienen exactamente la misma lógica de negocio respecto a las unidades de stock."
   },
   {
     title: "Validación de try/except externa",
-    statement: "Si un bloque `try` está ubicado afuera del bucle `while True` de validación (por ejemplo, envolviendo al bucle entero), el programa se mantendrá preguntando en caso de error de entrada.",
+    statement: "Si un bloque <code>try</code> está ubicado afuera del bucle <code>while True</code> (envolviendo al bucle entero), el programa seguirá pidiendo el dato hasta que el usuario lo escriba bien.",
     correct: false,
     explanation: "¡Falso! Si el `try-except` envuelve al `while True` por fuera, cuando ocurra un error el flujo saltará al bloque `except` y se saldrá permanentemente del bucle. Para repetir la pregunta, el `try-except` debe ir **dentro** del bucle."
   },
@@ -114,7 +114,7 @@ const patronesTfExercises = [
   },
   {
     title: "Acumuladores vs Contadores",
-    statement: "Un contador suma valores variables a lo largo de un bucle (como sumarle el precio de cada producto al total), mientras que un acumulador siempre incrementa en una cantidad fija como +1.",
+    statement: "Un <strong>contador</strong> suma valores variables a lo largo de un bucle (como sumarle el precio de cada producto al total), mientras que un <strong>acumulador</strong> siempre incrementa en una cantidad fija como +1.",
     correct: false,
     explanation: "¡Falso! Es exactamente al revés. Un **contador** incrementa en una cantidad fija (habitualmente +1 para llevar un conteo de ítems), mientras que un **acumulador** suma valores variables (como acumular montos de compras u horas trabajadas)."
   }
@@ -232,7 +232,7 @@ const patronesCompleteExercises = [
     if len(codigo) >= 5 and " " ________ codigo and codigo.________():
         return True
     return False`,
-    question: "¿Qué operadores y métodos completan la validación correcta del código según los requisitos?",
+    question: "El código debe tener al menos 5 caracteres, sin espacios y solo letras/números. ¿Qué operador y método completan los espacios en blanco?",
     options: [
       "`in` / `isdigit`",
       "`not in` / `isalnum`",
@@ -295,7 +295,7 @@ if devolucion > 0 and libros_disponibles + devolucion ________ CAPACIDAD_MAX:
     print("Devolución exitosa!")
 else:
     print("Error de capacidad.")`,
-    question: "¿Qué operador de comparación lógica asegura que el stock no exceda la capacidad máxima?",
+    question: "¿Qué símbolo de comparación va en el espacio en blanco para que no se pasen de los 30 libros?",
     options: [
       "`>`",
       "`==`",
