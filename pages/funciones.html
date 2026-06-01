@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🛠️ Masterclass: Funciones en Python</title>
+  <meta name="description" content="Taller interactivo avanzado sobre Funciones en Python: def, parámetros, argumentos, return, scope y programación funcional." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+    .section-pill .pill-count { display:inline-flex; align-items:center; justify-content:center; background:var(--t-accent-bg); color:var(--t-accent); font-size:0.7rem; font-weight:700; width:1.3rem; height:1.3rem; border-radius:50%; margin-left:0.3rem; }
+    .section-pill.active .pill-count { background:var(--t-surface); }
+    
+    .tf-btn { padding:0.8rem 2rem; border-radius:0.8rem; border:2px solid var(--t-glass-border); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; min-width:140px; }
+    .tf-btn:hover:not(.disabled) { transform:scale(1.03); }
+    .tf-btn.true-btn:hover:not(.disabled) { background:var(--t-shape-3); border-color:var(--t-correct); }
+    .tf-btn.false-btn:hover:not(.disabled) { background:var(--t-wrong-bg); border-color:var(--t-wrong); }
+    .tf-btn.selected-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
+    .tf-btn.selected-wrong { background:var(--t-wrong-bg); border-color:var(--t-wrong); color:var(--t-wrong-text); }
+    .tf-btn.reveal-correct { background:var(--t-shape-3); border-color:var(--t-correct); color:var(--t-correct-text); }
+    .tf-btn.disabled { cursor:default; opacity:0.7; }
+    
+    .match-container { display:grid; grid-template-columns:1fr auto 1fr; gap:0.6rem; align-items:stretch; }
+    .match-left,.match-right { padding:0.7rem 1rem; border-radius:0.6rem; font-size:0.9rem; display:flex; align-items:center; }
+    .match-left { background:var(--t-deep-bg); border:2px solid var(--t-deep-border); font-weight:600; justify-content:center; text-align:center; }
+    .match-right { background:var(--t-surface); border:2px solid var(--t-surface-border); cursor:pointer; transition:all 0.2s ease; }
+    .match-right:hover:not(.matched) { border-color:var(--t-accent); background:var(--t-accent-bg); }
+    .match-right.selected { border-color:var(--t-purple); background:var(--t-tag-lilac-bg); box-shadow:0 0 0 2px rgba(123,31,162,0.2); }
+    .match-right.matched { border-color:var(--t-correct); background:var(--t-correct-bg); cursor:default; }
+    .match-right.wrong { border-color:var(--t-wrong); background:var(--t-wrong-bg); animation:shake 0.4s ease; }
+    .match-arrow { display:flex; align-items:center; color:var(--t-deep-border); font-size:1.2rem; }
+    .match-arrow.matched { color:var(--t-correct); }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    @media (max-width:640px) { .match-container{grid-template-columns:1fr;gap:0.3rem} .match-arrow{justify-content:center;font-size:1rem;transform:rotate(90deg)} }
+    
+    .score-summary { background:var(--t-score-bg); border:2px solid var(--t-score-border); border-radius:1.2rem; padding:1.5rem; text-align:center; }
+    .score-big { font-size:3rem; font-weight:700; color:var(--t-accent); line-height:1; }
+    
+    .reto-card { background: var(--t-surface); border-radius: 12px; box-shadow: 0 4px 6px var(--t-shadow); padding: 1.5rem; border: 2px solid var(--t-glass-border); transition: transform 0.3s, border-color 0.3s; margin-bottom: 1rem; color: var(--t-text); }
+    .reto-card:hover { transform: translateY(-5px); box-shadow: 0 8px 12px var(--t-shadow); border-color: var(--t-accent); }
+    .reto-card.pro-reto { border: 2px solid var(--t-purple); background: var(--t-glass-bg); }
+    .reto-card.pro-reto:hover { box-shadow: 0 8px 16px rgba(123,31,162,0.2); }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">⬅️ Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🛠️ Funciones en Python</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          ¡Bienvenid@ a la programación funcional! 🚀 Las funciones son el corazón de un código limpio, ordenado y reutilizable. Dile adiós al código espagueti.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: currentSection === 'entrada' }" @click="goToSection('entrada')">🎫 Ticket Entrada</button>
+        <button class="section-pill" :class="{ active: currentSection === 'ref' }" @click="goToSection('ref')">📚 Conceptos</button>
+        <button class="section-pill" :class="{ active: currentSection === 'faq' }" @click="goToSection('faq')">🚨 Errores Cuáticos</button>
+        <button class="section-pill" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">🎯 Selección <span class="pill-count">{{ choiceExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">⚖️ V o F <span class="pill-count">{{ tfExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'match' }" @click="goToSection('match')">🧩 Unir <span class="pill-count">{{ matchData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'error' }" @click="goToSection('error')">🐛 Errores <span class="pill-count">{{ errorExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'complete' }" @click="goToSection('complete')">✍️ Completar <span class="pill-count">{{ completeExercises.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">🧠 Trazar <span class="pill-count">{{ traceData.length }}</span></button>
+        <button class="section-pill" :class="{ active: currentSection === 'retos' }" @click="goToSection('retos')">⚔️ Retos Finales</button>
+        <button class="section-pill" :class="{ active: currentSection === 'salida' }" @click="goToSection('salida')">🚪 Ticket Salida</button>
+      </div>
+    </div>
+
+    <!-- --- TICKET DE ENTRADA --- -->
+    <div v-show="currentSection === 'entrada'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🎫</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Ticket de Entrada: Contrarreloj</h2>
+        <p class="text-sm mt-2">Tienes 80 segundos de dinamita por pregunta. ¡Piensa rápido!</p>
+        
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ entradaScore }} / {{ entradaData.length }}</span>
+        </div>
+      </div>
+
+      <div v-if="currentEntradaIndex < entradaData.length" class="card p-6 fade-in-up">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-start gap-3">
+            <span class="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-800 font-bold text-lg">{{ currentEntradaIndex + 1 }}</span>
+            <div><h3 class="font-bold text-lg text-kawaii-deep">{{ entradaData[currentEntradaIndex].title }}</h3></div>
+          </div>
+          <div class="font-bold text-red-500 text-xl">{{ entradaTimeLeft }}s</div>
+        </div>
+        
+        <!-- Dynamite Timer -->
+        <div class="dynamite-container">
+          <div class="dynamite-fuse" :style="{ width: (entradaTimeLeft / 80 * 100) + '%' }">
+            <div v-if="entradaTimeLeft > 0 && !entradaData[currentEntradaIndex].answered" class="dynamite-spark">💥</div>
+          </div>
+        </div>
+
+        <p class="font-semibold text-kawaii-text mb-4 text-sm md:text-base leading-relaxed" v-html="entradaData[currentEntradaIndex].question"></p>
+        
+        <div class="kahoot-grid">
+          <button v-for="(opt, oi) in entradaData[currentEntradaIndex].options" :key="oi" class="kahoot-btn"
+                  :class="[
+                    ['kahoot-red', 'kahoot-blue', 'kahoot-yellow', 'kahoot-green'][oi],
+                    {
+                      'opacity-30': entradaData[currentEntradaIndex].answered && oi !== entradaData[currentEntradaIndex].correct && entradaData[currentEntradaIndex].selected !== oi,
+                      'opacity-50': entradaData[currentEntradaIndex].answered && entradaData[currentEntradaIndex].selected === oi && oi !== entradaData[currentEntradaIndex].correct,
+                      'ring-4 ring-white ring-offset-4 ring-offset-green-500': entradaData[currentEntradaIndex].answered && oi === entradaData[currentEntradaIndex].correct,
+                      'ring-4 ring-white ring-offset-4 ring-offset-red-500': entradaData[currentEntradaIndex].answered && entradaData[currentEntradaIndex].selected === oi && oi !== entradaData[currentEntradaIndex].correct
+                    }
+                  ]"
+                  @click="answerEntrada(oi)" :disabled="entradaData[currentEntradaIndex].answered">
+            <div class="kahoot-icon">{{ ['🔺', '🔷', '🟡', '🟩'][oi] }}</div>
+            <span v-html="opt"></span>
+          </button>
+        </div>
+        
+        <div v-if="entradaData[currentEntradaIndex].answered" 
+             class="mt-4 rounded-lg p-5 text-sm font-semibold shadow-lg text-gray-900 border-2" 
+             :class="entradaData[currentEntradaIndex].selected === entradaData[currentEntradaIndex].correct ? 'bg-green-100 border-green-500 animate-correct' : 'bg-red-100 border-red-500 animate-wrong'">
+          <div class="flex gap-2 items-start">
+            <span class="text-2xl">{{ entradaData[currentEntradaIndex].selected === entradaData[currentEntradaIndex].correct ? '🎉' : '❌' }}</span>
+            <span v-html="entradaData[currentEntradaIndex].explanation" class="mt-1"></span>
+          </div>
+          <div class="mt-4 text-right">
+            <button @click="nextEntrada" class="px-6 py-3 bg-kawaii-deep text-white font-bold rounded-full hover:opacity-90 transition shadow-lg border-2 border-transparent" style="transform: scale(1); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Siguiente ➡️</button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="card p-6 text-center">
+        <h3 class="text-2xl font-bold text-kawaii-deep mb-2">🎟️ ¡Ticket Completado!</h3>
+        <p>Puntuación: {{ entradaScore }} / {{ entradaData.length }}</p>
+        <button @click="goToSection('ref')" class="mt-4 px-6 py-2 bg-kawaii-accent text-white rounded-lg hover:bg-opacity-90 transition">Empezar Masterclass 🚀</button>
+      </div>
+    </div>
+
+    <!-- --- REFERENCIA --- -->
+    <div v-show="currentSection === 'ref'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <div class="doc-section">
+        <h2>🍝 El Problema: El Código Espagueti</h2>
+        <p>
+          Hasta ahora, has escrito scripts lineales. Todo el código va de arriba hacia abajo. Si necesitas hacer lo mismo tres veces (como validar una entrada o calcular un impuesto), copias y pegas el código. Esto genera archivos gigantescos, difíciles de leer y una pesadilla para encontrar errores.
+          <br><br>
+          La solución: <strong>"Empaquetar la lógica en bloques independientes que tengan un nombre y puedan ser llamados cuando los necesite"</strong>.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>🛠️ La Función: Tu Propia Herramienta</h2>
+        <p>Una función es un <strong>bloque de código reutilizable</strong> diseñado para hacer una única tarea. Funciona como una máquina en una fábrica: le pasas materias primas (<span class="tooltip-word">argumentos<span class="tooltip-text">Los valores reales que le envías a la función cuando la llamas. Ej: sumar(5, 10).</span></span>), hace su trabajo internamente y te devuelve el producto terminado (<span class="tooltip-word">return<span class="tooltip-text">Instrucción que finaliza la función y devuelve un valor específico al código que la llamó.</span></span>).</p>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">💡 La Regla de Oro: DRY (Don't Repeat Yourself)</p>
+          <p class="text-sm">Si te sorprendes copiando y pegando el mismo bloque de código más de dos veces en tu archivo, ¡es el momento exacto de crear una función!</p>
+        </div>
+
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm mt-3 border border-gray-200 relative">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-2">📄 Anatomía de una Función</span>
+            <span class="animate-flow text-green-400">datos ➡️ función ➡️ resultado</span>
+          </div>
+          <pre class="!mt-0"><code class="language-python"># 1. DEFINICIÓN: Creamos la herramienta usando 'def'
+def saludar(nombre):  # 'nombre' es el PARÁMETRO
+    mensaje = f"¡Hola, {nombre}!"
+    return mensaje    # Devolvemos el resultado al mundo exterior
+
+# 2. LLAMADA: Usamos la herramienta
+# Le pasamos "Ash" como ARGUMENTO y guardamos lo que retorna
+saludo_ash = saludar("Ash") 
+print(saludo_ash)  # ¡Hola, Ash!
+
+print(saludar("Misty"))  # ¡Hola, Misty!</code></pre>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>📥 Entradas: <span class="tooltip-word">Parámetros<span class="tooltip-text">Variable utilizada en la definición de la función.</span></span> y <span class="tooltip-word">Argumentos<span class="tooltip-text">El valor real que le pasas.</span></span></h2>
+        <p>Las funciones necesitan datos para trabajar. Hay que distinguir entre dos conceptos clave que suelen confundirse:</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+          <div class="bg-blue-50 p-5 rounded-xl border border-blue-200 relative overflow-hidden group">
+            <h3 class="font-bold text-blue-800 mb-3 text-lg border-b border-blue-200 pb-2">📦 Parámetro (La caja)</h3>
+            <p class="text-sm text-blue-900">Es la variable que pones dentro de los paréntesis al <strong>definir</strong> la función. Es un marcador de posición, como una caja vacía esperando contenido.</p>
+            <p class="text-xs font-code text-blue-600 bg-white border border-blue-100 p-2 mt-2 rounded">def sumar(a, b): # a y b son parámetros</p>
+          </div>
+          <div class="bg-green-50 p-5 rounded-xl border border-green-200 relative overflow-hidden group">
+            <h3 class="font-bold text-green-800 mb-3 text-lg border-b border-green-200 pb-2">🍎 Argumento (El contenido)</h3>
+            <p class="text-sm text-green-900">Es el valor real y concreto que le envías a la función al <strong>llamarla</strong>. Es lo que metes dentro de la caja para que la función lo procese.</p>
+            <p class="text-xs font-code text-green-600 bg-white border border-green-100 p-2 mt-2 rounded">sumar(5, 10) # 5 y 10 son los argumentos</p>
+          </div>
+        </div>
+
+        <p class="mt-4"><strong>Valores por Defecto:</strong> Puedes asignar un valor opcional a un parámetro. Si quien llama a la función no envía ese dato, se usará el valor por defecto.</p>
+        <pre class="!mt-2 rounded-xl border border-gray-200"><code class="language-python">def presentar(nombre, rol="estudiante"):
+    print(f"{nombre} es {rol}")
+
+presentar("Ash") # Usa el por defecto: Ash es estudiante
+presentar("Oak", "profesor") # Sobrescribe: Oak es profesor</code></pre>
+      </div>
+
+      <div class="doc-section" style="background: var(--t-tag-lilac-bg); border-color: var(--t-purple);">
+        <h2 style="color: var(--t-purple);">✨ Tip Pro: Type Hinting</h2>
+        <p class="text-gray-900">En el código moderno, los desarrolladores usan <strong>Type Hinting</strong> (Pistas de Tipo). Aunque Python no te obliga, es una excelente práctica decir de qué tipo son los parámetros y qué tipo devuelve la función. ¡Tu IDE (y tus compañeros de trabajo) te lo agradecerán!</p>
+        <pre class="!mt-2 rounded bg-white border"><code class="language-python"># Indica que 'a' y 'b' deben ser enteros (int)
+# y que la función devolverá (->) un entero (int)
+def sumar(a: int, b: int) -> int:
+    return a + b
+
+def saludar(nombre: str) -> str:
+    return f"Hola {nombre}"</code></pre>
+        <p class="text-sm mt-2 font-semibold" style="color: var(--t-purple);">Veremos esto en mucha más profundidad más adelante, ¡pero es bueno que lo vayas conociendo!</p>
+      </div>
+
+      <div class="doc-section">
+        <h2>🔒 El <span class="tooltip-word">Scope<span class="tooltip-text">El alcance de una variable. Define dónde existe y dónde puede ser leída.</span></span>: Lo que pasa en la función, se queda en la función</h2>
+        <p>Las variables creadas <em>dentro</em> de una función son <strong>locales</strong>. Solo existen mientras la función está trabajando. Cuando la función termina, esas variables se destruyen.</p>
+        
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg mt-4 mb-2">
+          <p class="font-bold text-red-800 text-sm">⚠️ Cuidado con intentar acceder al interior</p>
+          <pre class="!mt-2 rounded bg-white border"><code class="language-python">def calcular_area(base, altura):
+    area = (base * altura) / 2
+    return area
+
+calcular_area(10, 5)
+print(area) # ❌ NameError: name 'area' is not defined</code></pre>
+          <p class="text-sm mt-2 text-red-900">La variable <code>area</code> murió al terminar la función. Para usar su valor, debes <strong>capturar el return</strong>: <code>mi_area = calcular_area(10, 5)</code> y luego <code>print(mi_area)</code>.</p>
+        </div>
+      </div>
+
+      <div class="doc-section">
+        <h2>📤 Salidas: return vs print</h2>
+        <p>Este es el concepto más malentendido por los principiantes.</p>
+        <ul class="text-sm space-y-3 relative z-10 text-gray-800 font-medium mb-4">
+          <li class="flex items-start gap-2"><span class="shrink-0 text-lg">🖨️</span> <span><code>print()</code> solo es un "megáfono". Muestra cosas en la pantalla para que el humano las lea, pero <strong>al programa se le olvidan inmediatamente</strong>. No puedes guardar un print en una variable.</span></li>
+          <li class="flex items-start gap-2"><span class="shrink-0 text-lg">📬</span> <span><code>return</code> es un "paquete de envío". <strong>Saca la información de la función y se la entrega al resto del programa</strong> para que pueda usarla en otros cálculos.</span></li>
+        </ul>
+
+        <div class="bg-kawaii-peach/30 p-5 rounded-xl border border-orange-200">
+          <p class="font-bold text-orange-800 mb-2">⚡ El superpoder del Return</p>
+          <p class="text-sm mb-2 text-orange-900">El <code>return</code> tiene un poder extra: <strong>detiene la función inmediatamente</strong>. Es la puerta de salida. Cualquier línea de código escrita debajo de un return ejecutado, será ignorada por Python (Dead Code).</p>
+        </div>
+
+        <p class="mt-4 font-bold text-blue-800">¡También puedes devolver múltiples cosas a la vez!</p>
+        <pre class="!mt-2 rounded-xl border border-gray-200"><code class="language-python">def estadisticas(notas):
+    # Retorna tres valores separados por coma (Python los empaqueta en una tupla)
+    return max(notas), min(notas), sum(notas)/len(notas)
+
+# Desempaquetado mágico en 3 variables:
+mayor, menor, prom = estadisticas([5.0, 7.0, 6.0])</code></pre>
+      </div>
+    </div>
+
+    <!-- --- ERRORES CUÁTICOS (FAQ) --- -->
+    <div v-show="currentSection === 'faq'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="card p-5 text-center mb-6" style="background: var(--t-wrong-bg); border-color: var(--t-wrong);">
+        <p class="text-4xl mb-2">🚨</p>
+        <h2 class="text-2xl font-bold" style="color: var(--t-wrong);">Errores Cuáticos (FAQ)</h2>
+        <p class="text-sm mt-2 opacity-80" style="color: var(--t-wrong-text);">Cosas que los estudiantes suelen hacer pensando que van a funcionar... pero desatan el caos absoluto.</p>
+      </div>
+
+      <div class="faq-accordion" :class="{ 'open': activeFaq === 1 }" @click="toggleFaq(1)">
+        <div class="faq-header">
+          <span>1. El Return Olvidado (El fantasma del NoneType)</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p class="font-bold text-red-600 mb-2">❌ Lo que intentas:</p>
+            <pre class="!mt-0 mb-3"><code class="language-python">def sumar(a, b):
+    resultado = a + b
+    # (¡Se te olvidó el return!)
+
+mi_suma = sumar(5, 5)
+print(mi_suma + 10)  # TypeError: unsupported operand type(s) for +: 'NoneType' and 'int'</code></pre>
+            <p class="font-bold text-green-700 mb-2">✅ Lo que pasó:</p>
+            <p>Si una función no tiene un <code>return</code> explícito, Python asume que quieres retornar <code>None</code> (Nada). Entonces, <code>mi_suma</code> vale <code>None</code>. Cuando intentas sumar <code>None + 10</code>, el programa colapsa. <strong>¡Asegúrate siempre de retornar lo que calculas!</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-accordion" :class="{ 'open': activeFaq === 2 }" @click="toggleFaq(2)">
+        <div class="faq-header">
+          <span>2. Llamar sin Paréntesis (Imprimiendo la Matrix)</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p class="font-bold text-red-600 mb-2">❌ Lo que intentas:</p>
+            <pre class="!mt-0 mb-3"><code class="language-python">def saludar():
+    return "Hola a todos"
+
+mensaje = saludar
+print(mensaje)  # &lt;function saludar at 0x7f8b9c...&gt;</code></pre>
+            <p class="font-bold text-green-700 mb-2">✅ Lo que pasó:</p>
+            <p>Si escribes el nombre de la función SIN paréntesis, NO la estás llamando, solo estás apuntando al lugar en la memoria (RAM) donde está guardado su código. Para que la función "trabaje", <strong>debes usar los paréntesis:</strong> <code>saludar()</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-accordion" :class="{ 'open': activeFaq === 3 }" @click="toggleFaq(3)">
+        <div class="faq-header">
+          <span>3. La Trampa Mutante (Listas como Default)</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p class="font-bold text-red-600 mb-2">❌ Lo que intentas:</p>
+            <pre class="!mt-0 mb-3"><code class="language-python">def agregar_item(item, inventario=[]):
+    inventario.append(item)
+    return inventario
+
+print(agregar_item("Espada"))  # ['Espada']
+print(agregar_item("Escudo"))  # ['Espada', 'Escudo']  ¡¿Qué pasó?!</code></pre>
+            <p class="font-bold text-green-700 mb-2">✅ Lo que pasó:</p>
+            <p><strong>NUNCA uses una lista o diccionario vacío `[]` / `{}` como valor por defecto de un parámetro.</strong> Python crea la lista por defecto <em>solo una vez</em> al leer el archivo. Si la modificas en la primera llamada, ¡se mantiene modificada para todas las siguientes llamadas! La solución: <code>def agregar(item, inv=None): if inv is None: inv = []</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-accordion" :class="{ 'open': activeFaq === 4 }" @click="toggleFaq(4)">
+        <div class="faq-header">
+          <span>4. Sobreescritura de Funciones Nativas</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p class="font-bold text-red-600 mb-2">❌ Lo que intentas:</p>
+            <pre class="!mt-0 mb-3"><code class="language-python">sum = 100
+# ...mucho código después...
+total = sum([10, 20, 30])  # TypeError: 'int' object is not callable</code></pre>
+            <p class="font-bold text-green-700 mb-2">✅ Lo que pasó:</p>
+            <p>Usaste la palabra `sum` (que es una función interna de Python) como nombre para una simple variable. Acabas de "destruir" la función original. Cuando más abajo intentas usarla como función `sum()`, Python dice "Oye, `sum` ahora es el número 100, no puedes llamar a un número con paréntesis". <strong>No uses palabras reservadas o nativas como nombres de variables (list, str, int, sum, max, min).</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-accordion" :class="{ 'open': activeFaq === 5 }" @click="toggleFaq(5)">
+        <div class="faq-header">
+          <span>5. El Paso por Referencia "Silencioso"</span>
+          <span class="faq-icon">▼</span>
+        </div>
+        <div class="faq-content">
+          <div class="faq-content-inner">
+            <p class="font-bold text-red-600 mb-2">❌ Lo que intentas:</p>
+            <pre class="!mt-0 mb-3"><code class="language-python">def borrar_malos(alumnos):
+    alumnos.clear()
+    return alumnos
+
+mi_curso = ["Ana", "Juan", "Pedro"]
+borrar_malos(mi_curso)
+print(mi_curso) # []  ¡Me borró mi lista original!</code></pre>
+            <p class="font-bold text-green-700 mb-2">✅ Lo que pasó:</p>
+            <p>Cuando pasas una Lista o Diccionario a una función, <strong>no estás pasando una copia, estás pasando el objeto original.</strong> Si la función le hace `.clear()`, `.append()`, o altera el diccionario, <em>modifica tus datos originales</em>. Si quieres evitar esto, pasa una copia: <code>borrar_malos(mi_curso.copy())</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- SELECCIÓN MÚLTIPLE --- -->
+    <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🎯</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Selección Múltiple</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ choiceScore }} / {{ choiceExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: choiceProgress + '%', background: 'linear-gradient(90deg, #f48fb1, #ce93d8)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in choiceExercises" :key="'choice-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-lilac flex items-center justify-center text-kawaii-deep font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base" v-html="ex.question"></p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-rose': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('choiceExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- VERDADERO O FALSO --- -->
+    <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">⚖️</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Verdadero o Falso</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ tfScore }} / {{ tfExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: tfProgress + '%', background: 'linear-gradient(90deg, #66bb6a, #26a69a)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in tfExercises" :key="'tf-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-sky flex items-center justify-center text-blue-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <p class="text-kawaii-text mb-4 leading-relaxed" v-html="ex.statement"></p>
+        <div class="flex gap-3 justify-center">
+          <button class="tf-btn true-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===true&&ex.correct===true, 'selected-wrong':ex.answered&&ex.selected===true&&ex.correct!==true, 'reveal-correct':ex.answered&&ex.selected!==true&&ex.correct===true, 'disabled':ex.answered }" @click="answerTF(idx,true)" :disabled="ex.answered">👍 Verdadero</button>
+          <button class="tf-btn false-btn" :class="{ 'selected-correct':ex.answered&&ex.selected===false&&ex.correct===false, 'selected-wrong':ex.answered&&ex.selected===false&&ex.correct!==false, 'reveal-correct':ex.answered&&ex.selected!==false&&ex.correct===false, 'disabled':ex.answered }" @click="answerTF(idx,false)" :disabled="ex.answered">👎 Falso</button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- UNIR CONCEPTOS --- -->
+    <div v-show="currentSection === 'match'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🧩</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Unir Conceptos</h2>
+      </div>
+      <div v-for="(ex, exIdx) in matchData" :key="'match-'+exIdx" class="card p-6 fade-in-up" :style="{ animationDelay: (exIdx*0.1)+'s' }">
+        <h3 class="font-bold text-lg text-kawaii-deep mb-4">{{ ex.title }}</h3>
+        <div v-for="(pair, pIdx) in ex.pairs" :key="pair.id" class="match-container mb-2">
+          <div class="match-left" :class="{ 'cursor-pointer':!pair.matched, 'opacity-60':pair.matched }" :style="pair.matched?'border-color:var(--t-correct);background:#e8f5e9':(selectedLeft&&selectedLeft.exIdx===exIdx&&selectedLeft.pIdx===pIdx?'border-color:var(--t-purple); background:var(--t-tag-lilac-bg);box-shadow:0 0 0 2px rgba(123,31,162,0.2)':'')" @click="selectMatchLeft(exIdx,pIdx)" v-html="pair.left"></div>
+          <div class="match-arrow" :class="{ matched:pair.matched }"><span v-if="pair.matched">✅</span><span v-else>↔️</span></div>
+          <div class="match-right" :class="{ matched:ex.shuffledRights[pIdx].matched, wrong:ex.shuffledRights[pIdx].wrong, selected:selectedRight&&selectedRight.exIdx===exIdx&&selectedRight.pIdx===pIdx }" @click="selectMatchRight(exIdx,pIdx)" v-html="ex.shuffledRights[pIdx].text"></div>
+        </div>
+        <div v-if="ex.allMatched" class="mt-4 rounded-lg p-4 text-sm bg-kawaii-mint border border-green-300 text-center"><span class="font-bold text-green-700">🌟 ¡Magistral en conceptos!</span></div>
+      </div>
+    </div>
+
+    <!-- --- ENCONTRAR EL ERROR --- -->
+    <div v-show="currentSection === 'error'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🐛</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Encuentra el Error</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ errorScore }} / {{ errorExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: errorProgress + '%', background: 'linear-gradient(90deg, #ef5350, #ff7043)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in errorExercises" :key="'error-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>💻</span><span>Modo Depuración</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2 text-sm">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('errorExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- COMPLETAR CÓDIGO --- -->
+    <div v-show="currentSection === 'complete'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">✍️</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Completa el Código</h2>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ completeScore }} / {{ completeExercises.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-cream rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: completeProgress + '%', background: 'linear-gradient(90deg, #ffd54f, #ffb300)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in completeExercises" :key="'complete-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-cream flex items-center justify-center text-yellow-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>📝</span><span>Rellena los espacios _____</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3 text-sm md:text-base">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-yellow-200': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('completeExercises',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- TRAZAR CÓDIGO --- -->
+    <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center">
+        <p class="text-3xl mb-2">🧠</p>
+        <h2 class="text-xl font-bold text-kawaii-deep">Tablas de Recorrido Mentales</h2>
+        <p class="text-kawaii-text/60 text-sm mt-1">Sigue el flujo de las funciones paso a paso.</p>
+        <div class="flex justify-center items-center gap-4 mt-3">
+          <span class="text-sm font-semibold text-kawaii-deep">🏆 {{ traceScore }} / {{ traceData.length }}</span>
+          <div class="flex-1 max-w-[200px] bg-kawaii-pink rounded-full h-2.5 overflow-hidden">
+            <div class="progress-fill h-full rounded-full" :style="{ width: traceProgress + '%', background: 'linear-gradient(90deg, #ffa726, #ef5350)' }"></div>
+          </div>
+        </div>
+      </div>
+      <div v-for="(ex, idx) in traceData" :key="'trace-'+idx" class="card p-6 fade-in-up" :style="{ animationDelay: (idx*0.07)+'s' }">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-kawaii-peach flex items-center justify-center text-orange-800 font-bold text-lg">{{ idx+1 }}</span>
+          <div><h3 class="font-bold text-lg text-kawaii-deep">{{ ex.title }}</h3></div>
+        </div>
+        <div class="mb-5 rounded-xl overflow-hidden shadow-sm">
+          <div class="bg-[#2d2d2d] text-xs text-gray-400 px-4 py-1.5 flex items-center gap-2"><span>🔍</span><span>Evalúa</span></div>
+          <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+        </div>
+        <p class="font-semibold text-kawaii-text mb-3">{{ ex.question }}</p>
+        <div class="space-y-2">
+          <button v-for="(opt, oi) in ex.options" :key="oi" class="option-btn text-left p-3 rounded-lg border-2 w-full" 
+                  :class="{ 
+                    'border-gray-200 bg-gray-50 hover:border-kawaii-peach': !ex.answered,
+                    'border-green-500 bg-green-50': ex.answered && oi === ex.correct,
+                    'border-red-500 bg-red-50': ex.answered && ex.selected === oi && oi !== ex.correct,
+                    'opacity-50 cursor-default': ex.answered && oi !== ex.correct && ex.selected !== oi 
+                  }" 
+                  @click="answerQuiz('traceData',idx,oi)" :disabled="ex.answered">
+            <span class="font-bold mr-2 text-kawaii-deep">{{ ['A','B','C','D'][oi] }}.</span><span v-html="opt"></span>
+          </button>
+        </div>
+        <div v-if="ex.answered" class="mt-4 rounded-lg p-4 text-sm" :class="ex.selected===ex.correct?'bg-kawaii-mint border border-green-300':'bg-kawaii-pink border border-red-200'">
+          <span v-html="ex.explanation"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- RETOS FINALES (30 Retos) --- -->
+    <div v-show="currentSection === 'retos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-5 text-center bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <p class="text-4xl mb-2">⚔️</p>
+        <h2 class="text-2xl font-bold text-indigo-900">30 Retos Funcionales</h2>
+        <p class="text-indigo-800/70 mt-2">Aplica todo lo aprendido. Codifica estas 30 funciones en tu IDE. ¡La dificultad aumenta progresivamente!</p>
+      </div>
+
+      <h3 class="font-bold text-xl text-kawaii-deep mt-8 mb-4 border-b-2 border-kawaii-rose pb-2">Nivel 1: Fundamentos (5 - 10 min c/u)</h3>
+
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">1. Saludo Personalizado</h3>
+        <p class="text-sm">Crea <code>saludar(nombre)</code> que retorne el string "Hola, [nombre], bienvenido al sistema".</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">2. Calculadora Simple</h3>
+        <p class="text-sm">Crea <code>sumar(a, b)</code> que retorne la suma de los dos números recibidos.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">3. Número Par</h3>
+        <p class="text-sm">Crea <code>es_par(numero)</code> que retorne True si el número es par, y False si es impar.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">4. Mayor de Tres</h3>
+        <p class="text-sm">Crea <code>mayor_de_tres(a, b, c)</code> que reciba 3 números y retorne el mayor de ellos.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">5. Contador de Vocales</h3>
+        <p class="text-sm">Crea <code>contar_vocales(texto)</code> que reciba un string y retorne la cantidad de vocales que contiene.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">6. Reversa</h3>
+        <p class="text-sm">Crea <code>reversar_texto(texto)</code> que devuelva el string al revés. (Ej: "hola" -> "aloh")</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">7. Calculadora de Propinas</h3>
+        <p class="text-sm">Crea <code>calcular_propina(total, porcentaje=10)</code> que retorne el monto de la propina. El porcentaje por defecto es 10%.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">8. Filtrar Pares</h3>
+        <p class="text-sm">Crea <code>filtrar_pares(lista_numeros)</code> que reciba una lista, y retorne una NUEVA lista solo con los números pares.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">9. Conversor de Temperaturas</h3>
+        <p class="text-sm">Crea <code>celsius_a_fahrenheit(c)</code> que retorne la temperatura en F. Fórmula: (C * 9/5) + 32.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">10. Generador de Password</h3>
+        <p class="text-sm">Crea <code>generar_password(longitud=8)</code> que retorne un string aleatorio de la longitud especificada.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">11. Diccionario de Frecuencias</h3>
+        <p class="text-sm">Crea <code>contar_caracteres(texto)</code> que retorne un diccionario donde las claves son las letras y los valores son la cantidad de veces que aparecen.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">12. Validador de Email</h3>
+        <p class="text-sm">Crea <code>es_email_valido(email)</code> que retorne True solo si el texto contiene al menos un "@" y un "."</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">13. Promedio de Lista</h3>
+        <p class="text-sm">Crea <code>promedio(lista)</code> que retorne el promedio de una lista de números. Retorna 0 si la lista está vacía.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">14. Buscar en Diccionario</h3>
+        <p class="text-sm">Crea <code>buscar_alumno(rut, diccionario_alumnos)</code> que retorne el nombre del alumno si el rut existe, o "No encontrado" si no.</p>
+      </div>
+      <div class="reto-card">
+        <h3 class="text-lg font-bold text-kawaii-deep mb-2">15. Función Compuesta</h3>
+        <p class="text-sm">Usando <code>filtrar_pares()</code> y <code>sumar()</code>, crea <code>sumar_pares_lista(lista)</code> que reciba una lista y retorne la suma de todos los números pares en ella.</p>
+      </div>
+
+      <h3 class="font-bold text-xl text-purple-700 mt-12 mb-4 border-b-2 border-purple-400 pb-2" style="color: var(--t-purple);">Nivel 2: Misiones de Desarrollo (20 - 30 min c/u)</h3>
+      
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">16. Analizador de Textos Modular</h3>
+        <p class="text-sm">Crea <code>analizar_texto(texto)</code> que use internamente otras funciones para contar vocales, contar palabras y determinar la palabra más repetida. Debe retornar un diccionario con estos tres resultados.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">17. Sistema de Combate RPG</h3>
+        <p class="text-sm">Crea <code>atacar(atacante, defensor)</code> recibiendo diccionarios de Stats. Debe calcular evasión con <code>random</code>, reducir la vida del defensor mitigada por su armadura, y retornar una tupla <code>(nueva_vida, log_combate)</code>.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">18. Validador de Contraseñas Hardcore</h3>
+        <p class="text-sm">Crea <code>validar_password(psw)</code> que retorne una tupla <code>(True, "Éxito")</code> o <code>(False, "Razón del error")</code>. Reglas: >8 caracteres, 1 mayúscula, 1 número, 1 símbolo especial (!@#$%^&*).</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">19. Cajero Automático (Greedy Algorithm)</h3>
+        <p class="text-sm">Crea <code>retirar_dinero(monto, saldo)</code>. Valida que haya saldo suficiente, resta el dinero, y retorna un diccionario con la cantidad exacta de billetes de 20k, 10k, 5k y 1k que la máquina debe entregar.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">20. Gestor de Inventario Mutante</h3>
+        <p class="text-sm">Crea funciones <code>agregar_item(inv, item)</code> y <code>eliminar_item(inv, item)</code> que modifiquen el diccionario de inventario original pasado por parámetro. ¡No uses returns, usa la referencia de memoria!</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">21. Buscaminas (Scanner de Matriz)</h3>
+        <p class="text-sm">Crea <code>contar_minas(matriz, fila, col)</code> que reciba una matriz NxN donde "X" es mina. Debe retornar la cantidad de minas adyacentes a la coordenada (fila, col).</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">22. Cifrado César</h3>
+        <p class="text-sm">Crea <code>cifrar(texto, desp)</code> y <code>descifrar(texto, desp)</code>. Transforma el string sumando el desplazamiento al valor ASCII de cada letra. Preserva espacios.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">23. Validador de Tarjetas (Luhn)</h3>
+        <p class="text-sm">Investiga e implementa una función <code>validar_luhn(numero_tarjeta)</code> que determine si un número de tarjeta de crédito es matemáticamente válido usando el algoritmo de Luhn.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">24. Compresor de Strings (RLE)</h3>
+        <p class="text-sm">Crea <code>comprimir_texto(texto)</code>. Si recibe "AAAABBBCCDAA", debe retornar "A4B3C2D1A2".</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">25. Calculadora Universitaria</h3>
+        <p class="text-sm">Crea <code>situacion_academica(ramos)</code>. Recibe una lista de diccionarios <code>[{'nota': 5.0, 'pond': 30}, ...]</code>. Debe validar que la ponderación suma 100%, calcular el promedio ponderado, y retornar si aprueba o va a examen.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">26. Filtro Anti-Toxicidad</h3>
+        <p class="text-sm">Crea <code>censurar(texto, palabras_baneadas)</code> que reemplace todas las incidencias de las malas palabras en el string por "***", pero preservando las mayúsculas/minúsculas originales del texto.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">27. Máquina Vending Inteligente</h3>
+        <p class="text-sm">Crea <code>dar_vuelto(precio, pago)</code>. Si el pago es menor, retorna un string de error. Si es exacto, retorna diccionario vacío. Si es mayor, retorna diccionario con las monedas exactas de $500, $100, $50 y $10.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">28. Batalla Naval (Disparo)</h3>
+        <p class="text-sm">Crea <code>disparar(tablero, x, y)</code>. Debe buscar en la matriz de la flota rival. Modifica el tablero original dejando un "X" si había barco (retorna "Impacto") o una "O" si era agua (retorna "Agua"). Retorna "Ya disparaste ahí" si repite.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">29. Gestor de Fechas Bisiestas</h3>
+        <p class="text-sm">Crea <code>sumar_dias(fecha_str, dias)</code>. Debe recibir algo como "15/02/2026", sumar la cantidad de días respetando la cantidad de días por cada mes, y usando una función auxiliar <code>es_bisiesto(year)</code>. Retorna la nueva fecha como string.</p>
+      </div>
+      <div class="reto-card pro-reto">
+        <h3 class="text-lg font-bold mb-2" style="color: var(--t-purple);">30. Tic-Tac-Toe AI Básica</h3>
+        <p class="text-sm">Crea <code>mejor_movimiento(tablero, simbolo_cpu)</code>. Debe analizar el tablero 3x3 actual, detectar si puede ganar en el próximo movimiento y retornar esa tupla (f, c). Si no, retornar la coordenada para bloquear al rival. Si no, retornar cualquier casilla libre.</p>
+      </div>
+    </div>
+
+    <!-- --- TICKET DE SALIDA --- -->
+    <div v-show="currentSection === 'salida'" class="max-w-3xl mx-auto px-4 pb-16 space-y-8 fade-in-up">
+      <div class="card p-6 border-2 border-purple-300 bg-purple-50">
+        <p class="text-4xl text-center mb-4">🚪</p>
+        <h2 class="text-2xl font-bold text-purple-900 text-center mb-2">Ticket de Salida</h2>
+        <p class="text-purple-800 text-center text-sm mb-6">Para finalizar, reflexiona sobre lo aprendido y compártelo.</p>
+        
+        <div v-if="salidaQuestion" class="bg-white p-5 rounded-xl border border-purple-200 mb-6 shadow-sm">
+          <p class="font-bold text-purple-900 text-lg mb-2">Tu pregunta de reflexión:</p>
+          <p class="text-purple-800 italic">"{{ salidaQuestion }}"</p>
+        </div>
+        
+        <textarea v-model="salidaRespuesta" rows="5" class="w-full p-4 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none resize-none text-gray-800 bg-white" placeholder="Escribe tu reflexión aquí..."></textarea>
+        
+        <div class="mt-6 text-center">
+          <button @click="copiarTicketSalida" :disabled="!salidaRespuesta.trim()" class="px-6 py-3 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            📝 Copiar y Compartir en AVA
+          </button>
+          <p v-if="salidaCopiado" class="text-green-600 font-bold mt-3 text-sm animate-pulse">¡Copiado! Abre los mensajes directos de AVA y envíaselo a un compañero al azar.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- RESUMEN FINAL --- -->
+    <div v-if="['choice', 'tf', 'error', 'complete', 'trace'].includes(currentSection) && allAnswered" class="max-w-md mx-auto px-4 pb-8">
+      <div class="score-summary fade-in-up">
+        <p class="text-4xl mb-2">⭐</p>
+        <p class="text-sm text-kawaii-text/60 mb-1">Tu puntaje en esta sección</p>
+        <p class="score-big">{{ sectionScore }} / {{ sectionTotal }}</p>
+        <p class="text-sm text-kawaii-text/60 mt-2">{{ scoreMessage }}</p>
+        <p v-if="xpResult" class="text-sm mt-2 font-bold" style="color:var(--t-accent);">{{ xpResult }}</p>
+      </div>
+    </div>
+
+    <footer class="site-footer">Hecho con ☕ para Academia hachimaki</footer>
+  </div>
+
+  <script src="../data/funciones-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const { createApp } = Vue;
+    const app = createApp({
+      mixins: [QuizXP.vueMixin('funciones')],
+      data() {
+        return {
+          currentSection: 'entrada',
+          activeFaq: 0,
+          xpResult: '',
+          
+          // Ticket Entrada State
+          entradaData: typeof funcTicketEntradaData !== 'undefined' ? funcTicketEntradaData.map(e => ({ ...e, answered: false, selected: null })) : [],
+          currentEntradaIndex: 0,
+          entradaTimeLeft: 80,
+          entradaTimer: null,
+
+          // Ticket Salida State
+          salidaQuestionsPool: typeof funcTicketSalidaQuestions !== 'undefined' ? funcTicketSalidaQuestions : [],
+          salidaQuestion: '',
+          salidaRespuesta: '',
+          salidaCopiado: false,
+
+          choiceExercises: typeof funcChoiceExercises !== 'undefined' ? funcChoiceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          tfExercises: typeof funcTfExercises !== 'undefined' ? funcTfExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          errorExercises: typeof funcErrorExercises !== 'undefined' ? funcErrorExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          completeExercises: typeof funcCompleteExercises !== 'undefined' ? funcCompleteExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          traceData: typeof funcTraceExercises !== 'undefined' ? funcTraceExercises.map(e => ({ ...e, answered: false, selected: null })) : [],
+          matchData: typeof funcMatchExercises !== 'undefined' ? funcMatchExercises.map(ex => {
+            const shuffled = [...ex.pairs].map(p => ({ text: p.right, id: p.id, matched: false, wrong: false }));
+            for (let i = shuffled.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
+            return { ...ex, pairs: ex.pairs.map(p => ({ ...p, matched: false })), shuffledRights: shuffled, allMatched: false };
+          }) : [],
+          selectedLeft: null, selectedRight: null,
+        };
+      },
+      mounted() {
+        if (this.salidaQuestionsPool.length > 0) {
+          this.salidaQuestion = this.salidaQuestionsPool[Math.floor(Math.random() * this.salidaQuestionsPool.length)];
+        }
+        if (this.currentSection === 'entrada') {
+          this.startEntradaTimer();
+        }
+      },
+      computed: {
+        entradaScore() { return this.entradaData.filter(e => e.answered && e.selected === e.correct).length; },
+        choiceScore() { return this.choiceExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        choiceProgress() { const a = this.choiceExercises.filter(e => e.answered).length; return this.choiceExercises.length ? Math.round(a / this.choiceExercises.length * 100) : 0; },
+        tfScore() { return this.tfExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        tfProgress() { const a = this.tfExercises.filter(e => e.answered).length; return this.tfExercises.length ? Math.round(a / this.tfExercises.length * 100) : 0; },
+        errorScore() { return this.errorExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        errorProgress() { const a = this.errorExercises.filter(e => e.answered).length; return this.errorExercises.length ? Math.round(a / this.errorExercises.length * 100) : 0; },
+        completeScore() { return this.completeExercises.filter(e => e.answered && e.selected === e.correct).length; },
+        completeProgress() { const a = this.completeExercises.filter(e => e.answered).length; return this.completeExercises.length ? Math.round(a / this.completeExercises.length * 100) : 0; },
+        traceScore() { return this.traceData.filter(e => e.answered && e.selected === e.correct).length; },
+        traceProgress() { const a = this.traceData.filter(e => e.answered).length; return this.traceData.length ? Math.round(a / this.traceData.length * 100) : 0; },
+        sectionScore() {
+          const m = { choice: this.choiceScore, tf: this.tfScore, error: this.errorScore, complete: this.completeScore, trace: this.traceScore };
+          return m[this.currentSection] || 0;
+        },
+        sectionTotal() {
+          const m = { choice: this.choiceExercises.length, tf: this.tfExercises.length, error: this.errorExercises.length, complete: this.completeExercises.length, trace: this.traceData.length };
+          return m[this.currentSection] || 0;
+        },
+        allAnswered() {
+          const m = { choice: this.choiceExercises, tf: this.tfExercises, error: this.errorExercises, complete: this.completeExercises, trace: this.traceData };
+          const arr = m[this.currentSection];
+          return arr ? arr.every(e => e.answered) : false;
+        },
+        scoreMessage() {
+          const pct = this.sectionTotal > 0 ? this.sectionScore / this.sectionTotal : 0;
+          if (pct === 1) return '🏆 ¡Perfección Funcional! 🚀';
+          if (pct >= 0.8) return '¡Excelente dominio de funciones! 🌟';
+          if (pct >= 0.6) return '¡Bien hecho! Los conceptos se afianzan 👍';
+          if (pct >= 0.4) return 'Sigue practicando. El código es tu herramienta 🔧';
+          return '¡No te rindas! Revisa los conceptos de parámetros y returns 📚';
+        },
+      },
+      methods: {
+        highlightCode(code) { return typeof highlightPython === 'function' ? highlightPython(code) : code; },
+        goToSection(section) {
+          if (this.currentSection === 'entrada') this.stopEntradaTimer();
+          this.currentSection = section;
+          if (section === 'entrada' && this.currentEntradaIndex < this.entradaData.length && !this.entradaData[this.currentEntradaIndex].answered) {
+            this.startEntradaTimer();
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        toggleFaq(id) { this.activeFaq = this.activeFaq === id ? 0 : id; },
+        answerQuiz(arrName, idx, oi) { const ex = this[arrName][idx]; if (ex.answered) return; ex.selected = oi; ex.answered = true; },
+        answerTF(idx, value) { const ex = this.tfExercises[idx]; if (ex.answered) return; ex.selected = value; ex.answered = true; },
+        selectMatchLeft(exIdx, pIdx) { const pair = this.matchData[exIdx].pairs[pIdx]; if (pair.matched) return; this.selectedLeft = { exIdx, pIdx }; this.tryMatch(); },
+        selectMatchRight(exIdx, pIdx) { const item = this.matchData[exIdx].shuffledRights[pIdx]; if (item.matched) return; this.selectedRight = { exIdx, pIdx }; this.tryMatch(); },
+        tryMatch() {
+          if (!this.selectedLeft || !this.selectedRight) return;
+          if (this.selectedLeft.exIdx !== this.selectedRight.exIdx) { this.selectedLeft = null; this.selectedRight = null; return; }
+          const exIdx = this.selectedLeft.exIdx;
+          const leftPair = this.matchData[exIdx].pairs[this.selectedLeft.pIdx];
+          const rightItem = this.matchData[exIdx].shuffledRights[this.selectedRight.pIdx];
+          if (leftPair.id === rightItem.id) { leftPair.matched = true; rightItem.matched = true; if (this.matchData[exIdx].pairs.every(p => p.matched)) { this.matchData[exIdx].allMatched = true; } }
+          else { rightItem.wrong = true; setTimeout(() => { rightItem.wrong = false; }, 600); }
+          this.selectedLeft = null; this.selectedRight = null;
+        },
+        
+        // Ticket de Entrada Methods
+        startEntradaTimer() {
+          this.stopEntradaTimer();
+          this.entradaTimer = setInterval(() => {
+            if (this.entradaTimeLeft > 0) {
+              this.entradaTimeLeft--;
+            } else {
+              this.stopEntradaTimer();
+              this.timeOutEntrada();
+            }
+          }, 1000);
+        },
+        stopEntradaTimer() {
+          if (this.entradaTimer) clearInterval(this.entradaTimer);
+          this.entradaTimer = null;
+        },
+        answerEntrada(oi) {
+          const ex = this.entradaData[this.currentEntradaIndex];
+          if (ex.answered) return;
+          this.stopEntradaTimer();
+          ex.selected = oi;
+          ex.answered = true;
+          if (oi === ex.correct && typeof confetti === 'function') {
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+          }
+        },
+        timeOutEntrada() {
+          const ex = this.entradaData[this.currentEntradaIndex];
+          if (ex.answered) return;
+          ex.selected = -1; // -1 means time out (wrong)
+          ex.answered = true;
+          ex.explanation = "💥 <strong>¡Bum! Se acabó el tiempo.</strong> " + ex.explanation;
+        },
+        nextEntrada() {
+          this.currentEntradaIndex++;
+          if (this.currentEntradaIndex < this.entradaData.length) {
+            this.entradaTimeLeft = 80;
+            this.startEntradaTimer();
+          }
+        },
+
+        // Ticket de Salida Methods
+        copiarTicketSalida() {
+          const text = `[Ticket de Salida: Funciones en Python]\nPregunta: ${this.salidaQuestion}\nReflexión: ${this.salidaRespuesta}`;
+          navigator.clipboard.writeText(text).then(() => {
+            this.salidaCopiado = true;
+            setTimeout(() => { this.salidaCopiado = false; }, 5000);
+          }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            alert('No se pudo copiar automáticamente. Por favor, selecciona y copia el texto.');
+          });
+        }
+      },
+    });
+    app.mount('#app');
+  </script>
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>

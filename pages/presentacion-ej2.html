@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejercicio 2 — Juego de Adivinanza</title>
+<link rel="stylesheet" href="../css/presentacion.css">
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+<div class="nav">
+  <button onclick="prev()" title="Anterior">←</button>
+  <button onclick="next()" title="Siguiente">→</button>
+</div>
+
+<!-- SLIDE 1: Portada -->
+<div class="slide active">
+  <div class="deco-circle" style="width:300px;height:300px;background:var(--pastel-pink);top:-80px;right:-60px;"></div>
+  <div class="deco-circle" style="width:200px;height:200px;background:var(--pastel-blue);bottom:-40px;left:-40px;"></div>
+  <div class="emoji-big">🎯</div>
+  <h1>Juego de Adivinanza</h1>
+  <p class="subtitle">Ejercicio 2 — Evaluación 3 (60 puntos)</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-pink">random</span>
+    <span class="tag tag-blue">condicionales</span>
+    <span class="tag tag-green">ciclos</span>
+    <span class="tag tag-purple">funciones</span>
+  </div>
+</div>
+
+<!-- SLIDE 2: Qué vamos a construir -->
+<div class="slide">
+  <h2>¿Qué vamos a construir? 🏗️</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>📥 Entrada</h3>
+      <p>El usuario ingresa un rango numérico (límite inferior y superior)</p>
+    </div>
+    <div class="card">
+      <h3>🎲 Proceso</h3>
+      <p>Se genera un número aleatorio <strong>par</strong> dentro del rango</p>
+    </div>
+    <div class="card">
+      <h3>🎮 Juego</h3>
+      <p>3 intentos para adivinar, con pistas progresivas</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Pregunta orientadora 1 -->
+<div class="slide">
+  <h2>Antes de codear... pensemos 🧠</h2>
+  <div class="question-box">
+    <p>¿Cómo generamos un número aleatorio en Python?</p>
+  </div>
+  <div class="question-box open" style="margin-top:1rem;">
+    <p>Si el número aleatorio sale impar, ¿cómo lo convertimos en par?</p>
+  </div>
+</div>
+
+<!-- SLIDE 4: Diagrama del flujo general -->
+<div class="slide">
+  <h2>Flujo General del Programa</h2>
+  <div class="diagram">
+    <div class="box" style="border-color:var(--pastel-pink);">📥 Pedir rango</div>
+    <div class="arrow">→</div>
+    <div class="box" style="border-color:var(--pastel-blue);">🎲 Generar número</div>
+    <div class="arrow">→</div>
+    <div class="box" style="border-color:var(--pastel-green);">🔧 Ajustar a par</div>
+    <div class="arrow">→</div>
+    <div class="box" style="border-color:var(--pastel-purple);">🎮 Juego 3 intentos</div>
+  </div>
+  <p style="margin-top:1.5rem;font-size:1.1rem;">Cada bloque es un <span class="hl">subproblema</span> que resolveremos por separado</p>
+</div>
+
+<!-- SLIDE 5: Código base — Entrada -->
+<div class="slide">
+  <h3>Paso 1 — Pedir el rango al usuario</h3>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">import</span> random
+
+limite_inferior <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ingrese límite inferior: "</span>))
+limite_superior <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Ingrese límite superior: "</span>))
+  </div>
+  <p style="margin-top:1rem;"><span class="tag tag-yellow">💡 Clave</span> Convertimos a <code>int</code> porque <code>input()</code> retorna texto</p>
+</div>
+
+<!-- SLIDE 6: Código base — Generar número -->
+<div class="slide">
+  <h3>Paso 2 — Generar el número aleatorio</h3>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+numero_aleatorio <span class="op">=</span> random.<span class="fn">randint</span>(limite_inferior, limite_superior)
+numero_secreto <span class="op">=</span> numero_aleatorio
+  </div>
+  <div class="question-box" style="margin-top:1.5rem;">
+    <p>¿Qué pasa si <code>randint</code> genera un número impar?</p>
+  </div>
+</div>
+
+<!-- SLIDE 7: Diagrama ajuste par -->
+<div class="slide">
+  <h2>Ajuste a número par 🔧</h2>
+  <div class="diagram" style="flex-direction:column;gap:1.2rem;">
+    <div class="box" style="background:var(--pastel-yellow);border-color:var(--pastel-yellow);">¿numero_secreto % 2 != 0? → Es impar</div>
+    <div class="arrow" style="transform:rotate(90deg);">→</div>
+    <div style="display:flex;gap:2rem;">
+      <div class="box" style="border-color:var(--pastel-green);">✅ numero + 1 ≤ límite superior<br><strong>→ sumar 1</strong></div>
+      <div class="box" style="border-color:var(--pastel-pink);">❌ se sale del rango<br><strong>→ restar 1</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Código ajuste par -->
+<div class="slide">
+  <h3>Paso 3 — Código del ajuste</h3>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="cm"># Si es impar, ajustamos</span>
+<span class="kw">if</span> numero_secreto <span class="op">%</span> <span class="num">2</span> <span class="op">!=</span> <span class="num">0</span>:
+    <span class="kw">if</span> numero_secreto <span class="op">+</span> <span class="num">1</span> <span class="op">&lt;=</span> limite_superior:
+        numero_secreto <span class="op">=</span> numero_secreto <span class="op">+</span> <span class="num">1</span>
+    <span class="kw">else</span>:
+        numero_secreto <span class="op">=</span> numero_secreto <span class="op">-</span> <span class="num">1</span>
+  </div>
+</div>
+
+<!-- SLIDE 9: Pregunta orientadora juego -->
+<div class="slide">
+  <h2>Ahora viene el juego... 🎮</h2>
+  <div class="question-box">
+    <p>¿Qué estructura usarías para repetir algo exactamente 3 veces?</p>
+  </div>
+  <div class="question-box open" style="margin-top:1rem;">
+    <p>¿Cómo saber si el usuario adivinó antes de agotar los intentos?</p>
+  </div>
+  <div class="question-box" style="margin-top:1rem;">
+    <p>¿Cómo dar pistas diferentes en cada ronda?</p>
+  </div>
+</div>
+
+<!-- SLIDE 10: Diagrama lógica del juego -->
+<div class="slide">
+  <h2>Lógica del juego por ronda</h2>
+  <div class="two-cols">
+    <div>
+      <h3 style="color:var(--pastel-pink);">Ronda 1</h3>
+      <ul>
+        <li>Pedir número</li>
+        <li>¿Adivinó? → <span class="hl-green">Gana</span></li>
+        <li>¿No? → Pista: mayor/menor</li>
+        <li><span class="hl">Guardar este valor</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--pastel-blue);">Ronda 2</h3>
+      <ul>
+        <li>Pedir número</li>
+        <li>¿Adivinó? → <span class="hl-green">Gana</span></li>
+        <li>¿No? → Pista: mayor/menor</li>
+        <li><span class="hl-pink">Pista extra: cercanía</span></li>
+      </ul>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;">
+    <h3 style="color:var(--pastel-purple);">Ronda 3</h3>
+    <p>¿Adivinó? → <span class="hl-green">Gana</span> · ¿No? → <span class="hl-pink">Perdiste + revelar número</span></p>
+  </div>
+</div>
+
+<!-- SLIDE 11: Lógica 1 titulo -->
+<div class="slide">
+  <div class="emoji-big">🔄</div>
+  <h1>Lógica 1: <span class="hl-blue">Ciclo for</span></h1>
+  <p class="subtitle">Enfoque clásico y estructurado</p>
+  <span class="tag tag-blue">for numero_de_intento in range(1, 4)</span>
+</div>
+
+<!-- SLIDE 12: Código Lógica 1 -->
+<div class="slide">
+  <h3>Lógica 1 — Ciclo <code>for</code></h3>
+  <div class="code-block" style="font-size:1rem;line-height:1.65;">
+    <span class="code-label">Python</span>
+valor_primer_intento <span class="op">=</span> <span class="num">0</span>
+
+<span class="kw">for</span> <span class="var">numero_de_intento</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">4</span>):
+    valor <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">f"Ronda {numero_de_intento}: "</span>))
+
+    <span class="kw">if</span> valor <span class="op">==</span> numero_secreto:
+        <span class="fn">print</span>(<span class="str">"¡Felicitaciones!"</span>)
+        <span class="kw">break</span>
+
+    <span class="kw">elif</span> <span class="var">numero_de_intento</span> <span class="op">==</span> <span class="num">3</span>:
+        <span class="fn">print</span>(<span class="str">f"Perdiste. Era: {numero_secreto}"</span>)
+
+    <span class="kw">else</span>:
+        <span class="kw">if</span> valor <span class="op">&gt;</span> numero_secreto:
+            <span class="fn">print</span>(<span class="str">"Es menor"</span>)
+        <span class="kw">else</span>:
+            <span class="fn">print</span>(<span class="str">"Es mayor"</span>)
+
+        <span class="kw">if</span> <span class="var">numero_de_intento</span> <span class="op">==</span> <span class="num">1</span>:
+            valor_primer_intento <span class="op">=</span> valor
+        <span class="kw">elif</span> <span class="var">numero_de_intento</span> <span class="op">==</span> <span class="num">2</span>:
+            <span class="fn">print</span>(<span class="str">f"Pista: más cerca de {valor}"</span>)
+  </div>
+</div>
+
+<!-- SLIDE 13: Pregunta abierta for -->
+<div class="slide">
+  <h2>Reflexionemos sobre el <code>for</code> 💬</h2>
+  <div class="question-box open">
+    <p>¿Por qué usamos <code>range(1, 4)</code> y no <code>range(0, 3)</code>?</p>
+  </div>
+  <div class="question-box" style="margin-top:1rem;">
+    <p>¿Qué hace <code>break</code> dentro del <code>for</code>?</p>
+  </div>
+  <div class="question-box open" style="margin-top:1rem;">
+    <p>¿Por qué guardamos el valor del primer intento en una variable separada?</p>
+  </div>
+</div>
+
+<!-- SLIDE 14: Lógica 2 titulo -->
+<div class="slide">
+  <div class="emoji-big">📋</div>
+  <h1>Lógica 2: <span class="hl-pink">While + Listas</span></h1>
+  <p class="subtitle">Enfoque de historial</p>
+  <span class="tag tag-pink">historial_de_valores = []</span>
+</div>
+
+<!-- SLIDE 15: Diagrama while + listas -->
+<div class="slide">
+  <h2>¿Cómo funciona el historial?</h2>
+  <div class="diagram" style="flex-direction:column;gap:1rem;">
+    <div class="box" style="border-color:var(--pastel-pink);width:100%;max-width:600px;">
+      📋 <code>historial = []</code> → lista vacía al inicio
+    </div>
+    <div class="arrow" style="transform:rotate(90deg);">→</div>
+    <div class="box" style="border-color:var(--pastel-blue);width:100%;max-width:600px;">
+      Ronda 1: usuario ingresa <strong>3</strong> → <code>historial = [3]</code>
+    </div>
+    <div class="arrow" style="transform:rotate(90deg);">→</div>
+    <div class="box" style="border-color:var(--pastel-green);width:100%;max-width:600px;">
+      Ronda 2: usuario ingresa <strong>8</strong> → <code>historial = [3, 8]</code><br>
+      Pista: <code>historial[1]</code> vs <code>historial[0]</code>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16: Código Lógica 2 -->
+<div class="slide">
+  <h3>Lógica 2 — <code>while</code> + Listas</h3>
+  <div class="code-block" style="font-size:.95rem;line-height:1.6;">
+    <span class="code-label">Python</span>
+intentos_consumidos <span class="op">=</span> <span class="num">0</span>
+historial <span class="op">=</span> []
+
+<span class="kw">while</span> intentos_consumidos <span class="op">&lt;</span> <span class="num">3</span>:
+    ronda <span class="op">=</span> intentos_consumidos <span class="op">+</span> <span class="num">1</span>
+    valor <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">f"Ronda {ronda}: "</span>))
+    historial.<span class="fn">append</span>(valor)
+    intentos_consumidos <span class="op">+=</span> <span class="num">1</span>
+
+    <span class="kw">if</span> valor <span class="op">==</span> numero_secreto:
+        <span class="fn">print</span>(<span class="str">"¡Felicitaciones!"</span>)
+        <span class="kw">break</span>
+    <span class="kw">if</span> intentos_consumidos <span class="op">==</span> <span class="num">3</span>:
+        <span class="fn">print</span>(<span class="str">f"Perdiste. Era: {numero_secreto}"</span>)
+    <span class="kw">else</span>:
+        <span class="kw">if</span> valor <span class="op">&lt;</span> numero_secreto:
+            <span class="fn">print</span>(<span class="str">"Es mayor"</span>)
+        <span class="kw">else</span>:
+            <span class="fn">print</span>(<span class="str">"Es menor"</span>)
+        <span class="kw">if</span> intentos_consumidos <span class="op">==</span> <span class="num">2</span>:
+            <span class="fn">print</span>(<span class="str">f"Pista: más cerca de {historial[1]}"</span>)
+  </div>
+</div>
+
+<!-- SLIDE 17: Pregunta abierta while -->
+<div class="slide">
+  <h2>Reflexionemos sobre <code>while</code> + listas 💬</h2>
+  <div class="question-box">
+    <p>¿Cuál es la diferencia entre <code>for</code> y <code>while</code> aquí?</p>
+  </div>
+  <div class="question-box open" style="margin-top:1rem;">
+    <p>¿Por qué la lista es mejor que una variable para guardar intentos?</p>
+  </div>
+  <div class="question-box" style="margin-top:1rem;">
+    <p>¿Qué pasa si olvidamos <code>intentos_consumidos += 1</code>?</p>
+  </div>
+</div>
+
+<!-- SLIDE 18: Lógica 3 titulo -->
+<div class="slide">
+  <div class="emoji-big">🧩</div>
+  <h1>Lógica 3: <span class="hl-green">Funciones</span></h1>
+  <p class="subtitle">Enfoque modular — sin ciclos</p>
+  <span class="tag tag-green">def ejecutar_juego(numero_secreto)</span>
+</div>
+
+<!-- SLIDE 19: Diagrama funciones -->
+<div class="slide">
+  <h2>¿Por qué funciones?</h2>
+  <div class="cards">
+    <div class="card" style="border-top-color:var(--pastel-green);">
+      <h3>📦 Encapsulación</h3>
+      <p>Todo el juego vive dentro de <strong>una sola función</strong></p>
+    </div>
+    <div class="card" style="border-top-color:var(--pastel-yellow);">
+      <h3>🚪 return</h3>
+      <p>Usamos <code>return</code> para terminar la función al adivinar</p>
+    </div>
+    <div class="card" style="border-top-color:var(--pastel-purple);">
+      <h3>📖 Legibilidad</h3>
+      <p>Cada ronda es un bloque visible y claro</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 20: Código Lógica 3 -->
+<div class="slide">
+  <h3>Lógica 3 — Funciones (fragmento)</h3>
+  <div class="code-block" style="font-size:.9rem;line-height:1.55;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">ejecutar_juego</span>(numero_secreto):
+    <span class="cm"># --- RONDA 1 ---</span>
+    valor <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Intento 1: "</span>))
+    <span class="kw">if</span> valor <span class="op">==</span> numero_secreto:
+        <span class="fn">print</span>(<span class="str">"¡Adivinaste en el 1er intento!"</span>)
+        <span class="kw">return</span>
+    <span class="cm"># pista mayor/menor...</span>
+    primer_intento <span class="op">=</span> valor
+
+    <span class="cm"># --- RONDA 2 ---</span>
+    valor <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Intento 2: "</span>))
+    <span class="kw">if</span> valor <span class="op">==</span> numero_secreto:
+        <span class="fn">print</span>(<span class="str">"¡Adivinaste en el 2do intento!"</span>)
+        <span class="kw">return</span>
+    <span class="fn">print</span>(<span class="str">f"Pista: más cerca de {valor} que de {primer_intento}"</span>)
+
+    <span class="cm"># --- RONDA 3 ---</span>
+    valor <span class="op">=</span> <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Intento 3: "</span>))
+    <span class="kw">if</span> valor <span class="op">==</span> numero_secreto:
+        <span class="fn">print</span>(<span class="str">"¡Adivinaste en el 3er intento!"</span>)
+        <span class="kw">return</span>
+    <span class="fn">print</span>(<span class="str">f"Perdiste. Era: {numero_secreto}"</span>)
+
+<span class="fn">ejecutar_juego</span>(numero_secreto)
+  </div>
+</div>
+
+<!-- SLIDE 21: Preguntas funciones -->
+<div class="slide">
+  <h2>Reflexionemos sobre funciones 💬</h2>
+  <div class="question-box open">
+    <p>¿Qué diferencia hay entre <code>break</code> y <code>return</code>?</p>
+  </div>
+  <div class="question-box" style="margin-top:1rem;">
+    <p>¿Por qué pasamos el número secreto como parámetro y no lo usamos directo?</p>
+  </div>
+  <div class="question-box open" style="margin-top:1rem;">
+    <p>¿Qué ventaja tiene esta versión si el juego tuviera 10 intentos?</p>
+  </div>
+</div>
+
+<!-- SLIDE 22: Comparación -->
+<div class="slide">
+  <h2>Comparación de las 3 lógicas ⚖️</h2>
+  <table class="compare-table">
+    <tr><th>Aspecto</th><th>for</th><th>while + lista</th><th>funciones</th></tr>
+    <tr><td>Estructura</td><td>Ciclo fijo</td><td>Ciclo condicional</td><td>Secuencial</td></tr>
+    <tr><td>Finaliza con</td><td><code>break</code></td><td><code>break</code></td><td><code>return</code></td></tr>
+    <tr><td>Guarda intentos</td><td>Variable</td><td>Lista</td><td>Variable</td></tr>
+    <tr><td>Escalabilidad</td><td>⭐⭐</td><td>⭐⭐⭐</td><td>⭐</td></tr>
+    <tr><td>Legibilidad</td><td>⭐⭐⭐</td><td>⭐⭐</td><td>⭐⭐⭐</td></tr>
+  </table>
+</div>
+
+<!-- SLIDE 23: Cierre -->
+<div class="slide">
+  <div class="deco-circle" style="width:250px;height:250px;background:var(--pastel-green);top:-60px;left:-50px;"></div>
+  <div class="deco-circle" style="width:180px;height:180px;background:var(--pastel-purple);bottom:-30px;right:-30px;"></div>
+  <div class="emoji-big">🚀</div>
+  <h1>Un problema,<br>múltiples caminos</h1>
+  <p class="subtitle" style="max-width:600px;">No hay una única forma correcta de programar.<br>Lo importante es <span class="hl">entender la lógica</span> detrás de cada solución.</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-pink">pensar</span>
+    <span class="tag tag-blue">diseñar</span>
+    <span class="tag tag-green">codear</span>
+    <span class="tag tag-purple">iterar</span>
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function show(n) {
+  slides[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${((current + 1) / slides.length) * 100}%`;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') prev();
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+});
+
+show(0);
+</script>
+</body>
+</html>

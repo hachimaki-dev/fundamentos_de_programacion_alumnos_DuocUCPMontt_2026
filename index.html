@@ -91,7 +91,44 @@
       </div>
     </div>
 
-    <!-- ─── EA2 Section (expanded) ─── -->
+    <!-- ─── EA3 Section (expanded) ─── -->
+    <div v-if="ea3Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
+      <div class="unit-section" style="margin-bottom: 0;">
+        <div class="unit-header" @click="ea3Open = !ea3Open"
+          style="margin-bottom: 0; border: none; box-shadow: none; border-radius: var(--t-radius, 12px);">
+          <span class="unit-chevron" :class="{ open: ea3Open }">▶</span>
+          <span class="unit-badge ea3">EA3</span>
+          <span class="unit-title">Unidad 3 — Funciones en Python</span>
+          <span class="unit-count">{{ ea3Entries.length }} entradas</span>
+        </div>
+        <div class="unit-body" :class="ea3Open ? 'expanded' : 'collapsed'"
+          :style="ea3Open ? 'max-height:' + (ea3Entries.length * 250) + 'px' : ''">
+          <div style="padding: 0 1rem 1rem;">
+            <a v-for="(entry, idx) in ea3Entries" :key="entry.id" :href="entry.page !== '#' ? entry.page : undefined"
+              class="diary-entry fade-in-up"
+              :style="{ animationDelay: (idx * 0.08) + 's', marginLeft: '0', marginBottom: '0.5rem', display: 'block', textDecoration: 'none' }"
+              :class="{ 'opacity-60 cursor-default': entry.page === '#' }"
+              @click="entry.page === '#' && $event.preventDefault()">
+              <div class="entry-date">{{ formatDate(entry.date) }}</div>
+              <div class="entry-title">
+                <span class="entry-emoji">{{ entry.emoji }}</span>
+                {{ entry.title }}
+                <span v-if="entry.isOptional" class="entry-tag" style="margin-left: 0.3rem; background: rgba(192,132,252,0.15); color: #c084fc; border: 1px solid rgba(192,132,252,0.3); font-size: 0.65rem;">⭐ OPCIONAL</span>
+                <span v-if="entry.page === '#'" class="entry-tag nuevo" style="margin-left: 0.3rem;">✨ Pronto</span>
+              </div>
+              <div class="entry-desc">{{ entry.description }}</div>
+              <div class="entry-tags">
+                <span v-for="tag in entry.tags" :key="tag" class="entry-tag" :class="tag">
+                  {{ tagLabels[tag] || tag }}
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── EA2 Section ─── -->
     <div v-if="ea2Entries.length > 0" class="sd-card fade-in-up" style="margin-bottom: 1.5rem; padding: 0;">
       <div class="unit-section" style="margin-bottom: 0;">
         <div class="unit-header" @click="ea2Open = !ea2Open"
@@ -164,28 +201,47 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0" class="empty-state"
+    <div v-if="ea1Entries.length === 0 && ea2Entries.length === 0 && ea3Entries.length === 0" class="empty-state"
       style="max-width:700px;margin:0 auto;">
       <div class="emoji">🔍</div>
       <p>No se encontraron entradas con ese filtro.</p>
       <p class="mt-2 text-sm">Intenta con otra búsqueda o quita los filtros 🌸</p>
     </div>
 
-    <!-- ─── Stats Section ─── -->
-    <div class="sd-card mb-8">
-      <div class="sd-sec" style="text-align: center;">📊 Resumen del curso</div>
-      <div class="sd-stat-row" style="margin-top: 0.5rem;">
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ totalEntries }}</div>
-          <div class="sd-stat-label">entradas</div>
+    <!-- ─── Platform Stats Section ─── -->
+    <div class="sd-card mb-8 fade-in-up" style="background: linear-gradient(135deg, var(--t-surface), var(--t-surface-alt)); border-color: var(--t-accent-subtle); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: var(--t-accent); filter: blur(50px); opacity: 0.3;"></div>
+      <div style="position: absolute; bottom: -50px; left: -50px; width: 100px; height: 100px; background: var(--t-correct); filter: blur(50px); opacity: 0.2;"></div>
+      
+      <div class="sd-sec" style="text-align: center; font-size: 1.2rem; color: var(--t-accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+        🌐 Estadísticas Globales de la Academia
+      </div>
+
+      <div v-if="loadingStats" style="text-align: center; padding: 2rem;">
+        <div class="spinner" style="border-color: var(--t-accent); border-top-color: transparent; width: 30px; height: 30px; margin: 0 auto;"></div>
+        <div style="margin-top: 1rem; color: var(--t-text-muted); font-size: 0.9rem;">Sincronizando con el servidor...</div>
+      </div>
+
+      <div v-else class="sd-stat-row" style="margin-top: 0.5rem; gap: 1rem; flex-wrap: wrap;">
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">🥷</div>
+          <div class="sd-stat-num" style="color: var(--t-text); font-size: 2rem;">{{ platformStats.hackers }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-accent);">Hackers Activos</div>
         </div>
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ availableEntries }}</div>
-          <div class="sd-stat-label">disponibles</div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">⚡</div>
+          <div class="sd-stat-num" style="color: var(--t-warning-text); font-size: 2rem;">{{ platformStats.totalXp.toLocaleString() }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-warning-text);">XP Total Farmeada</div>
         </div>
-        <div class="sd-stat-box">
-          <div class="sd-stat-num">{{ comingSoonEntries }}</div>
-          <div class="sd-stat-label">próximamente</div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">🐙</div>
+          <div class="sd-stat-num" style="color: var(--t-correct-text); font-size: 2rem;">{{ platformStats.commits }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-correct-text);">Commits GitHub</div>
+        </div>
+        <div class="sd-stat-box" style="background: var(--t-glass-bg); border: 1px solid var(--t-glass-border); padding: 1.5rem 1rem; flex: 1; min-width: 120px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='none'">
+          <div style="font-size: 1.8rem; margin-bottom: 0.25rem;">📖</div>
+          <div class="sd-stat-num" style="color: var(--t-text); font-size: 2rem;">{{ platformStats.diaries }}</div>
+          <div class="sd-stat-label" style="font-size: 0.85rem; color: var(--t-accent);">Publicaciones</div>
         </div>
       </div>
     </div>
@@ -226,13 +282,50 @@
           searchQuery: '',
           activeFilter: 'all',
           ea1Open: false,
-          ea2Open: true,
+          ea2Open: false,
+          ea3Open: true,
           tagLabels: {
             python: 'Python',
             flow: 'Diagramas',
             docs: 'Documentación',
           },
+          platformStats: {
+            hackers: 0,
+            totalXp: 0,
+            commits: 0,
+            diaries: 0
+          },
+          loadingStats: true
         };
+      },
+      async mounted() {
+        try {
+          const client = typeof SupabaseManager !== 'undefined' ? SupabaseManager.getClient() : null;
+          if (!client) {
+            this.loadingStats = false;
+            return;
+          }
+
+          // Fetch hackers and total XP
+          const { data: profiles } = await client.from('profiles').select('xp');
+          if (profiles) {
+            this.platformStats.hackers = profiles.length;
+            this.platformStats.totalXp = profiles.reduce((sum, p) => sum + (p.xp || 0), 0);
+          }
+
+          // Fetch GitHub commits count
+          const { count: commitsCount } = await client.from('github_sync_history').select('*', { count: 'exact', head: true });
+          this.platformStats.commits = commitsCount || 0;
+
+          // Fetch diary entries count
+          const { count: diariesCount } = await client.from('diary_entries').select('*', { count: 'exact', head: true });
+          this.platformStats.diaries = diariesCount || 0;
+          
+        } catch (e) {
+          console.error('Error fetching global stats', e);
+        } finally {
+          this.loadingStats = false;
+        }
       },
       computed: {
         filteredEntries() {
@@ -256,6 +349,9 @@
         },
         ea2Entries() {
           return this.filteredEntries.filter(e => e.unit === 'ea2');
+        },
+        ea3Entries() {
+          return this.filteredEntries.filter(e => e.unit === 'ea3');
         },
         totalEntries() {
           return this.entries.length;

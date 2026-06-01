@@ -1537,3 +1537,594 @@
   color: var(--t-accent);
   border-bottom-color: var(--t-accent);
 }
+
+/* ============================================================
+   🥋 DOJO V2 — Arena Viva de Aprendizaje
+   ============================================================
+   Hereda el ADN visual del Dashboard (mismos radios, sombras,
+   pills, tipografía). Adds 3-column layout, solution cards,
+   code preview, WANTED posters, countdown, activity feed.
+   ============================================================ */
+
+/* ─── 3-Column Dojo Layout ─── */
+.dojo-root {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 260px;
+  gap: 14px;
+  padding: 12px 0;
+  align-items: start;
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: var(--t-font-main, 'Quicksand'), sans-serif;
+}
+
+/* ─── Dojo Nav (replaces top-nav) ─── */
+.dojo-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  color: var(--t-text-muted);
+  margin-bottom: 6px;
+}
+.dojo-breadcrumb a {
+  color: var(--t-text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.dojo-breadcrumb a:hover { color: var(--t-accent); }
+.dojo-breadcrumb .sep { opacity: 0.4; }
+
+/* ─── Hero Card (Active Challenge) ─── */
+.dojo-hero {
+  background: var(--t-glass-bg);
+  border: 1px solid var(--t-glass-border);
+  border-radius: var(--t-radius, 12px);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--t-shadow);
+}
+.dojo-hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--t-accent), var(--t-correct, #1D9E75));
+}
+.dojo-hero-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--t-text);
+  margin-bottom: 4px;
+}
+.dojo-hero-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--t-text-muted);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.dojo-hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ─── Solution Card ─── */
+.dojo-solution-card {
+  background: var(--t-glass-bg);
+  border: 1px solid var(--t-glass-border);
+  border-radius: var(--t-radius, 12px);
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 10px var(--t-shadow);
+  display: flex;
+}
+.dojo-solution-card:hover {
+  box-shadow: 0 6px 24px var(--t-shadow-hover);
+  border-color: var(--t-accent);
+  transform: translateY(-2px);
+}
+.dojo-diff-band {
+  width: 5px;
+  flex-shrink: 0;
+  border-radius: var(--t-radius, 12px) 0 0 var(--t-radius, 12px);
+}
+.dojo-diff-band.easy { background: var(--t-correct, #1D9E75); }
+.dojo-diff-band.medium { background: var(--t-warning-text, #BA7517); }
+.dojo-diff-band.hard { background: var(--t-wrong, #D4537E); }
+.dojo-solution-body {
+  flex: 1;
+  padding: 12px 14px;
+  min-width: 0;
+}
+.dojo-solution-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.dojo-solution-author {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--t-text);
+}
+.dojo-solution-problem {
+  font-size: 10px;
+  color: var(--t-text-muted);
+  margin-top: 1px;
+}
+.dojo-solution-metrics {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.dojo-metric {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--t-text-muted);
+  font-weight: 500;
+}
+.dojo-metric strong {
+  color: var(--t-text);
+  font-weight: 700;
+}
+.dojo-solution-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.dojo-action-btn {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--t-glass-border);
+  background: transparent;
+  color: var(--t-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--t-font-main), sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.dojo-action-btn:hover {
+  border-color: var(--t-accent);
+  color: var(--t-accent);
+  background: var(--t-accent-subtle);
+}
+.dojo-action-btn.active {
+  background: var(--t-accent-subtle);
+  border-color: var(--t-accent);
+  color: var(--t-accent);
+}
+.dojo-action-btn.liked {
+  background: var(--t-wrong-bg);
+  border-color: var(--t-wrong);
+  color: var(--t-wrong);
+}
+
+/* ─── Code Preview ─── */
+.dojo-code-preview {
+  background: #0d1117;
+  border-radius: 0 0 8px 8px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.dojo-code-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dojo-code-filename {
+  font-size: 10px;
+  color: #8b949e;
+  font-family: var(--t-font-code, 'Fira Code'), monospace;
+}
+.dojo-code-copy {
+  font-size: 9px;
+  padding: 2px 8px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 4px;
+  color: #8b949e;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--t-font-main), sans-serif;
+}
+.dojo-code-copy:hover { background: rgba(255,255,255,0.15); color: #e6edf3; }
+.dojo-code-content {
+  padding: 10px 14px;
+  font-family: var(--t-font-code, 'Fira Code'), monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #e6edf3;
+  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre;
+  margin: 0;
+  counter-reset: line;
+}
+.dojo-code-content .line-num {
+  color: #484f58;
+  display: inline-block;
+  width: 2.5em;
+  text-align: right;
+  margin-right: 1em;
+  user-select: none;
+}
+.dojo-code-loading {
+  padding: 2rem;
+  text-align: center;
+  color: #484f58;
+  font-size: 11px;
+}
+
+/* ─── Countdown ─── */
+.dojo-countdown {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 8px 0;
+}
+.dojo-countdown-unit {
+  text-align: center;
+  background: var(--t-surface-alt);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-width: 44px;
+}
+.dojo-countdown-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--t-text);
+  font-variant-numeric: tabular-nums;
+}
+.dojo-countdown-label {
+  font-size: 8px;
+  color: var(--t-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.dojo-countdown.urgent .dojo-countdown-num {
+  color: var(--t-wrong);
+  animation: dojoPulse 1s ease-in-out infinite;
+}
+@keyframes dojoPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ─── Activity Feed ─── */
+.dojo-feed-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--t-glass-border);
+}
+.dojo-feed-item:last-child { border-bottom: none; }
+.dojo-feed-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+  background: var(--t-surface-alt);
+}
+.dojo-feed-text {
+  font-size: 11px;
+  color: var(--t-text-secondary);
+  line-height: 1.4;
+}
+.dojo-feed-text strong { color: var(--t-text); }
+.dojo-feed-time {
+  font-size: 9px;
+  color: var(--t-text-muted);
+  margin-top: 2px;
+}
+
+/* ─── WANTED Poster (One Piece style, adapted for dark themes) ─── */
+.dojo-wanted-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.dojo-wanted-poster {
+  background: #e8dcb8;
+  padding: 12px;
+  border: 6px solid #3d2b1f;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  color: #3d2b1f;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  display: block;
+}
+.dojo-wanted-poster:hover {
+  transform: translateY(-6px) rotate(1deg);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+.dojo-wanted-poster.rank-1 {
+  border-color: #b8860b;
+  grid-column: 1 / -1;
+  max-width: 260px;
+  margin: 0 auto;
+}
+.dojo-wanted-header {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  border-bottom: 2px solid #3d2b1f;
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+}
+.dojo-wanted-subtitle {
+  font-size: 0.6rem;
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+}
+.dojo-wanted-img {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 3px solid #3d2b1f;
+  object-fit: cover;
+  filter: sepia(0.5) contrast(1.1);
+  margin-bottom: 6px;
+}
+.dojo-wanted-name {
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.dojo-wanted-bounty {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-top: 6px;
+}
+.dojo-wanted-amount {
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+.dojo-wanted-faction {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #8b0000;
+  color: white;
+  padding: 2px 8px;
+  font-size: 8px;
+  font-weight: 700;
+  font-family: sans-serif;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  transform: rotate(12deg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* ─── Sidebar Nav Items ─── */
+.dojo-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  color: var(--t-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font-family: var(--t-font-main), sans-serif;
+}
+.dojo-nav-item:hover {
+  background: var(--t-surface-hover);
+  color: var(--t-text);
+}
+.dojo-nav-item.active {
+  background: var(--t-accent-subtle);
+  color: var(--t-accent);
+  font-weight: 600;
+}
+.dojo-nav-badge {
+  margin-left: auto;
+  background: var(--t-surface-alt);
+  border-radius: 10px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--t-text-muted);
+}
+.dojo-nav-item.active .dojo-nav-badge {
+  background: var(--t-accent);
+  color: var(--t-text-inverse, white);
+}
+
+/* ─── Wall Post Enhanced ─── */
+.dojo-wall-card {
+  background: var(--t-surface-alt);
+  border: 1px solid var(--t-glass-border);
+  border-radius: var(--t-radius, 12px);
+  padding: 12px 14px;
+  transition: border-color 0.2s;
+}
+.dojo-wall-card:hover { border-color: var(--t-accent); }
+.dojo-wall-likes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.dojo-wall-like-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid var(--t-glass-border);
+  background: transparent;
+  color: var(--t-text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--t-font-main), sans-serif;
+}
+.dojo-wall-like-btn:hover,
+.dojo-wall-like-btn.liked {
+  background: var(--t-wrong-bg);
+  border-color: var(--t-wrong);
+  color: var(--t-wrong);
+}
+.dojo-like-avatars {
+  display: flex;
+  margin-left: 4px;
+}
+.dojo-like-avatars .sd-av {
+  width: 18px;
+  height: 18px;
+  margin-left: -5px;
+  border: 1.5px solid var(--t-surface-alt);
+}
+.dojo-like-avatars .sd-av:first-child { margin-left: 0; }
+
+/* ─── Avatar Stack ─── */
+.dojo-avatar-stack {
+  display: flex;
+  align-items: center;
+}
+.dojo-avatar-stack .sd-av {
+  width: 26px;
+  height: 26px;
+  margin-left: -6px;
+  border: 2px solid var(--t-glass-bg);
+  transition: transform 0.2s;
+}
+.dojo-avatar-stack .sd-av:first-child { margin-left: 0; }
+.dojo-avatar-stack .sd-av:hover {
+  transform: scale(1.15) translateY(-2px);
+  z-index: 5;
+}
+.dojo-avatar-more {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--t-surface-alt);
+  border: 2px solid var(--t-glass-bg);
+  margin-left: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--t-text-muted);
+}
+
+/* ─── Competition List Card Enhanced ─── */
+.dojo-comp-card {
+  background: var(--t-glass-bg);
+  border: 1px solid var(--t-glass-border);
+  border-radius: var(--t-radius, 12px);
+  padding: 14px;
+  box-shadow: 0 2px 12px var(--t-shadow);
+  transition: all 0.25s ease;
+}
+.dojo-comp-card:hover {
+  box-shadow: 0 6px 24px var(--t-shadow-hover);
+  transform: translateY(-2px);
+}
+.dojo-comp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.dojo-comp-status.active {
+  background: var(--t-correct-bg);
+  color: var(--t-correct-text);
+}
+.dojo-comp-status.finished {
+  background: var(--t-surface-alt);
+  color: var(--t-text-muted);
+}
+
+/* ─── Mobile Tabs for Dojo ─── */
+.dojo-mobile-tabs {
+  display: none;
+  gap: 3px;
+  background: var(--t-surface-alt);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+.dojo-mobile-tab {
+  flex: 1;
+  text-align: center;
+  padding: 6px;
+  font-size: 11px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--t-text-secondary);
+  font-family: var(--t-font-main), sans-serif;
+}
+.dojo-mobile-tab.active {
+  background: var(--t-glass-bg);
+  color: var(--t-text);
+  font-weight: 600;
+  border: 1px solid var(--t-glass-border);
+}
+
+/* ─── Dojo Responsive ─── */
+@media (max-width: 1100px) {
+  .dojo-root {
+    grid-template-columns: 1fr 240px;
+    padding: 10px;
+  }
+  .dojo-root > .sd-col:first-child { display: none; }
+  .dojo-mobile-tabs { display: flex; }
+}
+@media (max-width: 768px) {
+  .dojo-root {
+    grid-template-columns: 1fr;
+    padding: 8px;
+  }
+  .dojo-root > .sd-col:first-child,
+  .dojo-root > .sd-col:last-child { display: none; }
+  .dojo-root > .sd-col.dojo-mobile-show { display: flex !important; }
+  .dojo-mobile-tabs { display: flex; }
+  .dojo-wanted-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .dojo-solution-card { flex-direction: column; }
+  .dojo-diff-band { width: 100%; height: 4px; border-radius: var(--t-radius, 12px) var(--t-radius, 12px) 0 0; }
+}
+
+/* ─── Difficulty Pills ─── */
+.sd-pill.easy { background: var(--t-correct-bg); color: var(--t-correct-text); }
+.sd-pill.medium { background: var(--t-tag-peach-bg); color: var(--t-warning-text); }
+.sd-pill.hard { background: var(--t-wrong-bg); color: var(--t-wrong-text); }
