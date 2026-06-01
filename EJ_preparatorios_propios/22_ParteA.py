@@ -31,8 +31,10 @@ for a in range(animales_registrados):
 
             if peso_animal > 25:
                 paciente_grande += 1
+                break
             else:
                 paciente_grande += 1
+                break
         except ValueError:
             print("Ingrese uan opcion valida ")
 
