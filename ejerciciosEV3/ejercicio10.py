@@ -34,12 +34,12 @@ while True:
     except:
         print("ingresa un numero real")
 
+
 for cantidad_de_notas in range(estudiantes):
     while True:
         try:
             nota = int(input(f"ingresa la nota del estudiante {cantidad_de_notas + 1} (tiene que ser del 1 al 7)"))
             promedio_curso +=nota / estudiantes
-            
             if nota >=1 and nota <=7:
                 break
             else:
@@ -47,15 +47,12 @@ for cantidad_de_notas in range(estudiantes):
         except ValueError:
             print("ingrese la nota como numero valido")
     
+    
     notas.append(nota)
     if nota >= 4:
         aprovados+=1
     elif nota < 4:
         reprobados +=1
-
-
-
-
 
 print(f"resumen :\n cantidad de aprobados : {aprovados}\n cantidad de reprobados : {reprobados}\n promedio curso : {promedio_curso} ")
 

@@ -25,7 +25,7 @@ while True:
         print("ingresa un numero valido")
 
 lista_empleados = []
-for cantidad_de_empleados in range(len(empleados)): 
+for cantidad_de_empleados in range(empleados): 
     while True:
         try:
             id_empleado = input(f"ingresa el id del empleado {cantidad_de_empleados +1 }: ")

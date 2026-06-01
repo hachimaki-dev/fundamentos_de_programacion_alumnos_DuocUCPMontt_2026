@@ -40,4 +40,4 @@ while sensores < 6:
         Temperaturas_bajas +=1
         sensores +=1
 
-print(f" temperaturas criticas: {Temperaturas_críticas}\n temperaturas normales: {Temperaturas_normales}\n temperatuas bajas :{Temperaturas_bajas}")
+print(f" temperaturas criticas: {Temperaturas_críticas}\n temperaturas normales: {Temperaturas_normales}\n temperatuas bajas : {Temperaturas_bajas}")

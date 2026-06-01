@@ -59,6 +59,7 @@ for codigo_por_unidad in range(paquetes):
             print("ingresa el codigo de barras bien ")
     
     codigos.append(codigo)
+    tamano_de_codigos = len(codigo)
     print(f"{codigos}")
 
 print(f" total carga pesada: {carga_pesada}\n total carga normal: {carga_normal}\n total peso : {total_peso}kg")    
