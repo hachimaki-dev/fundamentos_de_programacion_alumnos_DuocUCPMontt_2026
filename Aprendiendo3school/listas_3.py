@@ -1,7 +1,5 @@
+#TIPOS
 
-equipo_pokemon=["Torterra", "Infernaoe", "Empoleon", "Luxray", "Staraptor", "Garchomp"]
-
-print(equipo_pokemon[2])
-
-print(equipo_pokemon[-1])
-
+integer=[1, 2, 3]
+estring=["hola", "pepe"]
+booleano=[True, False]

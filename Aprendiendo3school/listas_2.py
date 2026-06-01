@@ -1,9 +1,5 @@
+#SELECCION
 
-
-boolean_list=[True, False]
-
-number_list=[1, 2, 3]
-
-str_list=["Hola genteee"]
-
-
+lista=["Turtwig", "Chimchar", "Piplup"]
+print(lista[1])
+print(lista[-1])

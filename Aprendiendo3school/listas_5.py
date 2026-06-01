@@ -1,8 +1,8 @@
-#APPEND
+#CLEAR
 
 lista=["Turtwig", "Chimchar", "Piplup"]
 print(lista)
 
-lista.append("Pachirisu")
+lista.clear()
 print(lista)
 
