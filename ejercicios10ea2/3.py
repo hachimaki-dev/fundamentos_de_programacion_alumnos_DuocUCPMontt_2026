@@ -3,7 +3,6 @@ kit_material = 18000
 edad_usuario_meses = 10
 nivel = 2
 
-# Lógica de Mensualidad
 if edad_usuario_meses <= 18:
     if nivel == 1 or nivel == 2:
         mensualidad *= 0.80 

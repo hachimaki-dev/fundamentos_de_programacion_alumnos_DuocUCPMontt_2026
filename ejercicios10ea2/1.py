@@ -1,3 +1,5 @@
+
+
 cuenta_mensual = 45000
 carga_medicion = 6000
 consumo = 600
