@@ -12,6 +12,7 @@ print("==="*12)
 
 
 while True:
+    print()
     print("1. Ver horas disponibles \n2. Reservar hora(s) \n3. Cancelar hora(s) \n4. Ver historial de reservas \n5. Registrar animal \n6. Historial Animales Registrados \n7. Salir")
     print()
 
@@ -94,6 +95,7 @@ while True:
             print("==="*8)
             print()
             print(f"Resumen Pacientes: \nPacientes Grandes : {paciente_grande} \nPacientes Pequeños : {paciente_pequeño}")
+            print(f"Id de los animales : {id_animales_registrados}")
     except ValueError:
         print("Ingrese una opcion valida")
 
