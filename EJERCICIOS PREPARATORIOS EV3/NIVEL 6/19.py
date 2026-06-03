@@ -29,7 +29,10 @@ for v in range(registro_vehiculos):
     while True:
         patente = input(f"Patente del camión {v + 1}: ").strip().upper()
         if len(patente) == 6 and " " not in patente:
-            break
+            if (patente in camion_liviano) or (patente in camion_pesado):
+                print("Error: La patente ya ha sido registrada.")
+            else:
+                break
         else:
             print("Error: La patente debe tener 6 caracteres, sin espacios.")
     
