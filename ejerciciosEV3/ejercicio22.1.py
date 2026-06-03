@@ -59,3 +59,4 @@ for cantidad_de_animales in range(len(id_animales)):
             print("ingresa un numero valido")
 
 print(f"La clínica ha registrado {paciente_grande} pacientes grandes y {paciente_pequeno} pacientes pequeños. ¡Bienvenidos!")
+print(id_animales)
