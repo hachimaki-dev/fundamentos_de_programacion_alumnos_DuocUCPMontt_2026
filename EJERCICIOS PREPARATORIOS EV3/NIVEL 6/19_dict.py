@@ -11,8 +11,8 @@
 #Al finalizar:
 #"La flota cuenta con 3 camiones pesados y 5 camiones livianos. Registro completado."
 
-camion_pesado = []
-camion_liviano = []
+camion_pesado = {}
+camion_liviano = {}
 
 while True:
     try:
@@ -47,9 +47,9 @@ for v in range(registro_vehiculos):
             print("Error: La capacidad del camión debe ingresarse en formato numérico.")
         
     if capacidad > 15:
-        camion_pesado.append(patente)
+        camion_pesado[patente]= capacidad
     else:
-        camion_liviano.append(patente)
+        camion_liviano[patente]= capacidad
     
 print(f"Camión pesado = {camion_pesado}")
 print(f"Camión liviano = {camion_liviano}")
