@@ -8,6 +8,6 @@ for estudiante in lista_de_estudiantes:
     promedio = sum(estudiante["Notas"])/cantidad_notas
     promedio = round(promedio,2)
     estudiante["Promedio"] = promedio
-    print(estudiante.get("Promedio"))
+    print(f"Nombre:{(estudiante.get("Nombre"))} Promedio:{estudiante.get("Promedio")}")
 
         
