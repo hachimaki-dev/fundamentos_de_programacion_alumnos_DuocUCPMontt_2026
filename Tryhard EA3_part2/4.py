@@ -11,15 +11,20 @@
 
 total=0
 
-print("\n===============")
-print("1. Suma\n2. Motrar total\n3. Reiniciar\n4. Salir")
-print("===============")
-
 while True:
+    print("\n===============")
+    print("1. Suma\n2. Motrar total\n3. Reiniciar\n4. Salir")
+    print("===============")
+
     opcion_usuario=int(input("\nPor favor ingrese una opcion. "))
     if opcion_usuario==1:
-        numero_1=int(input("Ingrese un numero: "))
-        total+=numero_1
+        while True:
+            try:
+                numero_1=int(input("Ingrese un numero: "))
+                total+=numero_1
+                break
+            except ValueError:
+                print("Entrada inválida. Ingresa un entero.")
     elif opcion_usuario==2:
         print(total)
     elif opcion_usuario==3:
