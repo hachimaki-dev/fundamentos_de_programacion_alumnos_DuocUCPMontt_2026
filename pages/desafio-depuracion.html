@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <link rel="stylesheet" href="../css/main.css" />
+
+  <title>🐛 Desafío de Depuración — Academia hachimaki</title>
+  <meta name="description" content="6 desafíos de depuración Python con errores lógicos ocultos. Analiza, compara con los requisitos y corrige el código. Trabajo en parejas con informe técnico." />
+
+  <!-- PrismJS for code highlighting -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <style>
+    /* ─── Difficulty Badge ─── */
+    .diff-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .diff-1 { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .diff-2 { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+    .diff-3 { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .diff-4 { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+    .diff-5 { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+    .diff-6 { background: #212121; color: #ff5252; border: 1px solid #f44336; }
+
+    /* ─── Theme Badge ─── */
+    .theme-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: var(--t-accent-bg);
+      color: var(--t-accent);
+      border: 1px solid var(--t-accent-subtle);
+    }
+
+    /* ─── Error Count Badge ─── */
+    .error-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+
+    /* ─── Requirements List ─── */
+    .req-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.8rem 0;
+    }
+    .req-list li {
+      position: relative;
+      padding: 0.5rem 0 0.5rem 1.8rem;
+      font-size: 0.9rem;
+      color: var(--t-text);
+      line-height: 1.5;
+      border-bottom: 1px solid var(--t-glass-border);
+    }
+    .req-list li:last-child { border-bottom: none; }
+    .req-list li::before {
+      content: '✅';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    /* ─── Code Block Container ─── */
+    .code-block {
+      position: relative;
+      margin: 1rem 0;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      border: 2px solid var(--t-glass-border);
+    }
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: #1e1e2e;
+      border-bottom: 1px solid #333;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .code-block-header .filename {
+      font-family: 'Fira Code', monospace;
+      color: #ccc;
+    }
+    .code-block pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+    }
+
+    /* ─── Teacher Section ─── */
+    .teacher-gate {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 2px solid #e94560;
+      border-radius: var(--t-radius);
+      padding: 2rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .teacher-gate h3 {
+      color: #e94560;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .teacher-gate p {
+      color: #a0a0b8;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .teacher-input {
+      padding: 0.7rem 1.2rem;
+      border-radius: 0.5rem;
+      border: 2px solid #333;
+      background: #0a0a1a;
+      color: #e94560;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      text-align: center;
+      width: 250px;
+      max-width: 90%;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .teacher-input:focus {
+      border-color: #e94560;
+      box-shadow: 0 0 0 3px rgba(233,69,96,0.2);
+    }
+    .teacher-btn {
+      display: inline-block;
+      margin-top: 0.8rem;
+      padding: 0.6rem 2rem;
+      border-radius: 2rem;
+      border: 2px solid #e94560;
+      background: transparent;
+      color: #e94560;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: var(--t-font-main, 'Quicksand'), sans-serif;
+    }
+    .teacher-btn:hover {
+      background: #e94560;
+      color: white;
+    }
+
+    /* ─── Teacher Answer Key (hidden) ─── */
+    .answer-key {
+      background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+      border: 2px solid #e94560;
+      border-radius: var(--t-radius);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .answer-key h4 {
+      color: #e94560;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .error-detail {
+      background: rgba(233,69,96,0.08);
+      border: 1px solid rgba(233,69,96,0.2);
+      border-radius: 0.6rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .error-detail .error-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: #e94560;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+    .error-detail h5 {
+      color: #ff6b6b;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .error-detail p {
+      color: #a0a0b8;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      margin-bottom: 0.3rem;
+    }
+    .error-detail .impact {
+      color: #ffd93d;
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+    .corrected-code {
+      margin-top: 1.5rem;
+    }
+    .corrected-code h5 {
+      color: #51cf66;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ─── Challenge Card ─── */
+    .challenge-card {
+      background: var(--t-glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 2px solid var(--t-glass-border);
+      border-radius: var(--t-radius);
+      box-shadow: 0 8px 32px var(--t-shadow);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .challenge-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--t-accent), var(--t-purple, #a78bfa));
+    }
+    .challenge-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px var(--t-shadow-hover);
+    }
+
+    /* ─── Submission Guidelines ─── */
+    .guidelines-card {
+      background: linear-gradient(135deg, var(--t-surface), var(--t-surface-alt));
+      border: 2px solid var(--t-accent-subtle);
+      border-radius: var(--t-radius);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .guidelines-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 100px;
+      height: 100px;
+      background: var(--t-accent);
+      filter: blur(50px);
+      opacity: 0.15;
+    }
+    .guidelines-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: guide-step;
+    }
+    .guidelines-list li {
+      position: relative;
+      padding: 0.8rem 0 0.8rem 2.5rem;
+      font-size: 0.9rem;
+      color: var(--t-text);
+      line-height: 1.6;
+      border-bottom: 1px solid var(--t-glass-border);
+      counter-increment: guide-step;
+    }
+    .guidelines-list li::before {
+      content: counter(guide-step);
+      position: absolute;
+      left: 0;
+      top: 0.8rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      background: var(--t-accent);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .guidelines-list li:last-child { border-bottom: none; }
+
+    /* Section nav */
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+
+    /* Smooth section */
+    .section-content {
+      animation: fadeInUp 0.4s ease forwards;
+    }
+
+    /* Print styles for teacher */
+    @media print {
+      .section-nav, .back-btn, .teacher-gate, .bg-shape, .theme-selector-container { display: none !important; }
+      .challenge-card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">🏠 Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🐛 Desafío de Depuración</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          6 programas Python que <strong>ejecutan sin errores de sintaxis</strong>, pero contienen errores lógicos ocultos. Tu misión: analizar los requisitos, detectar los bugs y corregirlos.
+          <br><br>
+          <span style="display:inline-flex; align-items:center; gap:0.4rem; padding:0.3rem 0.8rem; border-radius:1rem; background:var(--t-accent-bg); color:var(--t-accent); font-size:0.8rem; font-weight:600;">👥 Trabajo en parejas &nbsp;|&nbsp; 📝 Informe técnico &nbsp;|&nbsp; 📊 Presentación PPT</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-3xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: currentSection === 'challenges' }" @click="currentSection = 'challenges'">🐛 Desafíos</button>
+        <button class="section-pill" :class="{ active: currentSection === 'guidelines' }" @click="currentSection = 'guidelines'">📋 Instrucciones</button>
+        <button class="section-pill" :class="{ active: currentSection === 'teacher' }" @click="currentSection = 'teacher'">🔐 Docente</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--          SECTION: CHALLENGES           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div v-show="currentSection === 'challenges'" class="max-w-3xl mx-auto px-4 pb-16 section-content">
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 1 — NIVEL ★☆☆☆☆☆       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-1">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-1">★☆☆☆☆☆ Inicial</span>
+          <span class="theme-badge">🚀 Exploradores Espaciales</span>
+          <span class="error-count">🐛 3 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 1 — Registro de Astronautas
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          La Agencia Espacial Internacional necesita un sistema para registrar astronautas en su nueva misión. El programa debe solicitar datos de cada candidato y clasificarlos según su rendimiento.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Preguntar cuántos astronautas se van a registrar (debe ser un entero positivo mayor a 0).</li>
+          <li>Para cada astronauta, pedir su <strong>nombre</strong> (no vacío) y su <strong>puntaje de aptitud</strong> (entero entre 1 y 100 inclusive).</li>
+          <li>Si el puntaje es <strong>mayor o igual a 80</strong>, clasificar como <code>"Apto para misión"</code>. Si es <strong>menor a 80</strong>, clasificar como <code>"En entrenamiento"</code>.</li>
+          <li>Al finalizar, mostrar cuántos quedaron <code>"Apto para misión"</code> y cuántos <code>"En entrenamiento"</code>.</li>
+          <li>También mostrar el <strong>promedio general de puntajes</strong> redondeado a 2 decimales.</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">registro_astronautas.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("=== AGENCIA ESPACIAL INTERNACIONAL ===")
+print("Sistema de Registro de Astronautas")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos astronautas registrar? "))
+        if cantidad > 0:
+            break
+        print("Debe ser un número positivo.")
+    except ValueError:
+        print("Entrada inválida. Ingresa un número entero.")
+
+aptos = 0
+entrenamiento = 0
+suma_puntajes = 0
+
+for i in range(cantidad):
+    print(f"\n--- Astronauta {i+1} ---")
+
+    while True:
+        nombre = input("Nombre del astronauta: ").strip()
+        if len(nombre) > 0:
+            break
+        print("El nombre no puede estar vacío.")
+
+    while True:
+        try:
+            puntaje = int(input("Puntaje de aptitud (1-100): "))
+            if 1 <= puntaje <= 100:
+                break
+            print("El puntaje debe estar entre 1 y 100.")
+        except ValueError:
+            print("Ingresa un número entero válido.")
+
+    suma_puntajes += puntaje
+
+    if puntaje > 80:
+        print(f"→ {nombre}: Apto para misión")
+        aptos += 1
+    else:
+        print(f"→ {nombre}: En entrenamiento")
+        entrenamiento += 1
+
+promedio = suma_puntajes / aptos
+print(f"\n=== RESUMEN DE LA MISIÓN ===")
+print(f"Aptos para misión: {aptos}")
+print(f"En entrenamiento: {entrenamiento}")
+print(f"Promedio general: {promedio}")</code></pre>
+        </div>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 2 — NIVEL ★★☆☆☆☆       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-2">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-2">★★☆☆☆☆ Básico</span>
+          <span class="theme-badge">🧙‍♂️ Academia de Magia</span>
+          <span class="error-count">🐛 4 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 2 — Clasificación de Aprendices de Magia
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          La Academia Arcana necesita clasificar a sus nuevos aprendices en tres casas según su poder mágico. El sistema debe registrar cada estudiante y generar estadísticas al final.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Pedir cuántos aprendices se registrarán (entero positivo).</li>
+          <li>Para cada aprendiz pedir su <strong>nombre mágico</strong> (mínimo 3 caracteres) y su <strong>nivel de poder</strong> (entero entre 1 y 100).</li>
+          <li>Clasificación por poder: <strong>71 a 100</strong> → <code>"Casa del Fénix"</code>, <strong>41 a 70</strong> → <code>"Casa del Grifo"</code>, <strong>1 a 40</strong> → <code>"Casa del Búho"</code>.</li>
+          <li>Al finalizar mostrar cuántos aprendices hay en cada casa.</li>
+          <li>Mostrar el <strong>nombre y poder del aprendiz más poderoso</strong> (el de mayor puntaje).</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">academia_magia.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("✨ ACADEMIA ARCANA — Clasificación de Aprendices ✨")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos aprendices registrar? "))
+        if cantidad > 0:
+            break
+        print("Ingresa un número mayor a 0.")
+    except ValueError:
+        print("Entrada inválida.")
+
+fenix = 0
+grifo = 0
+buho = 0
+mejor_nombre = ""
+mejor_poder = 0
+
+for i in range(cantidad):
+    print(f"\n--- Aprendiz {i+1} ---")
+
+    while True:
+        nombre = input("Nombre mágico: ").strip()
+        if len(nombre) >= 3:
+            break
+        print("El nombre debe tener al menos 3 caracteres.")
+
+    while True:
+        try:
+            poder = int(input("Nivel de poder (1-100): "))
+            if 1 <= poder <= 100:
+                break
+            print("Debe estar entre 1 y 100.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    if poder >= 71:
+        print(f"→ {nombre} ingresa a la Casa del Fénix 🔥")
+        fenix += 1
+    elif poder >= 40:
+        print(f"→ {nombre} ingresa a la Casa del Grifo 🦅")
+        grifo += 1
+    else:
+        print(f"→ {nombre} ingresa a la Casa del Búho 🦉")
+        buho += 1
+
+    if poder > mejor_poder:
+        mejor_nombre = nombre
+
+print(f"\n✨ RESULTADOS DE LA CLASIFICACIÓN ✨")
+print(f"Casa del Fénix: {fenix}")
+print(f"Casa del Grifo: {grifo}")
+print(f"Casa del Búho: {buho}")
+print(f"Aprendiz más poderoso: {mejor_nombre} con poder {mejor_poder}")</code></pre>
+        </div>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 3 — NIVEL ★★★☆☆☆       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-3">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-3">★★★☆☆☆ Intermedio</span>
+          <span class="theme-badge">🔬 Estación Científica</span>
+          <span class="error-count">🐛 4 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 3 — Monitoreo Ambiental de la Estación Polar
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          La Estación Científica Antártica necesita un sistema de monitoreo que registre lecturas de temperatura durante el día y genere un informe con alertas y estadísticas.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Pedir cuántas lecturas de temperatura se tomarán (entero positivo).</li>
+          <li>Para cada lectura, pedir la <strong>hora</strong> (texto, no vacío) y la <strong>temperatura en °C</strong> (entero entre -60 y 50 inclusive).</li>
+          <li>Si la temperatura es <strong>menor a -20</strong>, mostrar <code>"⚠️ ALERTA: Temperatura crítica"</code> y contar como alerta.</li>
+          <li>Almacenar cada lectura como un diccionario <code>{"hora": ..., "temp": ..., "alerta": True/False}</code> en una lista.</li>
+          <li>Al finalizar, mostrar: la <strong>temperatura mínima</strong>, la <strong>temperatura máxima</strong>, el <strong>promedio</strong> redondeado a 1 decimal, y la <strong>cantidad de alertas</strong>.</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">monitoreo_polar.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("🔬 ESTACIÓN CIENTÍFICA ANTÁRTICA")
+print("Sistema de Monitoreo Ambiental")
+
+while True:
+    try:
+        num_lecturas = int(input("¿Cuántas lecturas registrar? "))
+        if num_lecturas > 0:
+            break
+        print("Debe ser mayor a 0.")
+    except ValueError:
+        print("Ingresa un número entero.")
+
+lecturas = []
+alertas = 0
+temp_min = 50
+temp_max = -60
+suma_temps = 0
+
+for i in range(num_lecturas):
+    print(f"\n--- Lectura {i+1} ---")
+
+    while True:
+        hora = input("Hora de la lectura: ").strip()
+        if len(hora) > 0:
+            break
+        print("La hora no puede estar vacía.")
+
+    while True:
+        try:
+            temp = int(input("Temperatura (°C): "))
+            if -60 <= temp <= 50:
+                break
+            print("Debe estar entre -60 y 50.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    es_alerta = False
+    if temp <= -20:
+        print("⚠️ ALERTA: Temperatura crítica")
+        alertas += 1
+        es_alerta = True
+
+    if temp < temp_min:
+        temp_min = temp
+    if temp > temp_max:
+        temp_max = temp
+
+    registro = {"hora": hora, "temp": temp, "alerta": es_alerta}
+    lecturas.append(registro)
+
+promedio = suma_temps / num_lecturas
+
+print(f"\n🔬 INFORME DEL DÍA")
+print(f"Lecturas registradas: {num_lecturas}")
+print(f"Temperatura mínima: {temp_min}°C")
+print(f"Temperatura máxima: {temp_max}°C")
+print(f"Promedio: {promedio}°C")
+print(f"Alertas críticas: {alertas}")
+
+print(f"\n--- Detalle de Alertas ---")
+for r in lecturas:
+    if r["alerta"]:
+        print(f"Hora: {r['hora']} | Temp: {r['temp']}°C")</code></pre>
+        </div>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 4 — NIVEL ★★★★☆☆       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-4">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-4">★★★★☆☆ Avanzado</span>
+          <span class="theme-badge">🎮 Torneo de Videojuegos</span>
+          <span class="error-count">🐛 5 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 4 — Torneo eSports: Liga de Campeones
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          La Liga de Campeones eSports necesita un sistema para registrar jugadores, calcular sus puntajes y generar un ranking final con clasificación por divisiones.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Pedir cuántos jugadores participan (entero positivo, mínimo 2).</li>
+          <li>Para cada jugador pedir: <strong>gamertag</strong> (mínimo 3 caracteres, sin espacios) y <strong>3 puntajes</strong> de rondas (enteros entre 0 y 100 cada uno).</li>
+          <li>Calcular el <strong>puntaje final</strong> como el <strong>promedio</strong> de las 3 rondas.</li>
+          <li>Clasificación: puntaje final <strong>≥ 80</strong> → <code>"División Diamante"</code>, <strong>≥ 50</strong> → <code>"División Oro"</code>, <strong>< 50</strong> → <code>"División Bronce"</code>.</li>
+          <li>Guardar cada jugador como diccionario en una lista: <code>{"gamertag": ..., "puntajes": [...], "final": ..., "division": ...}</code>.</li>
+          <li>Al finalizar mostrar: cantidad de jugadores por división, el <strong>gamertag del ganador</strong> (mayor puntaje final), y el <strong>puntaje promedio general</strong> del torneo redondeado a 2 decimales.</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">torneo_esports.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("🎮 LIGA DE CAMPEONES — Torneo eSports")
+
+while True:
+    try:
+        num_jugadores = int(input("¿Cuántos jugadores participan? "))
+        if num_jugadores >= 2:
+            break
+        print("Se necesitan al menos 2 jugadores.")
+    except ValueError:
+        print("Ingresa un número entero.")
+
+jugadores = []
+diamante = 0
+oro = 0
+bronce = 0
+mejor_gamertag = ""
+mejor_puntaje = 0
+suma_general = 0
+
+for i in range(num_jugadores):
+    print(f"\n--- Jugador {i+1} ---")
+
+    while True:
+        tag = input("Gamertag: ").strip()
+        if len(tag) >= 3 and " " not in tag:
+            break
+        print("El gamertag debe tener al menos 3 caracteres y sin espacios.")
+
+    puntajes = []
+    for ronda in range(3):
+        while True:
+            try:
+                pts = int(input(f"Puntaje ronda {ronda+1} (0-100): "))
+                if 0 <= pts <= 100:
+                    puntajes.append(pts)
+                    break
+                print("Debe estar entre 0 y 100.")
+            except ValueError:
+                print("Ingresa un entero válido.")
+
+    puntaje_final = sum(puntajes) / 2
+
+    if puntaje_final >= 80:
+        division = "División Diamante"
+        diamante += 1
+    elif puntaje_final > 50:
+        division = "División Oro"
+        oro += 1
+    else:
+        division = "División Bronce"
+        bronce += 1
+
+    print(f"→ {tag}: Puntaje final {puntaje_final:.2f} — {division}")
+
+    if puntaje_final > mejor_puntaje:
+        mejor_puntaje = puntaje_final
+        mejor_gamertag = tag
+
+    jugador = {"gamertag": tag, "puntajes": puntajes, "final": puntaje_final, "division": division}
+    jugadores.append(jugador)
+    suma_general += puntaje_final
+
+promedio_torneo = suma_general / len(jugadores)
+
+print(f"\n🏆 RESULTADOS DEL TORNEO")
+print(f"División Diamante: {diamante} jugadores")
+print(f"División Oro: {oro} jugadores")
+print(f"División Bronce: {bronce} jugadores")
+print(f"Ganador del torneo: {mejor_gamertag}")
+print(f"Promedio general del torneo: {promedio_torneo}")</code></pre>
+        </div>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 5 — NIVEL ★★★★★☆       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-5">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-5">★★★★★☆ Experto</span>
+          <span class="theme-badge">🏙️ Colonia Futurista</span>
+          <span class="error-count">🐛 5 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 5 — Sistema de Gestión de Colonos
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          La Colonia Terranova en Marte necesita un sistema con menú interactivo para registrar colonos, buscarlos y generar reportes de distribución por sector.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Usar un <strong>menú interactivo</strong> con 4 opciones que se repite hasta que el usuario elija Salir.</li>
+          <li><strong>Opción 1 — Registrar colono:</strong> Pedir nombre (no vacío), edad (entero entre 18 y 65 inclusive) y especialidad (<code>"ingenieria"</code>, <code>"medicina"</code> o <code>"ciencia"</code>). Guardar como diccionario en una lista.</li>
+          <li><strong>Opción 2 — Buscar colono:</strong> Pedir un nombre y buscarlo <strong>sin distinguir mayúsculas/minúsculas</strong>. Si se encuentra, mostrar todos sus datos. Si no, mostrar <code>"Colono no encontrado."</code>.</li>
+          <li><strong>Opción 3 — Reporte:</strong> Mostrar total de colonos, cuántos hay por especialidad y la <strong>edad promedio</strong> redondeada a 1 decimal. Si no hay colonos, mostrar <code>"No hay colonos registrados."</code>.</li>
+          <li><strong>Opción 4 — Salir:</strong> Terminar el programa con un mensaje de despedida.</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">colonia_marte.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("🏙️ COLONIA TERRANOVA — Sistema de Gestión")
+
+colonos = []
+
+while True:
+    print("\n=== MENÚ PRINCIPAL ===")
+    print("1. Registrar colono")
+    print("2. Buscar colono")
+    print("3. Reporte de la colonia")
+    print("4. Salir")
+
+    opcion = input("Selecciona una opción: ")
+
+    if opcion == "1":
+        print("\n--- Registro de Colono ---")
+
+        while True:
+            nombre = input("Nombre: ").strip()
+            if len(nombre) > 0:
+                break
+            print("El nombre no puede estar vacío.")
+
+        while True:
+            try:
+                edad = int(input("Edad (18-65): "))
+                if 18 <= edad <= 65:
+                    break
+                print("La edad debe estar entre 18 y 65.")
+            except ValueError:
+                print("Ingresa un número entero.")
+
+        especialidades_validas = ["ingenieria", "medicina", "ciencia"]
+        while True:
+            especialidad = input("Especialidad (ingenieria/medicina/ciencia): ").strip().lower()
+            if especialidad in especialidades_validas:
+                break
+            print("Especialidad no válida. Elige: ingenieria, medicina o ciencia.")
+
+        colono = {"nombre": nombre, "edad": edad, "especialidad": especialidad}
+        colonos.append(colono)
+        print(f"✅ Colono {nombre} registrado exitosamente.")
+
+    elif opcion == "2":
+        busqueda = input("Nombre del colono a buscar: ").strip()
+        encontrado = False
+
+        for c in colonos:
+            if c["nombre"] == busqueda:
+                print(f"\n🔍 Colono encontrado:")
+                print(f"   Nombre: {c['nombre']}")
+                print(f"   Edad: {c['edad']}")
+                print(f"   Especialidad: {c['especialidad']}")
+                encontrado = True
+
+        if not encontrado:
+            print("Colono no encontrado.")
+
+    elif opcion == "3":
+        print("\n📊 REPORTE DE LA COLONIA")
+
+        total = len(colonos)
+        print(f"Total de colonos: {total}")
+
+        ing = 0
+        med = 0
+        cie = 0
+        suma_edades = 0
+
+        for c in colonos:
+            suma_edades += c["edad"]
+            if c["especialidad"] == "ingenieria":
+                ing += 1
+            elif c["especialidad"] == "medicina":
+                med += 1
+            elif c["especialidad"] == "ciencia":
+                cie += 1
+
+        print(f"Ingeniería: {ing}")
+        print(f"Medicina: {med}")
+        print(f"Ciencia: {cie}")
+
+        promedio_edad = suma_edades / total
+        print(f"Edad promedio: {round(promedio_edad, 1)}")
+
+    elif opcion == "4":
+        print("Cerrando sistema. ¡Hasta la próxima misión!")
+        break
+
+    else:
+        print("Opción no válida. Elige entre 1 y 4.")</code></pre>
+        </div>
+      </div>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║     DESAFÍO 6 — NIVEL ★★★★★★       ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="challenge-card fade-in-up" id="desafio-6">
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:1rem;">
+          <span class="diff-badge diff-6">★★★★★★ Maestro</span>
+          <span class="theme-badge">🏰 Gremio de Aventureros</span>
+          <span class="error-count">🐛 6 errores</span>
+        </div>
+
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.5rem;">
+          Desafío 6 — Sistema del Gremio de Aventureros
+        </h2>
+
+        <p style="color:var(--t-text-secondary); font-size:0.92rem; line-height:1.6; margin-bottom:1rem;">
+          El Gran Gremio de Aventureros necesita un sistema completo para registrar misiones completadas por sus miembros, calcular recompensas, clasificar rangos y generar estadísticas finales.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin-bottom:0.5rem;">📋 Requisitos del programa:</h3>
+        <ul class="req-list">
+          <li>Pedir cuántos aventureros se registrarán (entero positivo).</li>
+          <li>Para cada aventurero pedir: <strong>nombre</strong> (mínimo 2 caracteres), <strong>cantidad de misiones completadas</strong> (entero entre 1 y 50) y <strong>nivel de dificultad promedio</strong> de sus misiones (entero entre 1 y 10).</li>
+          <li>Calcular las <strong>monedas de oro ganadas</strong> = misiones × dificultad × 15.</li>
+          <li>Clasificar por rango según monedas: <strong>≥ 3000</strong> → <code>"Rango Legendario"</code>, <strong>≥ 1500</strong> → <code>"Rango Veterano"</code>, <strong>≥ 500</strong> → <code>"Rango Novato"</code>, <strong>< 500</strong> → <code>"Rango Aprendiz"</code>.</li>
+          <li>Guardar cada aventurero en una lista de diccionarios con claves: <code>nombre</code>, <code>misiones</code>, <code>dificultad</code>, <code>oro</code>, <code>rango</code>.</li>
+          <li>Al finalizar mostrar: total de aventureros, cantidad por cada rango, el <strong>aventurero con más oro</strong> (nombre y cantidad), el <strong>total de oro</strong> generado por el gremio y el <strong>promedio de misiones</strong> redondeado a 1 decimal.</li>
+        </ul>
+
+        <h3 style="color:var(--t-accent); font-size:1rem; font-weight:700; margin:1.2rem 0 0.5rem;">💻 Código a depurar:</h3>
+        <div class="code-block">
+          <div class="code-block-header">
+            <span class="filename">gremio_aventureros.py</span>
+            <span>Python 3</span>
+          </div>
+          <pre><code class="language-python">print("🏰 GRAN GREMIO DE AVENTUREROS")
+print("Sistema de Registro y Recompensas")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos aventureros registrar? "))
+        if cantidad > 0:
+            break
+        print("Debe ser mayor a 0.")
+    except ValueError:
+        print("Ingresa un entero válido.")
+
+aventureros = []
+legendarios = 0
+veteranos = 0
+novatos = 0
+aprendices = 0
+mejor_nombre = ""
+mejor_oro = 0
+total_oro = 0
+suma_misiones = 0
+
+for i in range(cantidad):
+    print(f"\n--- Aventurero {i+1} ---")
+
+    while True:
+        nombre = input("Nombre del aventurero: ").strip()
+        if len(nombre) >= 2:
+            break
+        print("El nombre debe tener al menos 2 caracteres.")
+
+    while True:
+        try:
+            misiones = int(input("Misiones completadas (1-50): "))
+            if 1 <= misiones <= 50:
+                break
+            print("Debe estar entre 1 y 50.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    while True:
+        try:
+            dificultad = int(input("Dificultad promedio (1-10): "))
+            if 1 <= dificultad <= 10:
+                break
+            print("Debe estar entre 1 y 10.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    oro = misiones * dificultad * 10
+
+    if oro >= 3000:
+        rango = "Rango Legendario"
+        legendarios += 1
+    elif oro >= 1500:
+        rango = "Rango Veterano"
+        veteranos += 1
+    elif oro > 500:
+        rango = "Rango Novato"
+        novatos += 1
+    else:
+        rango = "Rango Aprendiz"
+        aprendices += 1
+
+    print(f"→ {nombre}: {oro} monedas de oro — {rango}")
+
+    if oro >= mejor_oro:
+        mejor_nombre = nombre
+        mejor_oro = oro
+
+    aventurero = {"nombre": nombre, "misiones": misiones, "dificultad": dificultad, "oro": oro, "rango": rango}
+    aventureros.append(aventurero)
+    total_oro += oro
+    suma_misiones += misiones
+
+promedio_misiones = suma_misiones / len(aventureros)
+
+print(f"\n🏰 RESUMEN DEL GREMIO")
+print(f"Total de aventureros: {cantidad}")
+print(f"Rango Legendario: {legendarios}")
+print(f"Rango Veterano: {veteranos}")
+print(f"Rango Novato: {novatos}")
+print(f"Rango Aprendiz: {aprendices}")
+print(f"Aventurero más rico: {mejor_nombre} con {mejor_oro} monedas")
+print(f"Total de oro del gremio: {total_oro}")
+print(f"Promedio de misiones: {promedio_misiones}")</code></pre>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--         SECTION: GUIDELINES            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div v-show="currentSection === 'guidelines'" class="max-w-3xl mx-auto px-4 pb-16 section-content">
+
+      <div class="guidelines-card fade-in-up" style="margin-bottom:2rem;">
+        <h2 style="color:var(--t-accent); font-size:1.4rem; font-weight:700; margin-bottom:0.3rem; display:flex; align-items:center; gap:0.5rem;">
+          📋 Instrucciones de la Actividad
+        </h2>
+        <p style="color:var(--t-text-secondary); font-size:0.9rem; margin-bottom:1.5rem;">
+          Esta actividad se realiza <strong>en parejas</strong>. Su objetivo es desarrollar la capacidad de <strong>analizar requisitos, identificar inconsistencias y justificar técnicamente</strong> las decisiones tomadas durante el proceso de depuración.
+        </p>
+
+        <h3 style="color:var(--t-accent); font-size:1.1rem; font-weight:700; margin-bottom:0.8rem;">🎯 ¿Qué deben hacer?</h3>
+        <ol class="guidelines-list">
+          <li>Leer cuidadosamente los <strong>requisitos</strong> de cada desafío.</li>
+          <li>Copiar el código a su editor (VS Code, PyCharm, etc.) y <strong>ejecutarlo</strong>.</li>
+          <li>Comparar el comportamiento del programa con lo que piden los requisitos.</li>
+          <li>Identificar y corregir <strong>todos los errores lógicos</strong> presentes.</li>
+          <li>Documentar cada error encontrado en un <strong>informe técnico</strong>.</li>
+          <li>Preparar una <strong>presentación en PowerPoint</strong> con su proceso.</li>
+        </ol>
+      </div>
+
+      <div class="guidelines-card fade-in-up" style="margin-bottom:2rem;">
+        <h3 style="color:var(--t-accent); font-size:1.1rem; font-weight:700; margin-bottom:0.8rem;">📝 Formato del Informe Técnico</h3>
+        <p style="color:var(--t-text-secondary); font-size:0.9rem; margin-bottom:1rem;">
+          Para <strong>cada error encontrado</strong>, el informe debe incluir:
+        </p>
+        <ul class="req-list">
+          <li><strong>Descripción del problema:</strong> ¿Qué está fallando y qué requisito no se cumple?</li>
+          <li><strong>Línea o bloque afectado:</strong> ¿Dónde se encuentra el error en el código?</li>
+          <li><strong>Explicación lógica:</strong> ¿Por qué el comportamiento actual es incorrecto?</li>
+          <li><strong>Evidencia:</strong> Captura de pantalla del error en acción (antes de corregir).</li>
+          <li><strong>Propuesta de corrección:</strong> ¿Cuál es el código corregido?</li>
+          <li><strong>Justificación técnica:</strong> ¿Por qué la nueva versión es correcta?</li>
+          <li><strong>Comparación antes/después:</strong> Mostrar la diferencia entre ambas versiones.</li>
+        </ul>
+      </div>
+
+      <div class="guidelines-card fade-in-up" style="margin-bottom:2rem;">
+        <h3 style="color:var(--t-accent); font-size:1.1rem; font-weight:700; margin-bottom:0.8rem;">📊 Formato de la Presentación PowerPoint</h3>
+        <p style="color:var(--t-text-secondary); font-size:0.9rem; margin-bottom:1rem;">
+          La presentación debe enfocarse en el <strong>razonamiento lógico</strong>, no solo en mostrar el código corregido:
+        </p>
+        <ul class="req-list">
+          <li><strong>Portada:</strong> Nombres de los integrantes, fecha y desafío asignado.</li>
+          <li><strong>Contexto:</strong> Breve resumen de los requisitos del programa.</li>
+          <li><strong>Proceso de detección:</strong> ¿Cómo descubrieron cada error? ¿Qué pruebas hicieron?</li>
+          <li><strong>Análisis de cada error:</strong> Descripción, impacto y corrección (con capturas).</li>
+          <li><strong>Código corregido final:</strong> La versión completa que cumple todos los requisitos.</li>
+          <li><strong>Conclusiones:</strong> ¿Qué aprendieron? ¿Qué tipo de errores son más difíciles de detectar?</li>
+        </ul>
+      </div>
+
+      <div class="guidelines-card fade-in-up">
+        <h3 style="color:var(--t-accent); font-size:1.1rem; font-weight:700; margin-bottom:0.8rem;">⚡ Consejos y Estrategias</h3>
+        <div style="display:grid; gap:0.8rem;">
+          <div style="padding:0.8rem; background:var(--t-glass-bg); border-radius:0.6rem; border:1px solid var(--t-glass-border);">
+            <strong style="color:var(--t-accent);">🧪 Prueben con datos límite:</strong>
+            <span style="color:var(--t-text-secondary); font-size:0.85rem;"> ¿Qué pasa con 0? ¿Con el valor mínimo? ¿Con el máximo exacto?</span>
+          </div>
+          <div style="padding:0.8rem; background:var(--t-glass-bg); border-radius:0.6rem; border:1px solid var(--t-glass-border);">
+            <strong style="color:var(--t-accent);">📖 Lean los requisitos línea por línea:</strong>
+            <span style="color:var(--t-text-secondary); font-size:0.85rem;"> Cada frase del enunciado corresponde a una o más líneas de código.</span>
+          </div>
+          <div style="padding:0.8rem; background:var(--t-glass-bg); border-radius:0.6rem; border:1px solid var(--t-glass-border);">
+            <strong style="color:var(--t-accent);">🔢 Verifiquen cálculos manualmente:</strong>
+            <span style="color:var(--t-text-secondary); font-size:0.85rem;"> Usen calculadora para comprobar promedios, totales y fórmulas.</span>
+          </div>
+          <div style="padding:0.8rem; background:var(--t-glass-bg); border-radius:0.6rem; border:1px solid var(--t-glass-border);">
+            <strong style="color:var(--t-accent);">🔍 Comparen operadores cuidadosamente:</strong>
+            <span style="color:var(--t-text-secondary); font-size:0.85rem;"> <code>></code> no es lo mismo que <code>>=</code>. Un detalle puede cambiar toda la lógica.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!--         SECTION: TEACHER               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div v-show="currentSection === 'teacher'" class="max-w-3xl mx-auto px-4 pb-16 section-content">
+
+      <!-- Gate -->
+      <div v-if="!teacherUnlocked" class="teacher-gate fade-in-up">
+        <h3>🔐 Pauta de Corrección — Solo Docente</h3>
+        <p>Ingresa la clave de acceso para ver las respuestas y la pauta de corrección.</p>
+        <input type="password" class="teacher-input" v-model="teacherPassword" placeholder="Clave de acceso" @keyup.enter="unlockTeacher" />
+        <br>
+        <button class="teacher-btn" @click="unlockTeacher">Desbloquear</button>
+        <p v-if="teacherError" style="color:#ff6b6b; margin-top:0.8rem; font-size:0.85rem;">{{ teacherError }}</p>
+      </div>
+
+      <!-- Answer Key Content -->
+      <div v-else>
+        <div style="text-align:center; margin-bottom:2rem; padding:1rem; background:linear-gradient(135deg, #1a1a2e, #16213e); border-radius:var(--t-radius); border:2px solid #e94560;">
+          <p style="color:#e94560; font-weight:700; font-size:1.2rem;">🔓 Modo Docente Activado</p>
+          <p style="color:#a0a0b8; font-size:0.85rem;">A continuación se muestran todos los errores y sus correcciones.</p>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 1 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🚀 Pauta — Desafío 1: Registro de Astronautas</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Condición de clasificación incorrecta</h5>
+            <p><strong>Línea afectada:</strong> <code>if puntaje > 80:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que un puntaje <strong>≥ 80</strong> (mayor o igual) clasifica como "Apto para misión", pero el código usa <code>></code> (estrictamente mayor). Un astronauta con exactamente 80 puntos quedaría clasificado como "En entrenamiento" cuando debería ser "Apto".</p>
+            <p class="impact">💥 Impacto: Astronautas con puntaje 80 son incorrectamente clasificados como "En entrenamiento".</p>
+            <p><strong>Corrección:</strong> Cambiar <code>if puntaje > 80:</code> → <code>if puntaje >= 80:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> Promedio calculado con divisor incorrecto</h5>
+            <p><strong>Línea afectada:</strong> <code>promedio = suma_puntajes / aptos</code></p>
+            <p><strong>Problema:</strong> El requisito pide el "promedio general de puntajes", lo que significa dividir la suma total entre <strong>todos los astronautas</strong> (<code>cantidad</code>), no solo los aptos. Si ningún astronauta es apto (<code>aptos = 0</code>), además produce un <code>ZeroDivisionError</code>.</p>
+            <p class="impact">💥 Impacto: El promedio es incorrecto (se calcula solo sobre los aptos) y puede causar un crash si todos quedan "En entrenamiento".</p>
+            <p><strong>Corrección:</strong> Cambiar <code>promedio = suma_puntajes / aptos</code> → <code>promedio = suma_puntajes / cantidad</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> Promedio no redondeado a 2 decimales</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Promedio general: {promedio}")</code></p>
+            <p><strong>Problema:</strong> El requisito exige que el promedio se muestre redondeado a 2 decimales, pero el código imprime el valor sin formatear.</p>
+            <p class="impact">💥 Impacto: Se muestran valores con muchos decimales, incumpliendo la especificación de presentación.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>{promedio}</code> → <code>{promedio:.2f}</code> o usar <code>round(promedio, 2)</code></p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">registro_astronautas_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("=== AGENCIA ESPACIAL INTERNACIONAL ===")
+print("Sistema de Registro de Astronautas")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos astronautas registrar? "))
+        if cantidad > 0:
+            break
+        print("Debe ser un número positivo.")
+    except ValueError:
+        print("Entrada inválida. Ingresa un número entero.")
+
+aptos = 0
+entrenamiento = 0
+suma_puntajes = 0
+
+for i in range(cantidad):
+    print(f"\n--- Astronauta {i+1} ---")
+
+    while True:
+        nombre = input("Nombre del astronauta: ").strip()
+        if len(nombre) > 0:
+            break
+        print("El nombre no puede estar vacío.")
+
+    while True:
+        try:
+            puntaje = int(input("Puntaje de aptitud (1-100): "))
+            if 1 <= puntaje <= 100:
+                break
+            print("El puntaje debe estar entre 1 y 100.")
+        except ValueError:
+            print("Ingresa un número entero válido.")
+
+    suma_puntajes += puntaje
+
+    if puntaje >= 80:  # FIX 1: >= en lugar de >
+        print(f"→ {nombre}: Apto para misión")
+        aptos += 1
+    else:
+        print(f"→ {nombre}: En entrenamiento")
+        entrenamiento += 1
+
+promedio = suma_puntajes / cantidad  # FIX 2: dividir entre cantidad, no aptos
+print(f"\n=== RESUMEN DE LA MISIÓN ===")
+print(f"Aptos para misión: {aptos}")
+print(f"En entrenamiento: {entrenamiento}")
+print(f"Promedio general: {promedio:.2f}")  # FIX 3: redondear a 2 decimales</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 2 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🧙‍♂️ Pauta — Desafío 2: Clasificación de Aprendices de Magia</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Límite de clasificación del Grifo incorrecto</h5>
+            <p><strong>Línea afectada:</strong> <code>elif poder >= 40:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que la "Casa del Grifo" es para poder entre <strong>41 y 70</strong>. Sin embargo, el código usa <code>>= 40</code>, lo que asigna al Grifo a alguien con poder 40, cuando debería ir al Búho (rango 1-40).</p>
+            <p class="impact">💥 Impacto: Aprendices con poder 40 son asignados al Grifo en lugar del Búho.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>elif poder >= 40:</code> → <code>elif poder >= 41:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> No se actualiza mejor_poder al encontrar un nuevo máximo</h5>
+            <p><strong>Línea afectada:</strong> Bloque <code>if poder > mejor_poder:</code></p>
+            <p><strong>Problema:</strong> Cuando se encuentra un poder mayor al actual, se actualiza <code>mejor_nombre</code> pero <strong>no</strong> <code>mejor_poder</code>. Esto hace que todos los aprendices con poder mayor a 0 sean registrados como "el más poderoso", y el valor de <code>mejor_poder</code> siempre queda en 0.</p>
+            <p class="impact">💥 Impacto: El nombre del más poderoso puede ser incorrecto (siempre será el último) y el puntaje mostrado siempre será 0.</p>
+            <p><strong>Corrección:</strong> Agregar <code>mejor_poder = poder</code> dentro del bloque if.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> La variable mejor_poder no se muestra correctamente al final</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Aprendiz más poderoso: {mejor_nombre} con poder {mejor_poder}")</code></p>
+            <p><strong>Problema:</strong> Este error es consecuencia directa del error anterior: como <code>mejor_poder</code> nunca se actualiza, siempre muestra 0. Ambos errores están encadenados.</p>
+            <p class="impact">💥 Impacto: El resumen final muestra información falsa sobre el poder del mejor aprendiz.</p>
+            <p><strong>Corrección:</strong> Se soluciona al corregir el error 2.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">4</span> La búsqueda del más poderoso no se detiene tras encontrarlo</h5>
+            <p><strong>Línea afectada:</strong> <code>if poder > mejor_poder:</code> (dentro del for)</p>
+            <p><strong>Problema:</strong> Si dos aprendices tienen el <strong>mismo puntaje máximo</strong>, el requisito no lo especifica, pero sin actualizar <code>mejor_poder</code> (error 2), el nombre se sobrescribe con cada aprendiz que tenga poder > 0. Al corregir el error 2, este caso límite también se resuelve correctamente porque se usa <code>></code> estricto.</p>
+            <p class="impact">💥 Impacto: Relación directa con el error 2, se corrige al actualizar mejor_poder.</p>
+            <p><strong>Corrección:</strong> Implícita al corregir error 2.</p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">academia_magia_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("✨ ACADEMIA ARCANA — Clasificación de Aprendices ✨")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos aprendices registrar? "))
+        if cantidad > 0:
+            break
+        print("Ingresa un número mayor a 0.")
+    except ValueError:
+        print("Entrada inválida.")
+
+fenix = 0
+grifo = 0
+buho = 0
+mejor_nombre = ""
+mejor_poder = 0
+
+for i in range(cantidad):
+    print(f"\n--- Aprendiz {i+1} ---")
+
+    while True:
+        nombre = input("Nombre mágico: ").strip()
+        if len(nombre) >= 3:
+            break
+        print("El nombre debe tener al menos 3 caracteres.")
+
+    while True:
+        try:
+            poder = int(input("Nivel de poder (1-100): "))
+            if 1 <= poder <= 100:
+                break
+            print("Debe estar entre 1 y 100.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    if poder >= 71:
+        print(f"→ {nombre} ingresa a la Casa del Fénix 🔥")
+        fenix += 1
+    elif poder >= 41:  # FIX 1: >= 41 en lugar de >= 40
+        print(f"→ {nombre} ingresa a la Casa del Grifo 🦅")
+        grifo += 1
+    else:
+        print(f"→ {nombre} ingresa a la Casa del Búho 🦉")
+        buho += 1
+
+    if poder > mejor_poder:
+        mejor_nombre = nombre
+        mejor_poder = poder  # FIX 2: actualizar mejor_poder
+
+print(f"\n✨ RESULTADOS DE LA CLASIFICACIÓN ✨")
+print(f"Casa del Fénix: {fenix}")
+print(f"Casa del Grifo: {grifo}")
+print(f"Casa del Búho: {buho}")
+print(f"Aprendiz más poderoso: {mejor_nombre} con poder {mejor_poder}")  # FIX 3-4: ahora muestra el valor correcto</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 3 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🔬 Pauta — Desafío 3: Monitoreo Ambiental de la Estación Polar</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Condición de alerta incorrecta</h5>
+            <p><strong>Línea afectada:</strong> <code>if temp <= -20:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que la alerta se activa cuando la temperatura es <strong>menor a -20</strong> (estrictamente menor). El código usa <code><= -20</code>, lo que incluye -20 como alerta cuando no debería serlo.</p>
+            <p class="impact">💥 Impacto: Una temperatura de exactamente -20°C genera una alerta falsa.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>if temp <= -20:</code> → <code>if temp < -20:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> Acumulador suma_temps nunca se actualiza</h5>
+            <p><strong>Línea afectada:</strong> Falta <code>suma_temps += temp</code> dentro del bucle</p>
+            <p><strong>Problema:</strong> La variable <code>suma_temps</code> se inicializa en 0 pero nunca se le suman las temperaturas leídas. Esto hace que el promedio siempre sea 0.</p>
+            <p class="impact">💥 Impacto: El promedio de temperatura siempre aparece como 0.0°C sin importar los datos ingresados.</p>
+            <p><strong>Corrección:</strong> Agregar <code>suma_temps += temp</code> después de leer la temperatura, antes de las comparaciones de mín/máx.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> Promedio no redondeado a 1 decimal</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Promedio: {promedio}°C")</code></p>
+            <p><strong>Problema:</strong> El requisito pide que el promedio se muestre redondeado a 1 decimal, pero el código no aplica ningún formato.</p>
+            <p class="impact">💥 Impacto: El promedio se muestra con muchos decimales, incumpliendo el formato requerido.</p>
+            <p><strong>Corrección:</strong> Cambiar a <code>{promedio:.1f}</code> o <code>{round(promedio, 1)}</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">4</span> Los datos de la lectura no incluyen la temperatura actualizada en el resumen final</h5>
+            <p><strong>Línea afectada:</strong> El cálculo del promedio ocurre después del bucle pero <code>suma_temps</code> es 0.</p>
+            <p><strong>Problema:</strong> Este es un error encadenado: como <code>suma_temps</code> nunca se actualiza (error 2), la línea <code>promedio = suma_temps / num_lecturas</code> siempre da 0. Se soluciona al corregir el error 2.</p>
+            <p class="impact">💥 Impacto: Relación directa con el error 2 — produce datos completamente erróneos.</p>
+            <p><strong>Corrección:</strong> Se resuelve al agregar <code>suma_temps += temp</code> en el bucle.</p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">monitoreo_polar_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("🔬 ESTACIÓN CIENTÍFICA ANTÁRTICA")
+print("Sistema de Monitoreo Ambiental")
+
+while True:
+    try:
+        num_lecturas = int(input("¿Cuántas lecturas registrar? "))
+        if num_lecturas > 0:
+            break
+        print("Debe ser mayor a 0.")
+    except ValueError:
+        print("Ingresa un número entero.")
+
+lecturas = []
+alertas = 0
+temp_min = 50
+temp_max = -60
+suma_temps = 0
+
+for i in range(num_lecturas):
+    print(f"\n--- Lectura {i+1} ---")
+
+    while True:
+        hora = input("Hora de la lectura: ").strip()
+        if len(hora) > 0:
+            break
+        print("La hora no puede estar vacía.")
+
+    while True:
+        try:
+            temp = int(input("Temperatura (°C): "))
+            if -60 <= temp <= 50:
+                break
+            print("Debe estar entre -60 y 50.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    suma_temps += temp  # FIX 2: acumular la temperatura
+
+    es_alerta = False
+    if temp < -20:  # FIX 1: < en lugar de <=
+        print("⚠️ ALERTA: Temperatura crítica")
+        alertas += 1
+        es_alerta = True
+
+    if temp < temp_min:
+        temp_min = temp
+    if temp > temp_max:
+        temp_max = temp
+
+    registro = {"hora": hora, "temp": temp, "alerta": es_alerta}
+    lecturas.append(registro)
+
+promedio = suma_temps / num_lecturas
+
+print(f"\n🔬 INFORME DEL DÍA")
+print(f"Lecturas registradas: {num_lecturas}")
+print(f"Temperatura mínima: {temp_min}°C")
+print(f"Temperatura máxima: {temp_max}°C")
+print(f"Promedio: {promedio:.1f}°C")  # FIX 3: redondear a 1 decimal
+print(f"Alertas críticas: {alertas}")
+
+print(f"\n--- Detalle de Alertas ---")
+for r in lecturas:
+    if r["alerta"]:
+        print(f"Hora: {r['hora']} | Temp: {r['temp']}°C")</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 4 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🎮 Pauta — Desafío 4: Torneo eSports</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Cálculo del promedio de rondas incorrecto (divisor erróneo)</h5>
+            <p><strong>Línea afectada:</strong> <code>puntaje_final = sum(puntajes) / 2</code></p>
+            <p><strong>Problema:</strong> El requisito dice que el puntaje final es el <strong>promedio de 3 rondas</strong>, por lo que se debe dividir entre 3. El código divide entre 2, inflando el puntaje final.</p>
+            <p class="impact">💥 Impacto: Todos los puntajes finales están inflados un 50%, afectando clasificaciones y el ranking completo.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>sum(puntajes) / 2</code> → <code>sum(puntajes) / 3</code> o mejor aún <code>sum(puntajes) / len(puntajes)</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> Clasificación de "División Oro" usa > en vez de >=</h5>
+            <p><strong>Línea afectada:</strong> <code>elif puntaje_final > 50:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que <strong>≥ 50</strong> clasifica como "División Oro", pero el código usa <code>> 50</code> (estrictamente mayor). Un jugador con exactamente 50 puntos quedaría en "División Bronce".</p>
+            <p class="impact">💥 Impacto: Jugadores con puntaje final de exactamente 50 se clasifican incorrectamente en Bronce.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>elif puntaje_final > 50:</code> → <code>elif puntaje_final >= 50:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> Falta mostrar el puntaje del ganador</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Ganador del torneo: {mejor_gamertag}")</code></p>
+            <p><strong>Problema:</strong> El requisito pide mostrar el gamertag del ganador, lo cual se hace, pero no se acompaña con el puntaje. Aunque el requisito solo dice "gamertag del ganador", la información del puntaje ya está disponible y no se usa en el resumen. Este es un error menor de presentación pero los estudiantes deberían comparar si el puntaje mostrado coincide.</p>
+            <p class="impact">💥 Impacto: El resumen final está incompleto si no se muestra el puntaje del ganador.</p>
+            <p><strong>Corrección:</strong> Agregar <code>con puntaje {mejor_puntaje:.2f}</code> al mensaje.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">4</span> Promedio general no redondeado a 2 decimales</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Promedio general del torneo: {promedio_torneo}")</code></p>
+            <p><strong>Problema:</strong> El requisito pide que el promedio general se muestre redondeado a 2 decimales, pero no se aplica formato.</p>
+            <p class="impact">💥 Impacto: Se muestran decimales excesivos en el promedio del torneo.</p>
+            <p><strong>Corrección:</strong> Cambiar a <code>{promedio_torneo:.2f}</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">5</span> Error en cadena: clasificaciones incorrectas por puntaje inflado</h5>
+            <p><strong>Línea afectada:</strong> Consecuencia del error 1</p>
+            <p><strong>Problema:</strong> Dado que el puntaje se calcula mal (÷2 en vez de ÷3), las clasificaciones de TODOS los jugadores están potencialmente incorrectas. Este error es sistémico: afecta contadores de divisiones, el ganador y el promedio general.</p>
+            <p class="impact">💥 Impacto: Todo el sistema de clasificación produce resultados erróneos, incluyendo la distribución por divisiones y el promedio.</p>
+            <p><strong>Corrección:</strong> Se resuelve al corregir el error 1 (el divisor del promedio).</p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">torneo_esports_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("🎮 LIGA DE CAMPEONES — Torneo eSports")
+
+while True:
+    try:
+        num_jugadores = int(input("¿Cuántos jugadores participan? "))
+        if num_jugadores >= 2:
+            break
+        print("Se necesitan al menos 2 jugadores.")
+    except ValueError:
+        print("Ingresa un número entero.")
+
+jugadores = []
+diamante = 0
+oro = 0
+bronce = 0
+mejor_gamertag = ""
+mejor_puntaje = 0
+suma_general = 0
+
+for i in range(num_jugadores):
+    print(f"\n--- Jugador {i+1} ---")
+
+    while True:
+        tag = input("Gamertag: ").strip()
+        if len(tag) >= 3 and " " not in tag:
+            break
+        print("El gamertag debe tener al menos 3 caracteres y sin espacios.")
+
+    puntajes = []
+    for ronda in range(3):
+        while True:
+            try:
+                pts = int(input(f"Puntaje ronda {ronda+1} (0-100): "))
+                if 0 <= pts <= 100:
+                    puntajes.append(pts)
+                    break
+                print("Debe estar entre 0 y 100.")
+            except ValueError:
+                print("Ingresa un entero válido.")
+
+    puntaje_final = sum(puntajes) / len(puntajes)  # FIX 1: dividir entre 3 (len), no entre 2
+
+    if puntaje_final >= 80:
+        division = "División Diamante"
+        diamante += 1
+    elif puntaje_final >= 50:  # FIX 2: >= 50 en lugar de > 50
+        division = "División Oro"
+        oro += 1
+    else:
+        division = "División Bronce"
+        bronce += 1
+
+    print(f"→ {tag}: Puntaje final {puntaje_final:.2f} — {division}")
+
+    if puntaje_final > mejor_puntaje:
+        mejor_puntaje = puntaje_final
+        mejor_gamertag = tag
+
+    jugador = {"gamertag": tag, "puntajes": puntajes, "final": puntaje_final, "division": division}
+    jugadores.append(jugador)
+    suma_general += puntaje_final
+
+promedio_torneo = suma_general / len(jugadores)
+
+print(f"\n🏆 RESULTADOS DEL TORNEO")
+print(f"División Diamante: {diamante} jugadores")
+print(f"División Oro: {oro} jugadores")
+print(f"División Bronce: {bronce} jugadores")
+print(f"Ganador del torneo: {mejor_gamertag} con puntaje {mejor_puntaje:.2f}")  # FIX 3: incluir puntaje
+print(f"Promedio general del torneo: {promedio_torneo:.2f}")  # FIX 4: redondear a 2 decimales</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 5 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🏙️ Pauta — Desafío 5: Sistema de Gestión de Colonos</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Búsqueda de colono no ignora mayúsculas/minúsculas</h5>
+            <p><strong>Línea afectada:</strong> <code>if c["nombre"] == busqueda:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que la búsqueda debe funcionar <strong>sin distinguir mayúsculas/minúsculas</strong> (por ejemplo, "ana" debería encontrar "Ana"). El código compara directamente sin usar <code>.lower()</code>.</p>
+            <p class="impact">💥 Impacto: Un colono registrado como "Carlos" no se encontrará si se busca como "carlos" o "CARLOS".</p>
+            <p><strong>Corrección:</strong> Cambiar a <code>if c["nombre"].lower() == busqueda.lower():</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> La búsqueda no se detiene al encontrar (falta break)</h5>
+            <p><strong>Línea afectada:</strong> Bloque <code>for c in colonos:</code> (opción 2)</p>
+            <p><strong>Problema:</strong> Si hay dos colonos con el mismo nombre, el programa muestra ambos registros. Aunque no es un error catastrófico, la lógica esperada es mostrar el primero encontrado y detenerse con <code>break</code>.</p>
+            <p class="impact">💥 Impacto: Con nombres duplicados, se muestran todos los resultados, lo cual podría confundir al usuario.</p>
+            <p><strong>Corrección:</strong> Agregar <code>break</code> después de <code>encontrado = True</code>.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> El reporte no valida si hay 0 colonos (división por cero)</h5>
+            <p><strong>Línea afectada:</strong> <code>promedio_edad = suma_edades / total</code></p>
+            <p><strong>Problema:</strong> El requisito dice que si no hay colonos registrados se debe mostrar <code>"No hay colonos registrados."</code>. El código calcula directamente <code>suma_edades / total</code> sin verificar que <code>total > 0</code>, causando un <code>ZeroDivisionError</code> si no se han registrado colonos.</p>
+            <p class="impact">💥 Impacto: El programa se crashea si se pide el reporte sin haber registrado colonos.</p>
+            <p><strong>Corrección:</strong> Agregar una verificación: <code>if total == 0: print("No hay colonos registrados.")</code> y saltar los cálculos con <code>else:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">4</span> Edad promedio no redondeada a 1 decimal de forma segura</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Edad promedio: {round(promedio_edad, 1)}")</code></p>
+            <p><strong>Problema:</strong> Aunque se usa <code>round()</code>, el requisito dice "redondeada a 1 decimal" — el formato actual funciona pero depende de que el error 3 esté corregido primero. Sin la validación de colonos vacíos, esta línea nunca se alcanza correctamente.</p>
+            <p class="impact">💥 Impacto: Error encadenado con el error 3.</p>
+            <p><strong>Corrección:</strong> Se soluciona al reestructurar el bloque del reporte con la validación de colonos vacíos.</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">5</span> La opción inválida no se maneja para menú vacío</h5>
+            <p><strong>Línea afectada:</strong> Flujo general del menú</p>
+            <p><strong>Problema:</strong> Aunque el <code>else</code> final captura opciones inválidas, si el usuario ingresa un espacio en blanco o un texto largo, el programa sigue funcionando pero podría confundir. Más importante: el mensaje <code>"No hay colonos registrados."</code> nunca aparece porque falta la validación del error 3.</p>
+            <p class="impact">💥 Impacto: Error de UX y cumplimiento del requisito del mensaje para lista vacía.</p>
+            <p><strong>Corrección:</strong> Se incluye como parte del fix del error 3.</p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">colonia_marte_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("🏙️ COLONIA TERRANOVA — Sistema de Gestión")
+
+colonos = []
+
+while True:
+    print("\n=== MENÚ PRINCIPAL ===")
+    print("1. Registrar colono")
+    print("2. Buscar colono")
+    print("3. Reporte de la colonia")
+    print("4. Salir")
+
+    opcion = input("Selecciona una opción: ")
+
+    if opcion == "1":
+        print("\n--- Registro de Colono ---")
+
+        while True:
+            nombre = input("Nombre: ").strip()
+            if len(nombre) > 0:
+                break
+            print("El nombre no puede estar vacío.")
+
+        while True:
+            try:
+                edad = int(input("Edad (18-65): "))
+                if 18 <= edad <= 65:
+                    break
+                print("La edad debe estar entre 18 y 65.")
+            except ValueError:
+                print("Ingresa un número entero.")
+
+        especialidades_validas = ["ingenieria", "medicina", "ciencia"]
+        while True:
+            especialidad = input("Especialidad (ingenieria/medicina/ciencia): ").strip().lower()
+            if especialidad in especialidades_validas:
+                break
+            print("Especialidad no válida. Elige: ingenieria, medicina o ciencia.")
+
+        colono = {"nombre": nombre, "edad": edad, "especialidad": especialidad}
+        colonos.append(colono)
+        print(f"✅ Colono {nombre} registrado exitosamente.")
+
+    elif opcion == "2":
+        busqueda = input("Nombre del colono a buscar: ").strip()
+        encontrado = False
+
+        for c in colonos:
+            if c["nombre"].lower() == busqueda.lower():  # FIX 1: comparación case-insensitive
+                print(f"\n🔍 Colono encontrado:")
+                print(f"   Nombre: {c['nombre']}")
+                print(f"   Edad: {c['edad']}")
+                print(f"   Especialidad: {c['especialidad']}")
+                encontrado = True
+                break  # FIX 2: detener búsqueda al encontrar
+
+        if not encontrado:
+            print("Colono no encontrado.")
+
+    elif opcion == "3":
+        print("\n📊 REPORTE DE LA COLONIA")
+
+        total = len(colonos)
+        if total == 0:  # FIX 3: validar lista vacía
+            print("No hay colonos registrados.")
+        else:
+            print(f"Total de colonos: {total}")
+
+            ing = 0
+            med = 0
+            cie = 0
+            suma_edades = 0
+
+            for c in colonos:
+                suma_edades += c["edad"]
+                if c["especialidad"] == "ingenieria":
+                    ing += 1
+                elif c["especialidad"] == "medicina":
+                    med += 1
+                elif c["especialidad"] == "ciencia":
+                    cie += 1
+
+            print(f"Ingeniería: {ing}")
+            print(f"Medicina: {med}")
+            print(f"Ciencia: {cie}")
+
+            promedio_edad = suma_edades / total
+            print(f"Edad promedio: {round(promedio_edad, 1)}")  # FIX 4: ahora seguro
+
+    elif opcion == "4":
+        print("Cerrando sistema. ¡Hasta la próxima misión!")
+        break
+
+    else:
+        print("Opción no válida. Elige entre 1 y 4.")</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ PAUTA DESAFÍO 6 ═══ -->
+        <div class="answer-key fade-in-up" style="margin-bottom:2rem;">
+          <h4>🏰 Pauta — Desafío 6: Sistema del Gremio de Aventureros</h4>
+
+          <div class="error-detail">
+            <h5><span class="error-num">1</span> Fórmula de oro con multiplicador incorrecto</h5>
+            <p><strong>Línea afectada:</strong> <code>oro = misiones * dificultad * 10</code></p>
+            <p><strong>Problema:</strong> El requisito dice que las monedas de oro se calculan como <strong>misiones × dificultad × 15</strong>. El código usa el multiplicador 10 en vez de 15.</p>
+            <p class="impact">💥 Impacto: Todos los aventureros reciben un 33% menos de oro del que deberían, afectando clasificaciones de rango en cascada.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>* 10</code> → <code>* 15</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">2</span> Clasificación de "Rango Novato" usa > en vez de >=</h5>
+            <p><strong>Línea afectada:</strong> <code>elif oro > 500:</code></p>
+            <p><strong>Problema:</strong> El requisito dice que <strong>≥ 500</strong> clasifica como "Rango Novato". El código usa <code>> 500</code>, así que un aventurero con exactamente 500 monedas sería clasificado como "Rango Aprendiz".</p>
+            <p class="impact">💥 Impacto: Aventureros con exactamente 500 monedas se clasifican incorrectamente.</p>
+            <p><strong>Corrección:</strong> Cambiar <code>elif oro > 500:</code> → <code>elif oro >= 500:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">3</span> El mejor aventurero se selecciona con >= en vez de ></h5>
+            <p><strong>Línea afectada:</strong> <code>if oro >= mejor_oro:</code></p>
+            <p><strong>Problema:</strong> Al usar <code>>=</code>, si dos aventureros tienen exactamente la misma cantidad de oro, el segundo sobrescribe al primero. El criterio correcto es usar <code>></code> para mantener al primer aventurero con el puntaje más alto (criterio estándar).</p>
+            <p class="impact">💥 Impacto: En caso de empate, siempre gana el último registrado, no el primero (criterio inconsistente).</p>
+            <p><strong>Corrección:</strong> Cambiar <code>if oro >= mejor_oro:</code> → <code>if oro > mejor_oro:</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">4</span> Promedio de misiones no redondeado a 1 decimal</h5>
+            <p><strong>Línea afectada:</strong> <code>print(f"Promedio de misiones: {promedio_misiones}")</code></p>
+            <p><strong>Problema:</strong> El requisito pide que el promedio de misiones se muestre redondeado a 1 decimal, pero el código no aplica formato.</p>
+            <p class="impact">💥 Impacto: El promedio se muestra con decimales excesivos.</p>
+            <p><strong>Corrección:</strong> Cambiar a <code>{promedio_misiones:.1f}</code></p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">5</span> Error en cadena: clasificaciones de rango afectadas por oro incorrecto</h5>
+            <p><strong>Línea afectada:</strong> Consecuencia del error 1</p>
+            <p><strong>Problema:</strong> Como el multiplicador es 10 en vez de 15, todos los umbrales de clasificación se ven afectados. Un aventurero que debería tener 3000 monedas (Legendario) solo tendría 2000 (Veterano). Las estadísticas de distribución por rango son todas incorrectas.</p>
+            <p class="impact">💥 Impacto: La distribución completa de rangos está distorsionada; aventureros que deberían ser Legendarios terminan como Veteranos, etc.</p>
+            <p><strong>Corrección:</strong> Se resuelve al corregir el error 1 (multiplicador).</p>
+          </div>
+
+          <div class="error-detail">
+            <h5><span class="error-num">6</span> Error encadenado en total de oro y estadísticas finales</h5>
+            <p><strong>Línea afectada:</strong> <code>total_oro</code> y <code>mejor_oro</code></p>
+            <p><strong>Problema:</strong> Dado que cada aventurero recibe menos oro del correcto (error 1), el total de oro del gremio y la cantidad del aventurero más rico también son incorrectos. Todos los valores numéricos del resumen final están contaminados.</p>
+            <p class="impact">💥 Impacto: El resumen final muestra datos completamente erróneos en todas las métricas de oro.</p>
+            <p><strong>Corrección:</strong> Se resuelve al corregir el error 1 y 3.</p>
+          </div>
+
+          <div class="corrected-code">
+            <h5>✅ Código Corregido Completo</h5>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="filename">gremio_aventureros_CORREGIDO.py</span>
+                <span>Solución</span>
+              </div>
+              <pre><code class="language-python">print("🏰 GRAN GREMIO DE AVENTUREROS")
+print("Sistema de Registro y Recompensas")
+
+while True:
+    try:
+        cantidad = int(input("¿Cuántos aventureros registrar? "))
+        if cantidad > 0:
+            break
+        print("Debe ser mayor a 0.")
+    except ValueError:
+        print("Ingresa un entero válido.")
+
+aventureros = []
+legendarios = 0
+veteranos = 0
+novatos = 0
+aprendices = 0
+mejor_nombre = ""
+mejor_oro = 0
+total_oro = 0
+suma_misiones = 0
+
+for i in range(cantidad):
+    print(f"\n--- Aventurero {i+1} ---")
+
+    while True:
+        nombre = input("Nombre del aventurero: ").strip()
+        if len(nombre) >= 2:
+            break
+        print("El nombre debe tener al menos 2 caracteres.")
+
+    while True:
+        try:
+            misiones = int(input("Misiones completadas (1-50): "))
+            if 1 <= misiones <= 50:
+                break
+            print("Debe estar entre 1 y 50.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    while True:
+        try:
+            dificultad = int(input("Dificultad promedio (1-10): "))
+            if 1 <= dificultad <= 10:
+                break
+            print("Debe estar entre 1 y 10.")
+        except ValueError:
+            print("Ingresa un entero válido.")
+
+    oro = misiones * dificultad * 15  # FIX 1: multiplicador 15, no 10
+
+    if oro >= 3000:
+        rango = "Rango Legendario"
+        legendarios += 1
+    elif oro >= 1500:
+        rango = "Rango Veterano"
+        veteranos += 1
+    elif oro >= 500:  # FIX 2: >= 500, no > 500
+        rango = "Rango Novato"
+        novatos += 1
+    else:
+        rango = "Rango Aprendiz"
+        aprendices += 1
+
+    print(f"→ {nombre}: {oro} monedas de oro — {rango}")
+
+    if oro > mejor_oro:  # FIX 3: > en lugar de >=
+        mejor_nombre = nombre
+        mejor_oro = oro
+
+    aventurero = {"nombre": nombre, "misiones": misiones, "dificultad": dificultad, "oro": oro, "rango": rango}
+    aventureros.append(aventurero)
+    total_oro += oro
+    suma_misiones += misiones
+
+promedio_misiones = suma_misiones / len(aventureros)
+
+print(f"\n🏰 RESUMEN DEL GREMIO")
+print(f"Total de aventureros: {cantidad}")
+print(f"Rango Legendario: {legendarios}")
+print(f"Rango Veterano: {veteranos}")
+print(f"Rango Novato: {novatos}")
+print(f"Rango Aprendiz: {aprendices}")
+print(f"Aventurero más rico: {mejor_nombre} con {mejor_oro} monedas")
+print(f"Total de oro del gremio: {total_oro}")
+print(f"Promedio de misiones: {promedio_misiones:.1f}")  # FIX 4: redondear a 1 decimal</code></pre>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="site-footer">Hecho con 💖 para Academia hachimaki — Fundamentos de Programación 2026</footer>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          currentSection: 'challenges',
+          teacherUnlocked: false,
+          teacherPassword: '',
+          teacherError: ''
+        };
+      },
+      methods: {
+        unlockTeacher() {
+          // Simple client-side gate — not meant for real security
+          const validKeys = ['hachimaki2026', 'profe2026', 'depuracion2026'];
+          if (validKeys.includes(this.teacherPassword.trim().toLowerCase())) {
+            this.teacherUnlocked = true;
+            this.teacherError = '';
+          } else {
+            this.teacherError = 'Clave incorrecta. Contacta al docente.';
+          }
+        }
+      },
+      mounted() {
+        // Re-highlight code blocks after Vue renders
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+          }
+        });
+      },
+      watch: {
+        currentSection() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') {
+              Prism.highlightAll();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        },
+        teacherUnlocked() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') {
+              Prism.highlightAll();
+            }
+          });
+        }
+      }
+    }).mount('#app');
+  </script>
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>
