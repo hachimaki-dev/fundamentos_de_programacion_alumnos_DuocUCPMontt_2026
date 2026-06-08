@@ -27,3 +27,6 @@ saludar("Zobeiba")
 Return es la respuesta de la funcion.
 
 No es necesario que las funciones devuelvan una respuesta, tampoco es obligatorio que tengan un argumento ni parametro.
+
+Existen las funciones con retorno y sin retorno (return)
+
