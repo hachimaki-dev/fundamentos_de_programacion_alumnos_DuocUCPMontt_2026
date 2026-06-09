@@ -17,5 +17,5 @@ ataques = ["impactrueno" , "ataque rapido" , "rayo" , "cola ferrea"]
 for ataque in ataques:
     print("pikachu puede usar:",ataque)
 
-tamaño = len(ataques)
-print(f"pikachu tiene un total de {tamaño} ataques disponible")
+
+print(f"pikachu tiene un total de {len(ataques)} ataques disponible")

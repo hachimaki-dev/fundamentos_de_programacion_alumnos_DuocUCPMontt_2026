@@ -8,3 +8,9 @@ for contador_de_posicion in range(len(mis_notas)):
 print(mis_notas) 
 """Resalta modificativamente permanente [6.6, 5.1, 4.1] <- Éxito masivo inyectado"""
 """en servidor variables """
+
+nombres = ["pedro", "juanini" , "nosexd"]
+
+for nombre in range(len(nombres)):
+    nombres[nombre] = nombres[nombre].upper()
+print(nombres)

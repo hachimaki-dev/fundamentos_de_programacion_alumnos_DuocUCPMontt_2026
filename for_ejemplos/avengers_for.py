@@ -23,18 +23,24 @@ vengadores = [  ]
 sacrificar = "sacrificar"
 
 while True:
-    menu = (input("1. Agregar avenger 2-mostrar base y modificar 3-salir")) or str(sacrificar)
-    if menu == "1":
-        avenger = input(" nombre del heroe: ")
-        vengadores.append(avenger)
+    try:
+        menu = input(" 1. Agregar advenger\n 2. mostrar base y modificar\n 3. salir") or str(sacrificar)
+        if menu == "1" :
+            advenger = input(" nombre del heroe: ").upper()
+            vengadores.append(advenger)
     
-    elif menu == "2":
-        for i in range(len(vengadores)):
-            for valor in vengadores.keys():
-                print(vengadores(i) ,(vengadores.upper()) )
-        
-    
-    elif menu == "3":
-        break 
-    elif menu == sacrificar:
-        vengadores.pop()   
+        elif menu == "2":
+            for indice,valor in enumerate(vengadores):
+                print(f"{indice} - {valor}")
+            
+        elif menu == "3":
+            break
+
+        elif menu == sacrificar:
+            vengadores.pop() 
+
+        else:
+            print("ingresa un numero entre el 1 y el 3")
+    except:
+        print("ingresa un valor valido")
+      
