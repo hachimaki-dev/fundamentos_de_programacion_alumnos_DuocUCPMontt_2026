@@ -29,18 +29,18 @@ while vida > 0:
     if opcion == "1":
         if enemigos_derrotados == 0:
             enemigo = Enemigo_1
-            print("\n¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
+            print("¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
         elif enemigos_derrotados == 1:
             enemigo = Enemigo_2
-            print("\n¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
+            print("¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
         elif enemigos_derrotados == 2:
             enemigo = Enemigo_3
-            print("\n¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
+            print("¡Encuentras un enemigo! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"])
         elif enemigos_derrotados == 3 and not jefe_derrotado:
             enemigo = Jefe_final
-            print("\n¡¡APARECE EL JEFE FINAL!! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"], "| Defensa:", enemigo["defensa"])
+            print("¡¡APARECE EL JEFE FINAL!! Vida:", enemigo["vida"], "| Daño:", enemigo["daño"], "| Defensa:", enemigo["defensa"])
         else:
-            print("\nNo quedan enemigos. ¡Eres el campeon!")
+            print("No quedan enemigos. ¡Eres el campeon!")
             continue
  
         print("1. Pelear")
@@ -50,7 +50,7 @@ while vida > 0:
         if accion == "1":
             print("¡Comienza el combate!")
             while enemigo["vida"] > 0 and vida > 0:
-                print("\n  Tu vida:", vida, " | Vida del enemigo:", enemigo["vida"])
+                print("  Tu vida:", vida, " | Vida del enemigo:", enemigo["vida"])
                 print("  1. Atacar")
                 print("  2. Escapar")
                 turno = input("  Elige: ")
