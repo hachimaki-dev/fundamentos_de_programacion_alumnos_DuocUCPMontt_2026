@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧰 Mini-taller: Patrones de Funciones en Python</title>
+<link rel="stylesheet" href="../css/presentacion.css">
+<style>
+  /* Override for PROJECTION: bigger fonts, higher contrast */
+  .slide h1 { font-size: 3.6rem; }
+  .slide h2 { font-size: 2.6rem; }
+  .slide h3 { font-size: 1.8rem; }
+  .slide p, .slide li { font-size: 1.4rem; line-height: 1.75; color: var(--text); }
+  .code-block { font-size: 1.25rem; line-height: 1.85; }
+  .tag { font-size: 1rem; padding: .4rem 1.2rem; }
+  .subtitle { font-size: 1.4rem; }
+
+  /* Concept number badge */
+  .concept-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--accent); color: #fff; font-weight: 900;
+    width: 2.8rem; height: 2.8rem; border-radius: 50%;
+    font-size: 1.3rem; margin-bottom: 0.5rem;
+  }
+
+  /* VS comparison */
+  .vs-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem; max-width: 1000px; width: 100%; align-items: start;
+  }
+  .vs-box {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 1.5rem 2rem; box-shadow: var(--shadow); text-align: left;
+  }
+  .vs-box h3 { font-size: 1.4rem; margin-bottom: 0.8rem; }
+  .vs-box p { font-size: 1.15rem; }
+  .vs-divider {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; font-weight: 900; color: var(--accent);
+  }
+
+  /* Key point callout */
+  .key-point {
+    background: var(--surface); border-left: 6px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.5rem 2rem; max-width: 850px; text-align: left;
+    box-shadow: var(--shadow); margin: 1rem 0;
+  }
+  .key-point p { font-size: 1.3rem; font-weight: 600; color: var(--text); }
+
+  /* Pattern map grid */
+  .pattern-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1rem; max-width: 1100px; width: 100%;
+  }
+  .pattern-cell {
+    background: var(--surface); border-radius: 12px;
+    padding: 1rem 1.2rem; box-shadow: var(--shadow);
+    text-align: center; transition: transform 0.2s;
+    border-top: 4px solid var(--pastel-blue);
+  }
+  .pattern-cell:nth-child(3n+2) { border-top-color: var(--pastel-pink); }
+  .pattern-cell:nth-child(3n) { border-top-color: var(--pastel-green); }
+  .pattern-cell:hover { transform: translateY(-3px); }
+  .pattern-cell .pattern-num {
+    font-size: 1.5rem; font-weight: 900; color: var(--accent);
+  }
+  .pattern-cell .pattern-name {
+    font-size: 0.95rem; font-weight: 600; color: var(--text); margin-top: 0.3rem;
+  }
+
+  /* Big icon row */
+  .icon-row {
+    display: flex; gap: 2rem; justify-content: center;
+    align-items: center; flex-wrap: wrap; margin: 1rem 0;
+  }
+  .icon-item {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--surface); border-radius: var(--radius);
+    padding: 1.5rem 2rem; box-shadow: var(--shadow);
+    min-width: 180px; transition: transform 0.2s;
+  }
+  .icon-item:hover { transform: translateY(-4px); }
+  .icon-item .icon-emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .icon-item .icon-label { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .icon-item .icon-desc { font-size: 0.95rem; color: var(--text-light); margin-top: 0.3rem; }
+
+  /* Alert box */
+  .alert-box {
+    background: #fff3cd; border: 2px solid #ffc107; border-radius: var(--radius);
+    padding: 1.2rem 1.8rem; max-width: 800px; text-align: left;
+    margin-top: 1rem;
+  }
+  .alert-box p { font-size: 1.15rem; color: #664d03; }
+
+  .danger-box {
+    background: #f8d7da; border: 2px solid #dc3545; border-radius: var(--radius);
+    padding: 1.2rem 1.8rem; max-width: 800px; text-align: left;
+    margin-top: 1rem;
+  }
+  .danger-box p { font-size: 1.15rem; color: #58151c; }
+
+  .success-box {
+    background: #d1e7dd; border: 2px solid #198754; border-radius: var(--radius);
+    padding: 1.2rem 1.8rem; max-width: 800px; text-align: left;
+    margin-top: 1rem;
+  }
+  .success-box p { font-size: 1.15rem; color: #0f5132; }
+
+  /* Quiz reveal system */
+  .quiz-question {
+    background: var(--surface); border: 3px solid var(--accent);
+    border-radius: var(--radius); padding: 1.2rem 1.8rem;
+    max-width: 850px; text-align: center; margin-top: 1rem;
+  }
+  .quiz-question p { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+
+  .reveal-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1.2rem; padding: 0.8rem 2rem; border-radius: 50px;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 1.2rem; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .reveal-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+  .answer-reveal {
+    display: none; margin-top: 1rem;
+    background: var(--surface); border: 3px solid #198754;
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    max-width: 850px; text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    animation: revealPop 0.4s ease;
+  }
+  .answer-reveal.visible { display: block; }
+  .answer-reveal h4 { font-size: 1.3rem; color: #198754; margin-bottom: 0.5rem; }
+  .answer-reveal p { font-size: 1.15rem; color: var(--text); }
+  .answer-reveal .output-line {
+    font-family: 'Courier New', monospace; font-size: 1.3rem;
+    font-weight: 700; color: #198754; background: #e8f5e9;
+    padding: 0.5rem 1rem; border-radius: 8px; margin: 0.3rem 0;
+    display: block;
+  }
+
+  @keyframes revealPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .quiz-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--pastel-orange); color: #8b5a30; font-weight: 900;
+    width: 2.8rem; height: 2.8rem; border-radius: 50%;
+    font-size: 1.3rem; margin-bottom: 0.5rem;
+  }
+  .quiz-badge.exit { background: var(--pastel-purple); color: #5a3d7a; }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+<div class="nav">
+  <button onclick="prev()" title="Anterior">←</button>
+  <button onclick="next()" title="Siguiente">→</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: Portada -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="deco-circle" style="width:350px;height:350px;background:var(--pastel-purple);top:-100px;right:-80px;"></div>
+  <div class="deco-circle" style="width:250px;height:250px;background:var(--pastel-pink);bottom:-60px;left:-60px;"></div>
+  <div class="emoji-big">🧰</div>
+  <h1>Mini-taller:<br>Funciones en Python</h1>
+  <p class="subtitle">De cero a sistema completo — 15 patrones clave</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-purple">def</span>
+    <span class="tag tag-blue">return</span>
+    <span class="tag tag-green">parámetros</span>
+    <span class="tag tag-pink">mutabilidad</span>
+    <span class="tag tag-yellow">validación</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ACTIVACIÓN: Intro -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="deco-circle" style="width:280px;height:280px;background:var(--pastel-orange);top:-80px;left:-60px;"></div>
+  <div class="emoji-big">🧠</div>
+  <h1>Activación de<br>Conocimientos Previos</h1>
+  <p class="subtitle">¿Qué recuerdan de funciones? — 3 desafíos de lectura de código</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-orange">leer</span>
+    <span class="tag tag-yellow">interpretar</span>
+    <span class="tag tag-pink">predecir</span>
+  </div>
+</div>
+
+<!-- ACTIVACIÓN: Quiz 1 -->
+<div class="slide">
+  <div class="quiz-badge">1</div>
+  <h2>¿Qué imprime este código? 🔍</h2>
+  <div class="code-block" style="margin-top:1rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">saludar</span>(nombre):
+    <span class="fn">print</span>(<span class="str">f"Hola {nombre}"</span>)
+
+resultado = <span class="fn">saludar</span>(<span class="str">"Ana"</span>)
+<span class="fn">print</span>(resultado)
+  </div>
+  <div class="quiz-question">
+    <p>¿Qué aparece en la consola? ¿Cuántas líneas?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta:</h4>
+    <span class="output-line">Hola Ana</span>
+    <span class="output-line">None</span>
+    <p style="margin-top:0.8rem;">La función <strong>imprime</strong> pero no tiene <code>return</code>. Cuando guardas el resultado de una función sin <code>return</code>, Python le asigna <code>None</code>.</p>
+  </div>
+</div>
+
+<!-- ACTIVACIÓN: Quiz 2 -->
+<div class="slide">
+  <div class="quiz-badge">2</div>
+  <h2>¿Qué imprime este código? 🔍</h2>
+  <div class="code-block" style="margin-top:1rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">doble</span>(x):
+    <span class="kw">return</span> x * <span class="num">2</span>
+
+a = <span class="fn">doble</span>(<span class="num">5</span>)
+b = <span class="fn">doble</span>(<span class="fn">doble</span>(<span class="num">3</span>))
+<span class="fn">print</span>(a, b)
+  </div>
+  <div class="quiz-question">
+    <p>¿Qué valores tienen <code>a</code> y <code>b</code>?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta:</h4>
+    <span class="output-line">10 12</span>
+    <p style="margin-top:0.8rem;"><code>doble(5)</code> → <code>10</code>. Para <code>b</code>: primero <code>doble(3)</code> → <code>6</code>, luego <code>doble(6)</code> → <code>12</code>. Se puede usar el <code>return</code> de una función como argumento de otra.</p>
+  </div>
+</div>
+
+<!-- ACTIVACIÓN: Quiz 3 -->
+<div class="slide">
+  <div class="quiz-badge">3</div>
+  <h2>¿Qué imprime este código? 🔍</h2>
+  <div class="code-block" style="margin-top:1rem;">
+    <span class="code-label">Python</span>
+x = <span class="num">10</span>
+
+<span class="kw">def</span> <span class="fn">cambiar</span>():
+    x = <span class="num">99</span>
+    <span class="kw">return</span> x
+
+resultado = <span class="fn">cambiar</span>()
+<span class="fn">print</span>(x)
+<span class="fn">print</span>(resultado)
+  </div>
+  <div class="quiz-question">
+    <p>¿Cuánto vale <code>x</code> después de llamar a <code>cambiar()</code>?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta:</h4>
+    <span class="output-line">10</span>
+    <span class="output-line">99</span>
+    <p style="margin-top:0.8rem;">La <code>x</code> dentro de la función es <strong>local</strong> (scope). No modifica la <code>x</code> global. <code>resultado</code> recibe el <code>return</code> (99), pero la <code>x</code> original sigue siendo 10.</p>
+  </div>
+</div>
+
+<!-- ACTIVACIÓN: Transición -->
+<div class="slide">
+  <div class="emoji-big">💪</div>
+  <h1>¡Muy bien!</h1>
+  <p class="subtitle" style="max-width:600px;">Esos conceptos son la <span class="hl">base</span>.<br>Ahora vamos a ver los <span class="hl-green">15 patrones</span> que necesitas para construir un sistema completo.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE: ¿Qué es una función? -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>¿Qué es una función? 🪥</h2>
+  <div class="key-point">
+    <p>Imagina que cada vez que quieres lavarte los dientes tuvieras que explicar: «agarra el cepillo, pon pasta, mueve la mano, enjuaga...»</p>
+  </div>
+  <div class="key-point" style="border-left-color:var(--pastel-green);">
+    <p>Una <span class="hl">función</span> es eso: un bloque de código con un nombre. Lo defines UNA vez, lo invocas las veces que quieras.</p>
+  </div>
+  <div class="code-block" style="margin-top:1.5rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">lavarse_dientes</span>():
+    <span class="fn">print</span>(<span class="str">"Agarrar cepillo"</span>)
+    <span class="fn">print</span>(<span class="str">"Cepillar 2 minutos"</span>)
+
+<span class="fn">lavarse_dientes</span>()  <span class="cm"># invocación</span>
+<span class="fn">lavarse_dientes</span>()  <span class="cm"># se puede usar cuantas veces quieras</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3: Vocabulario clave -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>Vocabulario Clave 📖</h2>
+  <div class="icon-row">
+    <div class="icon-item" style="border-top:4px solid var(--pastel-purple);">
+      <div class="icon-emoji">📝</div>
+      <div class="icon-label">Definir</div>
+      <div class="icon-desc">Escribir el código con <code>def</code></div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-blue);">
+      <div class="icon-emoji">📞</div>
+      <div class="icon-label">Invocar</div>
+      <div class="icon-desc">Ejecutar con <code>nombre()</code></div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-pink);">
+      <div class="icon-emoji">📦</div>
+      <div class="icon-label">Parámetro</div>
+      <div class="icon-desc">Variable en la definición</div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-green);">
+      <div class="icon-emoji">🍎</div>
+      <div class="icon-label">Argumento</div>
+      <div class="icon-desc">Valor real al invocar</div>
+    </div>
+  </div>
+  <div class="code-block" style="margin-top:1.5rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">lavarse_dientes</span>(<span class="var">minutos</span>):  <span class="cm"># "minutos" es PARÁMETRO</span>
+    <span class="fn">print</span>(<span class="str">f"Cepillando por {minutos} minutos"</span>)
+
+<span class="fn">lavarse_dientes</span>(<span class="num">2</span>)  <span class="cm"># "2" es el ARGUMENTO</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4: Concepto 1 — return vs print -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">1</div>
+  <h2><code>return</code> vs <code>print</code> — La confusión #1</h2>
+  <p style="margin-bottom:1.5rem;">El <span class="hl-pink">80% de los errores</span> de principiantes viene de aquí.</p>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid #dc3545;">
+      <h3>🖨️ print()</h3>
+      <p>Muestra algo en pantalla.<br><strong>Solo para el humano.</strong><br>El programa NO puede usarlo después.</p>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="vs-box" style="border-top:4px solid #198754;">
+      <h3>📬 return</h3>
+      <p>Entrega un valor al programa.<br><strong>Comunicación entre funciones.</strong><br>El programa SÍ puede usar ese valor.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5: Código return vs print -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h3>return vs print — En código</h3>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">sumar_print</span>(a, b):
+    <span class="fn">print</span>(a + b)     <span class="cm"># solo IMPRIME, no entrega nada</span>
+
+<span class="kw">def</span> <span class="fn">sumar_return</span>(a, b):
+    <span class="kw">return</span> a + b     <span class="cm"># ENTREGA el resultado</span>
+
+resultado1 = <span class="fn">sumar_print</span>(<span class="num">3</span>, <span class="num">4</span>)    <span class="cm"># en pantalla: 7</span>
+<span class="fn">print</span>(resultado1)                    <span class="cm"># pero esto imprime: None !!</span>
+
+resultado2 = <span class="fn">sumar_return</span>(<span class="num">3</span>, <span class="num">4</span>)   <span class="cm"># no aparece nada en pantalla</span>
+<span class="fn">print</span>(resultado2)                    <span class="cm"># esto imprime: 7</span>
+  </div>
+  <div class="danger-box">
+    <p>⚠️ Sin <code>return</code>, Python asigna <code>None</code> automáticamente.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6: Concepto 2 — Valores por defecto -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">2</div>
+  <h2>Valores por Defecto</h2>
+  <p style="margin-bottom:1rem;">Un parámetro puede tener un valor de «respaldo» si no se especifica.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">saludar</span>(nombre, idioma=<span class="str">"español"</span>):
+    <span class="kw">if</span> idioma == <span class="str">"español"</span>:
+        <span class="fn">print</span>(<span class="str">f"Hola, {nombre}"</span>)
+    <span class="kw">elif</span> idioma == <span class="str">"inglés"</span>:
+        <span class="fn">print</span>(<span class="str">f"Hello, {nombre}"</span>)
+
+<span class="fn">saludar</span>(<span class="str">"Juan"</span>)              <span class="cm"># usa "español" por defecto</span>
+<span class="fn">saludar</span>(<span class="str">"John"</span>, <span class="str">"inglés"</span>)    <span class="cm"># sobreescribe el default</span>
+  </div>
+  <div class="alert-box">
+    <p>💡 Los parámetros con default van <strong>después</strong> de los que no lo tienen.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7: Concepto 3 — Mutabilidad -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">3</div>
+  <h2>Mutabilidad — Crítico para el examen 🧬</h2>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid #198754;">
+      <h3>✅ Listas y Dicts (mutables)</h3>
+      <p>Se pasan «por referencia».<br>La función modifica <strong>el original</strong>.<br><code>.append()</code> cambia la lista de afuera.</p>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="vs-box" style="border-top:4px solid #dc3545;">
+      <h3>❌ Números y Strings (inmutables)</h3>
+      <p>Se pasan «por valor».<br>La función recibe una <strong>copia</strong>.<br>El original no cambia.</p>
+    </div>
+  </div>
+  <div class="success-box" style="margin-top:1rem;">
+    <p>🎯 <strong>Para el examen:</strong> al agregar un estudiante, haz <code>.append()</code> a la lista. <strong>No necesitas retornarla</strong> — el cambio ya quedó.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8: Código mutabilidad -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h3>Mutabilidad — En código</h3>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="cm"># LISTA: el cambio SÍ se mantiene afuera</span>
+<span class="kw">def</span> <span class="fn">agregar_fruta</span>(lista_frutas):
+    lista_frutas.<span class="fn">append</span>(<span class="str">"manzana"</span>)  <span class="cm"># sin return</span>
+
+mis_frutas = [<span class="str">"pera"</span>, <span class="str">"uva"</span>]
+<span class="fn">agregar_fruta</span>(mis_frutas)
+<span class="fn">print</span>(mis_frutas)  <span class="cm"># ['pera', 'uva', 'manzana'] ✅</span>
+
+<span class="cm"># NÚMERO: el cambio NO se mantiene afuera</span>
+<span class="kw">def</span> <span class="fn">intentar_cambiar</span>(numero):
+    numero = numero + <span class="num">100</span>
+
+x = <span class="num">5</span>
+<span class="fn">intentar_cambiar</span>(x)
+<span class="fn">print</span>(x)  <span class="cm"># sigue siendo 5 ❌</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9: Concepto 4 — Validación booleana -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">4</div>
+  <h2>Funciones de Validación 🔍</h2>
+  <p style="margin-bottom:1rem;">Responden una pregunta de <span class="hl-green">sí o no</span>. Retornan <code>True</code> o <code>False</code>.</p>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>✨ Versión Pythónica</h3>
+      <div class="code-block" style="font-size:1.15rem;padding:1rem 1.5rem;">
+<span class="kw">def</span> <span class="fn">es_mayor</span>(edad):
+    <span class="kw">return</span> edad >= <span class="num">18</span>
+      </div>
+    </div>
+    <div class="vs-divider">=</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-blue);">
+      <h3>📝 Versión Explícita</h3>
+      <div class="code-block" style="font-size:1.15rem;padding:1rem 1.5rem;">
+<span class="kw">def</span> <span class="fn">es_mayor</span>(edad):
+    <span class="kw">if</span> edad >= <span class="num">18</span>:
+        <span class="kw">return</span> <span class="num">True</span>
+    <span class="kw">else</span>:
+        <span class="kw">return</span> <span class="num">False</span>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:1rem;font-size:1.2rem;">Ambas producen <strong>exactamente lo mismo</strong>. Usa la que entiendas mejor.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10: Concepto 5 — Búsqueda posición/-1 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">5</div>
+  <h2>Búsqueda: Posición o -1 🔎</h2>
+  <p style="margin-bottom:1rem;">Uno de los <span class="hl-pink">patrones más importantes</span> del examen.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">buscar_posicion</span>(lista, valor_buscado):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(lista)):
+        <span class="kw">if</span> lista[i] == valor_buscado:
+            <span class="kw">return</span> i    <span class="cm"># ¡encontramos! return corta el ciclo</span>
+    <span class="kw">return</span> <span class="num">-1</span>          <span class="cm"># si el for terminó sin encontrar</span>
+  </div>
+  <div class="key-point" style="margin-top:1rem;">
+    <p>📌 <code>-1</code> nunca es una posición válida → funciona como señal de «no encontrado»</p>
+  </div>
+  <div class="key-point" style="border-left-color:var(--pastel-pink);">
+    <p>⚡ <code>return</code> <strong>termina la función inmediatamente</strong>, sin importar dónde esté.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11: Concepto 6 — Separación de responsabilidades -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">6</div>
+  <h2>Separación de Responsabilidades 🎯</h2>
+  <p style="margin-bottom:1.5rem;">Cada función hace <span class="hl">UNA sola cosa</span> y la hace bien.</p>
+  <div class="diagram">
+    <div class="box" style="border-color:var(--pastel-blue);"><code>buscar()</code><br>→ retorna posición</div>
+    <div class="arrow">→</div>
+    <div class="box" style="border-color:var(--pastel-green);"><strong>Buscar alumno</strong><br>→ muestra datos</div>
+  </div>
+  <div class="diagram" style="margin-top:0.5rem;">
+    <div class="box" style="border-color:var(--pastel-blue);"><code>buscar()</code><br>→ retorna posición</div>
+    <div class="arrow">→</div>
+    <div class="box" style="border-color:var(--pastel-pink);"><strong>Eliminar alumno</strong><br>→ lo elimina</div>
+  </div>
+  <div class="success-box" style="margin-top:1rem;">
+    <p>✅ La misma función de búsqueda se <strong>reutiliza</strong> para contextos diferentes.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 12: Concepto 7 — Reutilizar dentro de otra -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">7</div>
+  <h2>Funciones dentro de Funciones 🧱</h2>
+  <p style="margin-bottom:1rem;">Una función puede llamar a otra. Es la base de la <span class="hl-blue">organización modular</span>.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">buscar_posicion</span>(lista, valor):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(lista)):
+        <span class="kw">if</span> lista[i] == valor:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="num">-1</span>
+
+<span class="kw">def</span> <span class="fn">eliminar</span>(lista, valor):
+    posicion = <span class="fn">buscar_posicion</span>(lista, valor)  <span class="cm"># ¡reutilizamos!</span>
+    <span class="kw">if</span> posicion != <span class="num">-1</span>:
+        lista.<span class="fn">pop</span>(posicion)
+        <span class="fn">print</span>(<span class="str">"Eliminado correctamente"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">"No se encontró"</span>)
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 13: Concepto 8 — Recorrer y modificar todos -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">8</div>
+  <h2>Recorrer y Modificar TODOS 🔄</h2>
+  <p style="margin-bottom:1rem;">Aplicar una regla a <span class="hl-green">cada elemento</span> de la lista, sin excepción.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="cm"># Con listas de números: usar índices</span>
+<span class="kw">def</span> <span class="fn">aplicar_descuento</span>(lista_precios):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(lista_precios)):
+        lista_precios[i] = lista_precios[i] * <span class="num">0.9</span>
+
+<span class="cm"># Con listas de DICCIONARIOS: directo</span>
+<span class="kw">def</span> <span class="fn">marcar_todos_revisados</span>(lista_productos):
+    <span class="kw">for</span> producto <span class="kw">in</span> lista_productos:
+        producto[<span class="str">"revisado"</span>] = <span class="num">True</span>
+  </div>
+  <div class="alert-box">
+    <p>💡 Con diccionarios, <code>for producto in lista</code> funciona para modificar porque <code>producto</code> es una <strong>referencia</strong> al diccionario real (Concepto 3).</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 14: Concepto 9 — Dispatcher -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">9</div>
+  <h2>El Dispatcher 📞</h2>
+  <p style="margin-bottom:1rem;">Como un <span class="hl">operador de central telefónica</span>: recibe una señal y la despacha al lugar correcto.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+opcion = <span class="fn">leer_opcion</span>()
+
+<span class="kw">if</span> opcion == <span class="num">1</span>:
+    <span class="fn">agregar_estudiante</span>(lista)
+<span class="kw">elif</span> opcion == <span class="num">2</span>:
+    <span class="fn">buscar_estudiante</span>(lista)
+<span class="kw">elif</span> opcion == <span class="num">3</span>:
+    <span class="fn">eliminar_estudiante</span>(lista)
+<span class="kw">elif</span> opcion == <span class="num">6</span>:
+    <span class="fn">print</span>(<span class="str">"Adiós"</span>)
+    <span class="kw">break</span>
+  </div>
+  <div class="success-box">
+    <p>✅ Para el examen, <code>if/elif/else</code> es perfectamente válido y suficiente.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 15: Concepto 10 — while True + break -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">10</div>
+  <h2><code>while True</code> + <code>break</code> — El menú 🔁</h2>
+  <p style="margin-bottom:1rem;">Un menú se repite indefinidamente <span class="hl-pink">hasta que el usuario decide salir</span>.</p>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">while</span> <span class="num">True</span>:
+    <span class="fn">mostrar_menu</span>()
+    opcion = <span class="fn">leer_opcion</span>()
+
+    <span class="kw">if</span> opcion == <span class="num">6</span>:
+        <span class="fn">print</span>(<span class="str">"Adiós"</span>)
+        <span class="kw">break</span>  <span class="cm"># rompe el ciclo infinito</span>
+
+    <span class="cm"># ... resto de las opciones (dispatcher)</span>
+  </div>
+  <div class="alert-box">
+    <p>💡 <code>while True</code> + <code>break</code> es el patrón estándar para «repetir hasta que pase algo que decido durante el ciclo».</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 16: Concepto 11 — Validar entradas -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">11</div>
+  <h2>Validar Entradas: Pedir hasta que sea válido 🔒</h2>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-blue);">
+      <h3>Versión .isdigit()</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">pedir_edad</span>():
+    <span class="kw">while</span> <span class="num">True</span>:
+        e = <span class="fn">input</span>(<span class="str">"Edad: "</span>)
+        <span class="kw">if</span> e.<span class="fn">isdigit</span>() <span class="kw">and</span> <span class="fn">int</span>(e)><span class="num">0</span>:
+            <span class="kw">return</span> <span class="fn">int</span>(e)
+        <span class="fn">print</span>(<span class="str">"Inválida"</span>)
+      </div>
+    </div>
+    <div class="vs-divider">ó</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>Versión try/except</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">pedir_edad</span>():
+    <span class="kw">while</span> <span class="num">True</span>:
+        <span class="kw">try</span>:
+            e = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Edad: "</span>))
+            <span class="kw">if</span> e > <span class="num">0</span>: <span class="kw">return</span> e
+        <span class="kw">except</span> ValueError:
+            <span class="kw">pass</span>
+        <span class="fn">print</span>(<span class="str">"Inválida"</span>)
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:1rem;">Elige UNA estrategia y sé <span class="hl">consistente</span> en todo tu examen.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 17: Concepto 12 — Texto vacío -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">12</div>
+  <h2>Validar Texto Vacío o Solo Espacios 📝</h2>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-yellow);">
+      <h3>🔧 Versión Manual</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">tiene_contenido</span>(texto):
+    <span class="kw">for</span> caracter <span class="kw">in</span> texto:
+        <span class="kw">if</span> caracter != <span class="str">" "</span>:
+            <span class="kw">return</span> <span class="num">True</span>
+    <span class="kw">return</span> <span class="num">False</span>
+      </div>
+    </div>
+    <div class="vs-divider">=</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>✨ Versión .strip()</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">tiene_contenido</span>(texto):
+    <span class="kw">return</span> texto.<span class="fn">strip</span>() != <span class="str">""</span>
+      </div>
+      <p style="margin-top:0.8rem;font-size:1rem;"><code>.strip()</code> elimina espacios al inicio y al final.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 18: Concepto 13 — Rango decimal -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">13</div>
+  <h2>Validar Números en un Rango 🎯</h2>
+  <div class="code-block" style="margin-bottom:1.5rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">es_nota_valida</span>(nota):
+    <span class="kw">return</span> <span class="fn">isinstance</span>(nota, (<span class="fn">int</span>, <span class="fn">float</span>)) <span class="kw">and</span> <span class="num">1.0</span> <= nota <= <span class="num">7.0</span>
+  </div>
+  <div class="icon-row">
+    <div class="icon-item">
+      <div class="icon-emoji">🔍</div>
+      <div class="icon-label"><code>isinstance()</code></div>
+      <div class="icon-desc">¿Es del tipo correcto?</div>
+    </div>
+    <div class="icon-item">
+      <div class="icon-emoji">📏</div>
+      <div class="icon-label"><code>1.0 <= x <= 7.0</code></div>
+      <div class="icon-desc">Comparación encadenada</div>
+    </div>
+  </div>
+  <p style="margin-top:1rem;font-size:1.2rem;"><code>1.0 <= nota <= 7.0</code> equivale a <code>nota >= 1.0 and nota <= 7.0</code></p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 19: Concepto 14 — Contar con condición -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">14</div>
+  <h2>Contar Elementos con Condición 🧮</h2>
+  <div class="vs-grid">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-blue);">
+      <h3>📝 Con contador</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">contar_aprobados</span>(lista):
+    contador = <span class="num">0</span>
+    <span class="kw">for</span> est <span class="kw">in</span> lista:
+        <span class="kw">if</span> est[<span class="str">"aprobado"</span>]:
+            contador += <span class="num">1</span>
+    <span class="kw">return</span> contador
+      </div>
+    </div>
+    <div class="vs-divider">=</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>✨ Con sum()</h3>
+      <div class="code-block" style="font-size:1.05rem;padding:1rem;">
+<span class="kw">def</span> <span class="fn">contar_aprobados</span>(lista):
+    <span class="kw">return</span> <span class="fn">sum</span>(
+        <span class="num">1</span> <span class="kw">for</span> est <span class="kw">in</span> lista
+        <span class="kw">if</span> est[<span class="str">"aprobado"</span>]
+    )
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:1rem;font-size:1.2rem;">Ambas son válidas. La versión con contador es más fácil de <strong>explicar</strong>.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 20: Concepto 15 — Crear registro -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="concept-badge">15</div>
+  <h2>Crear un Registro con Valores Fijos 📋</h2>
+  <div class="code-block">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">crear_estudiante</span>(nombre, edad, nota):
+    estudiante = {
+        <span class="str">"nombre"</span>: nombre,
+        <span class="str">"edad"</span>: edad,
+        <span class="str">"nota"</span>: nota,
+        <span class="str">"aprobado"</span>: <span class="num">False</span>  <span class="cm"># siempre inicia en False</span>
+    }
+    <span class="kw">return</span> estudiante
+  </div>
+  <div class="success-box" style="margin-top:1rem;">
+    <p>✅ <code>"aprobado"</code> NO se pide al usuario — el sistema lo asigna por defecto y lo actualiza después con otra función (Concepto 8).</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 21: Mapa de patrones -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>Mapa de los 15 Patrones 🗺️</h2>
+  <div class="pattern-grid">
+    <div class="pattern-cell"><div class="pattern-num">1</div><div class="pattern-name">return vs print</div></div>
+    <div class="pattern-cell"><div class="pattern-num">2</div><div class="pattern-name">Valores por defecto</div></div>
+    <div class="pattern-cell"><div class="pattern-num">3</div><div class="pattern-name">Mutabilidad</div></div>
+    <div class="pattern-cell"><div class="pattern-num">4</div><div class="pattern-name">Validación booleana</div></div>
+    <div class="pattern-cell"><div class="pattern-num">5</div><div class="pattern-name">Búsqueda posición/-1</div></div>
+    <div class="pattern-cell"><div class="pattern-num">6</div><div class="pattern-name">Separación responsabilidades</div></div>
+    <div class="pattern-cell"><div class="pattern-num">7</div><div class="pattern-name">Función dentro de función</div></div>
+    <div class="pattern-cell"><div class="pattern-num">8</div><div class="pattern-name">Recorrer y modificar todos</div></div>
+    <div class="pattern-cell"><div class="pattern-num">9</div><div class="pattern-name">Dispatcher</div></div>
+    <div class="pattern-cell"><div class="pattern-num">10</div><div class="pattern-name">while True + break</div></div>
+    <div class="pattern-cell"><div class="pattern-num">11</div><div class="pattern-name">Validar entradas</div></div>
+    <div class="pattern-cell"><div class="pattern-num">12</div><div class="pattern-name">Texto vacío / .strip()</div></div>
+    <div class="pattern-cell"><div class="pattern-num">13</div><div class="pattern-name">Rango decimal</div></div>
+    <div class="pattern-cell"><div class="pattern-num">14</div><div class="pattern-name">Contar con condición</div></div>
+    <div class="pattern-cell"><div class="pattern-num">15</div><div class="pattern-name">Crear registro</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 22: Arquitectura del sistema completo -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>Arquitectura del Sistema Completo 🏗️</h2>
+  <div class="diagram" style="flex-direction:column;gap:1.2rem;">
+    <div class="box" style="border-color:var(--pastel-purple);width:100%;max-width:500px;">
+      📋 <strong>while True</strong> → Menú + Dispatcher
+      <br><small>(Conceptos 9, 10)</small>
+    </div>
+    <div class="arrow" style="transform:rotate(90deg);">→</div>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
+      <div class="box" style="border-color:var(--pastel-green);">➕ Agregar<br><small>(C3, C11, C12, C15)</small></div>
+      <div class="box" style="border-color:var(--pastel-blue);">🔍 Buscar<br><small>(C5, C6)</small></div>
+      <div class="box" style="border-color:var(--pastel-pink);">🗑️ Eliminar<br><small>(C5, C7)</small></div>
+      <div class="box" style="border-color:var(--pastel-yellow);">🔄 Actualizar<br><small>(C8)</small></div>
+      <div class="box" style="border-color:var(--pastel-orange);">📊 Mostrar<br><small>(C14)</small></div>
+    </div>
+  </div>
+  <p style="margin-top:1rem;font-size:1.2rem;">Cada opción del menú usa <strong>combinaciones</strong> de los patrones aprendidos.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 23: Reglas de oro -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>Reglas de Oro para el Examen 🏆</h2>
+  <ul>
+    <li>Si el programa necesita <strong>usar</strong> el resultado → <span class="hl"><code>return</code></span></li>
+    <li>Si solo necesita <strong>mostrar</strong> al usuario → <span class="hl-blue"><code>print</code></span></li>
+    <li>La función de búsqueda <strong>solo informa</strong>, no decide qué hacer</li>
+    <li>Las listas se modifican <strong>sin return</strong> (mutabilidad)</li>
+    <li>Cada función = <strong>UNA responsabilidad</strong></li>
+    <li>Validar entradas = <strong>while True</strong> + return cuando sea válido</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CIERRE: Intro -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="deco-circle" style="width:280px;height:280px;background:var(--pastel-purple);top:-80px;right:-60px;"></div>
+  <div class="emoji-big">🏆</div>
+  <h1>Desafío de Cierre</h1>
+  <p class="subtitle">Aplica los 15 patrones — 3 retos de lectura de código avanzados</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-purple">mutabilidad</span>
+    <span class="tag tag-blue">búsqueda</span>
+    <span class="tag tag-green">sistema completo</span>
+  </div>
+</div>
+
+<!-- CIERRE: Quiz 1 — Mutabilidad -->
+<div class="slide">
+  <div class="quiz-badge exit">1</div>
+  <h2>Desafío: Mutabilidad 🧬</h2>
+  <div class="code-block" style="margin-top:1rem;font-size:1.15rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">agregar</span>(lista, valor):
+    lista.<span class="fn">append</span>(valor)
+
+<span class="kw">def</span> <span class="fn">intentar_cambiar</span>(numero):
+    numero = numero + <span class="num">100</span>
+
+frutas = [<span class="str">"🍎"</span>, <span class="str">"🍊"</span>]
+x = <span class="num">5</span>
+
+<span class="fn">agregar</span>(frutas, <span class="str">"🍇"</span>)
+<span class="fn">intentar_cambiar</span>(x)
+
+<span class="fn">print</span>(frutas)
+<span class="fn">print</span>(x)
+  </div>
+  <div class="quiz-question">
+    <p>¿Qué imprime <code>frutas</code>? ¿Y <code>x</code>?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta — Concepto 3 (Mutabilidad):</h4>
+    <span class="output-line">['🍎', '🍊', '🍇']</span>
+    <span class="output-line">5</span>
+    <p style="margin-top:0.8rem;">Las listas son <strong>mutables</strong> → <code>.append()</code> modifica el original. Los números son <strong>inmutables</strong> → la reasignación dentro de la función NO afecta a <code>x</code>.</p>
+  </div>
+</div>
+
+<!-- CIERRE: Quiz 2 — Búsqueda -->
+<div class="slide">
+  <div class="quiz-badge exit">2</div>
+  <h2>Desafío: Búsqueda 🔎</h2>
+  <div class="code-block" style="margin-top:1rem;font-size:1.15rem;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">buscar</span>(lista, objetivo):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(lista)):
+        <span class="kw">if</span> lista[i] == objetivo:
+            <span class="kw">return</span> i
+    <span class="kw">return</span> <span class="num">-1</span>
+
+notas = [<span class="num">5.5</span>, <span class="num">7.0</span>, <span class="num">3.8</span>, <span class="num">6.2</span>]
+<span class="fn">print</span>(<span class="fn">buscar</span>(notas, <span class="num">7.0</span>))
+<span class="fn">print</span>(<span class="fn">buscar</span>(notas, <span class="num">4.0</span>))
+  </div>
+  <div class="quiz-question">
+    <p>¿Qué retorna cada <code>buscar()</code>? ¿Por qué?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta — Concepto 5 (Posición o -1):</h4>
+    <span class="output-line">1</span>
+    <span class="output-line">-1</span>
+    <p style="margin-top:0.8rem;"><code>7.0</code> está en la posición <strong>1</strong> (índices empiezan en 0). <code>4.0</code> no existe en la lista, así que retorna <strong>-1</strong> como señal de «no encontrado». El <code>return</code> dentro del <code>for</code> corta la ejecución inmediatamente.</p>
+  </div>
+</div>
+
+<!-- CIERRE: Quiz 3 — Sistema completo -->
+<div class="slide">
+  <div class="quiz-badge exit">3</div>
+  <h2>Desafío: Sistema Completo 🏗️</h2>
+  <div class="code-block" style="margin-top:1rem;font-size:1.05rem;line-height:1.7;">
+    <span class="code-label">Python</span>
+<span class="kw">def</span> <span class="fn">crear</span>(nombre, nota):
+    <span class="kw">return</span> {<span class="str">"nombre"</span>: nombre, <span class="str">"nota"</span>: nota, <span class="str">"aprobado"</span>: <span class="num">False</span>}
+
+<span class="kw">def</span> <span class="fn">actualizar</span>(lista):
+    <span class="kw">for</span> est <span class="kw">in</span> lista:
+        est[<span class="str">"aprobado"</span>] = est[<span class="str">"nota"</span>] >= <span class="num">4.0</span>
+
+alumnos = []
+alumnos.<span class="fn">append</span>(<span class="fn">crear</span>(<span class="str">"Ana"</span>, <span class="num">5.5</span>))
+alumnos.<span class="fn">append</span>(<span class="fn">crear</span>(<span class="str">"Bob"</span>, <span class="num">3.2</span>))
+<span class="fn">actualizar</span>(alumnos)
+<span class="fn">print</span>(alumnos[<span class="num">0</span>][<span class="str">"aprobado"</span>], alumnos[<span class="num">1</span>][<span class="str">"aprobado"</span>])
+  </div>
+  <div class="quiz-question">
+    <p>¿Cuántos conceptos puedes identificar? ¿Qué imprime?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta — Conceptos 3, 8, 15:</h4>
+    <span class="output-line">True False</span>
+    <p style="margin-top:0.8rem;"><strong>C15</strong>: <code>crear()</code> crea un registro con <code>"aprobado": False</code>. <strong>C3</strong>: <code>.append()</code> modifica la lista original. <strong>C8</strong>: <code>actualizar()</code> recorre TODOS y modifica cada diccionario. Ana (5.5 ≥ 4.0) → <code>True</code>. Bob (3.2 < 4.0) → <code>False</code>.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- ¿Qué sigue? -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <h2>¿Qué sigue? 🚀</h2>
+  <div class="cards">
+    <div class="card" style="border-top-color:var(--pastel-green);">
+      <h3>🏗️ Bloques A-B</h3>
+      <p>Ejercicios 1-13: Fundamentos y validaciones</p>
+    </div>
+    <div class="card" style="border-top-color:var(--pastel-blue);">
+      <h3>📦 Bloques C-D</h3>
+      <p>Ejercicios 14-27: Listas de diccionarios y menús</p>
+    </div>
+    <div class="card" style="border-top-color:var(--pastel-purple);">
+      <h3>🪞 Bloques E-F</h3>
+      <p>Ejercicios 28-31: Sistemas completos espejo</p>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;font-size:1.3rem;">Todo está en el <span class="hl-green">Mini-taller online</span> de la academia.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- Cierre -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+  <div class="deco-circle" style="width:300px;height:300px;background:var(--pastel-green);top:-80px;left:-60px;"></div>
+  <div class="deco-circle" style="width:220px;height:220px;background:var(--pastel-purple);bottom:-50px;right:-40px;"></div>
+  <div class="emoji-big">🧰</div>
+  <h1>15 patrones,<br>un sistema completo</h1>
+  <p class="subtitle" style="max-width:650px;">Cada patrón es una herramienta.<br>Domínalos uno por uno y el examen será solo <span class="hl">conectar las piezas</span>.</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-green">practicar</span>
+    <span class="tag tag-blue">entender</span>
+    <span class="tag tag-purple">conectar</span>
+    <span class="tag tag-pink">dominar</span>
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function show(n) {
+  slides[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${((current + 1) / slides.length) * 100}%`;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+function toggleReveal(btn) {
+  const answer = btn.nextElementSibling;
+  if (answer.classList.contains('visible')) {
+    answer.classList.remove('visible');
+    btn.textContent = '👁️ Revelar respuesta';
+  } else {
+    answer.classList.add('visible');
+    btn.textContent = '🙈 Ocultar respuesta';
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') prev();
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+  // 'r' key to toggle reveal on current slide
+  if (e.key === 'r' || e.key === 'R') {
+    const btn = slides[current].querySelector('.reveal-btn');
+    if (btn) toggleReveal(btn);
+  }
+});
+
+show(0);
+</script>
+</body>
+</html>

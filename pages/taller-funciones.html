@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🧰 Mini-taller: Funciones — De cero a sistema completo</title>
+  <meta name="description" content="Mini-taller progresivo de funciones en Python: 15 conceptos clave y 31 ejercicios para dominar def, return, mutabilidad, validación, búsqueda y menús." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+
+    /* Concept card styling */
+    .concept-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .concept-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-accent); color: #fff; font-weight: 900;
+      width: 2.5rem; height: 2.5rem; border-radius: 50%; font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .concept-title {
+      font-size: 1.25rem; font-weight: 700; color: var(--t-accent);
+    }
+
+    /* Exercise card */
+    .exercise-card {
+      background: var(--t-surface); border-radius: 12px;
+      box-shadow: 0 4px 6px var(--t-shadow); padding: 1.5rem;
+      border: 2px solid var(--t-glass-border);
+      transition: transform 0.3s, border-color 0.3s;
+      margin-bottom: 1rem; color: var(--t-text);
+    }
+    .exercise-card:hover {
+      transform: translateY(-3px); box-shadow: 0 8px 12px var(--t-shadow);
+      border-color: var(--t-accent);
+    }
+
+    /* Exercise header */
+    .ex-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+    }
+    .ex-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-glass-bg); border: 2px solid var(--t-accent);
+      color: var(--t-accent); font-weight: 800;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%; font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .ex-title { font-size: 1.1rem; font-weight: 700; color: var(--t-text); }
+
+    /* Callout boxes */
+    .callout-think {
+      background: var(--t-glass-bg); border-left: 4px solid var(--t-purple, #9c27b0);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-think strong { color: var(--t-purple, #9c27b0); }
+
+    .callout-investigate {
+      background: var(--t-glass-bg); border-left: 4px solid var(--t-warning-text, #f59e0b);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-investigate strong { color: var(--t-warning-text, #f59e0b); }
+
+    .callout-exam {
+      background: rgba(52, 211, 153, 0.08); border-left: 4px solid var(--t-correct, #10b981);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-exam strong { color: var(--t-correct, #10b981); }
+
+    /* Concept tags */
+    .concept-ref {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 1rem;
+      font-size: 0.7rem; font-weight: 700; margin-left: 0.3rem;
+      background: var(--t-accent-bg, rgba(139,92,246,0.1));
+      color: var(--t-accent); border: 1px solid var(--t-accent);
+    }
+
+    /* Block header */
+    .block-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 1.5rem; border-radius: 12px;
+      margin-bottom: 1rem; font-weight: 700; font-size: 1.15rem;
+    }
+
+    /* vs comparison inside concepts */
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    @media (max-width: 640px) { .vs-row { grid-template-columns: 1fr; } }
+    .vs-cell {
+      background: var(--t-glass-bg); border-radius: 10px; padding: 1rem;
+      border: 2px solid var(--t-glass-border);
+    }
+    .vs-cell h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">⬅️ Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🧰 Mini-taller: Funciones en Python</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          De cero a sistema completo — 15 patrones clave y 31 ejercicios progresivos. Todo lo que necesitas para dominar funciones y prepararte para el examen.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: sec === 'conceptos' }" @click="sec='conceptos'">📚 Conceptos (15)</button>
+        <button class="section-pill" :class="{ active: sec === 'bloqueA' }" @click="sec='bloqueA'">🏗️ Bloque A</button>
+        <button class="section-pill" :class="{ active: sec === 'bloqueB' }" @click="sec='bloqueB'">🔒 Bloque B</button>
+        <button class="section-pill" :class="{ active: sec === 'bloqueC' }" @click="sec='bloqueC'">📦 Bloque C</button>
+        <button class="section-pill" :class="{ active: sec === 'bloqueD' }" @click="sec='bloqueD'">🏠 Bloque D</button>
+        <button class="section-pill" :class="{ active: sec === 'bloqueEF' }" @click="sec='bloqueEF'">🪞 Bloques E-F</button>
+        <button class="section-pill" :class="{ active: sec === 'tips' }" @click="sec='tips'">💡 Tips</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: CONCEPTOS (1-15) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'conceptos'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+
+      <!-- Intro -->
+      <div class="doc-section">
+        <h2>Introducción: ¿Qué es una función y por qué existe? 🪥</h2>
+        <p>
+          Imagina que cada vez que quieres lavarte los dientes tuvieras que explicar: «agarra el cepillo, pon pasta, mueve la mano arriba y abajo, enjuaga». Sería agotador repetir eso cada vez. En cambio, simplemente dices <strong>«lávate los dientes»</strong> y todos entienden el procedimiento completo.
+        </p>
+        <p style="margin-top:0.75rem;">
+          Una <strong>función</strong> es exactamente eso: un bloque de código con un nombre que encapsula un procedimiento. Una vez que lo defines, puedes invocarlo las veces que quieras sin reescribir la lógica.
+        </p>
+        <pre class="!mt-3"><code class="language-python">def lavarse_dientes():
+    print("Agarrar cepillo")
+    print("Poner pasta")
+    print("Cepillar 2 minutos")
+    print("Enjuagar")
+
+lavarse_dientes()  # "invocación" o "llamado" de la función
+lavarse_dientes()  # se puede usar cuantas veces se quiera</code></pre>
+
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">📖 Vocabulario clave</p>
+          <ul class="text-sm space-y-1">
+            <li><strong>Definir</strong> = escribir su código con <code>def</code>.</li>
+            <li><strong>Invocar/llamar</strong> = ejecutar escribiendo su nombre seguido de <code>()</code>.</li>
+            <li><strong>Parámetro</strong> = variable que la función espera recibir (en la definición).</li>
+            <li><strong>Argumento</strong> = valor real que le pasas al invocarla.</li>
+          </ul>
+        </div>
+
+        <pre class="!mt-2"><code class="language-python">def lavarse_dientes(minutos):  # "minutos" es un PARÁMETRO
+    print(f"Cepillando por {minutos} minutos")
+
+lavarse_dientes(2)  # "2" es el ARGUMENTO</code></pre>
+      </div>
+
+      <!-- Concepto 1 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">1</span>
+          <span class="concept-title"><code>return</code> vs <code>print</code> — la confusión más común</span>
+        </div>
+        <p>Esta es la fuente del <strong>80% de los errores</strong> de quienes recién aprenden funciones.</p>
+
+        <div class="vs-row">
+          <div class="vs-cell" style="border-color:#dc3545;">
+            <h4>🖨️ <code>print()</code></h4>
+            <p class="text-sm">Muestra algo en pantalla. Comunicación con el humano. <strong>No le sirve al programa.</strong></p>
+          </div>
+          <div class="vs-cell" style="border-color:#198754;">
+            <h4>📬 <code>return</code></h4>
+            <p class="text-sm">Entrega un valor de vuelta a quien llamó. Comunicación entre partes del programa. <strong>El programa SÍ puede usar ese valor.</strong></p>
+          </div>
+        </div>
+
+        <pre class="!mt-3"><code class="language-python">def sumar_print(a, b):
+    print(a + b)  # solo IMPRIME, no entrega nada
+
+def sumar_return(a, b):
+    return a + b  # ENTREGA el resultado
+
+resultado1 = sumar_print(3, 4)   # en pantalla aparece "7"
+print(resultado1)                # pero esto imprime "None" !!
+
+resultado2 = sumar_return(3, 4)  # no aparece nada en pantalla
+print(resultado2)                # esto imprime "7"</code></pre>
+
+        <div class="bg-red-50 border-l-4 border-red-400 p-3 rounded-r-lg mt-3">
+          <p class="text-sm text-red-900"><strong>¿Por qué pasa esto?</strong> Sin <code>return</code>, Python automáticamente asigna <code>None</code>. Por eso <code>resultado1</code> termina siendo <code>None</code>.</p>
+        </div>
+
+        <div class="callout-exam">
+          <strong>🎯 Regla para el examen:</strong> si el programa necesita <em>usar</em> el resultado después → <code>return</code>. Si solo necesita <em>mostrar</em> algo → <code>print</code>.
+        </div>
+      </div>
+
+      <!-- Concepto 2 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">2</span>
+          <span class="concept-title">Parámetros con valores por defecto</span>
+        </div>
+        <p>A veces queremos que un parámetro tenga un valor «de respaldo» si no se especifica.</p>
+        <pre class="!mt-3"><code class="language-python">def saludar(nombre, idioma="español"):
+    if idioma == "español":
+        print(f"Hola, {nombre}")
+    elif idioma == "inglés":
+        print(f"Hello, {nombre}")
+
+saludar("Juan")              # usa "español" por defecto
+saludar("John", "inglés")    # sobreescribe el valor por defecto</code></pre>
+
+        <div class="bg-red-50 border-l-4 border-red-400 p-3 rounded-r-lg mt-3">
+          <p class="text-sm text-red-900"><strong>⚠️ Detalle importante:</strong> los parámetros con valor por defecto deben ir <em>después</em> de los que no lo tienen. <code>def mal(a="x", b):</code> da error.</p>
+        </div>
+      </div>
+
+      <!-- Concepto 3 -->
+      <div class="doc-section" style="border-color: var(--t-wrong, #ef4444);">
+        <div class="concept-header">
+          <span class="concept-num">3</span>
+          <span class="concept-title">Mutabilidad — CRÍTICO para el examen</span>
+        </div>
+        <p>Vas a tener UNA lista que vive durante toda la ejecución y muchas funciones que la modifican.</p>
+
+        <div class="vs-row">
+          <div class="vs-cell" style="border-color:#198754;">
+            <h4>✅ Listas y Diccionarios (mutables)</h4>
+            <p class="text-sm">Se pasan «por referencia». La función modifica el original.</p>
+          </div>
+          <div class="vs-cell" style="border-color:#dc3545;">
+            <h4>❌ Números, Strings, Booleanos (inmutables)</h4>
+            <p class="text-sm">Se pasan «por valor». La función recibe una copia.</p>
+          </div>
+        </div>
+
+        <pre class="!mt-3"><code class="language-python"># LISTA: el cambio SÍ se mantiene afuera
+def agregar_fruta(lista_frutas):
+    lista_frutas.append("manzana")
+    # no hay return, y no hace falta
+
+mis_frutas = ["pera", "uva"]
+agregar_fruta(mis_frutas)
+print(mis_frutas)  # ['pera', 'uva', 'manzana'] -> ¡se modificó!
+
+# NÚMERO: el cambio NO se mantiene afuera
+def intentar_cambiar(numero):
+    numero = numero + 100
+    # esto NO afecta la variable original
+
+x = 5
+intentar_cambiar(x)
+print(x)  # sigue siendo 5</code></pre>
+
+        <div class="callout-exam">
+          <strong>🎯 Para el examen:</strong> cuando definas la función que agrega un estudiante, recibirás la lista como parámetro, le harás <code>.append()</code>, y <strong>no necesitas retornar la lista</strong> — el cambio ya quedó hecho.
+        </div>
+      </div>
+
+      <!-- Concepto 4 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">4</span>
+          <span class="concept-title">Funciones de validación — patrón «sí o no»</span>
+        </div>
+        <p>Responde una pregunta booleana: ¿cumple la condición? Nombre típico: <code>es_</code>, <code>tiene_</code>, <code>valida_</code>. Siempre retorna <code>True</code> o <code>False</code>.</p>
+
+        <div class="vs-row">
+          <div class="vs-cell" style="border-color:var(--pastel-green, #10b981);">
+            <h4>✨ Pythónica</h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def es_mayor_de_edad(edad):
+    return edad >= 18</code></pre>
+          </div>
+          <div class="vs-cell" style="border-color:var(--pastel-blue, #3b82f6);">
+            <h4>📝 Explícita</h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def es_mayor_de_edad(edad):
+    if edad >= 18:
+        return True
+    else:
+        return False</code></pre>
+          </div>
+        </div>
+        <p class="text-sm mt-3" style="color:var(--t-text-secondary);">Ambas producen exactamente lo mismo. Usa la que entiendas mejor. <strong>Lo importante es reconocer las dos formas.</strong></p>
+      </div>
+
+      <!-- Concepto 5 -->
+      <div class="doc-section" style="border-color: var(--t-accent);">
+        <div class="concept-header">
+          <span class="concept-num">5</span>
+          <span class="concept-title">Búsqueda — patrón «posición o -1»</span>
+        </div>
+        <p>Uno de los <strong>patrones más importantes del examen</strong>. Recorres una lista buscando algo. Si lo encuentras, retornas la posición. Si no, retornas <code>-1</code> (señal de «no encontrado»).</p>
+
+        <pre class="!mt-3"><code class="language-python">def buscar_posicion(lista, valor_buscado):
+    for i in range(len(lista)):
+        if lista[i] == valor_buscado:
+            return i  # encontramos! salimos inmediatamente
+    return -1  # si el for terminó sin encontrar nada</code></pre>
+
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-3 my-3 rounded-r-lg">
+          <p class="text-sm"><strong>⚡ ¿Por qué <code>return</code> corta el ciclo?</strong> Porque <code>return</code> no solo entrega un valor, sino que <strong>termina la ejecución de la función inmediatamente</strong>.</p>
+        </div>
+
+        <p class="text-sm font-semibold mt-3 mb-2" style="color:var(--t-accent);">Forma alternativa con <code>enumerate()</code>:</p>
+        <pre class="!mt-1"><code class="language-python">def buscar_posicion_v2(lista, valor_buscado):
+    for indice, valor in enumerate(lista):
+        if valor == valor_buscado:
+            return indice
+    return -1</code></pre>
+        <p class="text-sm mt-2" style="color:var(--t-text-secondary);">Ambas versiones hacen lo mismo. <code>enumerate()</code> es más limpio cuando necesitas tanto el índice como el valor. Conocer ambas te prepara para el examen.</p>
+      </div>
+
+      <!-- Concepto 6 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">6</span>
+          <span class="concept-title">Separación de responsabilidades</span>
+        </div>
+        <p>Cada función debería hacer <strong>UNA sola cosa</strong> y hacerla bien.</p>
+        <p class="mt-2">La función de búsqueda tiene UNA responsabilidad: encontrar y reportar dónde está algo. NO es su responsabilidad decidir qué hacer con esa información.</p>
+        <p class="mt-2">La misma función de búsqueda se <strong>reutiliza</strong> para cosas distintas:</p>
+        <ul class="text-sm space-y-1 mt-2">
+          <li>Para «Buscar estudiante» → si encuentra, muestra los datos.</li>
+          <li>Para «Eliminar estudiante» → si encuentra, lo elimina.</li>
+        </ul>
+        <p class="mt-2 text-sm" style="color:var(--t-text-secondary);">Si la búsqueda ya tuviera incrustada la lógica de «mostrar datos», no podrías reutilizarla para eliminar. Al retornar solo la posición (o -1), el programa principal decide qué hacer según el contexto.</p>
+      </div>
+
+      <!-- Concepto 7 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">7</span>
+          <span class="concept-title">Reutilizar una función dentro de otra</span>
+        </div>
+        <p>Una función puede llamar a otra. Es la base de la organización modular.</p>
+        <pre class="!mt-3"><code class="language-python">def buscar_posicion(lista, valor):
+    for i in range(len(lista)):
+        if lista[i] == valor:
+            return i
+    return -1
+
+def eliminar(lista, valor):
+    posicion = buscar_posicion(lista, valor)  # reutilizamos
+    if posicion != -1:
+        lista.pop(posicion)
+        print("Eliminado correctamente")
+    else:
+        print("No se encontró el elemento")</code></pre>
+        <p class="text-sm mt-2" style="color:var(--t-text-secondary);">Si mejoras <code>buscar_posicion</code>, automáticamente <code>eliminar</code> también mejora.</p>
+      </div>
+
+      <!-- Concepto 8 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">8</span>
+          <span class="concept-title">Recorrer y modificar TODOS los elementos</span>
+        </div>
+        <p>Aplicar una regla a <strong>cada</strong> elemento de la lista, sin excepción.</p>
+        <pre class="!mt-3"><code class="language-python">def aplicar_descuento(lista_precios):
+    for i in range(len(lista_precios)):
+        lista_precios[i] = lista_precios[i] * 0.9  # 10% de descuento
+
+# Con diccionarios: acceder y modificar un campo específico
+def marcar_todos_revisados(lista_productos):
+    for producto in lista_productos:
+        producto["revisado"] = True</code></pre>
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-3 my-3 rounded-r-lg">
+          <p class="text-sm"><strong>💡 Nota sutil:</strong> <code>for producto in lista</code> funciona para modificar diccionarios porque <code>producto</code> es una referencia al diccionario real (Concepto 3). Si la lista contuviera números, necesitarías índices.</p>
+        </div>
+      </div>
+
+      <!-- Concepto 9 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">9</span>
+          <span class="concept-title">El Dispatcher — «central telefónica»</span>
+        </div>
+        <p><strong>Dispatcher</strong> viene de <em>to dispatch</em> (despachar). Como un operador de central telefónica que recibe una llamada y la dirige al lugar correcto.</p>
+
+        <pre class="!mt-3"><code class="language-python">opcion = leer_opcion()
+
+if opcion == 1:
+    agregar_estudiante(lista)
+elif opcion == 2:
+    buscar_estudiante(lista)
+elif opcion == 3:
+    eliminar_estudiante(lista)
+elif opcion == 6:
+    print("Adiós")
+    break</code></pre>
+
+        <div style="margin-top:1rem;" class="doc-section" style="background: var(--t-tag-lilac-bg); border-color: var(--t-purple);">
+          <p class="text-sm font-semibold" style="color: var(--t-purple);">🔮 Alternativa avanzada (opcional): diccionario de funciones</p>
+          <pre class="!mt-2"><code class="language-python">acciones = {
+    1: opcion_agregar,
+    2: opcion_buscar,
+}
+
+opcion = 1
+if opcion in acciones:
+    acciones[opcion]()  # se ejecuta con los paréntesis
+else:
+    print("Opción inválida")</code></pre>
+          <p class="text-sm mt-2" style="color:var(--t-text-secondary);">Para el examen, <code>if/elif/else</code> es perfectamente válido y suficiente.</p>
+        </div>
+      </div>
+
+      <!-- Concepto 10 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">10</span>
+          <span class="concept-title"><code>while True</code> + <code>break</code> — la estructura de un menú</span>
+        </div>
+        <p>Un menú se repite indefinidamente <em>hasta que el usuario decide salir</em>.</p>
+        <pre class="!mt-3"><code class="language-python">while True:
+    mostrar_menu()
+    opcion = leer_opcion()
+
+    if opcion == 6:
+        print("Adiós")
+        break  # rompe el ciclo, el programa continúa después del while
+
+    # ... resto de las opciones</code></pre>
+        <p class="text-sm mt-2" style="color:var(--t-text-secondary);"><strong>¿Por qué no <code>while opcion != 6</code>?</strong> Técnicamente se puede, pero tendrías que inicializar <code>opcion</code> con algún valor artificial. <code>while True</code> + <code>break</code> es el patrón estándar para este caso.</p>
+      </div>
+
+      <!-- Concepto 11 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">11</span>
+          <span class="concept-title">Validar entradas — «pedir hasta que sea válido»</span>
+        </div>
+        <p>El patrón: pedir, validar, y si no es válido, <strong>volver a pedir</strong>.</p>
+
+        <div class="vs-row">
+          <div class="vs-cell">
+            <h4>Con <code>.isdigit()</code></h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def pedir_edad_valida():
+    while True:
+        entrada = input("Edad: ")
+        if entrada.isdigit() and int(entrada) > 0:
+            return int(entrada)
+        else:
+            print("Edad inválida")</code></pre>
+          </div>
+          <div class="vs-cell">
+            <h4>Con <code>try/except</code></h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def pedir_edad_valida_v2():
+    while True:
+        entrada = input("Edad: ")
+        try:
+            edad = int(entrada)
+            if edad > 0:
+                return edad
+            else:
+                print("Mayor que 0")
+        except ValueError:
+            print("No es número")</code></pre>
+          </div>
+        </div>
+        <div class="callout-exam">
+          <strong>🎯 Para el examen:</strong> elige UNA estrategia y sé consistente en todas tus validaciones.
+        </div>
+      </div>
+
+      <!-- Concepto 12 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">12</span>
+          <span class="concept-title">Validar contra texto vacío o solo espacios</span>
+        </div>
+        <div class="vs-row">
+          <div class="vs-cell">
+            <h4>🔧 Versión manual</h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def tiene_contenido_v1(texto):
+    for caracter in texto:
+        if caracter != " ":
+            return True
+    return False</code></pre>
+          </div>
+          <div class="vs-cell">
+            <h4>✨ Versión con <code>.strip()</code></h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def tiene_contenido_v2(texto):
+    return texto.strip() != ""</code></pre>
+            <p class="text-sm mt-2"><code>.strip()</code> retorna una copia del string sin espacios al inicio ni al final. <code>"   ".strip()</code> → <code>""</code></p>
+          </div>
+        </div>
+        <p class="text-sm mt-3" style="color:var(--t-text-secondary);">La versión manual desarrolla tu capacidad de «pensar como el computador». La versión con <code>.strip()</code> es lo que usarías en código real. <strong>Saber ambas es valioso.</strong></p>
+      </div>
+
+      <!-- Concepto 13 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">13</span>
+          <span class="concept-title">Validar números decimales en un rango</span>
+        </div>
+        <pre class="!mt-3"><code class="language-python">def es_nota_valida(nota):
+    return isinstance(nota, (int, float)) and 1.0 <= nota <= 7.0</code></pre>
+        <ul class="text-sm space-y-2 mt-3">
+          <li><code>isinstance(valor, tipo)</code> retorna <code>True</code> si <code>valor</code> es del tipo indicado. La tupla <code>(int, float)</code> permite entero o decimal.</li>
+          <li><code>1.0 &lt;= nota &lt;= 7.0</code> es una «comparación encadenada» = <code>nota &gt;= 1.0 and nota &lt;= 7.0</code></li>
+        </ul>
+      </div>
+
+      <!-- Concepto 14 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">14</span>
+          <span class="concept-title">Contar elementos que cumplen una condición</span>
+        </div>
+        <div class="vs-row">
+          <div class="vs-cell">
+            <h4>📝 Con contador</h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def contar_aprobados_v1(lista):
+    contador = 0
+    for est in lista:
+        if est["aprobado"] == True:
+            contador = contador + 1
+    return contador</code></pre>
+          </div>
+          <div class="vs-cell">
+            <h4>✨ Con <code>sum()</code></h4>
+            <pre class="!mt-1" style="margin-bottom:0;"><code class="language-python">def contar_aprobados_v2(lista):
+    return sum(
+        1 for est in lista
+        if est["aprobado"]
+    )</code></pre>
+            <p class="text-sm mt-2">Produce un <code>1</code> por cada aprobado y <code>sum()</code> los suma.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Concepto 15 -->
+      <div class="doc-section">
+        <div class="concept-header">
+          <span class="concept-num">15</span>
+          <span class="concept-title">Crear un registro con valores iniciales fijos</span>
+        </div>
+        <pre class="!mt-3"><code class="language-python">def crear_estudiante(nombre, edad, nota):
+    estudiante = {
+        "nombre": nombre,
+        "edad": edad,
+        "nota": nota,
+        "aprobado": False  # siempre inicia en False, no se pide al usuario
+    }
+    return estudiante</code></pre>
+        <div class="callout-exam">
+          <strong>🎯</strong> El campo <code>"aprobado"</code> no depende del usuario, el sistema lo asigna por defecto para actualizarlo después con otra función (Concepto 8).
+        </div>
+      </div>
+
+    </div><!-- fin conceptos -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- BLOQUE A: Fundamentos (Ejercicios 1-6) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'bloqueA'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); border:2px solid var(--t-accent);">
+        🏗️ Bloque A: Fundamentos de funciones (Ejercicios 1-6)
+      </div>
+      <div class="doc-section" style="border-color:var(--t-accent);">
+        <p class="text-sm">📝 <strong>Contexto:</strong> sistema de gestión de una <strong>biblioteca</strong>, distinto al de tu examen (estudiantes), para que practiques los mismos <em>patrones</em> sin resolver directamente el examen.</p>
+      </div>
+
+      <!-- Ej 1 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">1</span><span class="ex-title">Saludo de bienvenida</span><span class="concept-ref">sin parámetros, sin return</span></div>
+        <p class="text-sm">Crea una función <code>mostrar_bienvenida()</code> que no reciba nada y no retorne nada, solo imprima un mensaje de bienvenida a la biblioteca. Llámala 3 veces seguidas.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿qué pasaría si guardas <code>x = mostrar_bienvenida()</code> y luego imprimes <code>x</code>? Pruébalo y reflexiona por qué da ese resultado.</div>
+      </div>
+
+      <!-- Ej 2 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">2</span><span class="ex-title">Duplicar: print vs return</span><span class="concept-ref">Concepto 1</span></div>
+        <p class="text-sm">Crea dos funciones: <code>duplicar_print(numero)</code> que imprima el doble, y <code>duplicar_return(numero)</code> que lo retorne. Luego:</p>
+        <pre class="!mt-2"><code class="language-python">a = duplicar_print(5)
+b = duplicar_return(5)
+print(a)
+print(b)</code></pre>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿por qué <code>a</code> y <code>b</code> son distintos aunque ambas funciones «hacen lo mismo» a primera vista?</div>
+      </div>
+
+      <!-- Ej 3 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">3</span><span class="ex-title">Calcular multa</span><span class="concept-ref">Concepto 2</span></div>
+        <p class="text-sm">Crea <code>calcular_multa(dias_atraso, valor_por_dia=100)</code> que retorne el total de la multa. Pruébala con un solo argumento y luego con dos.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿qué pasa si intentas <code>def calcular_multa(valor_por_dia=100, dias_atraso)</code>? ¿Por qué da error?</div>
+      </div>
+
+      <!-- Ej 4 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">4</span><span class="ex-title">Libro antiguo (dos caminos)</span><span class="concept-ref">Concepto 4</span></div>
+        <p class="text-sm">Crea <code>es_libro_antiguo(anio)</code> que retorne <code>True</code> si el año es menor a 1990.</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li>Escríbela primero con <code>if/else</code> explícito.</li>
+          <li>Luego reescríbela en una sola línea con <code>return</code>.</li>
+        </ul>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿en qué casos preferirías la versión larga aunque sea más código?</div>
+      </div>
+
+      <!-- Ej 5 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">5</span><span class="ex-title">Agregar a lista (mutabilidad)</span><span class="concept-ref">Concepto 3</span></div>
+        <p class="text-sm">Crea <code>agregar_a_lista(lista, elemento)</code> que use <code>.append()</code> sin retornar nada. Luego:</p>
+        <pre class="!mt-2"><code class="language-python">mi_lista = ["a", "b"]
+agregar_a_lista(mi_lista, "c")
+print(mi_lista)</code></pre>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué pasaría si en lugar de <code>.append()</code> la función hiciera <code>lista = lista + [elemento]</code>? (Pista: crea una lista <em>nueva</em>, no modifica la original).</div>
+      </div>
+
+      <!-- Ej 6 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">6</span><span class="ex-title">Intentar aumentar un número</span><span class="concept-ref">Concepto 3 (contraste)</span></div>
+        <p class="text-sm">Crea <code>intentar_aumentar(numero)</code> que haga <code>numero = numero + 10</code> (sin retornar). Luego:</p>
+        <pre class="!mt-2"><code class="language-python">x = 5
+intentar_aumentar(x)
+print(x)</code></pre>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿por qué el resultado es distinto al ejercicio 5? Escribe con tus propias palabras la diferencia entre tipos mutables e inmutables.</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- BLOQUE B: Validaciones (Ejercicios 7-13) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'bloqueB'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.1)); border:2px solid var(--t-warning-text, #f59e0b);">
+        🔒 Bloque B: Validaciones (Ejercicios 7-13)
+      </div>
+
+      <!-- Ej 7 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">7</span><span class="ex-title">Texto vacío/espacios (dos caminos)</span><span class="concept-ref">Concepto 12</span></div>
+        <p class="text-sm">Crea <code>tiene_contenido_v1(texto)</code> (recorriendo carácter por carácter) y <code>tiene_contenido_v2(texto)</code> (usando <code>.strip()</code>). Pruébalas con <code>"   "</code>, <code>""</code>, <code>"  Don Quijote  "</code>.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> busca en la documentación qué hacen <code>.lstrip()</code> y <code>.rstrip()</code>. ¿En qué se diferencian de <code>.strip()</code>?</div>
+      </div>
+
+      <!-- Ej 8 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">8</span><span class="ex-title">Validar año (dos estrategias)</span><span class="concept-ref">Conceptos 11, 13</span></div>
+        <p class="text-sm">Crea <code>validar_anio(anio)</code> que retorne <code>True</code> si es un entero mayor que 0 y menor o igual a 2026.</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li>Versión con <code>isinstance()</code>.</li>
+          <li>Versión con <code>try/except</code> que intente convertir a <code>int</code>.</li>
+        </ul>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué retorna <code>isinstance(5.0, int)</code>? ¿Y <code>isinstance(5.0, (int, float))</code>?</div>
+      </div>
+
+      <!-- Ej 9 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">9</span><span class="ex-title">Validar precio (rango decimal)</span><span class="concept-ref">Concepto 13</span></div>
+        <p class="text-sm">Crea <code>validar_precio(precio)</code> que retorne <code>True</code> si es un número (entero o decimal) entre 1000 y 50000 inclusive.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> si el usuario ingresa exactamente <code>1000</code>, ¿debería ser válido? ¿Y <code>50000.01</code>? Decide tú el criterio y documéntalo con un comentario.</div>
+      </div>
+
+      <!-- Ej 10 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">10</span><span class="ex-title">Validar stock (enteros no negativos)</span><span class="concept-ref">Concepto 11</span></div>
+        <p class="text-sm">Crea <code>validar_stock(cantidad)</code> que retorne <code>True</code> solo si es un entero mayor o igual a 0.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué hace <code>.isdigit()</code> con un string vacío <code>""</code>? ¿Y con <code>"-5"</code>? Explica por qué <code>.isdigit()</code> por sí solo no es suficiente para validar números negativos.</div>
+      </div>
+
+      <!-- Ej 11 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">11</span><span class="ex-title">Validar ISBN (13 dígitos)</span><span class="concept-ref">Concepto 12</span></div>
+        <p class="text-sm">Crea <code>validar_isbn(isbn)</code> que retorne <code>True</code> si tiene exactamente 13 caracteres y todos son dígitos.</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li>Versión con <code>for</code> recorriendo carácter por carácter.</li>
+          <li>Versión combinando <code>len()</code> e <code>.isdigit()</code>.</li>
+        </ul>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué retorna <code>"123".isdigit()</code>? ¿Y <code>"12 3".isdigit()</code>?</div>
+      </div>
+
+      <!-- Ej 12 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">12</span><span class="ex-title">Solicitar título válido (while)</span><span class="concept-ref">Conceptos 11, 12</span></div>
+        <p class="text-sm">Crea <code>solicitar_titulo_valido()</code>: usa <code>while True</code> que pida un título por <code>input()</code>, lo valide con tu función del ejercicio 7, y solo retorne cuando sea válido. Mensaje de error <strong>dentro de esta función</strong> (no dentro de la validación).</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿por qué el mensaje de error va en <code>solicitar_titulo_valido()</code> y no en <code>tiene_contenido_v1()</code>? Relaciona con el Concepto 6 (separación de responsabilidades).</div>
+      </div>
+
+      <!-- Ej 13 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">13</span><span class="ex-title">Solicitar precio válido (try/except)</span><span class="concept-ref">Concepto 11</span></div>
+        <p class="text-sm">Crea <code>solicitar_precio_valido()</code> similar al anterior, pero usando <code>try/except</code> para manejar texto no numérico.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué excepción lanza <code>float("abc")</code>? Ejecuta ese código fuera de un <code>try/except</code> para ver el error completo.</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- BLOQUE C: Listas de diccionarios (Ejercicios 14-22) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'bloqueC'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1)); border:2px solid var(--t-correct, #10b981);">
+        📦 Bloque C: Listas de diccionarios (Ejercicios 14-22)
+      </div>
+
+      <!-- Ej 14 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">14</span><span class="ex-title">Crear un registro libro</span><span class="concept-ref">Concepto 15</span></div>
+        <p class="text-sm">Crea <code>crear_libro(titulo, autor, anio, precio)</code> que retorne un diccionario con esos 4 campos más <code>"disponible": True</code>.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿por qué <code>"disponible"</code> no es un parámetro si su valor inicial siempre es el mismo? ¿En qué se parece al campo <code>"aprobado"</code> de tu examen?</div>
+      </div>
+
+      <!-- Ej 15 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">15</span><span class="ex-title">Agregar libro a lista</span><span class="concept-ref">Concepto 3</span></div>
+        <p class="text-sm">Crea <code>agregar_libro(lista_libros, libro)</code> que haga <code>.append()</code> del diccionario a la lista, sin retornar nada.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué pasa si usas <code>.append(libro.copy())</code>? Investiga <code>.copy()</code> en diccionarios.</div>
+      </div>
+
+      <!-- Ej 16 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">16</span><span class="ex-title">Mostrar libros</span><span class="concept-ref">Recorrer y mostrar</span></div>
+        <p class="text-sm">Crea <code>mostrar_libros(lista_libros)</code> que recorra la lista e imprima cada libro. Si la lista está vacía, mostrar mensaje específico.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿cómo verificas si una lista está vacía? <code>len(lista) == 0</code> vs <code>if not lista:</code>. Investiga por qué la segunda funciona (listas vacías son «falsy»).</div>
+      </div>
+
+      <!-- Ej 17 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">17</span><span class="ex-title">Buscar por título</span><span class="concept-ref">Concepto 5</span></div>
+        <p class="text-sm">Crea <code>buscar_por_titulo(lista_libros, titulo)</code> que retorne la posición o <code>-1</code>.</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li>Versión con <code>range(len(...))</code>.</li>
+          <li>Versión con <code>enumerate()</code>.</li>
+        </ul>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué pasa si hay dos libros con el mismo título? ¿Cuál posición retorna? ¿Es un problema?</div>
+      </div>
+
+      <!-- Ej 18 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">18</span><span class="ex-title">La búsqueda solo informa</span><span class="concept-ref">Concepto 6</span></div>
+        <p class="text-sm">En tu programa principal, pide un título, llama a <code>buscar_por_titulo</code>, y según el resultado (-1 o posición válida) muestra el libro o «no encontrado».</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> si quisieras que el mensaje de «no encontrado» fuera distinto en dos partes del programa, ¿podrías lograrlo si la búsqueda imprimiera el mensaje? ¿Por qué la solución actual sí lo permite?</div>
+      </div>
+
+      <!-- Ej 19 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">19</span><span class="ex-title">Eliminar libro (reutilizar búsqueda)</span><span class="concept-ref">Concepto 7</span></div>
+        <p class="text-sm">Crea <code>eliminar_libro(lista_libros, titulo)</code> que use <code>buscar_por_titulo</code> internamente: si la posición es válida, elimina con <code>.pop()</code>; si es -1, «no encontrado».</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿cuál es la diferencia entre <code>lista.pop(posicion)</code> y <code>del lista[posicion]</code>? ¿<code>.pop()</code> retorna algo?</div>
+      </div>
+
+      <!-- Ej 20 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">20</span><span class="ex-title">Actualizar disponibilidad</span><span class="concept-ref">Concepto 8</span></div>
+        <p class="text-sm">Agrega campo <code>"stock"</code>. Crea <code>actualizar_disponibilidad(lista_libros)</code> que recorra <strong>toda</strong> la lista y ponga <code>"disponible": False</code> si <code>"stock" == 0</code>, y <code>True</code> en caso contrario.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> usas <code>for libro in lista_libros:</code> sin índices y modificas <code>libro["disponible"]</code>. ¿Por qué aquí SÍ funciona? (No estás reasignando <code>libro</code>, estás modificando el contenido del diccionario al que apunta).</div>
+      </div>
+
+      <!-- Ej 21 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">21</span><span class="ex-title">Mostrar reporte</span><span class="concept-ref">Conceptos 7, 8</span></div>
+        <p class="text-sm">Crea <code>mostrar_reporte(lista_libros)</code> que primero llame a <code>actualizar_disponibilidad</code> y luego muestre cada libro con formato visual y separadores <code>***</code>.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿por qué tiene sentido que «mostrar» llame primero a «actualizar»? ¿Qué pasaría si el usuario cambió el stock justo antes de pedir el reporte?</div>
+      </div>
+
+      <!-- Ej 22 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">22</span><span class="ex-title">Contar disponibles</span><span class="concept-ref">Concepto 14</span></div>
+        <p class="text-sm">Crea <code>contar_disponibles(lista_libros)</code> con dos versiones: contador + <code>for</code> y <code>sum()</code> + expresión generadora.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ejecuta solo la expresión generadora sin <code>sum()</code> e imprímela. ¿Qué tipo de objeto es? Investiga qué es un «generador» en Python.</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- BLOQUE D: Menús y estructura (Ejercicios 23-27) -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'bloqueD'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(139,92,246,0.1), rgba(236,72,153,0.1)); border:2px solid var(--t-purple, #9c27b0);">
+        🏠 Bloque D: Menús y estructura del programa (Ejercicios 23-27)
+      </div>
+
+      <!-- Ej 23 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">23</span><span class="ex-title">Dispatcher simple</span><span class="concept-ref">Concepto 9</span></div>
+        <p class="text-sm">Crea <code>mostrar_menu()</code> (imprime 4 opciones: Agregar, Buscar, Eliminar, Salir) y <code>leer_opcion()</code> (pide y retorna un número, validando con <code>.isdigit()</code> o <code>try/except</code>).</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> busca qué significa «dispatcher» en otros contextos (event dispatcher, dispatcher de emergencias/911).</div>
+      </div>
+
+      <!-- Ej 24 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">24</span><span class="ex-title">while True + break (esqueleto)</span><span class="concept-ref">Concepto 10</span></div>
+        <p class="text-sm">Crea el esqueleto: <code>while True</code> que llame a <code>mostrar_menu()</code> y <code>leer_opcion()</code>, use <code>if/elif</code> (de momento solo <code>print("Ejecutando opción X")</code>), y <code>break</code> en la opción de salir.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿qué pasaría si olvidas el <code>break</code> en la opción de salir? ¡Pruébalo y prepárate para Ctrl+C!</div>
+      </div>
+
+      <!-- Ej 25 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">25</span><span class="ex-title">Integración completa</span><span class="concept-ref">Todos los conceptos</span></div>
+        <p class="text-sm">Conecta las funciones de los ejercicios 12-22 dentro del esqueleto del ejercicio 24.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> ¿en qué orden llamas las funciones? Para «agregar», ¿primero pides los datos o primero creas el diccionario vacío? Escribe en un comentario el orden <em>antes</em> de programar — esto es «pseudocódigo».</div>
+      </div>
+
+      <!-- Ej 26 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">26</span><span class="ex-title">Dispatcher con diccionario (avanzado)</span><span class="concept-ref">Concepto 9</span></div>
+        <p class="text-sm">⭐ <strong>Opcional.</strong> Reescribe el dispatcher usando un diccionario de funciones, en lugar de <code>if/elif</code>.</p>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿qué pasa si el usuario ingresa opción 99 que no está en el diccionario? Investiga <code>.get()</code> de diccionarios — ¿cómo lo usarías para manejar opciones inválidas?</div>
+      </div>
+
+      <!-- Ej 27 -->
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">27</span><span class="ex-title">Estadísticas del sistema</span><span class="concept-ref">Concepto 14</span></div>
+        <p class="text-sm">Agrega al menú una opción «Estadísticas» que muestre: total de libros (<code>len()</code>), disponibles (ej. 22) y no disponibles.</p>
+        <div class="callout-think"><strong>🤔 Pregúntate:</strong> si ya tienes total y disponibles, ¿necesitas otra función para los no disponibles o puedes usar una resta? Reflexiona sobre cuándo vale la pena crear una función nueva.</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- BLOQUES E-F: Anidadas + Espejo + Desafío Final -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'bloqueEF'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+
+      <!-- Bloque E -->
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(236,72,153,0.1), rgba(245,158,11,0.1)); border:2px solid var(--t-warning-text, #f59e0b);">
+        🧬 Bloque E: Estructuras anidadas (Ejercicio 28)
+      </div>
+
+      <div class="exercise-card">
+        <div class="ex-header"><span class="ex-num">28</span><span class="ex-title">Categorías de libros</span><span class="concept-ref">Listas dentro de diccionarios</span></div>
+        <p class="text-sm">Agrega campo <code>"categoria"</code> (valores posibles: <code>"Novela"</code>, <code>"Ciencia"</code>, <code>"Historia"</code>).</p>
+        <ul class="text-sm mt-2 space-y-2">
+          <li>Crea <code>validar_categoria(categoria, categorias_validas)</code> que retorne <code>True</code> si está en la lista.
+            <br>→ Versión con <code>for</code> y comparación manual.
+            <br>→ Versión con operador <code>in</code>.
+          </li>
+          <li>Crea <code>buscar_por_categoria(lista_libros, categoria)</code> que retorne una <strong>lista nueva</strong> con todos los libros de esa categoría (no una posición).</li>
+        </ul>
+        <div class="callout-investigate"><strong>🔍 Investiga:</strong> ¿cuál es la diferencia entre retornar una <em>posición</em> (un número) y retornar una <em>lista nueva</em>? ¿Cuándo necesitas cada una?</div>
+      </div>
+
+      <!-- Bloque F -->
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(16,185,129,0.1)); border:2px solid var(--t-accent); margin-top:2rem;">
+        🪞 Bloque F: Ejercicios «espejo» del examen (Ejercicios 29-30)
+      </div>
+      <div class="doc-section" style="border-color:var(--t-accent);">
+        <p class="text-sm">Estos ejercicios replican la <strong>estructura completa</strong> de tu examen, con datos distintos (no estudiantes), para practicar el flujo de principio a fin sin memorizar respuestas.</p>
+      </div>
+
+      <!-- Ej 29 -->
+      <div class="exercise-card" style="border-color: var(--t-accent);">
+        <div class="ex-header"><span class="ex-num">29</span><span class="ex-title">Sistema de gestión de vehículos</span><span class="concept-ref">Sistema completo</span></div>
+        <p class="text-sm font-semibold" style="color:var(--t-accent);">🔧 Taller mecánico</p>
+        <p class="text-sm mt-1">Cada vehículo es un diccionario con:</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li><code>"patente"</code>: no vacía ni solo espacios.</li>
+          <li><code>"kilometraje"</code>: entero mayor que 0.</li>
+          <li><code>"costo_reparacion"</code>: decimal entre 10000.0 y 500000.0.</li>
+          <li><code>"reparado"</code>: booleano, inicia en <code>False</code>. Se actualiza a <code>True</code> si <code>costo_reparacion &lt;= 100000.0</code>.</li>
+        </ul>
+        <p class="text-sm mt-2"><strong>Menú de 6 opciones:</strong> Agregar, Buscar (por patente), Eliminar, Actualizar estados, Mostrar, Salir.</p>
+        <p class="text-sm mt-2">Debes implementar funciones separadas:</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li><code>mostrar_menu()</code> y <code>leer_opcion()</code></li>
+          <li>Agregar: pide datos, valida cada campo con funciones separadas</li>
+          <li>Búsqueda: retorna posición o <code>-1</code></li>
+          <li>Eliminar: reutiliza la búsqueda</li>
+          <li>Actualizar: recorre toda la lista</li>
+          <li>Mostrar: formato con separadores</li>
+        </ul>
+        <div class="callout-think"><strong>🤔 Antes de programar:</strong> dibuja en papel qué función llama a cuál. Ej: «Mostrar → llama a → Actualizar → recorre lista». Esto es un «diagrama de flujo de control».</div>
+      </div>
+
+      <!-- Ej 30 -->
+      <div class="exercise-card" style="border-color: var(--t-accent);">
+        <div class="ex-header"><span class="ex-num">30</span><span class="ex-title">Sistema de gestión de empleados</span><span class="concept-ref">Sistema completo</span></div>
+        <p class="text-sm">Mismo formato que el ejercicio 29, pero con empleados:</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li><code>"nombre"</code>: no vacío ni solo espacios.</li>
+          <li><code>"horas_trabajadas"</code>: entero mayor que 0.</li>
+          <li><code>"sueldo_base"</code>: decimal entre 300000.0 y 3000000.0.</li>
+          <li><code>"bono"</code>: booleano, inicia en <code>False</code>, se actualiza a <code>True</code> si <code>horas_trabajadas &gt;= 180</code>.</li>
+        </ul>
+        <p class="text-sm mt-2">Mismo menú de 6 opciones, mismas funciones separadas.</p>
+        <div class="callout-exam"><strong>🎯</strong> Esta vez, hazlo <strong>sin mirar el ejercicio 29</strong>. Si te trabas, vuelve a los ejercicios del Bloque C. El objetivo es que la lógica quede en tu cabeza.</div>
+      </div>
+
+      <!-- Desafío Final -->
+      <div class="block-header" style="background:linear-gradient(135deg, rgba(239,68,68,0.1), rgba(245,158,11,0.1)); border:2px solid #dc3545; margin-top:2rem;">
+        🏆 Desafío Final: Ejercicio 31 (opcional, mayor dificultad)
+      </div>
+
+      <div class="exercise-card" style="border: 2px solid var(--t-purple, #9c27b0); background: var(--t-glass-bg);">
+        <div class="ex-header"><span class="ex-num" style="background:var(--t-purple, #9c27b0);">31</span><span class="ex-title">Sistema de gestión de pedidos de restaurante</span></div>
+        <p class="text-sm">Este ejercicio introduce conceptos <strong>nuevos</strong> no cubiertos en el taller:</p>
+
+        <p class="text-sm mt-2">Cada pedido es un diccionario con:</p>
+        <ul class="text-sm mt-1 space-y-1">
+          <li><code>"cliente"</code>: nombre del cliente.</li>
+          <li><code>"items"</code>: una <strong>lista de diccionarios</strong>, cada uno con <code>"nombre_plato"</code> y <code>"precio"</code>.</li>
+          <li><code>"propina_porcentaje"</code>: decimal entre 0 y 30.</li>
+          <li><code>"estado"</code>: string — <code>"pendiente"</code>, <code>"en preparación"</code>, <code>"entregado"</code>.</li>
+        </ul>
+
+        <h4 class="font-bold mt-3 text-sm" style="color:var(--t-purple, #9c27b0);">Nuevos retos:</h4>
+        <ol class="text-sm mt-1 space-y-2" style="list-style:decimal;padding-left:1.2rem;">
+          <li><strong>Listas dentro de diccionarios dentro de listas</strong> (estructuras anidadas): necesitas un <code>for</code> dentro de otro <code>for</code> = <strong>anidamiento de ciclos</strong>.</li>
+          <li><strong>Sub-ciclo de captura:</strong> al agregar, un ciclo «¿desea agregar otro plato? (s/n)» agregando cada plato a <code>"items"</code>.</li>
+          <li><strong>Búsqueda con múltiples resultados:</strong> <code>buscar_por_cliente()</code> retorna una <strong>lista de posiciones</strong> (puede estar vacía).</li>
+          <li><strong>Cálculo compuesto:</strong> <code>calcular_total_pedido()</code> suma precios de todos los items y aplica propina.</li>
+          <li><strong>Actualización condicional compleja:</strong> pedidos <code>"pendiente"</code> con más de 3 items pasan a <code>"en preparación"</code>.</li>
+        </ol>
+
+        <div class="callout-investigate"><strong>🔍 Antes de empezar:</strong> busca «nested loops» y mira un ejemplo donde se recorra una lista de diccionarios con listas. Dibuja en papel la estructura de un pedido con 2-3 items: <code>pedido["items"][0]["nombre_plato"]</code>.</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- TIPS: Cómo usar este material -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'tips'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+
+      <div class="doc-section" style="border-color: var(--t-correct, #10b981);">
+        <h2>🌱 Si «casi no entiendes nada»</h2>
+        <ol class="text-sm space-y-2 mt-3" style="list-style:decimal;padding-left:1.5rem;">
+          <li><strong>No saltes el Mini-taller.</strong> Cada concepto tiene un número — si en un ejercicio te trabas, vuelve al concepto referenciado.</li>
+          <li><strong>Ejecuta TODO.</strong> No leas el código y asumas que entiendes — escríbelo, córrelo, cambia valores y observa qué pasa.</li>
+          <li>Las preguntas <strong>«¿Pregúntate?»</strong> e <strong>«¿Investiga?»</strong> no son opcionales — son las que construyen la comprensión real, no solo la memorización del patrón.</li>
+        </ol>
+      </div>
+
+      <div class="doc-section" style="border-color: var(--t-purple, #9c27b0); background: var(--t-tag-lilac-bg, rgba(139,92,246,0.05));">
+        <h2 style="color: var(--t-purple, #9c27b0);">⚡ Si «te resulta fácil»</h2>
+        <ol class="text-sm space-y-2 mt-3" style="list-style:decimal;padding-left:1.5rem;">
+          <li>No te saltes las preguntas de <strong>«Investiga»</strong> — son las que te llevan a conceptos que probablemente no conoces aún (generadores, <code>.get()</code>, excepciones específicas, mutabilidad profunda).</li>
+          <li>En los ejercicios con «dos versiones», <strong>domina ambas</strong> — en el examen o en una entrevista te pueden pedir explicar la alternativa.</li>
+          <li>El <strong>Ejercicio 31</strong> es tu verdadero desafío — intenta resolverlo sin pistas adicionales.</li>
+        </ol>
+      </div>
+
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="site-footer" style="max-width:800px;margin:0 auto;">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <p class="text-sm" style="color: var(--t-text-secondary); opacity: 0.7;">Hecho con 💖 para Academia hachimaki</p>
+      </div>
+    </footer>
+
+  </div><!-- fin #app -->
+
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          sec: 'conceptos',
+        };
+      },
+      mounted() {
+        // Re-highlight all code blocks
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') Prism.highlightAll();
+        });
+      },
+      watch: {
+        sec() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+
+</body>
+</html>
