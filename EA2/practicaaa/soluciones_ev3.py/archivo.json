@@ -1,0 +1,35 @@
+medicamentos = []
+
+while True:
+    print("\n=== APP MÉDICA ===")
+    print("1. Agregar medicamento")
+    print("2. Ver medicamentos")
+    print("3. Salir")
+
+    opcion = input("Elige una opción: ")
+
+    if opcion == "1":
+        nombre = input("Nombre del medicamento: ")
+        dosis = input("Dosis: ")
+        hora = input("Hora de toma: ")
+
+        medicamento = {
+            "nombre": nombre,
+            "dosis": dosis,
+            "hora": hora
+        }
+
+        medicamentos.append(medicamento)
+        print("Medicamento agregado correctamente.")
+
+    elif opcion == "2":
+        print("\n--- Medicamentos registrados ---")
+        for med in medicamentos:
+            print(f"{med['nombre']} - {med['dosis']} - {med['hora']}")
+
+    elif opcion == "3":
+        print("Saliendo de la app...")
+        break
+
+    else:
+        print("Opción inválida.")
