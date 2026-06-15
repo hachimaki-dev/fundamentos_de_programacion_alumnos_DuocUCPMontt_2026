@@ -30,6 +30,40 @@
     .section-pill:hover { background:var(--t-surface-hover); }
     .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
 
+    /* Password gate */
+    .solution-gate {
+      text-align: center; padding: 3rem 2rem;
+      background: var(--t-surface); border-radius: 16px;
+      border: 2px solid var(--t-glass-border);
+      box-shadow: 0 4px 24px var(--t-shadow);
+      max-width: 500px; margin: 2rem auto;
+    }
+    .solution-gate h3 { font-size: 1.3rem; font-weight: 700; color: var(--t-accent); margin-bottom: 0.5rem; }
+    .solution-gate p { font-size: 0.9rem; color: var(--t-text-secondary); margin-bottom: 1.5rem; }
+    .solution-gate input {
+      width: 100%; max-width: 300px; padding: 0.75rem 1rem;
+      border-radius: 10px; border: 2px solid var(--t-glass-border);
+      background: var(--t-glass-bg); color: var(--t-text);
+      font-size: 1rem; font-family: inherit; text-align: center;
+      transition: border-color 0.3s;
+    }
+    .solution-gate input:focus { outline: none; border-color: var(--t-accent); }
+    .solution-gate .gate-btn {
+      display: inline-block; margin-top: 1rem; padding: 0.65rem 2rem;
+      border-radius: 50px; border: none; background: var(--t-accent);
+      color: #fff; font-weight: 700; font-size: 0.95rem; cursor: pointer;
+      font-family: inherit; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .solution-gate .gate-btn:hover { transform: scale(1.05); }
+    .solution-unlocked-banner {
+      text-align: center; margin-bottom: 2rem; padding: 1rem;
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05));
+      border-radius: 12px; border: 2px solid rgba(16,185,129,0.3);
+    }
+    .solution-unlocked-banner p { color: #10b981; font-weight: 700; font-size: 1.1rem; }
+    .solution-unlocked-banner .sub { color: var(--t-text-secondary); font-size: 0.85rem; font-weight: 400; margin-top: 0.3rem; }
+
     /* Concept card styling */
     .concept-header {
       display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
@@ -143,6 +177,7 @@
       <div class="section-nav">
         <button class="section-pill" :class="{ active: sec === 'enunciado' }" @click="sec='enunciado'">📝 Enunciado del Ejercicio</button>
         <button class="section-pill" :class="{ active: sec === 'referencia' }" @click="sec='referencia'">📚 Guía de Referencia y Lógica</button>
+        <button class="section-pill" :class="{ active: sec === 'solucion' }" @click="sec='solucion'">🔐 Solución</button>
       </div>
     </div>
 
@@ -589,6 +624,237 @@ while True:
 
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: SOLUCIÓN -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'solucion'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <!-- Gate -->
+      <div v-if="!solucionUnlocked" class="solution-gate fade-in-up">
+        <h3>🔐 Solución Protegida</h3>
+        <p>Ingresa la clave de acceso para ver la solución completa de este ejercicio.</p>
+        <input type="password" v-model="solucionPassword" placeholder="Clave de acceso" @keyup.enter="unlockSolucion" />
+        <br>
+        <button class="gate-btn" @click="unlockSolucion">Desbloquear</button>
+        <p v-if="solucionError" style="color:#ff6b6b; margin-top:0.8rem; font-size:0.85rem;">{{ solucionError }}</p>
+      </div>
+
+      <!-- Solution Content -->
+      <div v-else>
+        <div class="solution-unlocked-banner">
+          <p>🔓 Solución Desbloqueada</p>
+          <p class="sub">A continuación se muestra el código completo de la solución.</p>
+        </div>
+
+        <div class="doc-section">
+          <h2>Solución Completa — Sistema Cazabichos 🪲</h2>
+          <p>
+            Este es el código Python completo que cumple con todos los requisitos del enunciado: validaciones independientes, búsqueda reutilizable, actualización de estados y formato de salida.
+          </p>
+        </div>
+
+        <div class="exercise-card">
+          <div class="ex-header">
+            <span class="ex-num">✅</span>
+            <span class="ex-title">cazabichos.py — Código Completo</span>
+          </div>
+          <pre><code class="language-python"># ══════════════════════════════════════════════════
+# 🪲 SISTEMA CAZABICHOS — Solución Completa
+# ══════════════════════════════════════════════════
+
+# ── FUNCIONES DE VALIDACIÓN ──
+# Estas funciones solo retornan True/False.
+# NO imprimen mensajes de error.
+
+def validar_especie(especie):
+    especie_limpia = especie.strip()
+    if especie_limpia != "":
+        return True
+    else:
+        return False
+
+
+def validar_tamano(tamano_str):
+    try:
+        tamano = int(tamano_str)
+        if tamano > 0:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
+
+
+def validar_peligrosidad(peligrosidad_str):
+    try:
+        peligrosidad = float(peligrosidad_str)
+        if 1.0 <= peligrosidad <= 10.0:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
+
+
+# ── FUNCIONES DE INTERFAZ ──
+
+def mostrar_menu():
+    print("\n========== MENÚ PRINCIPAL ==========")
+    print("1. Agregar bicho")
+    print("2. Buscar bicho")
+    print("3. Eliminar bicho")
+    print("4. Actualizar estados")
+    print("5. Mostrar bichos")
+    print("6. Salir")
+    print("=====================================")
+
+
+def leer_opcion():
+    while True:
+        opcion = input("Seleccione una opción (1-6): ")
+        if opcion.isdigit():
+            num = int(opcion)
+            if 1 <= num <= 6:
+                return num
+        print("Opción inválida. Ingrese un número entre 1 y 6.")
+
+
+# ── FUNCIÓN DE ACCIÓN: AGREGAR ──
+# Pide datos uno por uno. Si alguno falla, corta con return.
+
+def agregar_bicho(lista):
+    especie = input("Ingrese especie del bicho: ")
+    if not validar_especie(especie):
+        print("Error: La especie no puede estar vacía.")
+        return
+
+    tamano_str = input("Ingrese tamaño en cm: ")
+    if not validar_tamano(tamano_str):
+        print("Error: El tamaño debe ser un número entero mayor a 0.")
+        return
+
+    peligrosidad_str = input("Ingrese nivel de peligrosidad (1.0 - 10.0): ")
+    if not validar_peligrosidad(peligrosidad_str):
+        print("Error: La peligrosidad debe ser un número decimal entre 1.0 y 10.0.")
+        return
+
+    bicho = {
+        "especie": especie.strip(),
+        "tamaño": int(tamano_str),
+        "peligrosidad": float(peligrosidad_str),
+        "peligroso": False
+    }
+    lista.append(bicho)
+    print("¡Bicho registrado exitosamente!")
+
+
+# ── FUNCIÓN DE CONSULTA: BUSCAR ──
+# Retorna la posición (índice) o -1. NO imprime nada.
+
+def buscar_bicho(lista, especie_buscada):
+    for i in range(len(lista)):
+        if lista[i]["especie"] == especie_buscada:
+            return i
+    return -1
+
+
+# ── FUNCIÓN DE ACCIÓN: ACTUALIZAR ESTADOS ──
+# Modifica "peligroso" de cada bicho según su peligrosidad.
+
+def actualizar_estados(lista):
+    for bicho in lista:
+        if bicho["peligrosidad"] >= 7.0:
+            bicho["peligroso"] = True
+        else:
+            bicho["peligroso"] = False
+
+
+# ── FUNCIÓN DE INTERFAZ: MOSTRAR BICHOS ──
+# Primero actualiza estados (reutiliza la función anterior),
+# luego imprime cada bicho con el formato requerido.
+
+def mostrar_bichos(lista):
+    actualizar_estados(lista)
+    print("\n=== LISTA DE BICHOS ===")
+
+    if len(lista) == 0:
+        print("No hay bichos registrados en esta expedición.")
+        return
+
+    for bicho in lista:
+        if bicho["peligroso"]:
+            estado_str = "PELIGROSO"
+        else:
+            estado_str = "NO PELIGROSO"
+
+        print(f"Especie: {bicho['especie']}")
+        print(f"Tamaño: {bicho['tamaño']}")
+        print(f"Peligrosidad: {bicho['peligrosidad']}")
+        print(f"Estado: {estado_str}")
+        print("*" * 44)
+
+
+# ══════════════════════════════════════════════════
+# PROGRAMA PRINCIPAL
+# ══════════════════════════════════════════════════
+
+lista_bichos = []
+
+while True:
+    mostrar_menu()
+    opcion = leer_opcion()
+
+    if opcion == 1:
+        agregar_bicho(lista_bichos)
+
+    elif opcion == 2:
+        especie = input("Ingrese especie a buscar: ")
+        pos = buscar_bicho(lista_bichos, especie)
+        if pos != -1:
+            b = lista_bichos[pos]
+            print(f"\nBicho encontrado en posición {pos}:")
+            print(f"  Especie: {b['especie']}")
+            print(f"  Tamaño: {b['tamaño']} cm")
+            print(f"  Peligrosidad: {b['peligrosidad']}")
+        else:
+            print("Especie no registrada.")
+
+    elif opcion == 3:
+        especie = input("Ingrese especie a eliminar: ")
+        pos = buscar_bicho(lista_bichos, especie)
+        if pos != -1:
+            eliminado = lista_bichos.pop(pos)
+            print(f"Se eliminó el bicho '{eliminado['especie']}' correctamente.")
+        else:
+            print(f"El bicho '{especie}' no se encuentra registrado.")
+
+    elif opcion == 4:
+        actualizar_estados(lista_bichos)
+        print("Estados actualizados correctamente.")
+
+    elif opcion == 5:
+        mostrar_bichos(lista_bichos)
+
+    elif opcion == 6:
+        print("Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!")
+        break</code></pre>
+        </div>
+
+        <div class="callout-exam" style="margin-top:1.5rem;">
+          <strong>📌 Puntos clave de esta solución:</strong>
+          <ul style="margin-top:0.5rem; padding-left:1.2rem; font-size:0.88rem; line-height:1.7;">
+            <li>Las 3 funciones de validación <strong>solo retornan <code>True</code>/<code>False</code></strong>, sin prints internos.</li>
+            <li><code>buscar_bicho()</code> retorna la <strong>posición</strong> (no el diccionario), y se <strong>reutiliza</strong> en opciones 2 y 3.</li>
+            <li><code>actualizar_estados()</code> se <strong>reutiliza</strong> en opciones 4 y 5.</li>
+            <li>En <code>agregar_bicho()</code>, si un dato falla, el <code>return</code> corta inmediatamente sin pedir los siguientes datos.</li>
+            <li>El campo <code>"peligroso"</code> inicia en <code>False</code> y <strong>nunca se pide al usuario</strong>.</li>
+            <li>La lista se pasa como <strong>parámetro</strong> y no se retorna (mutabilidad).</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Footer -->
     <footer class="site-footer" style="max-width:800px;margin:0 auto;">
       <div class="flex flex-col items-center justify-center gap-3">
@@ -603,7 +869,24 @@ while True:
       data() {
         return {
           sec: 'enunciado',
+          solucionUnlocked: false,
+          solucionPassword: '',
+          solucionError: '',
         };
+      },
+      methods: {
+        unlockSolucion() {
+          const validKeys = ['hachimaki-dev'];
+          if (validKeys.includes(this.solucionPassword.trim().toLowerCase())) {
+            this.solucionUnlocked = true;
+            this.solucionError = '';
+            this.$nextTick(() => {
+              if (typeof Prism !== 'undefined') Prism.highlightAll();
+            });
+          } else {
+            this.solucionError = 'Clave incorrecta. Intenta de nuevo.';
+          }
+        }
       },
       mounted() {
         this.$nextTick(() => {
