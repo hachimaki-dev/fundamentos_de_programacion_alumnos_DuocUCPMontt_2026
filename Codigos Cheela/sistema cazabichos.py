@@ -120,7 +120,7 @@ def main():
             if eliminacion == -1:
                 print ('Bicho no existe')
             else:
-                lista_bichos.remove(eliminacion)
+                lista_bichos.pop(eliminacion)
         if opcion == 4:
             actualizarEstados(lista_bichos)
             print('Datos actualizados')
