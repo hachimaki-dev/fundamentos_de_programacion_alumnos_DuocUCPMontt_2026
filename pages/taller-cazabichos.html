@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🪲 Taller: Sistema Cazabichos (Funciones)</title>
+  <meta name="description" content="Taller práctico de funciones en Python: implementa un sistema CRUD completo de Cazabichos utilizando diccionarios, listas y funciones validadoras independientes." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+
+    /* Concept card styling */
+    .concept-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    .concept-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-accent); color: #fff; font-weight: 900;
+      width: 2.5rem; height: 2.5rem; border-radius: 50%; font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .concept-title {
+      font-size: 1.25rem; font-weight: 700; color: var(--t-accent);
+    }
+
+    /* Exercise card */
+    .exercise-card {
+      background: var(--t-surface); border-radius: 12px;
+      box-shadow: 0 4px 6px var(--t-shadow); padding: 1.5rem;
+      border: 2px solid var(--t-glass-border);
+      transition: transform 0.3s, border-color 0.3s;
+      margin-bottom: 1.5rem; color: var(--t-text);
+    }
+    .exercise-card:hover {
+      transform: translateY(-3px); box-shadow: 0 8px 12px var(--t-shadow);
+      border-color: var(--t-accent);
+    }
+
+    /* Exercise header */
+    .ex-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+    }
+    .ex-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-glass-bg); border: 2px solid var(--t-accent);
+      color: var(--t-accent); font-weight: 800;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%; font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .ex-title { font-size: 1.1rem; font-weight: 700; color: var(--t-text); }
+
+    /* Callout boxes */
+    .callout-think {
+      background: var(--t-glass-bg); border-left: 4px solid var(--t-purple, #9c27b0);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-think strong { color: var(--t-purple, #9c27b0); }
+
+    .callout-investigate {
+      background: var(--t-glass-bg); border-left: 4px solid var(--t-warning-text, #f59e0b);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-investigate strong { color: var(--t-warning-text, #f59e0b); }
+
+    .callout-exam {
+      background: rgba(52, 211, 153, 0.08); border-left: 4px solid var(--t-correct, #10b981);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-exam strong { color: var(--t-correct, #10b981); }
+
+    /* Concept tags */
+    .concept-ref {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 1rem;
+      font-size: 0.7rem; font-weight: 700; margin-left: 0.3rem;
+      background: var(--t-accent-bg, rgba(139,92,246,0.1));
+      color: var(--t-accent); border: 1px solid var(--t-accent);
+    }
+
+    /* Block header */
+    .block-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1rem 1.5rem; border-radius: 12px;
+      margin-bottom: 1rem; font-weight: 700; font-size: 1.15rem;
+    }
+
+    /* vs comparison inside concepts */
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    @media (max-width: 640px) { .vs-row { grid-template-columns: 1fr; } }
+    .vs-cell {
+      background: var(--t-glass-bg); border-radius: 10px; padding: 1rem;
+      border: 2px solid var(--t-glass-border);
+    }
+    .vs-cell h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">⬅️ Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🪲 Taller: Sistema Cazabichos</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          Aprende a estructurar un sistema CRUD completo en consola utilizando funciones independientes, listas de diccionarios y validaciones de datos estrictas.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: sec === 'enunciado' }" @click="sec='enunciado'">📝 Enunciado del Ejercicio</button>
+        <button class="section-pill" :class="{ active: sec === 'referencia' }" @click="sec='referencia'">📚 Guía de Referencia y Lógica</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: ENUNCIADO -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'enunciado'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <div class="doc-section">
+        <h2>Descripción General 🎯</h2>
+        <p>
+          Desarrolla un programa en Python que implemente un sistema de registro de bichos para una aplicación de <strong>"Cazabichos"</strong>, donde todo el comportamiento se organice mediante funciones bien definidas. El programa debe incluir un menú interactivo, validaciones de entrada, operaciones lógicas (decisiones y comparaciones) y uso de funciones separadas.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>1. Datos que debe manejar el sistema 📦</h2>
+        <p>
+          El sistema trabaja con una colección de bichos capturados. Esta colección debe existir desde que el programa inicia y estar disponible durante toda la ejecución. Cada vez que se registra un bicho, se incorpora a esa colección como un nuevo elemento.
+        </p>
+        <p class="mt-2">
+          Cada bicho se representa como un diccionario con 4 campos asociados: <code>especie</code>, <code>tamaño</code>, <code>peligrosidad</code> y <code>peligroso</code>. La siguiente tabla resume los campos de cada registro:
+        </p>
+
+        <table class="compare-table" style="width:100%; margin-top:1rem; margin-bottom:1rem;">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Qué representa</th>
+              <th>Restricciones de validación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"especie"</code></td>
+              <td>Nombre de la especie del bicho</td>
+              <td><code>str</code>. No vacío ni solo espacios en blanco.</td>
+            </tr>
+            <tr>
+              <td><code>"tamaño"</code></td>
+              <td>Tamaño del bicho, en centímetros</td>
+              <td><code>int</code>. Número entero mayor que cero.</td>
+            </tr>
+            <tr>
+              <td><code>"peligrosidad"</code></td>
+              <td>Nivel de peligrosidad (1.0–10.0)</td>
+              <td><code>float</code>. Número decimal entre 1.0 y 10.0 (incluidos).</td>
+            </tr>
+            <tr>
+              <td><code>"peligroso"</code></td>
+              <td>¿Es considerado un bicho peligroso?</td>
+              <td><code>bool</code>. Inicia en <code>False</code> al registrar. No se solicita al usuario, el sistema lo calcula automáticamente en base a la peligrosidad.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="text-sm text-kawaii-text/80">
+          Cada diccionario se guarda dentro de una lista. La lista es la colección general; los diccionarios son los bichos individuales dentro de ella. El programa comienza con la lista vacía y la va llenando a medida que se registran nuevos bichos.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>2. Lo que debe hacer el sistema ⚙️</h2>
+        <p>
+          El sistema se controla desde un menú que aparece en pantalla cada vez que el usuario termina una acción. El usuario elige una opción numérica, el programa ejecuta la tarea correspondiente y vuelve a mostrar el menú. Esto se repite hasta que el usuario elige salir.
+        </p>
+        <p class="mt-2">El menú tiene seis opciones:</p>
+        <pre><code class="language-python">========== MENÚ PRINCIPAL ==========
+1. Agregar bicho
+2. Buscar bicho
+3. Eliminar bicho
+4. Actualizar estados
+5. Mostrar bichos
+6. Salir
+=====================================</code></pre>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">💡 Regla de Arquitectura</p>
+          <p class="text-sm">
+            Debes definir dos funciones separadas para el menú: una que muestre las opciones en pantalla (sin recibir ni retornar nada) y otra que lea y retorne la opción elegida por el usuario (sin recibir nada, retornando el número validado). Ambas funciones deben invocarse en cada vuelta del ciclo.
+          </p>
+        </div>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Detalle de las Opciones del Menú:</h3>
+        
+        <div class="space-y-4">
+          <!-- Opcion 1 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">1</span><span class="ex-title">Agregar bicho</span></div>
+            <p class="text-sm">
+              El sistema solicita al usuario la especie, el tamaño y el nivel de peligrosidad del bicho. Antes de guardar el registro, verifica que cada dato cumpla su condición:
+            </p>
+            <ul class="text-sm mt-2 list-disc pl-5 space-y-1">
+              <li>La especie no puede estar vacía ni ser solo espacios en blanco.</li>
+              <li>El tamaño debe ser un número entero mayor que cero.</li>
+              <li>La peligrosidad debe ser un número decimal entre 1.0 y 10.0.</li>
+            </ul>
+            <p class="text-sm mt-2">
+              Si algún dato no cumple la condición, el sistema informa al usuario y no registra al bicho. Solo cuando todos los datos son válidos se crea el diccionario y se agrega a la lista.
+            </p>
+            <div class="callout-exam">
+              <strong>Estructura requerida:</strong> Define una función que reciba la lista como parámetro. Dentro de ella se solicitan los datos y se llama a una función de validación distinta para cada campo. Los mensajes de error se muestran en esta función de acción, no dentro de las funciones de validación.
+            </div>
+          </div>
+
+          <!-- Opcion 2 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">2</span><span class="ex-title">Buscar bicho</span></div>
+            <p class="text-sm">
+              El sistema solicita una especie al usuario y recorre la lista buscando un registro cuyo campo especie coincida exactamente con el ingresado. Si lo encuentra, muestra la posición en la que está y sus datos. Si no existe ningún registro con esa especie, informa al usuario.
+            </p>
+            <div class="callout-exam">
+              <strong>Estructura requerida:</strong> Define una función que reciba la lista y la especie a buscar como parámetros. La función recorre la lista y retorna la posición del registro encontrado, o <code>-1</code> si no existe. Es el programa principal quien recibe ese valor y decide qué hacer con él.
+            </div>
+          </div>
+
+          <!-- Opcion 3 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">3</span><span class="ex-title">Eliminar bicho</span></div>
+            <p class="text-sm">
+              El sistema solicita la especie del bicho que se desea eliminar. Para localizarlo, llama a la función de búsqueda de la opción anterior, pasándole la lista y la especie ingresada. Si la función retorna una posición válida, el sistema elimina el registro en esa posición. Si retorna <code>-1</code>, informa con el mensaje:
+            </p>
+            <pre><code class="language-python">El bicho 'especie' no se encuentra registrado.</code></pre>
+          </div>
+
+          <!-- Opcion 4 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">4</span><span class="ex-title">Actualizar estados</span></div>
+            <p class="text-sm">
+              El sistema recorre la lista completa de bichos y actualiza el campo <code>"peligroso"</code> de cada registro según su peligrosidad: si la peligrosidad es mayor o igual a <code>7.0</code>, el campo pasa a <code>True</code>; si es menor, queda en <code>False</code>. Esta operación afecta a todos los registros de la lista sin excepción.
+            </p>
+            <div class="callout-exam">
+              <strong>Estructura requerida:</strong> Define una función que reciba la lista como parámetro y aplique esa regla a cada elemento.
+            </div>
+          </div>
+
+          <!-- Opcion 5 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">5</span><span class="ex-title">Mostrar bichos</span></div>
+            <p class="text-sm">
+              El sistema primero actualiza los estados de todos los bichos haciendo el llamado a la función anterior (Opción 4), luego recorre la lista mostrando los datos de cada bicho. El formato de salida es el siguiente:
+            </p>
+            <pre><code class="language-python">=== LISTA DE BICHOS ===
+
+Especie: Escarabajo Rinoceronte
+Tamaño: 15
+Peligrosidad: 8.5
+Estado: PELIGROSO
+********************************************
+Especie: Mariquita
+Tamaño: 1
+Peligrosidad: 2.0
+Estado: NO PELIGROSO
+*********************************************</code></pre>
+          </div>
+
+          <!-- Opcion 6 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">6</span><span class="ex-title">Salir</span></div>
+            <p class="text-sm">
+              El sistema termina la ejecución de forma limpia, sin errores. El ciclo del menú se detiene y el programa finaliza con un mensaje de despedida:
+            </p>
+            <pre><code class="language-python">"Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!"</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: REFERENCIA -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'referencia'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <div class="doc-section">
+        <h2>Guía de Referencia y Lógica 📚</h2>
+        <p>
+          A continuación, se detalla una tabla interactiva con patrones comunes de lógica y código que te resultarán de gran utilidad para enfrentarte al desarrollo de este ejercicio.
+        </p>
+      </div>
+
+      <!-- Lógica 1 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">1</span>
+          <span class="ex-title">Estado Inicial: Inicializar la lista</span>
+          <span class="concept-ref">Estructura global</span>
+        </div>
+        <p class="text-sm">
+          La lista que contendrá los diccionarios debe definirse una sola vez en el programa principal antes de entrar al menú.
+        </p>
+        <pre><code class="language-python"># Al inicio del archivo principal
+lista_bichos = []</code></pre>
+      </div>
+
+      <!-- Lógica 2 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">2</span>
+          <span class="ex-title">Validación de Cadenas de Texto</span>
+          <span class="concept-ref">Especie</span>
+        </div>
+        <p class="text-sm">
+          Para verificar si un string no está vacío ni contiene únicamente espacios en blanco, se limpia con <code>.strip()</code> y se evalúa su longitud.
+        </p>
+        <pre><code class="language-python">def validar_especie(especie):
+    # .strip() elimina espacios al inicio y al final
+    especie_limpia = especie.strip()
+    # Si la cadena no quedó vacía, es válida
+    if especie_limpia != "":
+        return True
+    else:
+        return False</code></pre>
+      </div>
+
+      <!-- Lógica 3 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">3</span>
+          <span class="ex-title">Validación de Números Enteros</span>
+          <span class="concept-ref">Tamaño</span>
+        </div>
+        <p class="text-sm">
+          Para validar enteros, podemos intentar la conversión usando <code>try/except ValueError</code> y verificar que cumpla con el criterio solicitado (mayor que 0).
+        </p>
+        <pre><code class="language-python">def validar_tamano(tamano_str):
+    try:
+        tamano = int(tamano_str)
+        if tamano > 0:
+            return True
+        else:
+            return False
+    except ValueError:
+        # Si no se pudo convertir a entero
+        return False</code></pre>
+      </div>
+
+      <!-- Lógica 4 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">4</span>
+          <span class="ex-title">Validación de Decimales y Rango</span>
+          <span class="concept-ref">Peligrosidad</span>
+        </div>
+        <p class="text-sm">
+          Similar a los enteros, se intenta la conversión a <code>float</code> y luego se valida si está dentro del rango inclusivo.
+        </p>
+        <pre><code class="language-python">def validar_peligrosidad(peligrosidad_str):
+    try:
+        peligrosidad = float(peligrosidad_str)
+        if 1.0 <= peligrosidad <= 10.0:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False</code></pre>
+      </div>
+
+      <!-- Lógica 5 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">5</span>
+          <span class="ex-title">Agregar Registro: Lógica de Flujo Secuencial</span>
+          <span class="concept-ref">Mutabilidad</span>
+        </div>
+        <p class="text-sm">
+          Al agregar, solicitamos los datos uno por uno. Si un dato no pasa su validación correspondiente, interrumpimos el flujo de inmediato usando <code>return</code> para no seguir preguntando datos innecesariamente.
+        </p>
+        <pre><code class="language-python">def agregar_bicho(lista):
+    especie = input("Ingrese especie del bicho: ")
+    if not validar_especie(especie):
+        print("Error: La especie no puede estar vacía.")
+        return # Sale de la función sin agregar nada
+        
+    tamano_str = input("Ingrese tamaño en cm: ")
+    if not validar_tamano(tamano_str):
+        print("Error: El tamaño debe ser un número entero mayor a 0.")
+        return
+        
+    peligrosidad_str = input("Ingrese nivel de peligrosidad (1.0 - 10.0): ")
+    if not validar_peligrosidad(peligrosidad_str):
+        print("Error: Peligrosidad debe ser un número decimal entre 1.0 y 10.0.")
+        return
+        
+    # Si todo es correcto, creamos el diccionario e insertamos en la lista
+    bicho = {
+        "especie": especie.strip(),
+        "tamaño": int(tamano_str),
+        "peligrosidad": float(peligrosidad_str),
+        "peligroso": False # Por defecto inicia en False
+    }
+    lista.append(bicho)
+    print("¡Bicho registrado exitosamente!")</code></pre>
+      </div>
+
+      <!-- Lógica 6 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">6</span>
+          <span class="ex-title">Búsqueda Secuencial en Lista de Diccionarios</span>
+          <span class="concept-ref">Búsqueda</span>
+        </div>
+        <p class="text-sm">
+          Para buscar, recorremos la lista mediante sus índices. Comparamos la clave (por ejemplo, con <code>.lower()</code> para evitar problemas de mayúsculas/minúsculas). Retornamos la posición del índice encontrado o <code>-1</code>.
+        </p>
+        <pre><code class="language-python">def buscar_bicho(lista, especie_buscada):
+    # Convertimos a minúsculas para una comparación más flexible
+    buscar = especie_buscada.lower().strip()
+    for i in range(len(lista)):
+        if lista[i]["especie"].lower() == buscar:
+            return i # Retorna el índice inmediatamente
+    return -1 # Si terminó el ciclo y no encontró nada</code></pre>
+      </div>
+
+      <!-- Lógica 7 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">7</span>
+          <span class="ex-title">Eliminación por Índice</span>
+          <span class="concept-ref">Eliminar</span>
+        </div>
+        <p class="text-sm">
+          Reutilizamos la función de búsqueda para obtener la posición. Si es válida, removemos el elemento de la lista usando <code>.pop()</code>.
+        </p>
+        <pre><code class="language-python"># En el menú o función eliminar
+especie_eliminar = input("Ingrese especie a eliminar: ")
+pos = buscar_bicho(lista_bichos, especie_eliminar)
+
+if pos != -1:
+    # Eliminamos y podemos recuperar el diccionario eliminado
+    eliminado = lista_bichos.pop(pos)
+    print(f"Se eliminó el bicho '{eliminado['especie']}' correctamente.")
+else:
+    print(f"El bicho '{especie_eliminar}' no se encuentra registrado.")</code></pre>
+      </div>
+
+      <!-- Lógica 8 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">8</span>
+          <span class="ex-title">Actualización de Estados Iterativa</span>
+          <span class="concept-ref">Modificar todos</span>
+        </div>
+        <p class="text-sm">
+          Recorremos cada diccionario dentro de la lista y actualizamos el valor de la clave correspondiente según las condiciones del enunciado.
+        </p>
+        <pre><code class="language-python">def actualizar_estados(lista):
+    for bicho in lista:
+        if bicho["peligrosidad"] >= 7.0:
+            bicho["peligroso"] = True
+        else:
+            bicho["peligroso"] = False
+    print("Estados actualizados.")</code></pre>
+      </div>
+
+      <!-- Lógica 9 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">9</span>
+          <span class="ex-title">Mostrar con Formato y Condición de Estado</span>
+          <span class="concept-ref">Formato</span>
+        </div>
+        <p class="text-sm">
+          Evaluamos el valor booleano interno del estado para imprimir una etiqueta visual ("PELIGROSO" / "NO PELIGROSO") en vez de imprimir <code>True</code> o <code>False</code>.
+        </p>
+        <pre><code class="language-python">def mostrar_bichos(lista):
+    actualizar_estados(lista) # Reutilizamos la función
+    print("\n=== LISTA DE BICHOS ===")
+    
+    if len(lista) == 0:
+        print("No hay bichos registrados en esta expedición.")
+        return
+        
+    for bicho in lista:
+        # Decidimos qué etiqueta mostrar
+        if bicho["peligroso"]:
+            estado_str = "PELIGROSO"
+        else:
+            estado_str = "NO PELIGROSO"
+            
+        print(f"Especie: {bicho['especie']}")
+        print(f"Tamaño: {bicho['tamaño']}")
+        print(f"Peligrosidad: {bicho['peligrosidad']}")
+        print(f"Estado: {estado_str}")
+        print("*" * 44)</code></pre>
+      </div>
+
+      <!-- Lógica 10 -->
+      <div class="exercise-card">
+        <div class="ex-header">
+          <span class="ex-num">10</span>
+          <span class="ex-title">Estructura del Ciclo del Menú</span>
+          <span class="concept-ref">Menú Principal</span>
+        </div>
+        <p class="text-sm">
+          El ciclo se mantiene activo usando <code>while True</code>. Llamamos a las funciones del menú y despachamos cada opción.
+        </p>
+        <pre><code class="language-python">def mostrar_menu():
+    print("\n========== MENÚ PRINCIPAL ==========")
+    print("1. Agregar bicho")
+    print("2. Buscar bicho")
+    print("3. Eliminar bicho")
+    print("4. Actualizar estados")
+    print("5. Mostrar bichos")
+    print("6. Salir")
+    print("=====================================")
+
+def leer_opcion():
+    while True:
+        opcion = input("Seleccione una opción (1-6): ")
+        if opcion.isdigit():
+            num = int(opcion)
+            if 1 <= num <= 6:
+                return num
+        print("Opción inválida. Reintente.")
+
+# Programa Principal
+lista_bichos = []
+while True:
+    mostrar_menu()
+    opcion = leer_opcion()
+    
+    if opcion == 1:
+        agregar_bicho(lista_bichos)
+    elif opcion == 2:
+        especie = input("Ingrese especie a buscar: ")
+        pos = buscar_bicho(lista_bichos, especie)
+        if pos != -1:
+            b = lista_bichos[pos]
+            print(f"Encontrado en posición {pos}:")
+            print(f"Especie: {b['especie']} | Tamaño: {b['tamaño']} | Peligrosidad: {b['peligrosidad']}")
+        else:
+            print("Especie no registrada.")
+    elif opcion == 3:
+        # Lógica de eliminación (ejemplo 7)
+        pass
+    elif opcion == 4:
+        actualizar_estados(lista_bichos)
+    elif opcion == 5:
+        mostrar_bichos(lista_bichos)
+    elif opcion == 6:
+        print("Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!")
+        break</code></pre>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="max-width:800px;margin:0 auto;">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <p class="text-sm" style="color: var(--t-text-secondary); opacity: 0.7;">Hecho con 💖 para Academia hachimaki</p>
+      </div>
+    </footer>
+
+  </div><!-- fin #app -->
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          sec: 'enunciado',
+        };
+      },
+      mounted() {
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') Prism.highlightAll();
+        });
+      },
+      watch: {
+        sec() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+
+</body>
+</html>

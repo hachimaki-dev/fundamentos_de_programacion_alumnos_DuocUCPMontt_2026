@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📽️ Presentación — Diseño de Cazabichos</title>
+<link rel="stylesheet" href="../css/presentacion.css">
+<style>
+  /* ═══ PROJECTION OVERRIDES: Everything bigger ═══ */
+  .slide h1 { font-size: 3.8rem; }
+  .slide h2 { font-size: 2.8rem; line-height: 1.2; }
+  .slide h3 { font-size: 2rem; }
+  .slide p, .slide li { font-size: 1.5rem; line-height: 1.75; color: var(--text); }
+  .code-block { font-size: 1.3rem; line-height: 1.85; max-width: 950px; }
+  .tag { font-size: 1.1rem; padding: .45rem 1.3rem; }
+  .subtitle { font-size: 1.5rem; }
+  .emoji-big { font-size: 4.5rem; margin-bottom: 0.5rem; }
+  .compare-table th { font-size: 1.2rem; padding: 1rem 1.2rem; }
+  .compare-table td { font-size: 1.15rem; padding: 0.9rem 1.2rem; }
+
+  /* Step badge */
+  .step-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--accent); color: #fff; font-weight: 900;
+    width: 3rem; height: 3rem; border-radius: 50%;
+    font-size: 1.4rem; margin-bottom: 0.5rem;
+  }
+
+  /* Requirement badge — red/orange to distinguish from design steps */
+  .req-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #fff3cd; border: 2px solid #ffc107; border-radius: 50px;
+    padding: 0.4rem 1.4rem; font-size: 1.1rem; font-weight: 700;
+    color: #664d03; margin-bottom: 0.6rem;
+  }
+
+  /* Key point callout */
+  .key-point {
+    background: var(--surface); border-left: 6px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.8rem 2.5rem; max-width: 900px; text-align: left;
+    box-shadow: var(--shadow); margin: 1rem 0;
+  }
+  .key-point p { font-size: 1.4rem; font-weight: 600; color: var(--text); }
+
+  /* Alert/Success/Danger boxes */
+  .alert-box {
+    background: #fff3cd; border: 2px solid #ffc107; border-radius: var(--radius);
+    padding: 1.5rem 2rem; max-width: 850px; text-align: left; margin-top: 1rem;
+  }
+  .alert-box p { font-size: 1.3rem; color: #664d03; }
+
+  .success-box {
+    background: #d1e7dd; border: 2px solid #198754; border-radius: var(--radius);
+    padding: 1.5rem 2rem; max-width: 850px; text-align: left; margin-top: 1rem;
+  }
+  .success-box p { font-size: 1.3rem; color: #0f5132; }
+
+  .danger-box {
+    background: #f8d7da; border: 2px solid #dc3545; border-radius: var(--radius);
+    padding: 1.5rem 2rem; max-width: 850px; text-align: left; margin-top: 1rem;
+  }
+  .danger-box p { font-size: 1.3rem; color: #58151c; }
+
+  /* Requirement box — used to show the "business rule" on design slides */
+  .rule-box {
+    background: #fef3c7; border: 2px dashed #f59e0b; border-radius: var(--radius);
+    padding: 1.2rem 1.8rem; max-width: 900px; text-align: left; margin: 0.8rem 0;
+  }
+  .rule-box p { font-size: 1.2rem; color: #92400e; font-weight: 600; }
+  .rule-box p::before { content: '📌 '; }
+
+  /* VS comparison */
+  .vs-grid {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 1.5rem; max-width: 1050px; width: 100%; align-items: start;
+  }
+  .vs-box {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 1.8rem 2rem; box-shadow: var(--shadow); text-align: left;
+  }
+  .vs-box h3 { font-size: 1.5rem; margin-bottom: 0.8rem; }
+  .vs-box p { font-size: 1.3rem; }
+  .vs-divider {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.8rem; font-weight: 900; color: var(--accent);
+  }
+
+  /* Diagram tree */
+  .diagram-tree {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 0.6rem; padding-left: 1.5rem;
+    font-family: monospace; font-size: 1.2rem; line-height: 1.6;
+  }
+  .diagram-line { display: flex; align-items: center; gap: 0.6rem; }
+  .diagram-tag {
+    background: rgba(255,255,255,0.15); padding: 0.15rem 0.6rem;
+    border-radius: 4px; font-size: 0.95rem; font-weight: 700;
+  }
+
+  /* Reveal button */
+  .reveal-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1.2rem; padding: 0.9rem 2.2rem; border-radius: 50px;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 1.3rem; font-weight: 700; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .reveal-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+  .answer-reveal {
+    display: none; margin-top: 1rem;
+    background: var(--surface); border: 3px solid #198754;
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    max-width: 900px; text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    animation: revealPop 0.4s ease;
+  }
+  .answer-reveal.visible { display: block; }
+  .answer-reveal h4 { font-size: 1.4rem; color: #198754; margin-bottom: 0.5rem; }
+  .answer-reveal p { font-size: 1.25rem; color: var(--text); }
+  @keyframes revealPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Big icon row */
+  .icon-row {
+    display: flex; gap: 2rem; justify-content: center;
+    align-items: stretch; flex-wrap: wrap; margin: 1.5rem 0;
+  }
+  .icon-item {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--surface); border-radius: var(--radius);
+    padding: 2rem 2.5rem; box-shadow: var(--shadow);
+    min-width: 200px; transition: transform 0.2s;
+  }
+  .icon-item:hover { transform: translateY(-4px); }
+  .icon-item .icon-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  .icon-item .icon-label { font-size: 1.3rem; font-weight: 700; color: var(--text); }
+  .icon-item .icon-desc { font-size: 1.1rem; color: var(--text-light); margin-top: 0.3rem; text-align: center; }
+
+  /* Section divider slide */
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent); color: #fff; border-radius: 50px;
+    padding: 0.5rem 2rem; font-size: 1.1rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+<div class="nav">
+  <button onclick="prev()" title="Anterior">←</button>
+  <button onclick="next()" title="Siguiente">→</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1: Portada -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide active">
+  <div class="deco-circle" style="width:350px;height:350px;background:var(--pastel-green);top:-100px;right:-80px;"></div>
+  <div class="deco-circle" style="width:250px;height:250px;background:var(--pastel-pink);bottom:-60px;left:-60px;"></div>
+  <div class="emoji-big">🪲</div>
+  <h1>Sistema Cazabichos</h1>
+  <p class="subtitle">De los requisitos al código — paso a paso</p>
+  <div style="margin-top:2rem;">
+    <span class="tag tag-green">funciones</span>
+    <span class="tag tag-blue">listas</span>
+    <span class="tag tag-purple">diccionarios</span>
+    <span class="tag tag-pink">validación</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BLOQUE A: PANORAMA GENERAL — ¿Qué vamos a construir?        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SLIDE 2: Sección — Panorama -->
+<div class="slide">
+  <div class="deco-circle" style="width:280px;height:280px;background:var(--pastel-orange);top:-80px;left:-60px;"></div>
+  <span class="section-label">Parte 1</span>
+  <div class="emoji-big">🗺️</div>
+  <h1>Panorama general</h1>
+  <p class="subtitle" style="max-width:700px;">
+    Antes de pensar en funciones,<br>entendamos <span class="hl">qué</span> hay que construir.
+  </p>
+</div>
+
+<!-- SLIDE 3: ¿Qué es el sistema? -->
+<div class="slide">
+  <h2>¿Qué vamos a construir? 🎯</h2>
+  <div class="key-point" style="margin-top:1.5rem;">
+    <p>Un sistema de <span class="hl">registro y control de bichos</span> para una app llamada <strong>"Cazabichos"</strong>.</p>
+  </div>
+  <div class="key-point" style="border-left-color: var(--pastel-green);">
+    <p>Todo organizado con <span class="hl-green">funciones bien definidas</span>: menú interactivo, validaciones, decisiones y operaciones sobre datos.</p>
+  </div>
+</div>
+
+<!-- SLIDE 4: El Menú que hay que implementar -->
+<div class="slide">
+  <h2>El menú que debemos implementar 📋</h2>
+  <div class="code-block" style="margin-top:1.5rem; font-size:1.5rem; line-height:1.7;">
+    <span class="code-label">Menú</span>
+========== MENÚ PRINCIPAL ==========
+1. Agregar bicho
+2. Buscar bicho
+3. Eliminar bicho
+4. Actualizar estados
+5. Mostrar bichos
+6. Salir
+=====================================
+  </div>
+  <div class="rule-box" style="margin-top:1.5rem;">
+    <p>El menú se muestra después de cada acción y se repite hasta que el usuario elige "Salir".</p>
+  </div>
+</div>
+
+<!-- SLIDE 5: Restricción del menú -->
+<div class="slide">
+  <div class="emoji-big">⚠️</div>
+  <h2>Restricción importante del menú</h2>
+  <div class="danger-box" style="margin-top:1.5rem;">
+    <p>⚠️ El menú requiere <strong>dos funciones separadas</strong>:</p>
+  </div>
+  <div class="vs-grid" style="margin-top:1.5rem;">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-blue);">
+      <h3>📄 Función 1</h3>
+      <p><code>mostrar_menu()</code><br>Solo <strong>imprime</strong> las opciones.<br>No recibe nada, no retorna nada.</p>
+    </div>
+    <div class="vs-divider">+</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>📥 Función 2</h3>
+      <p><code>leer_opcion()</code><br>Lee y <strong>retorna</strong> la opción validada.<br>No recibe nada, retorna <code>int</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Los datos — qué es un bicho -->
+<div class="slide">
+  <h2>¿Qué es un "bicho"? 🐛</h2>
+  <p style="margin-bottom:1rem;">Cada bicho es un <span class="hl">diccionario</span> con 4 campos:</p>
+  <div class="icon-row">
+    <div class="icon-item" style="border-top:4px solid var(--pastel-blue);">
+      <div class="icon-emoji">🏷️</div>
+      <div class="icon-label"><code>"especie"</code></div>
+      <div class="icon-desc"><code>str</code></div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-green);">
+      <div class="icon-emoji">📏</div>
+      <div class="icon-label"><code>"tamaño"</code></div>
+      <div class="icon-desc"><code>int</code></div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-orange);">
+      <div class="icon-emoji">⚠️</div>
+      <div class="icon-label"><code>"peligrosidad"</code></div>
+      <div class="icon-desc"><code>float</code></div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-pink);">
+      <div class="icon-emoji">🚨</div>
+      <div class="icon-label"><code>"peligroso"</code></div>
+      <div class="icon-desc"><code>bool</code></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Restricciones de validación -->
+<div class="slide">
+  <h2>Restricciones de cada campo 🔒</h2>
+  <table class="compare-table" style="width:100%; max-width:1000px; margin-top:1.5rem;">
+    <thead>
+      <tr>
+        <th>Campo</th>
+        <th>Tipo</th>
+        <th>Restricción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>"especie"</code></td>
+        <td><code>str</code></td>
+        <td><strong>No vacío</strong> ni solo espacios en blanco.</td>
+      </tr>
+      <tr>
+        <td><code>"tamaño"</code></td>
+        <td><code>int</code></td>
+        <td>Número entero <strong>mayor que cero</strong>.</td>
+      </tr>
+      <tr>
+        <td><code>"peligrosidad"</code></td>
+        <td><code>float</code></td>
+        <td>Decimal entre <strong>1.0 y 10.0</strong> (incluidos).</td>
+      </tr>
+      <tr>
+        <td><code>"peligroso"</code></td>
+        <td><code>bool</code></td>
+        <td>Inicia en <code>False</code>. <strong>No se pide al usuario</strong>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 8: Regla del campo peligroso -->
+<div class="slide">
+  <div class="emoji-big">🚨</div>
+  <h2>Regla del campo "peligroso"</h2>
+  <div class="rule-box" style="margin-top:1.5rem;">
+    <p>El campo <code>"peligroso"</code> <strong>nunca</strong> se solicita al usuario. El sistema lo asigna automáticamente como <code>False</code> al registrar.</p>
+  </div>
+  <div class="rule-box">
+    <p>Su valor puede cambiar a <code>True</code> cuando se ejecute la <strong>Opción 4</strong> (Actualizar estados), si la peligrosidad del bicho es <strong>≥ 7.0</strong>.</p>
+  </div>
+  <div class="code-block" style="margin-top:1.5rem;">
+    <span class="code-label">Ejemplo</span>
+{<span class="str">"especie"</span>: <span class="str">"Mariquita"</span>, <span class="str">"tamaño"</span>: <span class="num">1</span>, <span class="str">"peligrosidad"</span>: <span class="num">2.0</span>, <span class="str">"peligroso"</span>: <span class="kw">False</span>}
+  </div>
+</div>
+
+<!-- SLIDE 9: La estructura general -->
+<div class="slide">
+  <h2>Estructura general de datos 📦</h2>
+  <div class="key-point" style="margin-top:1.5rem;">
+    <p>Los diccionarios se guardan dentro de una <span class="hl">lista</span>.</p>
+  </div>
+  <div class="key-point" style="border-left-color: var(--pastel-green);">
+    <p>La lista comienza <strong>vacía</strong> y se llena a medida que se registran bichos.</p>
+  </div>
+  <div class="code-block" style="margin-top:1.5rem;">
+    <span class="code-label">Python</span>
+<span class="cm"># Al inicio del programa principal:</span>
+lista_bichos = []
+
+<span class="cm"># Después de agregar bichos, se ve así:</span>
+lista_bichos = [
+    {<span class="str">"especie"</span>: <span class="str">"Escarabajo"</span>, <span class="str">"tamaño"</span>: <span class="num">15</span>, <span class="str">"peligrosidad"</span>: <span class="num">8.5</span>, <span class="str">"peligroso"</span>: <span class="kw">False</span>},
+    {<span class="str">"especie"</span>: <span class="str">"Mariquita"</span>, <span class="str">"tamaño"</span>: <span class="num">1</span>, <span class="str">"peligrosidad"</span>: <span class="num">2.0</span>, <span class="str">"peligroso"</span>: <span class="kw">False</span>}
+]
+  </div>
+</div>
+
+<!-- SLIDE 10: Requisitos de cada opción 1-3 -->
+<div class="slide">
+  <h2>¿Qué debe hacer cada opción? (1-3)</h2>
+  <table class="compare-table" style="width:100%; max-width:1050px; margin-top:1.5rem;">
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Requisito del enunciado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Agregar</strong></td>
+        <td>Pedir especie, tamaño y peligrosidad. Validar <strong>cada</strong> dato. Solo si todos son válidos, crear el diccionario y agregarlo.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Buscar</strong></td>
+        <td>Pedir especie. Buscar coincidencia exacta. Mostrar posición y datos, o informar que no existe.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Eliminar</strong></td>
+        <td>Pedir especie. Usar la <strong>misma función de búsqueda</strong> de la opción 2. Si existe, eliminar; si no, informar.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 11: Requisitos de cada opción 4-6 -->
+<div class="slide">
+  <h2>¿Qué debe hacer cada opción? (4-6)</h2>
+  <table class="compare-table" style="width:100%; max-width:1050px; margin-top:1.5rem;">
+    <thead>
+      <tr>
+        <th>Opción</th>
+        <th>Requisito del enunciado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>4. Actualizar</strong></td>
+        <td>Recorrer <strong>todos</strong> los bichos. Si peligrosidad ≥ 7.0 → <code>True</code>, si no → <code>False</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>5. Mostrar</strong></td>
+        <td>Primero <strong>llamar a actualizar estados</strong> (Opción 4), luego recorrer e imprimir con formato.</td>
+      </tr>
+      <tr>
+        <td><strong>6. Salir</strong></td>
+        <td>Terminar limpiamente: <code>"Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!"</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 12: Restricción de Opción 1 -->
+<div class="slide">
+  <div class="emoji-big">⚠️</div>
+  <h2>Restricción: Opción 1 — Agregar</h2>
+  <div class="danger-box" style="margin-top:1.5rem;">
+    <p>⚠️ Se debe definir una <strong>función de validación distinta</strong> para cada campo (especie, tamaño, peligrosidad).</p>
+  </div>
+  <div class="rule-box" style="margin-top:1rem;">
+    <p>Los <strong>mensajes de error</strong> se muestran en la función de agregar, <strong>no dentro</strong> de las funciones de validación.</p>
+  </div>
+  <div class="rule-box">
+    <p>Si algún dato no cumple su condición, <strong>no se registra</strong> al bicho. Solo cuando <strong>todos</strong> son válidos se crea el diccionario.</p>
+  </div>
+</div>
+
+<!-- SLIDE 13: Restricción de Opción 2 -->
+<div class="slide">
+  <div class="emoji-big">🔍</div>
+  <h2>Restricción: Opción 2 — Buscar</h2>
+  <div class="rule-box" style="margin-top:1.5rem;">
+    <p>La función de búsqueda recibe la <strong>lista</strong> y la <strong>especie</strong> como parámetros.</p>
+  </div>
+  <div class="rule-box">
+    <p>Retorna la <strong>posición</strong> (índice) del registro encontrado, o <code>-1</code> si no existe.</p>
+  </div>
+  <div class="danger-box" style="margin-top:1rem;">
+    <p>⚠️ Es el <strong>programa principal</strong> quien decide qué hacer con el resultado. La función <strong>no</strong> imprime nada.</p>
+  </div>
+</div>
+
+<!-- SLIDE 14: Restricción de Opción 5 — Formato -->
+<div class="slide">
+  <h2>Restricción: Opción 5 — Formato 📄</h2>
+  <p style="margin-bottom:1rem;">La salida debe verse exactamente así:</p>
+  <div class="code-block" style="font-size:1.35rem; line-height:1.6;">
+    <span class="code-label">Salida</span>
+=== LISTA DE BICHOS ===
+
+Especie: Escarabajo Rinoceronte
+Tamaño: 15
+Peligrosidad: 8.5
+Estado: PELIGROSO
+********************************************
+Especie: Mariquita
+Tamaño: 1
+Peligrosidad: 2.0
+Estado: NO PELIGROSO
+*********************************************
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BLOQUE B: PENSANDO ANTES DE PROGRAMAR                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SLIDE 15: Sección — Diseño -->
+<div class="slide">
+  <div class="deco-circle" style="width:300px;height:300px;background:var(--pastel-purple);top:-80px;right:-60px;"></div>
+  <span class="section-label">Parte 2</span>
+  <div class="emoji-big">🧠</div>
+  <h1>Pensando antes<br>de programar</h1>
+  <p class="subtitle" style="max-width:700px;">
+    Ya sabemos <em>qué</em> hay que construir.<br>
+    Ahora pensemos <span class="hl-green">cómo</span> organizarlo.
+  </p>
+</div>
+
+<!-- SLIDE 16: Paso 1 — ¿Dónde vive la info? -->
+<div class="slide">
+  <div class="step-badge">1</div>
+  <h2>¿Dónde "vive" la información? 💾</h2>
+  <div class="rule-box" style="margin-top:1rem;">
+    <p>Requisito: La colección debe existir desde que el programa inicia y estar disponible durante <strong>toda</strong> la ejecución.</p>
+  </div>
+  <div class="key-point" style="margin-top:1rem;">
+    <p>💡 <strong>Forma de pensarlo:</strong> creamos la lista <span class="hl">una sola vez</span>, antes del ciclo del menú.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem;">
+    <span class="code-label">Python</span>
+lista_bichos = []  <span class="cm"># Esto va ANTES del while True</span>
+  </div>
+</div>
+
+<!-- SLIDE 17: Mutabilidad — por qué importa -->
+<div class="slide">
+  <div class="emoji-big">🔑</div>
+  <h2>Dato clave: Mutabilidad</h2>
+  <div class="rule-box" style="margin-top:1rem;">
+    <p>Requisito: Cuando una función agrega o modifica un bicho, los cambios deben persistir en el programa principal.</p>
+  </div>
+  <div class="vs-grid" style="margin-top:1.5rem;">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>✅ Las listas son mutables</h3>
+      <p>Si una función recibe la lista y le hace <code>append()</code> o <code>pop()</code>, el cambio queda hecho <strong>afuera</strong>.</p>
+    </div>
+    <div class="vs-divider">→</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-blue);">
+      <h3>📦 Consecuencia</h3>
+      <p>Pasamos la lista como <strong>parámetro</strong>. <strong>No necesitamos retornarla.</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18: Paso 2 — Reutilización -->
+<div class="slide">
+  <div class="step-badge">2</div>
+  <h2>Detectar la reutilización ♻️</h2>
+  <p style="margin-bottom:1rem;">Pregunta clave: <em>¿algún paso se repite en otra opción?</em></p>
+  <div class="rule-box">
+    <p>Requisito Opción 3: "Para localizarlo, llama a la <strong>función de búsqueda</strong> definida en la opción anterior."</p>
+  </div>
+  <div class="rule-box">
+    <p>Requisito Opción 5: "El sistema primero <strong>actualiza los estados</strong> haciendo el llamado a la función anterior."</p>
+  </div>
+  <div class="success-box" style="margin-top:1rem;">
+    <p>✅ Dos funciones se construyen para ser <strong>reutilizadas</strong>: <code>buscar_bicho()</code> y <code>actualizar_estados()</code>.</p>
+  </div>
+</div>
+
+<!-- SLIDE 19: Visual de reutilización -->
+<div class="slide">
+  <div class="emoji-big">🔑</div>
+  <h2>La clave de este ejercicio</h2>
+  <div class="key-point" style="margin-top:2rem; border-left-color: var(--pastel-pink);">
+    <p>🔍 <code>buscar_bicho()</code> se usa en las opciones <span class="hl-pink">2 y 3</span></p>
+  </div>
+  <div class="key-point" style="border-left-color: var(--pastel-green);">
+    <p>🔄 <code>actualizar_estados()</code> se usa en las opciones <span class="hl-green">4 y 5</span></p>
+  </div>
+  <div class="alert-box" style="margin-top:1.5rem;">
+    <p>💡 Si estás copiando y pegando código en dos opciones distintas, probablemente debería ser una función.</p>
+  </div>
+</div>
+
+<!-- SLIDE 20: Paso 3 — Clasificar funciones -->
+<div class="slide">
+  <div class="step-badge">3</div>
+  <h2>Clasificar las funciones 🛠️</h2>
+  <p style="margin-bottom:1.5rem;">No todas se comportan igual:</p>
+  <div class="icon-row">
+    <div class="icon-item" style="border-top:4px solid var(--pastel-green);">
+      <div class="icon-emoji">🔍</div>
+      <div class="icon-label">Validación</div>
+      <div class="icon-desc">Retorna <code>bool</code><br>NO imprime errores</div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-blue);">
+      <div class="icon-emoji">🔎</div>
+      <div class="icon-label">Consulta</div>
+      <div class="icon-desc">Retorna posición<br>NO modifica lista</div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-pink);">
+      <div class="icon-emoji">⚙️</div>
+      <div class="icon-label">Acción</div>
+      <div class="icon-desc">Modifica la lista<br>NO retorna</div>
+    </div>
+    <div class="icon-item" style="border-top:4px solid var(--pastel-purple);">
+      <div class="icon-emoji">🖥️</div>
+      <div class="icon-label">Interfaz</div>
+      <div class="icon-desc">Habla con el usuario<br>(input/print)</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 21: Regla de oro -->
+<div class="slide">
+  <div class="emoji-big">⭐</div>
+  <h2>Regla de oro</h2>
+  <div class="rule-box" style="margin-top:1.5rem;">
+    <p>Requisito: "Los mensajes de error se muestran en la función de agregar, <strong>no dentro</strong> de las validaciones."</p>
+  </div>
+  <div class="key-point" style="margin-top:1rem;">
+    <p>💡 <strong>Forma de pensarlo:</strong> separar <span class="hl-pink">"decidir"</span> de <span class="hl-blue">"avisar"</span>.</p>
+  </div>
+  <p style="margin-top:1rem; max-width:750px;">
+    La validación dice <code>True</code> / <code>False</code>.<br>
+    Quien la <strong>llama</strong> decide qué mostrar en pantalla.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BLOQUE C: FICHAS TÉCNICAS Y MAPA                             -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SLIDE 22: Sección — Fichas -->
+<div class="slide">
+  <div class="deco-circle" style="width:280px;height:280px;background:var(--pastel-blue);top:-80px;left:-60px;"></div>
+  <span class="section-label">Parte 3</span>
+  <div class="emoji-big">📑</div>
+  <h1>Fichas técnicas</h1>
+  <p class="subtitle">¿Qué recibe, qué retorna y qué hace cada función?</p>
+</div>
+
+<!-- SLIDE 23: Fichas Parte A -->
+<div class="slide">
+  <div class="step-badge">4</div>
+  <h2>Fichas de Funciones (Parte A) 📑</h2>
+  <table class="compare-table" style="width:100%; max-width:1050px; margin-top:1rem;">
+    <thead>
+      <tr>
+        <th>Función</th>
+        <th>Recibe</th>
+        <th>Retorna</th>
+        <th>Qué hace</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>mostrar_menu()</code></td>
+        <td>nada</td>
+        <td>nada</td>
+        <td>Imprime las 6 opciones.</td>
+      </tr>
+      <tr>
+        <td><code>leer_opcion()</code></td>
+        <td>nada</td>
+        <td><code>int</code></td>
+        <td>Pide número, repite hasta válido.</td>
+      </tr>
+      <tr>
+        <td><code>validar_especie()</code></td>
+        <td><code>str</code></td>
+        <td><code>bool</code></td>
+        <td>¿No vacío tras <code>.strip()</code>?</td>
+      </tr>
+      <tr>
+        <td><code>validar_tamano()</code></td>
+        <td>valor</td>
+        <td><code>bool</code></td>
+        <td>¿Entero mayor a 0?</td>
+      </tr>
+      <tr>
+        <td><code>validar_peligrosidad()</code></td>
+        <td>valor</td>
+        <td><code>bool</code></td>
+        <td>¿Float entre 1.0 y 10.0?</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 24: Fichas Parte B -->
+<div class="slide">
+  <h2>Fichas de Funciones (Parte B) 📑</h2>
+  <table class="compare-table" style="width:100%; max-width:1050px; margin-top:1.5rem;">
+    <thead>
+      <tr>
+        <th>Función</th>
+        <th>Recibe</th>
+        <th>Retorna</th>
+        <th>Modifica lista</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>agregar_bicho(lista)</code></td>
+        <td><code>list</code></td>
+        <td>nada</td>
+        <td><strong>Sí</strong> (append)</td>
+      </tr>
+      <tr>
+        <td><code>buscar_bicho(lista, esp)</code></td>
+        <td><code>list</code>, <code>str</code></td>
+        <td><code>int</code> (pos o -1)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td><code>actualizar_estados(lista)</code></td>
+        <td><code>list</code></td>
+        <td>nada</td>
+        <td><strong>Sí</strong> (claves dict)</td>
+      </tr>
+      <tr>
+        <td><code>mostrar_bichos(lista)</code></td>
+        <td><code>list</code></td>
+        <td>nada</td>
+        <td>Indirectamente</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SLIDE 25: ¿Retorna o no? -->
+<div class="slide">
+  <div class="emoji-big">🤔</div>
+  <h2>¿Retorna o no retorna?</h2>
+  <div class="vs-grid" style="margin-top:2rem;">
+    <div class="vs-box" style="border-top:4px solid var(--pastel-green);">
+      <h3>✅ SÍ retornan</h3>
+      <p style="font-size:1.4rem; line-height:2;">
+        <code>leer_opcion()</code> → <code>int</code><br>
+        <code>validar_X()</code> → <code>bool</code><br>
+        <code>buscar_bicho()</code> → <code>int</code> / <code>-1</code>
+      </p>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="vs-box" style="border-top:4px solid var(--pastel-pink);">
+      <h3>❌ NO retornan</h3>
+      <p style="font-size:1.4rem; line-height:2;">
+        <code>mostrar_menu()</code><br>
+        <code>agregar_bicho()</code><br>
+        <code>actualizar_estados()</code><br>
+        <code>mostrar_bichos()</code>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 26: Mapa de llamadas -->
+<div class="slide">
+  <div class="step-badge">5</div>
+  <h2>¿Quién llama a quién? 🗺️</h2>
+  <div class="diagram-tree" style="margin-top:1.5rem;">
+    <div class="diagram-line">💻 <strong>main()</strong> <span style="color:var(--pastel-pink); font-size:1rem;">(Ciclo del Menú)</span></div>
+    <div class="diagram-line"> ├── 📄 <code>mostrar_menu()</code></div>
+    <div class="diagram-line"> ├── 📄 <code>leer_opcion()</code></div>
+    <div class="diagram-line"> ├── ⚙️ [Op.1] <code>agregar_bicho(lista)</code></div>
+    <div class="diagram-line"> │   ├── 🔍 <code>validar_especie()</code></div>
+    <div class="diagram-line"> │   ├── 🔍 <code>validar_tamano()</code></div>
+    <div class="diagram-line"> │   └── 🔍 <code>validar_peligrosidad()</code></div>
+    <div class="diagram-line"> ├── ⚙️ [Op.2] <code>buscar_bicho(lista, esp)</code></div>
+    <div class="diagram-line"> ├── ⚙️ [Op.3] <code>buscar_bicho(lista, esp)</code> <span class="diagram-tag" style="color:#f472b6;">¡REUTILIZADO!</span></div>
+    <div class="diagram-line"> ├── ⚙️ [Op.4] <code>actualizar_estados(lista)</code></div>
+    <div class="diagram-line"> └── ⚙️ [Op.5] <code>mostrar_bichos(lista)</code> → <code>actualizar_estados()</code> <span class="diagram-tag" style="color:#34d399;">¡REUTILIZADO!</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BLOQUE D: PSEUDOCÓDIGO                                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SLIDE 27: Sección — Pseudocódigo -->
+<div class="slide">
+  <div class="deco-circle" style="width:280px;height:280px;background:var(--pastel-green);top:-80px;right:-60px;"></div>
+  <span class="section-label">Parte 4</span>
+  <div class="emoji-big">📝</div>
+  <h1>Pseudocódigo</h1>
+  <p class="subtitle">El último paso antes de escribir Python</p>
+</div>
+
+<!-- SLIDE 28: Pseudocódigo ciclo principal -->
+<div class="slide">
+  <h2>Ciclo principal 🔄</h2>
+  <div class="rule-box" style="margin-top:0.5rem;">
+    <p>Requisito: El menú se repite hasta que el usuario elige salir.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem; font-size:1.25rem; line-height:1.6;">
+    <span class="code-label">Pseudocódigo</span>
+crear lista_bichos = []
+
+mientras True:
+    mostrar_menu()
+    opcion = leer_opcion()
+
+    si opcion == 1: agregar_bicho(lista_bichos)
+    sino si opcion == 2: <span class="cm">buscar...</span>
+    sino si opcion == 3: <span class="cm">eliminar...</span>
+    sino si opcion == 4: actualizar_estados(lista_bichos)
+    sino si opcion == 5: mostrar_bichos(lista_bichos)
+    sino si opcion == 6:
+        imprimir "Adiós"
+        <span class="kw">break</span>
+  </div>
+</div>
+
+<!-- SLIDE 29: Pseudocódigo buscar y eliminar -->
+<div class="slide">
+  <h2>Buscar y Eliminar 🔍🗑️</h2>
+  <div class="rule-box" style="margin-top:0.5rem;">
+    <p>Requisito: Es el programa principal quien decide qué hacer con la posición retornada.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem; font-size:1.2rem; line-height:1.55;">
+    <span class="code-label">Pseudocódigo</span>
+<span class="cm"># Opción 2 — Buscar</span>
+esp = pedir especie
+pos = buscar_bicho(lista_bichos, esp)
+si pos == -1: imprimir "No encontrado"
+sino: imprimir datos de lista_bichos[pos]
+
+<span class="cm"># Opción 3 — Eliminar (reutiliza la búsqueda)</span>
+esp = pedir especie
+pos = buscar_bicho(lista_bichos, esp)  <span class="cm"># ¡misma función!</span>
+si pos == -1: imprimir "No se encuentra registrado"
+sino: lista_bichos.pop(pos)
+  </div>
+</div>
+
+<!-- SLIDE 30: Pseudocódigo validaciones -->
+<div class="slide">
+  <h2>Validaciones ✅</h2>
+  <div class="rule-box" style="margin-top:0.5rem;">
+    <p>Requisito: Las validaciones solo retornan True/False. No imprimen errores.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem; font-size:1.15rem; line-height:1.5;">
+    <span class="code-label">Pseudocódigo</span>
+<span class="kw">def</span> <span class="fn">validar_especie</span>(especie):
+    cadena = especie.strip()
+    si cadena es vacía: retornar <span class="num">False</span>
+    sino: retornar <span class="num">True</span>
+
+<span class="kw">def</span> <span class="fn">validar_tamano</span>(tamano):
+    si se puede convertir a entero y es > 0:
+        retornar <span class="num">True</span>
+    sino: retornar <span class="num">False</span>
+
+<span class="kw">def</span> <span class="fn">validar_peligrosidad</span>(valor):
+    si se puede convertir a float y 1.0 ≤ valor ≤ 10.0:
+        retornar <span class="num">True</span>
+    sino: retornar <span class="num">False</span>
+  </div>
+</div>
+
+<!-- SLIDE 31: Pseudocódigo agregar_bicho -->
+<div class="slide">
+  <h2>Agregar bicho ➕</h2>
+  <div class="rule-box" style="margin-top:0.5rem;">
+    <p>Requisito: Si algún dato falla, no se registra al bicho. Solo cuando todos son válidos se crea el diccionario.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem; font-size:1.15rem; line-height:1.5;">
+    <span class="code-label">Pseudocódigo</span>
+<span class="kw">def</span> <span class="fn">agregar_bicho</span>(lista):
+    pedir especie
+    si NO validar_especie: <span class="op">imprimir error y return</span>
+
+    pedir tamaño
+    si NO validar_tamano: <span class="op">imprimir error y return</span>
+
+    pedir peligrosidad
+    si NO validar_peligrosidad: <span class="op">imprimir error y return</span>
+
+    <span class="cm"># Solo si TODO es válido:</span>
+    bicho = {especie, tamaño, peligrosidad, <span class="str">"peligroso"</span>: <span class="num">False</span>}
+    lista.append(bicho)
+  </div>
+</div>
+
+<!-- SLIDE 32: Pseudocódigo buscar y actualizar funciones -->
+<div class="slide">
+  <h2>Buscar y Actualizar (funciones) 🔄</h2>
+  <div class="rule-box" style="margin-top:0.5rem;">
+    <p>Requisito: buscar retorna posición o -1. Actualizar recorre toda la lista según peligrosidad ≥ 7.0.</p>
+  </div>
+  <div class="code-block" style="margin-top:1rem; font-size:1.2rem; line-height:1.55;">
+    <span class="code-label">Pseudocódigo</span>
+<span class="kw">def</span> <span class="fn">buscar_bicho</span>(lista, especie):
+    para i desde 0 hasta len(lista):
+        si lista[i]["especie"] == especie:
+            retornar i
+    retornar <span class="num">-1</span>
+
+<span class="kw">def</span> <span class="fn">actualizar_estados</span>(lista):
+    para cada bicho en lista:
+        si bicho["peligrosidad"] >= 7.0:
+            bicho["peligroso"] = <span class="num">True</span>
+        sino:
+            bicho["peligroso"] = <span class="num">False</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  BLOQUE E: PREGUNTAS Y CIERRE                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<!-- SLIDE 33: Pregunta interactiva 1 -->
+<div class="slide">
+  <div class="emoji-big">🤔</div>
+  <h2>Pregunta para la clase</h2>
+  <div class="question-box" style="margin-top:1.5rem; max-width:850px;">
+    <p>¿Por qué <code>buscar_bicho()</code> retorna la <strong>posición</strong> y no el diccionario del bicho?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta:</h4>
+    <p>Porque la posición sirve para <strong>dos cosas</strong>:</p>
+    <p>📍 Acceder al bicho: <code>lista[pos]</code></p>
+    <p>🗑️ Eliminarlo: <code>lista.pop(pos)</code></p>
+    <p style="margin-top:0.5rem;">Si retornara el diccionario, ¡no podríamos hacer <code>pop()</code> fácilmente!</p>
+  </div>
+</div>
+
+<!-- SLIDE 34: Pregunta interactiva 2 -->
+<div class="slide">
+  <div class="emoji-big">🤔</div>
+  <h2>Pregunta para la clase</h2>
+  <div class="question-box" style="margin-top:1.5rem; max-width:850px;">
+    <p>Si <code>agregar_bicho()</code> modifica la lista con <code>.append()</code>,<br>¿necesitamos hacer <code>return lista</code>?</p>
+  </div>
+  <button class="reveal-btn" onclick="toggleReveal(this)">👁️ Revelar respuesta</button>
+  <div class="answer-reveal">
+    <h4>✅ Respuesta: NO</h4>
+    <p>Las listas son <strong>mutables</strong> en Python.</p>
+    <p>Cuando la función recibe la lista como parámetro y le hace <code>.append()</code>, el cambio <strong>ya queda hecho</strong> en la lista original del programa principal.</p>
+    <p style="margin-top:0.5rem;">No es necesario retornarla. 🎯</p>
+  </div>
+</div>
+
+<!-- SLIDE 35: Checklist -->
+<div class="slide">
+  <div class="step-badge">✔</div>
+  <h2>Checklist final</h2>
+  <ul style="max-width:850px; margin-top:1.5rem;">
+    <li>¿Las validaciones retornan <code>True</code>/<code>False</code> <strong>sin prints</strong>?</li>
+    <li>¿La búsqueda retorna la <strong>posición</strong> (no el diccionario)?</li>
+    <li>¿<code>buscar_bicho()</code> se reutiliza en opciones 2 y 3?</li>
+    <li>¿<code>actualizar_estados()</code> se reutiliza en opciones 4 y 5?</li>
+    <li>¿Si un dato falla en agregar, no se piden los siguientes?</li>
+    <li>¿El campo <code>"peligroso"</code> inicia en <code>False</code> sin pedirlo?</li>
+  </ul>
+</div>
+
+<!-- SLIDE 36: ¡A programar! -->
+<div class="slide">
+  <div class="deco-circle" style="width:350px;height:350px;background:var(--pastel-green);top:-100px;left:-80px;"></div>
+  <div class="deco-circle" style="width:250px;height:250px;background:var(--pastel-purple);bottom:-60px;right:-60px;"></div>
+  <div class="emoji-big">🚀</div>
+  <h1>¡A programar!</h1>
+  <p class="subtitle" style="max-width:600px;">
+    Ya tienes el mapa completo:<br>
+    los requisitos, las restricciones<br>
+    y cómo pensar cada pieza.
+  </p>
+  <p style="margin-top:1rem; font-size:1.3rem;">Ahora es momento de transformar<br>este diseño en <span class="hl-green">código Python</span>. 🪲</p>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function show(n) {
+  slides[current].classList.remove('active');
+  current = (n + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  document.getElementById('counter').textContent = `${current + 1} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${((current + 1) / slides.length) * 100}%`;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+function toggleReveal(btn) {
+  const reveal = btn.nextElementSibling;
+  reveal.classList.toggle('visible');
+  btn.textContent = reveal.classList.contains('visible') ? '🙈 Ocultar respuesta' : '👁️ Revelar respuesta';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') prev();
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+});
+
+// Touch/swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); }
+});
+
+show(0);
+</script>
+</body>
+</html>
