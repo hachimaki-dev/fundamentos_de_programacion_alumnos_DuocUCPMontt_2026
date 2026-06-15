@@ -16,3 +16,5 @@ El sistema solicita al usuario la especie, el tamaño y el nivel de peligrosidad
 - Si algún dato no cumple la condición, el sistema informa al usuario y no registra al bicho. Solo cuando todos los datos son válidos se crea el diccionario y se agrega a la lista.
 
 Estructura requerida: Define una función que reciba la lista como parámetro. Dentro de ella se solicitan los datos y se llama a una función de validación distinta para cada campo. Los mensajes de error se muestran en esta función de acción, no dentro de las funciones de validación.
+
+Debo definir una función que solicite todo lo del diccionario (?
