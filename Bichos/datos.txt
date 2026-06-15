@@ -1,0 +1,18 @@
+Se deben guardar en una lista con disccionarios dentro:
+[{
+    "Especie": str,
+    "Tamaño": float/int,
+    "Peligrosidad": float,
+    "Peligros": True/False,
+}]
+
+Para el menu debe haber una función para mostrar el menú y otra para la selescción de la opción
+
+Agregar bicho
+El sistema solicita al usuario la especie, el tamaño y el nivel de peligrosidad del bicho. Antes de guardar el registro, verifica que cada dato cumpla su condición:
+- La especie no puede estar vacía ni ser solo espacios en blanco.
+- El tamaño debe ser un número entero mayor que cero.
+- La peligrosidad debe ser un número decimal entre 1.0 y 10.0.
+- Si algún dato no cumple la condición, el sistema informa al usuario y no registra al bicho. Solo cuando todos los datos son válidos se crea el diccionario y se agrega a la lista.
+
+Estructura requerida: Define una función que reciba la lista como parámetro. Dentro de ella se solicitan los datos y se llama a una función de validación distinta para cada campo. Los mensajes de error se muestran en esta función de acción, no dentro de las funciones de validación.
