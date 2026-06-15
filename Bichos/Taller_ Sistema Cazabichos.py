@@ -34,51 +34,82 @@ def validarNombreDelaEspecie():
         else:
             return nombre_especie
 
+#RECORDAR: cuando tenga que válidar un número usar el try/except si o si owo
 #Ahora validaremos el tamaño del bicho, debe ser mayor a 0
 def validarTamanioDeLaEspecie():
      while True:
-        longitud_especie = int(input("Ingrese tamaño de la especie: \n"))
-        if longitud_especie <= 0:
-             print("El tamaño del bicho debe ser mayor a 0.")
-        else:
-             return longitud_especie
+        try:
+            longitud_especie = int(input("Ingrese tamaño de la especie: \n"))
+            if longitud_especie <= 0:
+                print("El tamaño del bicho debe ser mayor a 0.")
+            else:
+                return longitud_especie
+        except ValueError:
+            print("Ingrese un número válido")
 
 #Es momento de validar la peligrosidad del bicho debe ser mayor a 0 y etsar entre 1.0 a 10.0
 def validaderPeligrosidadDeLaEspecie():
      while True:
-        peligrosidad_especie = float(input("Ingrese nivel de peligrosidad de la especie: \n"))
-        if 1.0 < peligrosidad_especie < 10.0:
-            return peligrosidad_especie
-        else:
-             print("Ingrese un número entre 1.0 y 10.0")
-             
+        try:
+            peligrosidad_especie = float(input("Ingrese nivel de peligrosidad de la especie: \n"))
+            if 1.0 < peligrosidad_especie < 10.0:
+                return peligrosidad_especie
+            else:
+                print("Ingrese un número entre 1.0 y 10.0")
+        except ValueError:
+            print("Ingrese un número válido")
+
+#Ahora vamos a registrar los bichos
+def registrarEspecie(diccionario):
+    lista_bichos.append(diccionario)
+    print("El bicho fue registradro de forma exitosa.")
+    return True
+
+#Creamos una función que englobe a todos 
 def agregarBicho():
-      #nombre
-      nombre = validarNombreDelaEspecie()
-      #tamaño
-      longitud = validarTamanioDeLaEspecie()
-      #peligrosidad
-      peligrosidad = validaderPeligrosidadDeLaEspecie()
-      #el programa determina si es peligroso >7.0 son peligrosos
-     
+    #nombre
+    nombre = validarNombreDelaEspecie()
+    #tamaño
+    longitud = validarTamanioDeLaEspecie()
+    #peligrosidad
+    peligrosidad = validaderPeligrosidadDeLaEspecie()
+    #el programa determina si es peligroso >7.0 son peligrosos
+
+    #generamos un diccionario de acuerdo a la información solicitada x.x
+    datos_de_la_especie = {
+         "Nombre":nombre,
+         "Tamaño (cm)":longitud,
+         "Peligrosidad":peligrosidad,
+         "Peligroso":False
+    }
+
+    registro = registrarEspecie(datos_de_la_especie)
+    if registro == True:
+        print("El registro se ha realizado de forma exitosa.")
+        return True
+    else:
+        print("Ha ocurrido un error inesperado.")
+        return False
+
 #Funcion encargada de inciar el programa :p normalemnte se llama "main"
 def main():
-    mostrarMenu()
-    opcion_de_usuario = leerOpcion() #creamos una variable que contenga a la función leerOpcion() con la finalidad de asociar la opci+on seleccionada por el usuario con la opción del menú y llamar a la funcion que se usará en casa caso
-    if opcion_de_usuario == "1":
-            print("\nAGREGAR BICHO")
-            agregarBicho()
-    elif opcion_de_usuario == "2":
-            print("BUSCAR BICHO")
-    elif opcion_de_usuario == "3":
-            print("ELIMINAR BICHO")
-    elif opcion_de_usuario == "4":
-            print("ACTUALIZAR ESTADOS")
-    elif opcion_de_usuario == "5":
-            print("MOSTRAR BICHOS")
-    elif opcion_de_usuario == "6":
-          print("SALIR")
-    else:
-        print("Opción inválida")
+    while True:
+        mostrarMenu()
+        opcion_de_usuario = leerOpcion() #creamos una variable que contenga a la función leerOpcion() con la finalidad de asociar la opci+on seleccionada por el usuario con la opción del menú y llamar a la funcion que se usará en casa caso
+        if opcion_de_usuario == "1":
+                print("\n========== AGREGAR BICHO ==========")
+                agregarBicho()
+        elif opcion_de_usuario == "2":
+                print("\n========== BUSCAR BICHO ==========")
+        elif opcion_de_usuario == "3":
+                print("\n========== ELIMINAR BICHO ==========")
+        elif opcion_de_usuario == "4":
+                print("\n========== ACTUALIZAR ESTADOS ==========")
+        elif opcion_de_usuario == "5":
+                print("\n========== MOSTRAR BICHOS ==========")
+        elif opcion_de_usuario == "6":
+            print("\n========== SALIR ==========")
+        else:
+            print("Opción inválida")
 
 main()
