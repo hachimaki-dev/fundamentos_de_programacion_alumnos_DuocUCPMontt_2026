@@ -67,40 +67,49 @@ def salir_del_programa():
 
 
 def buscar_bicho():
-    while True:
-        bandera_buscar_bicho = False
-        nombre_bicho_a_buscar = input("Ingrese el nombre del bicho a Buscar:     ").lower()
-        for cada_bicho in lista_de_todos_los_bichos:
-            if cada_bicho["nombre_especie"].lower() == nombre_bicho_a_buscar:
-                bandera_buscar_bicho = True
-                return print(f"\nDatos del Bicho que busco :\n Nombre del Bicho : {cada_bicho["nombre_especie"]} | Tamaño del Bicho : {cada_bicho["longitud_especie"]} | Peligrosidad del Bicho : {cada_bicho["peligrosidad_especie"]} | Es Peligroso el bicho : {cada_bicho["es_peligroso"]}\n ")
+    if len(lista_de_todos_los_bichos) < 1:
+        print("\nEsta la lista Vacia , Vuelva a intentarlo en otro momento\n")
+    else:
+        while True:
+            bandera_buscar_bicho = False
+            nombre_bicho_a_buscar = input("Ingrese el nombre del bicho a Buscar:     ").lower()
+            for cada_bicho in lista_de_todos_los_bichos:
+                if cada_bicho["nombre_especie"].lower() == nombre_bicho_a_buscar:
+                    bandera_buscar_bicho = True
+                    return print(f"\nDatos del Bicho que busco :\n Nombre del Bicho : {cada_bicho["nombre_especie"]} | Tamaño del Bicho : {cada_bicho["longitud_especie"]} | Peligrosidad del Bicho : {cada_bicho["peligrosidad_especie"]} | Es Peligroso el bicho : {cada_bicho["es_peligroso"]}\n ")
 
-        if not bandera_buscar_bicho:
-            print("Bicho no encontrado , vuelva a intentarlo")
+            if not bandera_buscar_bicho:
+                print("Bicho no encontrado , vuelva a intentarlo")
 
 
 def eliminar_bicho():
-    while True:
-        bandera_eliminar_bicho = False
-        nombre_eliminar_bicho = input("Ingrese el nombre De la especie del Bicho que Quiera Eliminar :     ").lower()
-        for cada_bicho in lista_de_todos_los_bichos:
-            if cada_bicho["nombre_especie"].lower() == nombre_eliminar_bicho:
-                bandera_eliminar_bicho = True
-                lista_de_todos_los_bichos.remove(cada_bicho)
-                return print(f"\nUsted a Eliminado la Especie llamada {cada_bicho["nombre_especie"]}\n ")
+    if len(lista_de_todos_los_bichos) < 1:
+        print("\nEsta la lista Vacia , Vuelva a intentarlo en otro momento\n")
+    else:
+        while True:
+            bandera_eliminar_bicho = False
+            nombre_eliminar_bicho = input("Ingrese el nombre De la especie del Bicho que Quiera Eliminar :     ").lower()
+            for cada_bicho in lista_de_todos_los_bichos:
+                if cada_bicho["nombre_especie"].lower() == nombre_eliminar_bicho:
+                    bandera_eliminar_bicho = True
+                    lista_de_todos_los_bichos.remove(cada_bicho)
+                    return print(f"\nUsted a Eliminado la Especie llamada {cada_bicho["nombre_especie"]}\n ")
 
-        if not bandera_eliminar_bicho:
-            print("Especie no Encontrada , Vuelva a intentarlo")
+            if not bandera_eliminar_bicho:
+                print("Especie no Encontrada , Vuelva a intentarlo")
 
 
 def actualizar_datos_bichos():
-    for i in lista_de_todos_los_bichos:
-        if i["peligrosidad_especie"] >= 7.0 :
-            i["es_peligroso"] = True
-        else:
-            i["es_peligroso"] = False
-    
-    print("\nProceso Terminado , Datos Ya Actualizados\n")
+    if len(lista_de_todos_los_bichos) < 1:
+        print("\nEsta la lista Vacia , Vuelva a intentarlo en otro momento\n")
+    else:
+        for i in lista_de_todos_los_bichos:
+            if i["peligrosidad_especie"] >= 7.0 :
+                i["es_peligroso"] = True
+            else:
+                i["es_peligroso"] = False
+        
+        print("\nProceso Terminado , Datos Ya Actualizados\n")
 
 
 def main():
