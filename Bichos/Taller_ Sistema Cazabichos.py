@@ -82,7 +82,7 @@ def agregarBicho():
          "Peligrosidad":peligrosidad,
          "Peligroso":False
     }
-
+    #Usamos la función registrar especie, con la finalidad de ingresar el diccionario a la lista vacía del inicio
     registro = registrarEspecie(datos_de_la_especie)
     if registro == True:
         print("El registro se ha realizado de forma exitosa.")
@@ -91,24 +91,75 @@ def agregarBicho():
         print("Ha ocurrido un error inesperado.")
         return False
 
+#Buscar un bicho dentro de la lista de diccionarios
+def buscarBichoPorNombre(nombre_a_buscar):
+    for cada_bicho in lista_bichos:
+        if cada_bicho["nombre_especie"] == nombre_a_buscar:
+            print("Existe")
+            indice = lista_bichos.index(cada_bicho)
+            return indice  
+         
+#Eliminar bicho
+def eliminarBivhoPorNombre(nombre):
+    indice_del_bischo_a_buscar = buscarBichoPorNombre(nombre)
+    if indice_del_bischo_a_buscar is not None:
+        if lista_bichos.pop(indice_del_bischo_a_buscar):
+            return True
+        else:
+            return False
+
+#Actualidad la peligrosidad d ela especie
+def actualizarPeligrosidad():
+    for cada_bicho in lista_bichos:
+        if cada_bicho["Peligrosidad"] >= 7.0:
+            cada_bicho["Peligroso"] == True
+ 
 #Funcion encargada de inciar el programa :p normalemnte se llama "main"
 def main():
     while True:
         mostrarMenu()
         opcion_de_usuario = leerOpcion() #creamos una variable que contenga a la función leerOpcion() con la finalidad de asociar la opci+on seleccionada por el usuario con la opción del menú y llamar a la funcion que se usará en casa caso
         if opcion_de_usuario == "1":
-                print("\n========== AGREGAR BICHO ==========")
-                agregarBicho()
+            print("\n========== AGREGAR BICHO ==========")
+            agregarBicho()
         elif opcion_de_usuario == "2":
-                print("\n========== BUSCAR BICHO ==========")
+            print("\n========== BUSCAR BICHO ==========")
+            while True:
+                nombre_a_buscar = input("Ingrese el nombre del bicho a busar: \n")
+                if " " in nombre_a_buscar or len(nombre_a_buscar) < 0:
+                    print("Ingrese un nombre válido")
+                else:
+                    break
+            indice_del_bicho = buscarBichoPorNombre(nombre_a_buscar)
+            if indice_del_bicho is not None:
+                print("Bicho encontrado")
+            else:
+                print("No existe")
+
         elif opcion_de_usuario == "3":
-                print("\n========== ELIMINAR BICHO ==========")
+            print("\n========== ELIMINAR BICHO ==========")
+            while True:
+                nombre_a_eliminar = input("Ingrese el nombre del bicho a busar: \n")
+                if " " in nombre_a_eliminar or len(nombre_a_eliminar) < 0:
+                    print("Ingrese un nombre válido")
+                else:
+                    break
+            fue_eliminado = eliminarBivhoPorNombre(nombre_a_eliminar)
+            if fue_eliminado == True:
+                print("Ha sido eliminado")
+            else:
+                print("No se úedo eliminar")
+                
         elif opcion_de_usuario == "4":
-                print("\n========== ACTUALIZAR ESTADOS ==========")
+            print("\n========== ACTUALIZAR ESTADOS ==========")
+            actualizarPeligrosidad()
         elif opcion_de_usuario == "5":
-                print("\n========== MOSTRAR BICHOS ==========")
+            print("\n========== MOSTRAR BICHOS ==========")
+            print(lista_bichos)
         elif opcion_de_usuario == "6":
             print("\n========== SALIR ==========")
+            print("Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!")
+            break
         else:
             print("Opción inválida")
 
