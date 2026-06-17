@@ -19,6 +19,7 @@ def iniciar_programa():
             mostar_bichos()
         elif opcion_usuario == "6":
             print("salir")
+            break
         else:
             print("opcion invalida")
 def mostar_bichos():
