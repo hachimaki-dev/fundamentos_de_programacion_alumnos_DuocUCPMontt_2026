@@ -24,7 +24,7 @@ def selecionOpcion(texto=''):
 #OPCION 1
 def validacionEspecie():
     while True:
-        especie=input('Por favor ingrese la especie del bicho a registrar: \n')
+        especie=input('Por favor ingrese la especie del bicho a registrar: \n').capitalize()
         valido=True
         if len(especie) == 0:
             print('La especie no puede estar vacia')
@@ -34,6 +34,15 @@ def validacionEspecie():
             valido = False
         if valido:
             return especie
+
+
+def validarDuplicados(dato,lista):#WorkInProgress
+    for i in lista:
+        if i['key'] == dato:
+            return True
+    return False
+def contadorEspecies():
+    pass       
 def validacionTamano():
     while True:
         try:
@@ -55,6 +64,8 @@ def validacionPeligrosidad():
 def agregarBicho(lista):
     #especie
     especie = validacionEspecie()
+    key= especie.upper() #mismo nombre pero en mayuscula para facilitar la funcion busqueda
+    
     #tamaño
     tamano = validacionTamano()
     #nivel de peligrosidad
@@ -62,20 +73,14 @@ def agregarBicho(lista):
     
     print ('Bicho registrado')
 
-    lista.append({"especie": especie, "tamaño":tamano, "peligrosidad": peligrosidad, "peligroso" : False})       
+    lista.append({"key": key, "especie": especie, "tamaño":tamano, "peligrosidad": peligrosidad, "peligroso" : False})       
 #OPCION 2 (opcion 3 utiliza esta misma funcion)
 def buscarBicho(texto,lista):
-    buscar= input(texto)
-    bichoEncontrado= False
+    buscar= input(texto).upper()
     for i in lista:
-        if buscar in i['especie']:
-            print ('Bicho encontrado')
-            bichoEncontrado= True
-            index= lista.index(i)
-    if bichoEncontrado:
-        return index
-    else:
-        return -1
+        if buscar in i['key']:
+            return lista.index(i)
+    return -1
 def mostrarEspecie(lista,index):
     i = lista[index]
     print('')
@@ -88,6 +93,7 @@ def actualizarEstados(lista):
     for i in lista:
         if i["peligrosidad"] >= 7.0:
             i.update({"peligroso": True})
+    print('Datos actualizados')        
 
 #opcion 5
 def listaBonita(lista):
@@ -101,7 +107,23 @@ def listaBonita(lista):
             print ('Estado: PELIGROSO')
         if not i['peligroso']:
             print ('Estado: NO PELIGROSO')
-        print('********************************************')        
+        print('********************************************') 
+#adicionales, añadidas el miercoles aka dejar la main lo mas corta posible
+def resultadoBusqueda(lista):
+    dato=buscarBicho("Ingrese la especie a buscar \n",lista)
+    if dato != -1:
+        print('Bicho encontrado')
+        mostrarEspecie(lista,dato)
+    else:
+        print ('Bicho no existe')       
+def eliminacionBicho(lista):
+    dato=buscarBicho("Ingrese la especie a eliminar \n",lista)
+    if dato == -1:
+        print ('Bicho no existe')
+    else:
+        lista.pop(dato)
+        print('Bicho Eliminado')
+
 def main():
     lista_bichos=[]
     while True:
@@ -110,27 +132,18 @@ def main():
         if opcion == 1:
             agregarBicho(lista_bichos)
         if opcion == 2:
-            buscar=buscarBicho("Ingrese la especie a buscar \n",lista_bichos)
-            if buscar != -1:
-                mostrarEspecie(lista_bichos,buscar)
-            else:
-                print ('Bicho no existe')    
+            resultadoBusqueda(lista_bichos)    
         if opcion == 3:
-            eliminacion=buscarBicho("Ingrese la especie a eliminar \n",lista_bichos)
-            if eliminacion == -1:
-                print ('Bicho no existe')
-            else:
-                lista_bichos.pop(eliminacion)
+            eliminacionBicho(lista_bichos)
         if opcion == 4:
-            actualizarEstados(lista_bichos)
-            print('Datos actualizados')
+            actualizarEstados(lista_bichos)   
         if opcion ==5:
             actualizarEstados(lista_bichos)
-            listaBonita(lista_bichos)         
-
-            
+            listaBonita(lista_bichos)             
         if opcion == 6:
             break
+        #debug
+        #print(lista_bichos)
 
 
 main()
