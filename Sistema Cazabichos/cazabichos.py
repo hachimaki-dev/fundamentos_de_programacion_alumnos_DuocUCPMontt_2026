@@ -13,7 +13,7 @@ def mostrar_menu():
 def elegir_opcion_menu():
     while True:
         opcion = input("Elija una opción (1/2/3/4/5/6): ")
-        if opcion in ('1','2','3','4','5','6'):
+        opcion in ["1", "2", "3", "4", "5", "6"]:
             return opcion # funciona como break
         else:
             print("Opción inválida. Ingrese una opción dentro del rango [1-6]")
@@ -109,6 +109,7 @@ def iniciar_programa(): # funcion main
         elif opcion_menu_seleccionada == '5':
             mostrar_todos_los_bichos()
         elif opcion_menu_seleccionada == '6':
+            print("Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!")
             break
         else:
             print("La opcion ingresada no es una opcion valida.")
