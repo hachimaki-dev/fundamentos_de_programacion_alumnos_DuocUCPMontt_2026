@@ -4,7 +4,7 @@ def Mostrar_menu ():
     print("1. Agregar bicho\n2. Buscar bicho\n3. Eliminar bicho\n4. Actualizar estados\n5. Mostrar bichos\n6. Salir")
 def opcion_menu_elegida():
   while True:
-    opcion_elegida = input("Ingrese una opción")
+    opcion_elegida = input("Ingrese una opción\n")
     if opcion_elegida in ["1", "2", "3", "4", "5", "6"]:
       return opcion_elegida
     else:
@@ -43,24 +43,29 @@ def agregar_bichito():
     nombre_bicho = validacion_nombre()
     longitud_bicho = validacion_longitud_bicho()
     peligrosidad_bicho = validacion_peligrosidad_bicho()
-    nuevo_bicho = {"nombre":nombre_bicho, "longitud":longitud_bicho, "peligrosidad":peligrosidad_bicho, "peligro": False}
+    nuevo_bicho = {"nombre":nombre_bicho.lower(), "longitud":longitud_bicho, "peligrosidad":peligrosidad_bicho, "peligro": False}
     coleccion_de_bichitos.append(nuevo_bicho)
 #OPCIÓN N°2
-def Buscar_bichito():
-    bicho_busqueda = validacion_nombre()
+def Buscar_bichito(Name_bug_parameter):
     for i in coleccion_de_bichitos:
-        if i["nombre"] == bicho_busqueda:
-            print("Existe")
-            break
+        if i["nombre"] == Name_bug_parameter:
+            indice_bichito = coleccion_de_bichitos.index(i)
+            return indice_bichito
+        else:
+           print("No se ha podido encontrar este bichito.")
+           return False
 #OPCIÓN N°3
-def Eliminar_bichito(lista, especie):
-   bicho_delete = Buscar_bichito()
-   
+def Eliminar_bichito(Name_bug_parameter):
+   respuestaindice = Buscar_bichito(Name_bug_parameter)
+   if coleccion_de_bichitos.pop(respuestaindice):
+      return True
+   else:
+      False
 #OPCIÓN N°4
 def Actualización_estado(lista):
     for i in lista:
-        if lista[i]["peligrosidad"] >= 7.0:
-           lista[i]["peligro"] = True
+        if i["peligrosidad"] >= 7.0:
+           i["peligro"] = True
 #OPCIÓN N°5
 def Mostrar_bichos(lista):
    for i in lista:
@@ -72,16 +77,24 @@ def inicio_programa():
         if opcion_elegida_validada == "1":
            agregar_bichito()
         elif opcion_elegida_validada == "2":
-           Buscar_bichito()
+           nombre_del_bicho_buscado = validacion_nombre()
+           respuesta_buscando_bicho = Buscar_bichito(nombre_del_bicho_buscado.lower())
+           print(f"La respuesta de buscando bicho es: {respuesta_buscando_bicho}.")
         elif opcion_elegida_validada == "3":
-           Eliminar_bichito()
+            nombre_del_bicho_buscado = validacion_nombre()
+            r_eliminando_bug = Eliminar_bichito(nombre_del_bicho_buscado)
+            if r_eliminando_bug == True:
+               print("Eliminado")
+            else:
+               print("No se puede eliminar algo que no existe.") 
         elif opcion_elegida_validada == "4":
-           Actualización_estado()
+           Actualización_estado(coleccion_de_bichitos)
         elif opcion_elegida_validada == "5":
-           Mostrar_bichos()
+           Mostrar_bichos(coleccion_de_bichitos)
         elif opcion_elegida_validada == "6":
            print("Gracias por usar el Cazabichos. ¡Hasta la próxima expedición!")
            break
         else:
            print("ERROR, escoja una opcion valida.")
+#UNICA LINEA QUE SE EJECUTA.
 inicio_programa()
