@@ -171,7 +171,7 @@ def iniciar_programa():
 
     else:
 
-      print("LA opcion ingresada no es una opción valida")
+      print("La opcion ingresada no es una opción valida")
 
   
 
