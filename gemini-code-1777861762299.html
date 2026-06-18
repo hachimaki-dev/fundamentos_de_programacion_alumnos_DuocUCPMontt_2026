@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Excepciones | Sistema Electoral Pro</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f1f5f9; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .terminal-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        
+        /* Animación de cursor */
+        .cursor { display: inline-block; width: 8px; height: 18px; background: #38bdf8; animation: blink 1s infinite; vertical-align: middle; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* SVG Path Animation */
+        .path-active { stroke-dasharray: 100; animation: dash 2s linear infinite; stroke: #38bdf8; stroke-width: 3; }
+        @keyframes dash { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+    </style>
+</head>
+<body>
+
+<div id="app" class="min-h-screen pb-20">
+    <header class="pt-16 pb-12 px-6 text-center border-b border-slate-800 bg-slate-900/50">
+        <div class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-400 uppercase bg-blue-400/10 rounded-full border border-blue-400/20">
+            Módulo de Robustez de Software v3.0
+        </div>
+        <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
+            Gestión de Excepciones
+        </h1>
+        <p class="text-xl text-slate-400 max-w-2xl mx-auto font-light">
+            El arte de fallar con elegancia. En sistemas electorales, un error no gestionado es un riesgo democrático. 
+            Aprende a capturar el caos y convertirlo en control.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 mt-12">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            
+            <div class="space-y-8">
+                <section class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i data-lucide="code-2" class="text-blue-400"></i> Lógica del Sistema
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="rounded-lg overflow-hidden border border-slate-700">
+                            <div class="bg-slate-800 px-4 py-2 text-xs text-slate-400 border-b border-slate-700 flex justify-between">
+                                <span>Código Ineficiente (Antes)</span>
+                                <span class="text-red-400">Peligro de Crash</span>
+                            </div>
+                            <pre><code class="language-python"># Sin gestión
+votos = int(input("Votos: "))
+mesas = int(input("Mesas: "))
+promedio = votos / mesas
+print(f"Resultado: {promedio}")</code></pre>
+                        </div>
+
+                        <div class="rounded-lg overflow-hidden border border-blue-500/30">
+                            <div class="bg-blue-900/30 px-4 py-2 text-xs text-blue-400 border-b border-blue-500/30 flex justify-between">
+                                <span>Código Robusto (Después)</span>
+                                <span class="text-green-400">Protegido</span>
+                            </div>
+                            <pre><code class="language-python">try:
+    votos = int(input("Votos: "))
+    promedio = votos / mesas_abiertas
+except ValueError:
+    print("Error: Ingrese solo números")
+except ZeroDivisionError:
+    print("Error: No hay mesas abiertas")
+finally:
+    cerrar_conexion_db()</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="glass rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
+                        <i data-lucide="git-branch" class="text-blue-400"></i> Flujo de Ejecución
+                    </h3>
+                    <div class="flex justify-center p-4 bg-slate-900/50 rounded-xl">
+                        <svg width="400" height="120" viewBox="0 0 400 120">
+                            <rect x="10" y="40" width="80" height="40" rx="5" fill="#1e293b" stroke="#475569"/>
+                            <text x="50" y="65" text-anchor="middle" fill="white" font-size="12">TRY</text>
+                            
+                            <path d="M90 60 H140" stroke="#475569" stroke-width="2" :class="{'path-active': isRunning}"/>
+                            
+                            <circle cx="160" cy="60" r="20" fill="#1e293b" stroke="#38bdf8"/>
+                            <text x="160" y="65" text-anchor="middle" fill="#38bdf8" font-size="10">Error?</text>
+
+                            <path d="M160 80 V100 H240" fill="none" stroke="#475569" stroke-width="2" :class="{'path-active': hasError}"/>
+                            <rect x="240" y="85" width="80" height="30" rx="5" fill="#991b1b" stroke="#f87171"/>
+                            <text x="280" y="105" text-anchor="middle" fill="white" font-size="10">EXCEPT</text>
+
+                            <path d="M180 60 H240" fill="none" stroke="#475569" stroke-width="2" :class="{'path-active': isRunning && !hasError}"/>
+                            <rect x="240" y="40" width="80" height="40" rx="5" fill="#166534" stroke="#4ade80"/>
+                            <text x="280" y="65" text-anchor="middle" fill="white" font-size="10">SUCCESS</text>
+
+                            <path d="M320 60 H340 M320 100 H340 V60" fill="none" stroke="#475569" stroke-width="2" :class="{'path-active': showFinally}"/>
+                            <rect x="340" y="40" width="50" height="40" rx="5" fill="#1e293b" stroke="#38bdf8"/>
+                            <text x="365" y="65" text-anchor="middle" fill="white" font-size="10">FINALLY</text>
+                        </svg>
+                    </div>
+                </section>
+            </div>
+
+            <div class="sticky top-8">
+                <div class="terminal-shadow rounded-xl overflow-hidden border border-slate-700 bg-slate-950">
+                    <div class="bg-slate-800 px-4 py-3 flex items-center gap-2">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div class="mx-auto text-xs text-slate-400 font-medium">python3 — gestion_electoral.py</div>
+                    </div>
+                    
+                    <div class="p-6 h-[500px] overflow-y-auto code-font text-sm leading-relaxed">
+                        <div v-for="line in terminalLines" :key="line.id" :class="line.color" class="mb-1">
+                            <span class="opacity-50 mr-2">>>></span> {{ line.text }}
+                        </div>
+                        <div v-if="isTyping" class="text-blue-400">
+                            <span class="opacity-50 mr-2">>>></span> Ingrese comando... <span class="cursor"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 border-t border-slate-800">
+                        <p class="text-xs text-slate-500 mb-3 uppercase tracking-widest font-bold">Simular Escenario de Error</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button @click="simulate('value')" class="px-3 py-2 bg-slate-800 hover:bg-blue-600 transition text-xs rounded border border-slate-700">
+                                ValueError
+                            </button>
+                            <button @click="simulate('file')" class="px-3 py-2 bg-slate-800 hover:bg-blue-600 transition text-xs rounded border border-slate-700">
+                                FileNotFoundError
+                            </button>
+                            <button @click="simulate('zero')" class="px-3 py-2 bg-slate-800 hover:bg-blue-600 transition text-xs rounded border border-slate-700">
+                                ZeroDivision
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                    <p class="text-blue-400 text-sm italic">
+                        <i data-lucide="info" class="inline-block w-4 h-4 mr-1"></i>
+                        <strong>Tip:</strong> Observa cómo el bloque <b>Finally</b> siempre se ejecuta, garantizando que los recursos del sistema electoral se liberen correctamente.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    const { createApp, ref, onMounted } = Vue;
+
+    createApp({
+        setup() {
+            const terminalLines = ref([
+                { id: 1, text: "Iniciando sistema de gestión electoral...", color: "text-slate-400" },
+                { id: 2, text: "Esperando parámetros de entrada...", color: "text-blue-400" }
+            ]);
+            const isRunning = ref(false);
+            const hasError = ref(false);
+            const showFinally = ref(false);
+            const isTyping = ref(true);
+
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+            const simulate = async (type) => {
+                if (isRunning.value) return;
+                
+                // Reset
+                terminalLines.value = [];
+                isRunning.value = true;
+                hasError.value = false;
+                showFinally.value = false;
+                isTyping.value = false;
+
+                terminalLines.value.push({ text: `Ejecutando proceso: ${type}_check.py`, color: "text-yellow-400" });
+                await sleep(800);
+
+                terminalLines.value.push({ text: "Entrando en bloque TRY...", color: "text-slate-400" });
+                await sleep(600);
+
+                if (type === 'value') {
+                    terminalLines.value.push({ text: "Entrada: 'Doce' (se esperaba int)", color: "text-white" });
+                    await sleep(1000);
+                    terminalLines.value.push({ text: "CRITICAL ERROR: ValueError: invalid literal for int()", color: "text-red-500 font-bold" });
+                    hasError.value = true;
+                    await sleep(800);
+                    terminalLines.value.push({ text: "CAPTURADO: Ejecutando bloque EXCEPT (ValueError)", color: "text-green-400" });
+                    terminalLines.value.push({ text: "Acción: Solicitando re-entrada de datos al usuario.", color: "text-green-400/80" });
+                } 
+                else if (type === 'file') {
+                    terminalLines.value.push({ text: "Abriendo 'config_votos.json'...", color: "text-white" });
+                    await sleep(1000);
+                    terminalLines.value.push({ text: "CRITICAL ERROR: FileNotFoundError: [Errno 2]", color: "text-red-500 font-bold" });
+                    hasError.value = true;
+                    await sleep(800);
+                    terminalLines.value.push({ text: "CAPTURADO: Ejecutando bloque EXCEPT (FileNotFoundError)", color: "text-green-400" });
+                    terminalLines.value.push({ text: "Acción: Cargando configuración por defecto del sistema.", color: "text-green-400/80" });
+                }
+                else if (type === 'zero') {
+                    terminalLines.value.push({ text: "Calculando: 1.500.000 votos / 0 mesas", color: "text-white" });
+                    await sleep(1000);
+                    terminalLines.value.push({ text: "CRITICAL ERROR: ZeroDivisionError: division by zero", color: "text-red-500 font-bold" });
+                    hasError.value = true;
+                    await sleep(800);
+                    terminalLines.value.push({ text: "CAPTURADO: Ejecutando bloque EXCEPT (ZeroDivisionError)", color: "text-green-400" });
+                    terminalLines.value.push({ text: "Acción: El promedio se establece en 0 y se notifica al supervisor.", color: "text-green-400/80" });
+                }
+
+                await sleep(1000);
+                showFinally.value = true;
+                terminalLines.value.push({ text: "SIEMPRE EJECUTADO: Bloque FINALLY activo.", color: "text-blue-400 font-bold" });
+                terminalLines.value.push({ text: "Acción: Cerrando conexiones y limpiando memoria electoral.", color: "text-blue-400/80" });
+                
+                await sleep(800);
+                terminalLines.value.push({ text: "Proceso finalizado con éxito.", color: "text-slate-500 underline" });
+                
+                isRunning.value = false;
+                isTyping.value = true;
+            };
+
+            onMounted(() => {
+                hljs.highlightAll();
+                lucide.createIcons();
+            });
+
+            return { terminalLines, simulate, isRunning, hasError, showFinally, isTyping };
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>
