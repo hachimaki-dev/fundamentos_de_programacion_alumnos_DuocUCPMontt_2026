@@ -1,0 +1,3 @@
+[submodule "paginaweb"]
+	path = paginaweb
+	url = https://github.com/cianeken/Pagina-web.git
