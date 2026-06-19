@@ -1,4 +1,3 @@
-
 listaDeLosLibros = []
 
 def menuPrincipal():
