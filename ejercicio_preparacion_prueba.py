@@ -30,6 +30,29 @@ def validar_ejemplares():
         else:
             return numeroDeEjemplares
 
+def debugging():
+    nuevoLibro = {
+        "titulo" : "En la montaña de la locura",
+        "autor" : "HP Lovecraft",
+        "ejemplares" : 5,
+        "disponible?" : False
+    }
+    listaDeLosLibros.append(nuevoLibro)
+    nuevoLibro = {
+        "titulo" : "Don Quijote",
+        "autor" : "Miguel de Cervantes",
+        "ejemplares" : 0,
+        "disponible?" : False
+    }
+    listaDeLosLibros.append(nuevoLibro)
+    nuevoLibro = {
+        "titulo" : "No Longer Human",
+        "autor" : "Osamu Dazai",
+        "ejemplares" : 12,
+        "disponible?" : False
+    }
+    listaDeLosLibros.append(nuevoLibro)
+
 def agregarLibro():
     tituloValidado = validar_titulo()
     autorValidado = validar_autor()
@@ -42,12 +65,21 @@ def agregarLibro():
         "titulo" : tituloValidado,
         "autor" : autorValidado,
         "ejemplares" : ejemplaresValidados,
-        "disponible?" : False,
+        "disponible?" : False
     }
     listaDeLosLibros.append(libroNuevo)
 
 def mostrarLibros():
-    print(listaDeLosLibros)
+    print("=== LISTA DE LIBROS === \n")
+    for libro in listaDeLosLibros:
+        print(f"Titulo : {libro["titulo"]}")
+        print(f"Autor : {libro["autor"]}")
+        print(f"Ejemplares : {libro["ejemplares"]}")
+        if libro["disponible?"] == True:
+            print(f"Estado : Disponible!")
+        else:
+            print(f"Estado : Sin ejemplares")
+        print("***************************************")
 
 
 def BuscadorDeLista(NombreDelLibro): # Esta funcion solo se dedicara a recorrer la lista de todos los libros
@@ -59,11 +91,15 @@ def BuscadorDeLista(NombreDelLibro): # Esta funcion solo se dedicara a recorrer 
             continue
     return
 
-def eliminarLibro():
-    libroAEliminar = input("Cual es el libro que desea eliminar?")
-    indiceDelLibro = BuscadorDeLista(libroAEliminar)
+def eliminarLibro(nombreDelLibroAEliminar):
+    indiceDelLibro = BuscadorDeLista(nombreDelLibroAEliminar)
     if listaDeLosLibros.pop(indiceDelLibro):
         return True
+    
+def actualizarDisponibilidadDeLibro():
+    for libro in listaDeLosLibros:
+        if libro["ejemplares"] > 0:
+            libro["disponible?"] = True
 
 
 def IniciarPrograma():
@@ -76,7 +112,7 @@ def IniciarPrograma():
             elif selectorDeOpcion == 2:
                     NombreDelLibro = input("Ingrese el titulo del libro a buscar \n[]: ")
                     indiceEncontrado = BuscadorDeLista(NombreDelLibro)
-                    if indiceDelLibro is not None:
+                    if indiceEncontrado is not None:
                         print(f"{NombreDelLibro} existe!")
                         print(f"Titulo del libro : {listaDeLosLibros[indiceEncontrado]["titulo"]}")
                         print(f"Nombre del autor : {listaDeLosLibros[indiceEncontrado]["autor"]}")
@@ -85,22 +121,22 @@ def IniciarPrograma():
                     else:
                         print("No existen ejemplares")
             elif selectorDeOpcion == 3:
-                nombreDelLibroAEliminar = input("Ingrese el nombre del bicho a eliminar \n[]: ")
-            se_elimino = eliminar_bicho(nombreDelLibroAEliminar)
-            if se_elimino is not None:
-                print(f"{nombreDelLibroAEliminar} existe!")
-                print("Se elimino con exito")
-            else:
-                print("No se puede eliminar algo que no existe")
+                nombreDelLibroAEliminar = input("Ingrese el nombre del libro a eliminar \n[]: ")
+                se_elimino = eliminarLibro(nombreDelLibroAEliminar)
+                if se_elimino is not None:
+                    print(f"{nombreDelLibroAEliminar} existe!")
+                    print("Se elimino con exito")
+                else:
+                    print("No se puede eliminar algo que no existe")
             elif selectorDeOpcion == 4:
-                return
+                actualizarDisponibilidadDeLibro()
             elif selectorDeOpcion == 5:
                 mostrarLibros()
             elif selectorDeOpcion == 6:
                 print("Salimos!")
                 break
             elif selectorDeOpcion == 7:
-                return
+                debugging()
         except ValueError:
             print("Valor no aceptado!")
 
