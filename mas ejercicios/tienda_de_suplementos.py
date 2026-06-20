@@ -18,4 +18,4 @@ while True:
     
     precio = int(input("cual es el precio del suplemento a agregar al carrito?"))
     print("press 0 para finalizar")
-    articulo +
+    articulo += precio

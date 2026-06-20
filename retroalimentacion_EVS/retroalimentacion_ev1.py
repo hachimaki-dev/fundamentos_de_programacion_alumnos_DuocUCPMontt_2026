@@ -30,20 +30,17 @@
 # Finalizar la ejecución del programa.
 
 edad_usuario = int(input("ingrese su edad : "))
-    
-
 if edad_usuario >=18:
     inscripcion = input(" esta inscrito al taller ? : ").upper()
+
     if inscripcion== "SI":
         print("Inscripcion aceptada")
         
     else:
         print("Inscripcion Rechazada")
-        
 
 else:
     print("Debe ser mayor de edad para inscribirse")
     
-
 print(" Fin del proceso ")
     

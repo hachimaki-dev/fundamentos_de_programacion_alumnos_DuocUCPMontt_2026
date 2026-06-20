@@ -21,9 +21,12 @@ elif edad_usuario >= 31 and edad_usuario <=60:
         mediacamentos = mediacamentos - descuento_medicamento_12_porciento
         descuento_despacho_10porciento = despacho_a_domicilio * 0.10
         despacho_a_domicilio = despacho_a_domicilio - descuento_despacho_10porciento
+
         if edad_usuario >= 55:
              descuento_adicional_despacho5porciento = despacho_a_domicilio * 0.05
              despacho_a_domicilio = despacho_a_domicilio - descuento_adicional_despacho5porciento
+
+             
     elif tramo == "C" or tramo == "D":
                 descuento_medicamento_8_porciento = mediacamentos * 0.08
                 mediacamentos = mediacamentos - descuento_medicamento_8_porciento
