@@ -1,0 +1,224 @@
+Ejercicio 1 — Sistema de Gestión de una Biblioteca
+Contexto: Una biblioteca necesita llevar registro de sus libros.
+Datos que maneja el sistema
+Campo
+Qué representa
+"titulo"
+"autor"
+Título del libro
+Nombre del autor
+"ejemplares" Cantidad de copias
+disponibles
+"disponible"
+Restricciones de validación
+No vacío ni solo espacios en blanco
+No vacío ni solo espacios en blanco
+Entero mayor o igual a cero
+¿Hay al menos un
+ejemplar?
+Menú principal
+False al registrar; lo asigna el sistema
+automáticamente
+========== MENÚ PRINCIPAL ==========
+1. Agregar libro
+2. Buscar libro
+3. Eliminar libro
+4. Actualizar disponibilidad
+5. Mostrar libros
+6. Salir
+=====================================
+Descripción de opciones
+Opción 1 – Agregar libro: Solicita título, autor y ejemplares. Los tres datos deben
+validarse antes de guardar. El campo 
+disponible siempre se asigna como 
+False al
+momento del registro. El sistema informa si algún dato no cumple la condición y no
+guarda el registro. Debes definir una función que reciba la lista y, dentro de ella, llame a
+funciones de validación independientes para cada campo.
+Opción 2 – Buscar libro: Solicita un título al usuario. Debes definir una función que
+reciba la lista y el título, recorra la lista y retorne la posición del libro si lo encuentra, o-1 si no existe. El programa principal decide qué mostrar según ese valor.
+Opción 3 – Eliminar libro: Solicita el título del libro a eliminar. Llama a la función de
+búsqueda de la opción anterior. Si retorna una posición válida, elimina el registro; si
+retorna -1 , muestra: 
+El libro 'titulo' no se encuentra registrado.
+Opción 4 – Actualizar disponibilidad: Recorre todos los libros y actualiza el campo
+disponible según sus ejemplares: si 
+ejemplares > 0 , pasa a 
+0 , queda en 
+True ; si 
+ejemplares ==
+False . Define una función que reciba la lista y aplique esta regla a cada
+elemento.
+Opción 5 – Mostrar libros: Primero llama a la función de la opción 4, luego muestra
+cada libro con el siguiente formato:
+=== LISTA DE LIBROS ===
+Título: Don Quijote
+Autor: Miguel de Cervantes
+Ejemplares: 3
+Estado: DISPONIBLE
+*******************************************
+Título: El principito
+Autor: Antoine de Saint-Exupéry
+Ejemplares: 0
+Estado: SIN EJEMPLARES
+*******************************************
+Opción 6 – Salir: Detiene el ciclo y muestra: 
+Gracias por usar el sistema. ¡Hasta pronto!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ejercicio 2 — Sistema de Registro de Calificaciones
+Contexto: Un profesor necesita registrar las notas de sus estudiantes por asignatura.
+Datos que maneja el sistema
+Campo
+Qué representa
+Restricciones de validación
+"nombre"
+"asignatura"
+"nota"
+"aprobado"
+Nombre del
+estudiante
+No vacío ni solo espacios en blanco
+No vacío ni solo espacios en blanco
+Nombre de la
+asignatura
+Calificación obtenida Número decimal entre 1.0 y 7.0 inclusive
+¿El alumno aprobó?
+False al registrar; lo asigna el sistema
+automáticamente
+Menú principal
+========== MENÚ PRINCIPAL ==========
+1. Agregar registro
+2. Buscar registro
+3. Eliminar registro
+4. Actualizar estados
+5. Mostrar registros
+6. Salir
+=====================================
+Descripción de opciones
+Opción 1 – Agregar registro: Solicita nombre, asignatura y nota. La nota debe ser un
+decimal dentro del rango [1.0, 7.0]; si está fuera de ese rango (aunque sea un número
+válido), el dato no es aceptado. El campo 
+aprobado siempre se asigna como 
+registrar. Define una función por campo para validar.
+False al
+Opción 2 – Buscar registro: Solicita el nombre del estudiante. La función de búsqueda
+recibe la lista y el nombre, y retorna la posición del primer registro que coincida, o -1 si
+no existe. El programa principal gestiona el resultado.
+Opción 3 – Eliminar registro: Solicita el nombre. Usa la función de búsqueda. Si
+encuentra el registro, lo elimina; si no, muestra: 
+El registro de 'nombre' no se encuentra
+en el sistema.
+Opción 4 – Actualizar estados: Recorre todos los registros y actualiza 
+la nota: si 
+nota >= 4.0 , pasa a 
+aprobado según
+True ; si 
+nota < 4.0 , queda en 
+False . Define una
+función que reciba la lista y aplique esta lógica a todos los elementos.
+Opción 5 – Mostrar registros: Primero llama a la función de la opción 4, luego muestra
+cada registro con el siguiente formato:
+=== LISTA DE REGISTROS ===
+Nombre: Ana Pérez
+Asignatura: Matemáticas
+Nota: 5.5
+Estado: APROBADO
+*******************************************
+Nombre: Luis Mora
+Asignatura: Historia
+Nota: 3.2
+Estado: REPROBADO
+*******************************************
+Opción 6 – Salir: Detiene el ciclo y muestra: 
+Gracias por usar el sistema. ¡Hasta pronto!
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ejercicio 3 — Sistema de Gestión de una Veterinaria
+Contexto: Una veterinaria necesita llevar el control de los animales atendidos y emitir
+alertas según su peso.
+Datos que maneja el sistema
+Campo
+Qué representa
+"nombre" Nombre del animal
+"especie"
+"peso"
+"alerta"
+Especie del animal (perro,
+gato, etc.)
+Peso del animal en
+kilogramos
+Restricciones de validación
+No vacío ni solo espacios en blanco
+No vacío ni solo espacios en blanco
+Número decimal mayor que cero
+¿Tiene alerta por bajo
+peso?
+False al registrar; lo asigna el sistema
+automáticamente
+Menú principal
+========== MENÚ PRINCIPAL ==========
+1. Registrar animal
+2. Buscar animal
+3. Eliminar animal
+4. Actualizar alertas
+5. Mostrar animales
+6. Salir
+=====================================
+Descripción de opciones
+Opción 1 – Registrar animal: Solicita nombre, especie y peso. Los tres campos deben
+validarse antes de guardar. El campo 
+alerta siempre se asigna como 
+False al
+momento del registro. Define funciones de validación independientes para cada campo.
+Opción 2 – Buscar animal: Solicita el nombre del animal. La función de búsqueda recibe
+la lista y el nombre, y retorna la posición del registro si lo encuentra, o 
+El programa principal decide qué hacer con ese valor.-1 si no existe.
+Opción 3 – Eliminar animal: Solicita el nombre. Usa la función de búsqueda. Si existe, lo
+elimina; si no, muestra: 
+El animal 'nombre' no se encuentra registrado.
+Opción 4 – Actualizar alertas: Recorre todos los animales y actualiza 
+alerta según su
+peso: si 
+peso < 3.0 , el campo pasa a 
+True (el animal está en alerta por bajo peso); si
+peso >= 3.0 , queda en 
+False . Define una función que reciba la lista y aplique esta regla
+a cada elemento.
+Opción 5 – Mostrar animales: Primero llama a la función de la opción 4, luego muestra
+cada animal con el siguiente formato:
+=== LISTA DE ANIMALES ===
+Nombre: Max
+Especie: Perro
+Peso: 2.3 kg
+Estado: EN ALERTA
+*******************************************
+Nombre: Luna
+Especie: Gato
+Peso: 4.8 kg
+Estado: NORMAL
+*******************************************
+Opción 6 – Salir: Detiene el ciclo y muestra: 
+Gracias por usar el sistema. ¡Hasta pronto

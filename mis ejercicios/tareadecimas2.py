@@ -89,7 +89,7 @@ while vida > 0:
         vida = vida + 20
 
     elif opcion == "4":
-        print("\n¿Que deseas comprar?")
+        print("¿Que deseas comprar?")
         print("1. Escudo (20 oro) - reduce daño en 10")
         print("2. Espada (30 oro) - aumenta daño en 20")
         print("3. Pocion (15 oro) - recupera 50 de vida")
