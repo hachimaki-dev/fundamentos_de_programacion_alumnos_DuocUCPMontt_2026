@@ -10,7 +10,7 @@ def opcion_menu_elegida():
     else:
       print("Opcion invalida, intente nuevamente")
 
-#FUNCIONES DE VALIDACION PARA LA OPCIÓN 1.
+#VALIDACIONES
 def validacion_nombre():
     while True:
         nombre_bicho = input("Ingrese el nombre del bicho: ")
@@ -70,6 +70,7 @@ def Actualización_estado(lista):
 def Mostrar_bichos(lista):
    for i in lista:
       print(f"Nombre: {i["nombre"]} | Longitud: {i["longitud"]} | Peligrosidad: {i["peligrosidad"]} | Peligro: {i["peligro"]}")
+      
 def inicio_programa():
     while True:
         Mostrar_menu()
