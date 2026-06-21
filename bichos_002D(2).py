@@ -92,7 +92,7 @@ def eliminar_bicho_por_nombre(nombre_del_bicho_a_buscar):
     indice_del_bicho_encontrado = buscar_bicho_por_nombre(nombre_del_bicho_a_buscar)
     lista_de_todos_los_bichos.pop(indice_del_bicho_encontrado)
     return True
-"""
+
 def rellenar_bichos_con_datos():
     lista_de_todos_los_bichos.append({
         "nombre_bicho": "mariposa",
@@ -112,7 +112,7 @@ def rellenar_bichos_con_datos():
         "peligrosidad_bicho": 9.3,
         "es_peligroso": False
     })
-"""
+
 
 def actualizar_estado_de_peligrosidad():
     for cada_bicho in lista_de_todos_los_bichos:
