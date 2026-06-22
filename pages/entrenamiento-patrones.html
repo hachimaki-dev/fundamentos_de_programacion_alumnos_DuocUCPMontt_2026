@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>🎮 Entrenamiento Progresivo: Patrones para la Evaluación</title>
+  <meta name="description" content="7 niveles progresivos con +60 ejercicios interactivos: V/F, selección múltiple, trazado y completar código. Practica cada patrón del examen paso a paso." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    /* ── Level Navigation ── */
+    .level-nav { display:flex; gap:0.4rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .level-pill {
+      padding:0.5rem 0.9rem; border-radius:2rem;
+      border:2px solid var(--t-glass-border);
+      background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif;
+      font-size:0.78rem; font-weight:700; cursor:pointer;
+      transition:all 0.3s ease; color:var(--t-text);
+      display:flex; align-items:center; gap:0.35rem;
+      position:relative; overflow:hidden;
+    }
+    .level-pill:hover { background:var(--t-surface-hover); transform:translateY(-2px); }
+    .level-pill.active { border-color:var(--t-accent); color:var(--t-accent); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .level-pill.active::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+      background:var(--t-accent); border-radius:3px;
+    }
+    .level-pill .pill-progress {
+      font-size:0.6rem; background:var(--t-glass-bg);
+      padding:0.1rem 0.4rem; border-radius:1rem;
+      color:var(--t-text-secondary);
+    }
+    .level-pill.completed .pill-progress { background:rgba(16,185,129,0.2); color:#10b981; }
+
+    /* ── Section tabs within level ── */
+    .section-tabs { display:flex; gap:0.5rem; justify-content:center; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .section-tab {
+      padding:0.4rem 1rem; border-radius:1.5rem;
+      background:var(--t-glass-bg); border:2px solid var(--t-glass-border);
+      font-size:0.8rem; font-weight:600; cursor:pointer;
+      transition:all 0.2s; color:var(--t-text-secondary);
+    }
+    .section-tab:hover { border-color:var(--t-accent); }
+    .section-tab.active { background:var(--t-accent); color:#fff; border-color:var(--t-accent); }
+
+    /* ── Lesson card ── */
+    .lesson-card {
+      background:var(--t-surface); border:2px solid var(--t-glass-border);
+      border-radius:16px; padding:1.5rem; margin-bottom:1.5rem;
+      box-shadow:0 4px 15px var(--t-shadow);
+    }
+    .lesson-title {
+      font-size:1.4rem; font-weight:800; color:var(--t-accent);
+      display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;
+    }
+    .key-point {
+      display:flex; gap:0.5rem; align-items:flex-start;
+      padding:0.5rem 0; font-size:0.88rem; color:var(--t-text);
+    }
+    .key-point::before { content:'💡'; flex-shrink:0; }
+
+    /* ── V/F Buttons ── */
+    .tf-container { display:flex; gap:0.75rem; margin-top:1rem; }
+    .tf-btn {
+      flex:1; padding:0.8rem; border-radius:12px; font-weight:700; font-size:0.95rem;
+      cursor:pointer; transition:all 0.25s; border:3px solid transparent;
+      font-family:var(--t-font-main,'Quicksand'),sans-serif;
+    }
+    .tf-btn.true-btn { background:rgba(16,185,129,0.1); color:#10b981; border-color:rgba(16,185,129,0.3); }
+    .tf-btn.false-btn { background:rgba(239,68,68,0.1); color:#ef4444; border-color:rgba(239,68,68,0.3); }
+    .tf-btn:hover:not(.disabled) { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    .tf-btn.selected-correct { background:rgba(16,185,129,0.25) !important; border-color:#10b981 !important; color:#10b981 !important; }
+    .tf-btn.selected-wrong { background:rgba(239,68,68,0.25) !important; border-color:#ef4444 !important; color:#ef4444 !important; }
+    .tf-btn.reveal-correct { background:var(--t-shape-3) !important; border-color:var(--t-correct) !important; color:var(--t-correct-text) !important; }
+    .tf-btn.disabled { cursor:default; opacity:0.7; }
+
+    /* ── Option buttons ── */
+    .option-btn {
+      display:block; width:100%; text-align:left; padding:0.9rem 1rem;
+      border-radius:12px; border:2px solid var(--t-glass-border);
+      background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif;
+      font-size:0.88rem; cursor:pointer; transition:all 0.25s;
+      color:var(--t-text); margin-bottom:0.5rem;
+    }
+    .option-btn:hover:not(:disabled) { border-color:var(--t-accent); transform:translateX(4px); }
+    .option-btn:disabled { cursor:default; }
+    .option-btn.correct { background:rgba(16,185,129,0.15) !important; border-color:#10b981 !important; }
+    .option-btn.wrong { background:rgba(239,68,68,0.15) !important; border-color:#ef4444 !important; }
+    .option-btn.dimmed { opacity:0.4; }
+
+    /* ── Exercise card ── */
+    .exercise-card {
+      background:var(--t-surface); border-radius:14px;
+      box-shadow:0 4px 8px var(--t-shadow); padding:1.5rem;
+      border:2px solid var(--t-glass-border);
+      transition:transform 0.3s, border-color 0.3s;
+      margin-bottom:1.25rem; color:var(--t-text);
+    }
+    .exercise-card:hover {
+      transform:translateY(-2px); box-shadow:0 8px 16px var(--t-shadow);
+      border-color:var(--t-accent);
+    }
+    .ex-badge {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:2rem; height:2rem; border-radius:50%; font-weight:800; font-size:0.85rem;
+      flex-shrink:0;
+    }
+    .ex-badge.tf { background:rgba(139,92,246,0.15); color:#8b5cf6; border:2px solid #8b5cf6; }
+    .ex-badge.choice { background:rgba(59,130,246,0.15); color:#3b82f6; border:2px solid #3b82f6; }
+    .ex-badge.trace { background:rgba(245,158,11,0.15); color:#f59e0b; border:2px solid #f59e0b; }
+
+    /* ── Feedback box ── */
+    .feedback-box {
+      margin-top:1rem; border-radius:12px; padding:1rem 1.2rem;
+      font-size:0.88rem; line-height:1.5;
+      animation: fadeSlideIn 0.3s ease;
+    }
+    .feedback-box.correct { background:rgba(16,185,129,0.1); border:2px solid rgba(16,185,129,0.3); color:var(--t-text); }
+    .feedback-box.wrong { background:rgba(239,68,68,0.1); border:2px solid rgba(239,68,68,0.3); color:var(--t-text); }
+
+    @keyframes fadeSlideIn {
+      from { opacity:0; transform:translateY(-8px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Progress bar ── */
+    .progress-track {
+      width:100%; height:8px; background:var(--t-glass-bg);
+      border-radius:4px; overflow:hidden;
+    }
+    .progress-fill {
+      height:100%; border-radius:4px; transition:width 0.5s ease;
+      background:linear-gradient(90deg, var(--t-accent), #8b5cf6);
+    }
+
+    /* ── Score summary ── */
+    .score-summary {
+      background:var(--t-surface); border:2px solid var(--t-accent);
+      border-radius:1.5rem; padding:2rem; text-align:center;
+      box-shadow:0 8px 24px var(--t-shadow);
+      animation:fadeSlideIn 0.5s ease;
+    }
+    .score-big { font-size:3rem; font-weight:800; color:var(--t-accent); line-height:1; }
+
+    /* ── Global progress banner ── */
+    .global-progress {
+      background: linear-gradient(135deg, var(--t-surface), var(--t-surface-alt, var(--t-surface)));
+      border:2px solid var(--t-glass-border); border-radius:16px;
+      padding:1.2rem 1.5rem; margin-bottom:1.5rem;
+      display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
+    }
+    .global-progress .stat {
+      display:flex; flex-direction:column; align-items:center; gap:0.2rem;
+      min-width:60px;
+    }
+    .global-progress .stat-num { font-size:1.5rem; font-weight:800; color:var(--t-accent); }
+    .global-progress .stat-label { font-size:0.7rem; color:var(--t-text-secondary); font-weight:600; }
+
+    /* ── Level completed card ── */
+    .level-complete-card {
+      text-align:center; padding:2rem;
+      background:linear-gradient(135deg, rgba(16,185,129,0.05), rgba(139,92,246,0.05));
+      border:2px solid rgba(16,185,129,0.3); border-radius:1.5rem;
+      margin-top:1rem; animation:fadeSlideIn 0.5s ease;
+    }
+
+    /* ── Code block header ── */
+    .code-header {
+      background:#2d2d2d; color:#9ca3af; font-size:0.75rem;
+      padding:0.4rem 1rem; display:flex; align-items:center; gap:0.4rem;
+      border-radius:12px 12px 0 0;
+    }
+    .code-header + pre { margin-top:0 !important; border-radius:0 0 12px 12px !important; }
+
+    /* ── Boss Final section ── */
+    .boss-card {
+      background:var(--t-surface); border:2px solid var(--t-glass-border);
+      border-radius:16px; padding:1.5rem; margin-bottom:1.5rem;
+      box-shadow:0 4px 15px var(--t-shadow);
+    }
+    .boss-card h3 {
+      font-size:1.15rem; font-weight:700; color:var(--t-accent);
+      display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;
+    }
+    .req-table {
+      width:100%; border-collapse:separate; border-spacing:0;
+      font-size:0.85rem; margin:1rem 0;
+    }
+    .req-table th {
+      background:var(--t-accent); color:#fff; padding:0.6rem 0.8rem;
+      text-align:left; font-weight:700;
+    }
+    .req-table th:first-child { border-radius:8px 0 0 0; }
+    .req-table th:last-child { border-radius:0 8px 0 0; }
+    .req-table td {
+      padding:0.6rem 0.8rem; border-bottom:1px solid var(--t-glass-border);
+      color:var(--t-text);
+    }
+    .req-table tr:last-child td:first-child { border-radius:0 0 0 8px; }
+    .req-table tr:last-child td:last-child { border-radius:0 0 8px 0; }
+    .req-table tr:nth-child(even) td { background:var(--t-glass-bg); }
+    .req-table code { background:rgba(139,92,246,0.1); padding:0.1rem 0.35rem; border-radius:4px; font-weight:600; color:var(--t-accent); font-size:0.8rem; }
+
+    .hint-card {
+      background:var(--t-glass-bg); border:2px solid var(--t-glass-border);
+      border-radius:12px; padding:1rem; margin-bottom:0.75rem;
+      transition:border-color 0.2s;
+    }
+    .hint-card:hover { border-color:var(--t-accent); }
+    .hint-card .hint-level {
+      font-size:0.7rem; font-weight:700; text-transform:uppercase;
+      padding:0.15rem 0.5rem; border-radius:1rem; display:inline-block; margin-bottom:0.4rem;
+    }
+
+    .checklist-item {
+      display:flex; align-items:flex-start; gap:0.6rem; padding:0.5rem 0;
+      font-size:0.88rem; color:var(--t-text);
+    }
+    .checklist-item .check-box {
+      width:1.3rem; height:1.3rem; border:2px solid var(--t-accent); border-radius:4px;
+      flex-shrink:0; margin-top:0.1rem; cursor:pointer; transition:all 0.2s;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--t-surface); font-size:0.7rem;
+    }
+    .checklist-item .check-box.checked {
+      background:var(--t-accent); border-color:var(--t-accent); color:#fff;
+    }
+
+    .menu-preview {
+      background:#1e1e3f; color:#e0e0e0; font-family:'Fira Code',monospace;
+      padding:1.2rem; border-radius:12px; font-size:0.85rem; line-height:1.6;
+      border:2px solid rgba(139,92,246,0.3);
+    }
+    .menu-preview .menu-line { color:#10b981; }
+    .menu-preview .menu-sep { color:#8b5cf6; }
+
+    /* ── Responsive ── */
+    @media (max-width:640px) {
+      .level-pill { font-size:0.7rem; padding:0.4rem 0.6rem; }
+      .level-pill .pill-label { display:none; }
+      .req-table { font-size:0.75rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">🏠 Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">🎮 Entrenamiento Progresivo</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          7 niveles para dominar los patrones del examen. Cada nivel tiene una lección corta, preguntas V/F, selección múltiple y trazado de código. ¡Avanza a tu ritmo y conquista cada patrón!
+        </p>
+      </div>
+    </div>
+
+    <!-- Global Progress Banner -->
+    <div class="max-w-3xl mx-auto px-4 mt-4">
+      <div class="global-progress">
+        <div class="stat">
+          <span class="stat-num">{{ totalAnswered }}</span>
+          <span class="stat-label">Resueltos</span>
+        </div>
+        <div style="flex:1; min-width:100px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.3rem;">
+            <span style="font-size:0.75rem; font-weight:700; color:var(--t-text-secondary);">Progreso Global</span>
+            <span style="font-size:0.75rem; font-weight:700; color:var(--t-accent);">{{ globalProgress }}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" :style="{ width: globalProgress + '%' }"></div>
+          </div>
+        </div>
+        <div class="stat">
+          <span class="stat-num" style="color:#10b981;">{{ totalCorrect }}</span>
+          <span class="stat-label">Correctas</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" style="color:var(--t-text-secondary); font-size:1.2rem;">{{ totalExercises }}</span>
+          <span class="stat-label">Total</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Navigation Pills -->
+    <div class="max-w-3xl mx-auto px-4">
+      <div class="level-nav">
+        <button v-for="nivel in niveles" :key="nivel.id"
+                class="level-pill"
+                :class="{ active: currentLevel === nivel.id, completed: isLevelCompleted(nivel.id) }"
+                @click="goToLevel(nivel.id)">
+          <span>{{ nivel.emoji }}</span>
+          <span class="pill-label">{{ nivel.title }}</span>
+          <span class="pill-progress" v-if="getLevelProgress(nivel.id).answered > 0">
+            {{ getLevelProgress(nivel.id).correct }}/{{ getLevelProgress(nivel.id).total }}
+          </span>
+        </button>
+        <button class="level-pill"
+                :class="{ active: currentLevel === 8 }"
+                @click="goToLevel(8)"
+                style="border-style:dashed;">
+          <span>🏆</span>
+          <span class="pill-label">Boss Final</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════ -->
+    <!-- LEVEL CONTENT (dynamic per level)           -->
+    <!-- ═════════════════════════════════════════════ -->
+    <div v-for="nivel in niveles" :key="'content-'+nivel.id" v-show="currentLevel === nivel.id">
+
+      <!-- Section Tabs -->
+      <div class="max-w-3xl mx-auto px-4">
+        <div class="section-tabs">
+          <button class="section-tab" :class="{ active: currentSection === 'lesson' }" @click="goToSection('lesson')">
+            📖 Lección
+          </button>
+          <button class="section-tab" :class="{ active: currentSection === 'tf' }" @click="goToSection('tf')">
+            ✅ V/F <span style="font-size:0.7rem; opacity:0.7;">({{ getLevelExercises(nivel.id, 'tf').length }})</span>
+          </button>
+          <button class="section-tab" :class="{ active: currentSection === 'choice' }" @click="goToSection('choice')">
+            🙋 Selección <span style="font-size:0.7rem; opacity:0.7;">({{ getLevelExercises(nivel.id, 'choice').length }})</span>
+          </button>
+          <button class="section-tab" :class="{ active: currentSection === 'trace' }" @click="goToSection('trace')">
+            📋 Trazar <span style="font-size:0.7rem; opacity:0.7;">({{ getLevelExercises(nivel.id, 'trace').length }})</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── LESSON TAB ── -->
+      <div v-show="currentSection === 'lesson'" class="max-w-3xl mx-auto px-4 pb-16 fade-in-up">
+        <div class="lesson-card">
+          <div class="lesson-title">
+            <span style="font-size:1.8rem;">{{ nivel.lesson.emoji }}</span>
+            {{ nivel.lesson.title }}
+          </div>
+          <p style="line-height:1.7; color:var(--t-text);" v-html="nivel.lesson.intro"></p>
+
+          <div style="margin-top:1.2rem; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+            <div class="code-header"><span>🐍</span> Python</div>
+            <pre class="!mt-0"><code class="language-python" v-html="highlightCode(nivel.lesson.code)"></code></pre>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <h3 style="font-weight:700; color:var(--t-accent); margin-bottom:0.75rem; font-size:1rem;">🎯 Puntos clave</h3>
+            <div v-for="(point, pi) in nivel.lesson.keyPoints" :key="pi" class="key-point" v-html="point"></div>
+          </div>
+
+          <div style="margin-top:1.5rem; text-align:center;">
+            <button @click="goToSection('tf')"
+                    style="background:var(--t-accent); color:#fff; padding:0.7rem 2rem; border-radius:2rem; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--t-font-main,'Quicksand'),sans-serif;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'"
+                    onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
+              ¡Practicar! →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── V/F TAB ── -->
+      <div v-show="currentSection === 'tf'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+        <div style="text-align:center; margin-bottom:1rem;">
+          <h2 style="font-size:1.2rem; font-weight:700; color:var(--t-accent);">✅ Verdadero o Falso</h2>
+          <div style="display:flex; justify-content:center; align-items:center; gap:0.75rem; margin-top:0.5rem;">
+            <span style="font-size:0.85rem; font-weight:600; color:var(--t-text-secondary);">
+              🏆 {{ getLevelScore(nivel.id, 'tf') }} / {{ getLevelExercises(nivel.id, 'tf').length }}
+            </span>
+            <div class="progress-track" style="width:120px;">
+              <div class="progress-fill" :style="{ width: getLevelSectionProgress(nivel.id, 'tf') + '%' }"></div>
+            </div>
+          </div>
+        </div>
+
+        <div v-for="(ex, idx) in getLevelExercises(nivel.id, 'tf')" :key="'tf-'+nivel.id+'-'+idx" class="exercise-card">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+            <span class="ex-badge tf">{{ idx + 1 }}</span>
+            <span style="font-weight:700; font-size:1.05rem; color:var(--t-text);">{{ ex.title }}</span>
+          </div>
+
+          <div v-if="ex.code" style="border-radius:12px; overflow:hidden; margin-bottom:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <div class="code-header"><span>🐍</span> Código</div>
+            <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+          </div>
+
+          <p style="font-weight:600; color:var(--t-text); font-size:0.92rem; line-height:1.5;" v-html="ex.question"></p>
+
+          <div class="tf-container">
+            <button class="tf-btn true-btn"
+                    :class="{
+                      'selected-correct': ex.answered && ex.correct === true && ex.selected === true,
+                      'selected-wrong': ex.answered && ex.correct === false && ex.selected === true,
+                      'reveal-correct': ex.answered && ex.correct === true && ex.selected !== true,
+                      'disabled': ex.answered
+                    }"
+                    @click="answerTF(nivel.id, idx, true)" :disabled="ex.answered">👍 Verdadero</button>
+            <button class="tf-btn false-btn"
+                    :class="{
+                      'selected-correct': ex.answered && ex.correct === false && ex.selected === false,
+                      'selected-wrong': ex.answered && ex.correct === true && ex.selected === false,
+                      'reveal-correct': ex.answered && ex.correct === false && ex.selected !== false,
+                      'disabled': ex.answered
+                    }"
+                    @click="answerTF(nivel.id, idx, false)" :disabled="ex.answered">👎 Falso</button>
+          </div>
+
+          <div v-if="ex.answered" class="feedback-box" :class="ex.selected === ex.correct ? 'correct' : 'wrong'">
+            <span v-html="ex.explanation"></span>
+          </div>
+        </div>
+
+        <!-- Next section button -->
+        <div v-if="allSectionAnswered(nivel.id, 'tf')" style="text-align:center; margin-top:1rem;">
+          <button @click="goToSection('choice')"
+                  style="background:var(--t-accent); color:#fff; padding:0.6rem 1.5rem; border-radius:2rem; font-weight:700; font-size:0.9rem; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--t-font-main,'Quicksand'),sans-serif;">
+            Siguiente: Selección Múltiple →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── CHOICE TAB ── -->
+      <div v-show="currentSection === 'choice'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+        <div style="text-align:center; margin-bottom:1rem;">
+          <h2 style="font-size:1.2rem; font-weight:700; color:var(--t-accent);">🙋 Selección Múltiple</h2>
+          <div style="display:flex; justify-content:center; align-items:center; gap:0.75rem; margin-top:0.5rem;">
+            <span style="font-size:0.85rem; font-weight:600; color:var(--t-text-secondary);">
+              🏆 {{ getLevelScore(nivel.id, 'choice') }} / {{ getLevelExercises(nivel.id, 'choice').length }}
+            </span>
+            <div class="progress-track" style="width:120px;">
+              <div class="progress-fill" :style="{ width: getLevelSectionProgress(nivel.id, 'choice') + '%' }"></div>
+            </div>
+          </div>
+        </div>
+
+        <div v-for="(ex, idx) in getLevelExercises(nivel.id, 'choice')" :key="'choice-'+nivel.id+'-'+idx" class="exercise-card">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+            <span class="ex-badge choice">{{ idx + 1 }}</span>
+            <span style="font-weight:700; font-size:1.05rem; color:var(--t-text);">{{ ex.title }}</span>
+          </div>
+
+          <div v-if="ex.code" style="border-radius:12px; overflow:hidden; margin-bottom:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <div class="code-header"><span>🐍</span> Código</div>
+            <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+          </div>
+
+          <p style="font-weight:600; color:var(--t-text); font-size:0.92rem; line-height:1.5; margin-bottom:0.75rem;" v-html="ex.question"></p>
+
+          <div>
+            <button v-for="(opt, oi) in ex.options" :key="oi"
+                    class="option-btn"
+                    :class="{
+                      'correct': ex.answered && oi === ex.correct,
+                      'wrong': ex.answered && ex.selected === oi && oi !== ex.correct,
+                      'dimmed': ex.answered && oi !== ex.correct && ex.selected !== oi
+                    }"
+                    @click="answerChoice(nivel.id, 'choice', idx, oi)" :disabled="ex.answered">
+              <span style="font-weight:800; margin-right:0.5rem; color:var(--t-accent);">{{ ['A','B','C','D'][oi] }}.</span>
+              <span v-html="opt"></span>
+            </button>
+          </div>
+
+          <div v-if="ex.answered" class="feedback-box" :class="ex.selected === ex.correct ? 'correct' : 'wrong'">
+            <span v-html="ex.explanation"></span>
+          </div>
+        </div>
+
+        <!-- Next section button -->
+        <div v-if="allSectionAnswered(nivel.id, 'choice')" style="text-align:center; margin-top:1rem;">
+          <button @click="goToSection('trace')"
+                  style="background:var(--t-accent); color:#fff; padding:0.6rem 1.5rem; border-radius:2rem; font-weight:700; font-size:0.9rem; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--t-font-main,'Quicksand'),sans-serif;">
+            Siguiente: Trazar Código →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TRACE TAB ── -->
+      <div v-show="currentSection === 'trace'" class="max-w-3xl mx-auto px-4 pb-16 space-y-4 fade-in-up">
+        <div style="text-align:center; margin-bottom:1rem;">
+          <h2 style="font-size:1.2rem; font-weight:700; color:var(--t-accent);">📋 Trazar / Completar Código</h2>
+          <div style="display:flex; justify-content:center; align-items:center; gap:0.75rem; margin-top:0.5rem;">
+            <span style="font-size:0.85rem; font-weight:600; color:var(--t-text-secondary);">
+              🏆 {{ getLevelScore(nivel.id, 'trace') }} / {{ getLevelExercises(nivel.id, 'trace').length }}
+            </span>
+            <div class="progress-track" style="width:120px;">
+              <div class="progress-fill" :style="{ width: getLevelSectionProgress(nivel.id, 'trace') + '%' }"></div>
+            </div>
+          </div>
+        </div>
+
+        <div v-for="(ex, idx) in getLevelExercises(nivel.id, 'trace')" :key="'trace-'+nivel.id+'-'+idx" class="exercise-card">
+          <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+            <span class="ex-badge trace">{{ idx + 1 }}</span>
+            <span style="font-weight:700; font-size:1.05rem; color:var(--t-text);">{{ ex.title }}</span>
+          </div>
+
+          <div v-if="ex.code" style="border-radius:12px; overflow:hidden; margin-bottom:0.75rem; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <div class="code-header"><span>🐍</span> Código</div>
+            <pre class="!mt-0"><code class="language-python" v-html="highlightCode(ex.code)"></code></pre>
+          </div>
+
+          <p style="font-weight:600; color:var(--t-text); font-size:0.92rem; line-height:1.5; margin-bottom:0.75rem;" v-html="ex.question"></p>
+
+          <div>
+            <button v-for="(opt, oi) in ex.options" :key="oi"
+                    class="option-btn"
+                    :class="{
+                      'correct': ex.answered && oi === ex.correct,
+                      'wrong': ex.answered && ex.selected === oi && oi !== ex.correct,
+                      'dimmed': ex.answered && oi !== ex.correct && ex.selected !== oi
+                    }"
+                    @click="answerChoice(nivel.id, 'trace', idx, oi)" :disabled="ex.answered">
+              <span style="font-weight:800; margin-right:0.5rem; color:var(--t-accent);">{{ ['A','B','C','D'][oi] }}.</span>
+              <span v-html="opt"></span>
+            </button>
+          </div>
+
+          <div v-if="ex.answered" class="feedback-box" :class="ex.selected === ex.correct ? 'correct' : 'wrong'">
+            <span v-html="ex.explanation"></span>
+          </div>
+        </div>
+
+        <!-- Level completed card -->
+        <div v-if="isLevelCompleted(nivel.id)" class="level-complete-card">
+          <div style="font-size:3rem; margin-bottom:0.5rem;">🎉</div>
+          <h3 style="font-size:1.3rem; font-weight:800; color:var(--t-accent); margin-bottom:0.5rem;">
+            ¡Nivel {{ nivel.id }} Completado!
+          </h3>
+          <p style="font-size:0.95rem; color:var(--t-text-secondary); margin-bottom:0.3rem;">
+            {{ nivel.emoji }} {{ nivel.title }}
+          </p>
+          <p class="score-big" style="margin:0.5rem 0;">
+            {{ getLevelProgress(nivel.id).correct }} / {{ getLevelProgress(nivel.id).total }}
+          </p>
+          <p style="font-size:0.85rem; color:var(--t-text-secondary);">
+            {{ getLevelMessage(nivel.id) }}
+          </p>
+          <button v-if="nivel.id < 7" @click="goToLevel(nivel.id + 1)"
+                  style="margin-top:1rem; background:var(--t-accent); color:#fff; padding:0.7rem 2rem; border-radius:2rem; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--t-font-main,'Quicksand'),sans-serif;">
+            Siguiente Nivel: {{ niveles[nivel.id].emoji }} {{ niveles[nivel.id].title }} →
+          </button>
+          <div v-else style="margin-top:1rem;">
+            <p style="font-size:1.1rem; font-weight:700; color:#10b981;">🏆 ¡Niveles completados!</p>
+            <p style="font-size:0.85rem; color:var(--t-text-secondary); margin-top:0.5rem;">Ahora pon a prueba todo lo aprendido en el Ejercicio Integrador.</p>
+            <p v-if="xpResult" style="font-size:0.9rem; font-weight:700; color:var(--t-accent); margin-top:0.5rem;">{{ xpResult }}</p>
+            <button @click="goToLevel(8)"
+                    style="margin-top:0.75rem; background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff; padding:0.7rem 2rem; border-radius:2rem; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; transition:all 0.2s; font-family:var(--t-font-main,'Quicksand'),sans-serif;">
+              🏆 Ir al Boss Final →
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end v-for niveles -->
+
+    <!-- ═════════════════════════════════════════════ -->
+    <!-- BOSS FINAL — Ejercicio Integrador            -->
+    <!-- ═════════════════════════════════════════════ -->
+    <div v-show="currentLevel === 8" class="max-w-3xl mx-auto px-4 pb-16 fade-in-up">
+
+      <!-- Boss Header -->
+      <div class="lesson-card" style="border-color:#f59e0b; background:linear-gradient(135deg, var(--t-surface), rgba(245,158,11,0.05));">
+        <div style="text-align:center; margin-bottom:1rem;">
+          <span style="font-size:3.5rem;">🏆</span>
+          <h2 style="font-size:1.6rem; font-weight:800; color:var(--t-accent); margin-top:0.5rem;">Boss Final: Ejercicio Integrador</h2>
+          <p style="color:var(--t-text-secondary); font-size:0.9rem; margin-top:0.5rem; max-width:500px; margin-left:auto; margin-right:auto;">
+            Aquí usarás <strong>todos los patrones</strong> que practicaste en los 7 niveles. Desarrolla el sistema completo en Python. ¡Tú puedes!
+          </p>
+        </div>
+      </div>
+
+      <!-- Enunciado -->
+      <div class="boss-card">
+        <h3>📝 Enunciado</h3>
+        <p style="line-height:1.7; color:var(--t-text); font-size:0.92rem;">
+          Desarrolla un programa en Python que implemente un <strong>sistema de gestión de pociones mágicas</strong> de un videojuego.
+          Todo el comportamiento debe organizarse mediante <strong>funciones bien definidas</strong>.
+          El programa debe incluir un <strong>menú interactivo</strong>, <strong>validaciones de entrada</strong>,
+          una <strong>operación de actualización masiva</strong> y uso de <strong>funciones separadas por responsabilidad</strong>.
+        </p>
+      </div>
+
+      <!-- Datos del sistema -->
+      <div class="boss-card">
+        <h3>📦 Datos que debe manejar el sistema</h3>
+        <p style="font-size:0.88rem; color:var(--t-text); margin-bottom:0.75rem;">
+          El sistema trabaja con una colección de pociones. Esta colección debe existir desde que el programa inicia como una <strong>lista vacía</strong>
+          y estar disponible durante toda la ejecución. Cada poción se representa como un <strong>diccionario</strong> con estos campos:
+        </p>
+        <table class="req-table">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Qué representa</th>
+              <th>Restricciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"nombre"</code></td>
+              <td>Nombre de la poción</td>
+              <td>No vacío ni solo espacios en blanco</td>
+            </tr>
+            <tr>
+              <td><code>"poder"</code></td>
+              <td>Nivel de poder de la poción</td>
+              <td>Número entero mayor que 0</td>
+            </tr>
+            <tr>
+              <td><code>"activa"</code></td>
+              <td>¿La poción está activa?</td>
+              <td><strong>False al registrar.</strong> No se pide al usuario. Cambia a True cuando se ejecute la opción 4, si el poder es ≥ 5.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Menú -->
+      <div class="boss-card">
+        <h3>📋 Menú del sistema</h3>
+        <p style="font-size:0.88rem; color:var(--t-text); margin-bottom:0.75rem;">
+          El menú aparece en pantalla en cada vuelta del ciclo. El usuario elige una opción numérica. Debe implementarse con <strong>dos funciones separadas</strong>:
+          una que muestre las opciones (sin recibir ni retornar nada) y otra que lea y retorne la opción validada.
+        </p>
+        <div class="menu-preview">
+          <span class="menu-sep">========== MENÚ PRINCIPAL ==========</span><br>
+          <span class="menu-line">1. Agregar poción</span><br>
+          <span class="menu-line">2. Buscar poción</span><br>
+          <span class="menu-line">3. Eliminar poción</span><br>
+          <span class="menu-line">4. Activar pociones</span><br>
+          <span class="menu-line">5. Mostrar pociones</span><br>
+          <span class="menu-line">6. Salir</span><br>
+          <span class="menu-sep">=====================================</span>
+        </div>
+      </div>
+
+      <!-- Opciones detalladas -->
+      <div class="boss-card">
+        <h3>⚙️ Qué debe hacer cada opción</h3>
+
+        <div style="margin-bottom:1.2rem; padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #3b82f6;">
+          <p style="font-weight:700; color:#3b82f6; margin-bottom:0.3rem;">Opción 1 — Agregar poción</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Solicita nombre y poder. Valida cada campo con una <strong>función de validación distinta</strong>.
+            Si algún dato no cumple, informa al usuario y <strong>no registra</strong> la poción.
+            Solo cuando todos son válidos, crea el diccionario (con <code>"activa": False</code>) y lo agrega a la lista.
+            Los mensajes de error se muestran en esta función, <strong>no dentro de las validaciones</strong>.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.2rem; padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #8b5cf6;">
+          <p style="font-weight:700; color:#8b5cf6; margin-bottom:0.3rem;">Opción 2 — Buscar poción</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Solicita un nombre y busca en la lista. Define una <strong>función de búsqueda</strong> que reciba la lista y el nombre,
+            retorne la <strong>posición</strong> si la encuentra o <strong>-1</strong> si no existe.
+            El programa principal decide qué hacer: si encontró, muestra los datos; si no, informa.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.2rem; padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #ef4444;">
+          <p style="font-weight:700; color:#ef4444; margin-bottom:0.3rem;">Opción 3 — Eliminar poción</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Solicita el nombre. <strong>Reutiliza la función de búsqueda</strong> de la opción 2.
+            Si retorna posición válida, elimina con <code>.pop()</code>.
+            Si retorna -1, muestra: <em>"La poción 'nombre' no se encuentra registrada."</em>
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.2rem; padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #06b6d4;">
+          <p style="font-weight:700; color:#06b6d4; margin-bottom:0.3rem;">Opción 4 — Activar pociones</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Recorre <strong>TODA</strong> la lista y actualiza <code>"activa"</code> según la regla:
+            si <code>poder ≥ 5</code> → <code>True</code>; si no → <code>False</code>.
+            Define una función que reciba la lista y aplique la regla a cada elemento.
+          </p>
+        </div>
+
+        <div style="margin-bottom:1.2rem; padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #10b981;">
+          <p style="font-weight:700; color:#10b981; margin-bottom:0.3rem;">Opción 5 — Mostrar pociones</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Primero <strong>llama a la función de activación</strong> (opción 4), luego recorre la lista mostrando cada poción con el formato:
+          </p>
+          <div class="menu-preview" style="margin-top:0.5rem; font-size:0.8rem;">
+            <span class="menu-sep">=== LISTA DE POCIONES ===</span><br>
+            Nombre: Elixir de Fuego<br>
+            Poder: 8<br>
+            Estado: ACTIVA<br>
+            <span class="menu-sep">**************************</span><br>
+            Nombre: Gota de Rocío<br>
+            Poder: 3<br>
+            Estado: INACTIVA<br>
+            <span class="menu-sep">**************************</span>
+          </div>
+        </div>
+
+        <div style="padding:1rem; background:var(--t-glass-bg); border-radius:10px; border-left:4px solid #ec4899;">
+          <p style="font-weight:700; color:#ec4899; margin-bottom:0.3rem;">Opción 6 — Salir</p>
+          <p style="font-size:0.85rem; color:var(--t-text); line-height:1.6;">
+            Termina la ejecución de forma limpia. Muestra: <em>"Gracias por usar el sistema. Vuelva pronto"</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- Pistas por nivel -->
+      <div class="boss-card">
+        <h3>💡 Pistas — Conecta cada parte con lo que aprendiste</h3>
+        <p style="font-size:0.85rem; color:var(--t-text-secondary); margin-bottom:1rem;">Cada pista te remite al nivel donde practicaste ese patrón exacto.</p>
+
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(59,130,246,0.15); color:#3b82f6;">Nivel 1</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">La lista empieza vacía: <code>pociones = []</code>. Cada poción es un diccionario con 3 campos. El campo <code>"activa"</code> siempre inicia en <code>False</code>.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(139,92,246,0.15); color:#8b5cf6;">Nivel 2</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">Para validar el nombre usa <code>.strip() != ""</code>. La función de validación solo retorna <code>True</code>/<code>False</code> — los mensajes de error van en la función que la llama.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(245,158,11,0.15); color:#f59e0b;">Nivel 3</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">Para validar el poder: <code>texto.isdigit() and int(texto) > 0</code>. Recuerda que <code>input()</code> siempre retorna un string.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(16,185,129,0.15); color:#10b981;">Nivel 4</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">La función de búsqueda recorre con <code>for i in range(len(lista))</code>. Si encuentra, <code>return i</code>. Después del for: <code>return -1</code>. <strong>No imprime mensajes.</strong></p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(239,68,68,0.15); color:#ef4444;">Nivel 5</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">Para eliminar: llama a <code>buscar_pocion()</code>, verifica que <code>!= -1</code>, y luego <code>lista.pop(posicion)</code>. No escribas otro <code>for</code> — reutiliza.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(6,182,212,0.15); color:#06b6d4;">Nivel 6</span>
+          <p style="font-size:0.85rem; color:var(--t-text);">Para actualizar: <code>for p in lista: p["activa"] = p["poder"] >= 5</code>. Funciona sin <code>return</code> porque los diccionarios son mutables. Recuerda el <code>else: False</code>.</p>
+        </div>
+        <div class="hint-card">
+          <span class="hint-level" style="background:rgba(236,72,153,0.15); color:#ec4899;">Nivel 7</span>
+          <p style="font-size:0.85rem; color:var(--t-text);"><code>while True</code> + <code>break</code> en la opción 6. Dos funciones separadas: <code>mostrar_menu()</code> y <code>leer_opcion()</code>. El dispatcher usa <code>if/elif</code>.</p>
+        </div>
+      </div>
+
+      <!-- Checklist de autoevaluación -->
+      <div class="boss-card" style="border-color:var(--t-accent);">
+        <h3>✅ Checklist de Autoevaluación</h3>
+        <p style="font-size:0.85rem; color:var(--t-text-secondary); margin-bottom:1rem;">Antes de dar tu ejercicio por terminado, verifica cada punto:</p>
+
+        <div v-for="(item, idx) in checklist" :key="'check-'+idx" class="checklist-item">
+          <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+            <span v-if="item.done">✓</span>
+          </div>
+          <span v-html="item.text"></span>
+        </div>
+
+        <div v-if="checklistCompleted" style="text-align:center; margin-top:1.5rem; padding:1.5rem; background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(139,92,246,0.1)); border-radius:12px; border:2px solid rgba(16,185,129,0.3);">
+          <p style="font-size:2rem; margin-bottom:0.5rem;">🎉</p>
+          <p style="font-size:1.1rem; font-weight:700; color:#10b981;">¡Felicitaciones!</p>
+          <p style="font-size:0.9rem; color:var(--t-text-secondary); margin-top:0.3rem;">Si marcaste todos los puntos, tu sistema está listo. Estás preparad@ para la evaluación. 💪🔥</p>
+        </div>
+      </div>
+
+    </div><!-- end boss final -->
+
+    <footer class="site-footer">Hecho con 💖 para Academia hachimaki</footer>
+  </div>
+
+  <!-- Data file -->
+  <script src="../data/entrenamiento-patrones-data.js"></script>
+
+  <!-- External & Shared Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/quiz-xp.js"></script>
+  <script src="../js/app.js"></script>
+
+  <script>
+    const { createApp } = Vue;
+    const app = createApp({
+      mixins: [QuizXP.vueMixin('entrenamiento-patrones')],
+      data() {
+        // Initialize exercises state from the data file
+        const data = typeof entrenamientoPatronesData !== 'undefined' ? entrenamientoPatronesData : { niveles: [] };
+        const niveles = data.niveles.map(n => ({
+          ...n,
+          lesson: n.lesson,
+          exercises: {
+            tf: (n.tf || []).map(e => ({ ...e, answered: false, selected: null })),
+            choice: (n.choice || []).map(e => ({ ...e, answered: false, selected: null })),
+            trace: (n.trace || []).map(e => ({ ...e, answered: false, selected: null })),
+          }
+        }));
+
+        return {
+          niveles,
+          currentLevel: 1,
+          currentSection: 'lesson',
+          xpResult: '',
+          checklist: [
+            { text: '¿La lista <code>pociones</code> empieza vacía (<code>[]</code>)?', done: false },
+            { text: '¿Cada poción es un diccionario con <code>"nombre"</code>, <code>"poder"</code> y <code>"activa"</code>?', done: false },
+            { text: '¿El campo <code>"activa"</code> se asigna como <code>False</code> automáticamente (no se pide al usuario)?', done: false },
+            { text: '¿Existe una función de validación de nombre que retorna <code>True</code>/<code>False</code> (sin imprimir)?', done: false },
+            { text: '¿Existe una función de validación de poder que retorna <code>True</code>/<code>False</code> (sin imprimir)?', done: false },
+            { text: '¿La función de búsqueda retorna la <strong>posición</strong> o <code>-1</code> (sin imprimir)?', done: false },
+            { text: '¿La eliminación <strong>reutiliza</strong> la función de búsqueda (no tiene su propio <code>for</code>)?', done: false },
+            { text: '¿La actualización recorre <strong>TODA</strong> la lista con <code>if/else</code> (True Y False)?', done: false },
+            { text: '¿<code>mostrar_menu()</code> no recibe ni retorna nada (solo imprime)?', done: false },
+            { text: '¿<code>leer_opcion()</code> no recibe nada pero SÍ retorna el número validado?', done: false },
+            { text: '¿El menú usa <code>while True</code> + <code>break</code> en la opción 6?', done: false },
+            { text: '¿La opción 5 llama primero a la función de activación antes de mostrar?', done: false },
+            { text: '¿El programa corre sin errores y todas las opciones funcionan correctamente?', done: false },
+          ],
+        };
+      },
+      computed: {
+        totalExercises() {
+          return this.niveles.reduce((sum, n) => {
+            return sum + n.exercises.tf.length + n.exercises.choice.length + n.exercises.trace.length;
+          }, 0);
+        },
+        totalAnswered() {
+          return this.niveles.reduce((sum, n) => {
+            return sum +
+              n.exercises.tf.filter(e => e.answered).length +
+              n.exercises.choice.filter(e => e.answered).length +
+              n.exercises.trace.filter(e => e.answered).length;
+          }, 0);
+        },
+        totalCorrect() {
+          return this.niveles.reduce((sum, n) => {
+            return sum +
+              n.exercises.tf.filter(e => e.answered && e.selected === e.correct).length +
+              n.exercises.choice.filter(e => e.answered && e.selected === e.correct).length +
+              n.exercises.trace.filter(e => e.answered && e.selected === e.correct).length;
+          }, 0);
+        },
+        globalProgress() {
+          return this.totalExercises > 0 ? Math.round(this.totalAnswered / this.totalExercises * 100) : 0;
+        },
+        checklistCompleted() {
+          return this.checklist.length > 0 && this.checklist.every(item => item.done);
+        },
+      },
+      methods: {
+        highlightCode(code) {
+          if (typeof Prism !== 'undefined' && Prism.languages.python) {
+            return Prism.highlight(code, Prism.languages.python, 'python');
+          }
+          return code;
+        },
+
+        goToLevel(levelId) {
+          this.currentLevel = levelId;
+          this.currentSection = levelId === 8 ? 'boss' : 'lesson';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.$nextTick(() => { if (typeof Prism !== 'undefined') Prism.highlightAll(); });
+        },
+
+        goToSection(section) {
+          this.currentSection = section;
+          window.scrollTo({ top: 200, behavior: 'smooth' });
+          this.$nextTick(() => { if (typeof Prism !== 'undefined') Prism.highlightAll(); });
+        },
+
+        getLevelExercises(levelId, type) {
+          const nivel = this.niveles.find(n => n.id === levelId);
+          return nivel ? nivel.exercises[type] : [];
+        },
+
+        getLevelProgress(levelId) {
+          const nivel = this.niveles.find(n => n.id === levelId);
+          if (!nivel) return { answered: 0, correct: 0, total: 0 };
+          const all = [...nivel.exercises.tf, ...nivel.exercises.choice, ...nivel.exercises.trace];
+          return {
+            answered: all.filter(e => e.answered).length,
+            correct: all.filter(e => e.answered && e.selected === e.correct).length,
+            total: all.length,
+          };
+        },
+
+        getLevelScore(levelId, type) {
+          const exs = this.getLevelExercises(levelId, type);
+          return exs.filter(e => e.answered && e.selected === e.correct).length;
+        },
+
+        getLevelSectionProgress(levelId, type) {
+          const exs = this.getLevelExercises(levelId, type);
+          if (!exs.length) return 0;
+          return Math.round(exs.filter(e => e.answered).length / exs.length * 100);
+        },
+
+        isLevelCompleted(levelId) {
+          const prog = this.getLevelProgress(levelId);
+          return prog.total > 0 && prog.answered === prog.total;
+        },
+
+        allSectionAnswered(levelId, type) {
+          const exs = this.getLevelExercises(levelId, type);
+          return exs.length > 0 && exs.every(e => e.answered);
+        },
+
+        getLevelMessage(levelId) {
+          const prog = this.getLevelProgress(levelId);
+          const pct = prog.total > 0 ? prog.correct / prog.total : 0;
+          if (pct === 1) return '🌟 ¡Perfecto! Dominio total del patrón.';
+          if (pct >= 0.8) return '🔥 ¡Excelente! Casi perfecto.';
+          if (pct >= 0.6) return '💪 ¡Bien! El concepto se afianza.';
+          if (pct >= 0.4) return '📖 Buen intento. Un repaso te vendría bien.';
+          return '🧗 No desanimes — practica el patrón de nuevo.';
+        },
+
+        answerTF(levelId, idx, value) {
+          const nivel = this.niveles.find(n => n.id === levelId);
+          if (!nivel) return;
+          const ex = nivel.exercises.tf[idx];
+          if (ex.answered) return;
+          ex.selected = value;
+          ex.answered = true;
+          this.checkAllCompleted();
+        },
+
+        answerChoice(levelId, type, idx, oi) {
+          const nivel = this.niveles.find(n => n.id === levelId);
+          if (!nivel) return;
+          const ex = nivel.exercises[type][idx];
+          if (ex.answered) return;
+          ex.selected = oi;
+          ex.answered = true;
+          this.checkAllCompleted();
+        },
+
+        checkAllCompleted() {
+          // Check if ALL exercises across ALL levels are done
+          if (this.totalAnswered === this.totalExercises && this.totalExercises > 0) {
+            // Fire confetti!
+            if (typeof confetti !== 'undefined') {
+              confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+              setTimeout(() => confetti({ particleCount: 100, spread: 60, origin: { y: 0.7 } }), 300);
+            }
+            // Submit XP
+            this.submitXP();
+          }
+        },
+
+        async submitXP() {
+          if (typeof QuizXP === 'undefined') return;
+          try {
+            const result = await QuizXP.submitQuizResult(
+              'entrenamiento-patrones',
+              this.totalCorrect,
+              this.totalExercises
+            );
+            if (result && result.xp_awarded > 0) {
+              this.xpResult = `⚡ +${result.xp_awarded} XP ganada!`;
+            }
+          } catch (e) {
+            console.log('XP submission failed:', e);
+          }
+        },
+      },
+      mounted() {
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+          }
+        });
+      }
+    });
+    app.mount('#app');
+  </script>
+  <script src="../js/theme-selector.js"></script>
+</body>
+</html>
