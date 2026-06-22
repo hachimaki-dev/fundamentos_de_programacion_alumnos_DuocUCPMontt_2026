@@ -16,9 +16,9 @@ libros = [
     'ejemplares': 31}
 ]
 
-"""def buscar_libro(lista_libros , titulo_busqueda):
+def buscar_libro(lista_libros , titulo_busqueda):
     for libro in range(len(libros)):
-        if libros[libro]["titulo_libro"].lower() == titulo_busqueda_usuario.lower():
+        if libros[libro]["titulo_libro"].lower() == titulo_busqueda.lower():
             return libro
 
     return -1
@@ -30,10 +30,10 @@ if posicion_libro != -1:
     print(f"\n¡Libro encontrado en la posición {posicion_libro}!")
     print(f"📌 Título: {libro_encontrado['titulo_libro']}")
     print(f"✍️ Autor: {libro_encontrado['autor']}")
-    print(f"📚 Ejemplares: {libro_encontrado['ejemplares']}")"""
+    print(f"📚 Ejemplares: {libro_encontrado['ejemplares']}")
 
 def buscar_libro(lista_libros , titulo_busqueda_usuario):
-    for pocicion_libro in range(len(libros)):
+    for pocicion_libro in range(len(lista_libros)):
         if libros[pocicion_libro]["titulo_libro"].lower() == titulo_busqueda_usuario.lower():
             return pocicion_libro
     print("no encontrado")     

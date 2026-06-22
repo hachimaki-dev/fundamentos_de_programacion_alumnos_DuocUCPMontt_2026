@@ -60,6 +60,8 @@ def agregar_datos_animal_a_lista():
     lista_de_animales.append(datos_animal)
     print(lista_de_animales)
 
+
+
 def iniciar_programa():
     while True:
         menu()
@@ -74,7 +76,7 @@ def iniciar_programa():
             pass
         elif opcion_usuario_validada == "5":
             pass
-        elif opcion_usuario_validada == "6":
-            pass
+        elif opcion_usuario_menu == "6":
+            break
 
 iniciar_programa()

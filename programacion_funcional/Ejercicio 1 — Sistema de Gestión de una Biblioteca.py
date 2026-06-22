@@ -15,14 +15,12 @@ def mostrar_menu():
 
 def opcion_usuario():
     while True:
-        try:
-            opcion_elegida = input("ingresa una opcion : (1-6): ")
-            if opcion_elegida in ["1","2","3","4","5","6"]:
-                return opcion_elegida
-            else:
-                print("opcion invalida , intenta nuevamente")
-        except: 
-            print("ingresa una opcion valida")
+        opcion_elegida = input("ingresa una opcion : (1-6): ").strip()
+        if opcion_elegida in ["1","2","3","4","5","6"]:
+            return opcion_elegida
+        else:
+            print("opcion invalida , intenta nuevamente")
+   
 
 
 def agregar_libro():
@@ -32,10 +30,10 @@ def agregar_libro():
     
 
     datos_libro = {
-        "nombre_libro" : titulo_libro_validado,
-        "autor_libro" : nombre_autor_validado,
+        "titulo" : titulo_libro_validado,
+        "autor" : nombre_autor_validado,
         "ejemplares" : cantidad_ejemplares_validado,
-        "estado" : False
+        "disponible" : False
     }
     libros.append(datos_libro)
     print(libros)
@@ -45,7 +43,7 @@ def validar_titulo_libro():
     while True:
         titulo_libro_usuario = input("ingresa el titulo del libro : ").strip()
 
-        if " " in titulo_libro_usuario or len(titulo_libro_usuario) <=0:
+        if len(titulo_libro_usuario) <=0:
             print("vuelve a intentar. no se guardo registro ")
         else:
             return titulo_libro_usuario
@@ -54,7 +52,7 @@ def validar_titulo_libro():
 def validar_nombre_libro():
     while True:
         nombre_autor_usuario = input("ingresa el nombre del autor del titulo : ").strip()
-        if " " in nombre_autor_usuario or len(nombre_autor_usuario) <=0:
+        if len(nombre_autor_usuario) <=0:
             print("intenta nuevamente. no se guardo registro")
         else:
             return nombre_autor_usuario
@@ -75,14 +73,14 @@ def validar_cantidad_ejemplares():
 def buscar_libro():
     while True:
         titulo_busqueda_usuario = input("ingresa el titulo que buscas \n").strip()
-        if  " " in titulo_busqueda_usuario or len(titulo_busqueda_usuario) >=6:
+        if len(titulo_busqueda_usuario) <=0:
             print("intenta nuevamente")
         else:
             return titulo_busqueda_usuario
 
 
 def buscar_libro_en_lista(lista_libros ,nombre_libro_a_buscar):
-    for pocicion_cada_libro in range(len(libros)):
+    for pocicion_cada_libro in range(len(lista_libros)):
         if libros[pocicion_cada_libro]["nombre_libro"].lower() == nombre_libro_a_buscar.lower():
             return pocicion_cada_libro
     print("no encontrado")    
@@ -92,21 +90,23 @@ def buscar_libro_en_lista(lista_libros ,nombre_libro_a_buscar):
 def actualizar_disponibilidad_libros(lista_libros):
     for libro in libros:
         if libro["ejemplares"] >0:
-            libro["estado"] = True
+            libro["disponible"] = True
+        elif libro["ejemplares"] == 0:
+            libro["disponible"] = False
 
 
 def mostrar_libros(lista_libros):
-    actualizar_disponibilidad_libros(libros)
+    actualizar_disponibilidad_libros(lista_libros)
     print("=== LISTA DE LIBROS ===")
-    for libro in libros:
-        if libro["estado"] == True:
-            libro["estado"] = "DISPONIBLE"
+    for libro in lista_libros:
+        if libro["disponible"] == True:
+            libro["disponible"] = "DISPONIBLE"
         else:
             libro["estado"] = "SIN EJEMPLARES"
-        print(f"Titulo: {libro["nombre_libro"]} ")
-        print(f"Autor: {libro["autor_libro"]} ")
+        print(f"Titulo: {libro["titulo"]} ")
+        print(f"Autor: {libro["autor"]} ")
         print(f"Ejemplares: {libro["ejemplares"]} ")
-        print(f"Estado: {libro["estado"]} ")
+        print(f"Estado: {libro["disponible"]} ")
         print("*******************************************")
 
         
@@ -123,8 +123,8 @@ def iniciar_programa():
             indice_libro_encontrado = buscar_libro_en_lista(libros ,nombre_libro_a_buscar)
             if indice_libro_encontrado != -1:
                 libro_encontrado = libros[indice_libro_encontrado]
-                print(libro_encontrado)
-                break
+                print(f"el libro fue encontrado en la posicion : {indice_libro_encontrado}")
+                
 
         elif opcion_del_menu_seleccionada == "3":
             titulo_ingresado_para_eliminar = input("ingresa el titulo que deseas eliminar\n").strip()
