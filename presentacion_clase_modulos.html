@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a Módulos y Proyectos en Python</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --accent-color: #ff007f; /* magenta/pink */
+            --secondary-color: #7f00ff; /* purple */
+            --code-bg: #f4f4f4; /* light gray for code */
+            --progress-bg: #e0e0e0;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            font-size: 32px; /* Bigger font size for back of the room */
+        }
+
+        /* Slide Container */
+        #presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            flex-grow: 1;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5% 10%;
+            box-sizing: border-box;
+            text-align: center;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 { font-size: 3em; color: var(--accent-color); margin-bottom: 0.2em; font-weight: 900; }
+        h2 { font-size: 2.2em; color: var(--secondary-color); margin-bottom: 0.5em; font-weight: 900; }
+        h3 { font-size: 1.8em; color: var(--accent-color); margin-bottom: 0.5em; font-weight: 900; }
+        p { line-height: 1.6; margin-bottom: 1em; max-width: 1000px; }
+        ul { text-align: left; line-height: 1.8; max-width: 900px; display: inline-block; font-weight: 700; }
+        li { margin-bottom: 15px; }
+
+        .highlight { color: #d800ff; font-weight: 900; background-color: rgba(216,0,255,0.1); padding: 2px 8px; border-radius: 8px; }
+        .warning { color: #ff0000; font-weight: 900; }
+
+        /* Code Blocks */
+        pre {
+            background-color: var(--code-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            max-width: 1000px;
+            width: 100%;
+            overflow-x: auto;
+            border-left: 8px solid var(--accent-color);
+            color: #111;
+        }
+
+        code { font-family: 'Courier New', Courier, monospace; font-weight: 700; }
+        .inline-code { background-color: var(--code-bg); padding: 4px 8px; border-radius: 5px; color: var(--accent-color); font-weight: 800;}
+
+        /* Basic Syntax Highlighting */
+        .kw { color: #7f00ff; font-weight: 900; } /* Keyword purple */
+        .func { color: #ff007f; font-weight: 900; } /* Function pink */
+        .str { color: #008800; font-weight: 800; } /* String green */
+        .com { color: #888888; font-style: italic; font-weight: 600; } /* Comment gray */
+        .num { color: #0000ff; font-weight: 900; } /* Number blue */
+
+        /* Controls & UI */
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .btn {
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            border: 4px solid var(--secondary-color);
+            padding: 10px 20px;
+            font-size: 1.2em;
+            font-weight: 900;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        .btn:disabled {
+            border-color: #aaaaaa;
+            color: #aaaaaa;
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+
+        #counter { font-size: 1.2em; color: var(--secondary-color); font-weight: 900; }
+
+        #progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background-color: var(--progress-bg);
+        }
+
+        #progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Reveal Box */
+        .reveal-box {
+            margin-top: 30px;
+            padding: 20px;
+            border: 4px dashed var(--accent-color);
+            border-radius: 10px;
+            background-color: rgba(255, 0, 127, 0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+        .reveal-box:hover { background-color: rgba(255, 0, 127, 0.15); }
+        .reveal-content { display: none; margin-top: 15px; font-weight: 900; color: var(--secondary-color); font-size: 1.2em;}
+        .reveal-content.show { display: block; animation: fadeIn 0.5s; }
+
+        #fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            font-size: 0.8em;
+            padding: 8px 15px;
+        }
+
+        .layout-left-right {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 40px;
+            align-items: center;
+        }
+        .layout-left-right > div { flex: 1; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <button id="fullscreen-btn" class="btn" onclick="toggleFullScreen()">📺 Pantalla Completa</button>
+
+    <div id="presentation">
+        <!-- SLIDE 1: Portada -->
+        <div class="slide active">
+            <h1>Python Nivel 2: Módulos y Proyectos</h1>
+            <h2>De un archivo simple a la creación de software</h2>
+            <p style="color: #555555; margin-top: 50px; font-weight: 800;">Usa las flechas del teclado (← / →) para avanzar</p>
+        </div>
+
+        <!-- SLIDE 2: Objetivos -->
+        <div class="slide">
+            <h2>¿Qué aprenderemos hoy?</h2>
+            <ul>
+                <li>Entender qué es la <span class="highlight">Librería Estándar</span> de Python.</li>
+                <li>Aprender a traer herramientas nuevas a tu código con <span class="highlight">import</span>.</li>
+                <li>Repasar las <span class="highlight">4 formas de hacer funciones</span>.</li>
+                <li>Dar el gran salto: programar en <span class="highlight">MÚLTIPLES archivos</span> conectados entre sí.</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 3: Analogía 1 -->
+        <div class="slide">
+            <h2>La caja de herramientas</h2>
+            <p>Imagina que compras un auto nuevo.</p>
+            <p>El auto viene listo para manejarse (volante, motor, ruedas).</p>
+            <p>Pero en la maleta, el fabricante te dejó una <span class="highlight">caja de herramientas roja</span> gratuita.</p>
+            <p>No necesitas usarla siempre, pero si se pincha una rueda, abres la caja, sacas la gata hidráulica y resuelves el problema.</p>
+        </div>
+
+        <!-- SLIDE 4: La Librería Estándar -->
+        <div class="slide">
+            <h2>La Librería Estándar</h2>
+            <p>Python funciona exactamente igual que ese auto.</p>
+            <p>Las funciones básicas como <span class="inline-code">print()</span> o <span class="inline-code">len()</span> son el volante y las ruedas: siempre están ahí.</p>
+            <p>Pero Python viene con una caja de herramientas gigante (gratis) llamada la <span class="highlight">Librería Estándar</span>.</p>
+            <p>Contiene herramientas matemáticas, de fechas, de sistema, etc. Solo debemos "abrirlas" cuando las necesitemos.</p>
+        </div>
+
+        <!-- SLIDE 5: ¿Qué es un módulo? -->
+        <div class="slide">
+            <h2>¿Qué es un Módulo?</h2>
+            <p>En el mundo real, un "módulo" de un mueble es una pieza independiente que puedes conectar a otras.</p>
+            <p>En Python, un <span class="highlight">módulo</span> es simplemente <strong>un archivo de texto con código Python adentro</strong>.</p>
+            <p>La Librería Estándar está llena de estos módulos. Alguien ya escribió miles de líneas de código experto por nosotros, ¡y podemos usarlas gratis!</p>
+        </div>
+
+        <!-- SLIDE 6: ¿Por qué "importar"? -->
+        <div class="slide">
+            <h2>¿Qué significa "Importar"?</h2>
+            <p>Si Python cargara TODA la librería estándar cada vez que haces un programa simple, tu computador se volvería lentísimo.</p>
+            <p>Por eso, usamos la palabra mágica <span class="inline-code">import</span> (importar).</p>
+            <p>Importar significa decirle a Python: <em>"Oye, para este programa en específico, por favor anda a la maleta y tráeme la herramienta X"</em>.</p>
+        </div>
+
+        <!-- SLIDE 7: Sintaxis 1 -->
+        <div class="slide">
+            <h2>Sintaxis 1: El import completo</h2>
+            <p>Trae la caja entera de herramientas y ponla en la mesa.</p>
+<pre>
+<span class="com"># Traemos TODA la caja de matemáticas (módulo math)</span>
+<span class="kw">import</span> math
+
+<span class="com"># Usamos la herramienta 'sqrt' (Raíz cuadrada) </span>
+<span class="com"># Nota: Debemos escribir "math." antes de la herramienta</span>
+resultado = math.<span class="func">sqrt</span>(<span class="num">25</span>)
+<span class="func">print</span>(resultado) <span class="com"># Imprime 5.0</span>
+</pre>
+            <p><strong>Ventaja:</strong> Sabes exactamente de dónde viene la herramienta.</p>
+        </div>
+
+        <!-- SLIDE 8: Sintaxis 2 -->
+        <div class="slide">
+            <h2>Sintaxis 2: Traer algo específico</h2>
+            <p>Si solo necesitas un martillo, no traigas toda la caja.</p>
+<pre>
+<span class="com"># "Desde matemáticas, impórtame SOLO la raíz cuadrada"</span>
+<span class="kw">from</span> math <span class="kw">import</span> sqrt
+
+<span class="com"># Como solo trajimos el martillo, lo usamos directamente</span>
+<span class="com"># ¡Ya no escribimos "math." al principio!</span>
+resultado = <span class="func">sqrt</span>(<span class="num">100</span>)
+<span class="func">print</span>(resultado) <span class="com"># Imprime 10.0</span>
+</pre>
+            <p><strong>Ventaja:</strong> Código más corto de escribir.</p>
+        </div>
+
+        <!-- SLIDE 9: Sintaxis 3 -->
+        <div class="slide">
+            <h2>Sintaxis 3: El apodo (alias)</h2>
+            <p>Si la caja tiene un nombre muy largo y te da pereza escribirlo.</p>
+<pre>
+<span class="com"># Importamos 'datetime' pero le ponemos el apodo 'dt'</span>
+<span class="kw">import</span> datetime <span class="kw">as</span> dt
+
+<span class="com"># Ahora usamos 'dt' en lugar de escribir 'datetime'</span>
+hora_actual = dt.datetime.<span class="func">now</span>()
+<span class="func">print</span>(hora_actual)
+</pre>
+            <p><strong>Ventaja:</strong> Te salva de la tendinitis en los dedos al programar.</p>
+        </div>
+
+        <!-- SLIDE 10: Check de Comprensión 1 -->
+        <div class="slide">
+            <h2>🧠 Check de Comprensión</h2>
+            <p>Tenemos este código:</p>
+<pre>
+<span class="kw">from</span> os <span class="kw">import</span> getcwd
+<span class="kw">import</span> random
+
+<span class="com"># LÍNEA MISTERIOSA</span>
+</pre>
+            <p>¿Cuál de las siguientes líneas de código funcionaría sin error?</p>
+            <ul style="font-size: 0.9em;">
+                <li>A) <span class="inline-code">n = random.randint(1, 10)</span></li>
+                <li>B) <span class="inline-code">n = randint(1, 10)</span></li>
+                <li>C) <span class="inline-code">carpeta = os.getcwd()</span></li>
+            </ul>
+            
+            <div class="reveal-box" onclick="toggleReveal(this)">
+                👉 Clic aquí para revelar la respuesta
+                <div class="reveal-content">La respuesta correcta es A.<br><br>Como usamos `import random`, debemos usar `random.randint`.<br>Para la B daría error porque no importamos randint directamente.<br>Para la C daría error porque trajimos `getcwd` directamente (from os import getcwd), así que se usa directo sin poner `os.`.</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Módulo math -->
+        <div class="slide">
+            <h2>Explorando: El módulo <code>math</code> 🧮</h2>
+            <p>La calculadora científica de Python.</p>
+            <p>Útil cuando el <span class="inline-code">+</span>, <span class="inline-code">-</span>, <span class="inline-code">*</span>, <span class="inline-code">/</span> no son suficientes.</p>
+            <ul>
+                <li><span class="highlight">sqrt(x)</span>: Raíz cuadrada.</li>
+                <li><span class="highlight">ceil(x)</span>: Redondea hacia ARRIBA (Techo).</li>
+                <li><span class="highlight">floor(x)</span>: Redondea hacia ABAJO (Piso).</li>
+                <li><span class="highlight">math.pi</span>: El número Pi (3.14159...).</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 12: Código math -->
+        <div class="slide">
+            <h2>Ejemplo <code>math</code>: Los buses</h2>
+            <p>Si tengo 41 alumnos y los buses son de 40 pasajeros, ¿cuántos buses contrato?</p>
+<pre>
+<span class="kw">import</span> math
+
+alumnos = <span class="num">41</span>
+capacidad = <span class="num">40</span>
+
+division = alumnos / capacidad 
+<span class="func">print</span>(division) <span class="com"># Imprime 1.025 buses</span>
+
+<span class="com"># ¡No puedo contratar 1.025 buses! Redondeo hacia arriba (Techo)</span>
+buses_necesarios = math.<span class="func">ceil</span>(division)
+
+<span class="func">print</span>(<span class="str">"Buses a contratar:"</span>, buses_necesarios) <span class="com"># Imprime 2</span>
+</pre>
+        </div>
+
+        <!-- SLIDE 13: Módulo random -->
+        <div class="slide">
+            <h2>Explorando: El módulo <code>random</code> 🎲</h2>
+            <p>El sombrero mágico de Python.</p>
+            <p>Las computadoras son exactas y aburridas. Este módulo le da el factor sorpresa o "azar" a tus juegos y programas.</p>
+            <ul>
+                <li><span class="highlight">randint(min, max)</span>: Lanza un dado virtual entre dos números.</li>
+                <li><span class="highlight">choice(lista)</span>: Elige al azar un elemento de una lista (como la ruleta).</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 14: Código random -->
+        <div class="slide">
+            <h2>Ejemplo <code>random</code>: El Gacha</h2>
+<pre>
+<span class="kw">from</span> random <span class="kw">import</span> randint, choice
+
+<span class="com"># 1. Un dado del 1 al 100</span>
+tirada = <span class="func">randint</span>(<span class="num">1</span>, <span class="num">100</span>)
+<span class="func">print</span>(<span class="str">"Sacaste un:"</span>, tirada)
+
+<span class="kw">if</span> tirada == <span class="num">1</span>:
+    <span class="func">print</span>(<span class="str">"¡GANASTE EL PERSONAJE ULTRA-RARO!"</span>)
+<span class="kw">else</span>:
+    <span class="func">print</span>(<span class="str">"Sigue intentando..."</span>)
+
+<span class="com"># 2. Elegir un enemigo al azar</span>
+enemigos = [<span class="str">"Orco"</span>, <span class="str">"Duende"</span>, <span class="str">"Dragón"</span>]
+rival = <span class="func">choice</span>(enemigos)
+<span class="func">print</span>(<span class="str">"¡Un"</span>, rival, <span class="str">"salvaje aparece!"</span>)
+</pre>
+        </div>
+
+        <!-- SLIDE 15: Módulo datetime -->
+        <div class="slide">
+            <h2>Explorando: El módulo <code>datetime</code> 🕰️</h2>
+            <p>El reloj de pulsera de Python.</p>
+            <p>Calcular fechas es de las cosas más difíciles en programación (años bisiestos, zonas horarias). ¡Deja que Python lo haga!</p>
+            <ul>
+                <li><span class="highlight">datetime.now()</span>: La hora y fecha exacta de este microsegundo.</li>
+                <li><span class="highlight">strftime(formato)</span>: Traduce la fecha robot a un texto legible por humanos.</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 16: Código datetime -->
+        <div class="slide">
+            <h2>Ejemplo <code>datetime</code>: Boleta de Compra</h2>
+<pre>
+<span class="kw">import</span> datetime <span class="kw">as</span> dt
+
+<span class="com"># 1. Mirar el reloj interno del computador</span>
+ahora = dt.datetime.<span class="func">now</span>()
+<span class="func">print</span>(<span class="str">"Hora robot:"</span>, ahora) 
+<span class="com"># Imprime ej: 2026-05-14 15:30:00.123456</span>
+
+<span class="com"># 2. Formatear para el cliente (Día/Mes/Año)</span>
+fecha_humana = ahora.<span class="func">strftime</span>(<span class="str">"%d/%m/%Y"</span>)
+
+<span class="func">print</span>(<span class="str">"--- TICKET DEL SUPERMERCADO ---"</span>)
+<span class="func">print</span>(<span class="str">"Fecha:"</span>, fecha_humana)
+<span class="com"># Imprime: Fecha: 14/05/2026</span>
+</pre>
+        </div>
+
+        <!-- SLIDE 17: Check de Comprensión 2 -->
+        <div class="slide">
+            <h2>🧠 Check de Comprensión</h2>
+            <p>Mira este código. ¿Qué va a imprimir?</p>
+<pre>
+<span class="kw">import</span> math
+<span class="kw">from</span> random <span class="kw">import</span> randint
+
+numero = <span class="func">randint</span>(<span class="num">3</span>, <span class="num">3</span>) <span class="com"># ¿Qué hace esto?</span>
+resultado = math.<span class="func">sqrt</span>(numero + <span class="num">6</span>)
+
+<span class="func">print</span>(resultado)
+</pre>
+            
+            <div class="reveal-box" onclick="toggleReveal(this)">
+                👉 Clic aquí para revelar la respuesta
+                <div class="reveal-content">Imprimirá: 3.0<br><br>Explicación: `randint(3,3)` obligatoriamente devuelve 3. <br>Luego `3 + 6` es 9.<br>Finalmente la raíz cuadrada de 9 es 3.0.</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 18: Error Común 1 -->
+        <div class="slide">
+            <h2>⚠️ Error Común 1: "Shadowing"</h2>
+            <p>Imagina que decides llamar a tu archivo <span class="warning">random.py</span> o <span class="warning">math.py</span>.</p>
+            <p>Al hacer <span class="inline-code">import random</span>, Python busca PRIMERO en tu misma carpeta.</p>
+            <p>¡Se importará a sí mismo en lugar de la librería real y todo explotará con errores raros!</p>
+            <div style="border: 4px solid #ff0000; padding: 20px; border-radius: 10px; margin-top: 20px; background-color: rgba(255,0,0,0.1);">
+                <strong style="color: #ff0000;">REGLA DE ORO:</strong> Nunca nombres a tus archivos igual que los módulos de la librería estándar.
+            </div>
+        </div>
+
+        <!-- SLIDE 19: Funciones (Repaso) -->
+        <div class="slide">
+            <h2>Repaso: ¿Qué es una Función Propia?</h2>
+            <p>Ya usamos funciones hechas por expertos (math.sqrt). Ahora repasaremos cómo hacer las nuestras.</p>
+            <p>Una función es "empaquetar código" en una cajita con un nombre, para poder usarla muchas veces sin repetir código.</p>
+            <p>Las funciones se definen con la palabra <span class="highlight">def</span> y tienen 4 formas posibles dependiendo de la información que ENTREGAS (parámetros) y la que RECIBES de vuelta (return).</p>
+        </div>
+
+        <!-- SLIDE 20: Función 1 -->
+        <div class="slide">
+            <h2>1. Sin parámetros, sin return</h2>
+            <p>No necesita información, ni devuelve un resultado matemático. Solo "hace una acción" repetitiva.</p>
+<pre>
+<span class="com"># DEFINICIÓN (La receta)</span>
+<span class="kw">def</span> <span class="func">mostrar_menu</span>():
+    <span class="func">print</span>(<span class="str">"--- MENÚ PRINCIPAL ---"</span>)
+    <span class="func">print</span>(<span class="str">"1. Jugar"</span>)
+    <span class="func">print</span>(<span class="str">"2. Salir"</span>)
+
+<span class="com"># LLAMADA (Usar la receta)</span>
+<span class="func">mostrar_menu</span>()
+<span class="func">mostrar_menu</span>() <span class="com"># Lo puedo llamar 100 veces sin re-escribir prints</span>
+</pre>
+        </div>
+
+        <!-- SLIDE 21: Función 2 -->
+        <div class="slide">
+            <h2>2. Con parámetros, sin return</h2>
+            <p>Necesita que le "pases" información (variables temporales), hace la acción, pero no te escupe un resultado matemático.</p>
+<pre>
+<span class="com"># 'nombre' es el parámetro (la variable vacía que espera un dato)</span>
+<span class="kw">def</span> <span class="func">saludar_usuario</span>(nombre):
+    <span class="func">print</span>(<span class="str">f"¡Bienvenido al sistema, {nombre}!"</span>)
+
+<span class="com"># Le pasamos el argumento ("Pedro" o "Ana") al llamarla</span>
+<span class="func">saludar_usuario</span>(<span class="str">"Pedro"</span>)
+<span class="func">saludar_usuario</span>(<span class="str">"Ana"</span>)
+</pre>
+        </div>
+
+        <!-- SLIDE 22: Función 3 -->
+        <div class="slide">
+            <h2>3. Sin parámetros, con return</h2>
+            <p>No necesita información extra, pero TE DEVUELVE (escupe) un valor para que lo guardes en una variable. Usa la palabra mágica <span class="highlight">return</span>.</p>
+<pre>
+<span class="kw">def</span> <span class="func">pedir_numero_secreto</span>():
+    <span class="com"># Pide un número y lo devuelve al programa principal</span>
+    valor = <span class="num">42</span>
+    <span class="kw">return</span> valor
+
+<span class="com"># Como la función TIENE return, debo "atrapar" el valor en una variable</span>
+mi_secreto = <span class="func">pedir_numero_secreto</span>()
+
+<span class="func">print</span>(<span class="str">"El secreto devuelto es:"</span>, mi_secreto)
+</pre>
+        </div>
+
+        <!-- SLIDE 23: Función 4 -->
+        <div class="slide">
+            <h2>4. Con parámetros y con return</h2>
+            <p>La más poderosa. Recibe materia prima, la procesa, y te devuelve el producto terminado.</p>
+<pre>
+<span class="com"># Recibe 'base' y 'altura'</span>
+<span class="kw">def</span> <span class="func">calcular_area_rectangulo</span>(base, altura):
+    area = base * altura
+    <span class="kw">return</span> area <span class="com"># Escupe el resultado matemático</span>
+
+<span class="com"># Pasamos 5 y 10. Atrapamos el 50 devuelto en 'resultado'</span>
+resultado = <span class="func">calcular_area_rectangulo</span>(<span class="num">5</span>, <span class="num">10</span>)
+<span class="func">print</span>(<span class="str">"El área es:"</span>, resultado)
+
+<span class="com"># ¡Podemos reutilizarla al infinito con distintos números!</span>
+</pre>
+        </div>
+
+        <!-- SLIDE 24: Multi-archivo -->
+        <div class="slide">
+            <h2>El Salto a Multi-Archivo 🏗️</h2>
+            <p>Hasta ahora, todos tus programas han sido un único archivo larguísimo.</p>
+            <p>Imagina un juego profesional (Mario Bros, GTA). Tienen millones de líneas de código. Si estuviera todo en un <span class="inline-code">main.py</span>, sería imposible de leer.</p>
+            <p><strong>Solución:</strong> Dividimos el programa en varios archivos lógicos (ej: <span class="inline-code">jugador.py</span>, <span class="inline-code">enemigos.py</span>, <span class="inline-code">mapa.py</span>).</p>
+        </div>
+
+        <!-- SLIDE 25: ¿Cómo importamos nuestro código? -->
+        <div class="slide">
+            <h2>¿Cómo unimos los archivos?</h2>
+            <p>¡Exactamente igual que como importamos la librería estándar!</p>
+            <p>Si tú creas un archivo llamado <span class="highlight">utilidades.py</span> que tiene una función <span class="inline-code">limpiar_texto()</span>...</p>
+            <p>...Cualquier otro archivo en la <strong>misma carpeta</strong> puede hacer:</p>
+            <div style="background-color: var(--code-bg); padding: 20px; border-radius: 10px; font-family: monospace; font-size: 1.2em;">
+                <span class="kw">from</span> utilidades <span class="kw">import</span> limpiar_texto
+            </div>
+            <p style="margin-top: 20px;">¡Tus propios archivos se han convertido en módulos!</p>
+        </div>
+
+        <!-- SLIDE 26: Error Común 2 -->
+        <div class="slide">
+            <h2>⚠️ Error Común 2: El Directorio</h2>
+            <p>Para que <span class="inline-code">main.py</span> pueda importar a <span class="inline-code">utilidades.py</span> de forma simple, <strong>AMBOS archivos deben estar guardados exactamente en la misma carpeta.</strong></p>
+            <div class="layout-left-right" style="margin-top: 20px;">
+                <div style="border: 4px solid #008800; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #008800; text-align: center;">✅ BIEN</h3>
+                    <p style="font-family: monospace;">📁 Mi_Proyecto/<br>&nbsp;&nbsp;📄 main.py<br>&nbsp;&nbsp;📄 utilidades.py</p>
+                </div>
+                <div style="border: 4px solid #ff0000; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #ff0000; text-align: center;">❌ MAL (Dará Error)</h3>
+                    <p style="font-family: monospace;">📁 Descargas/<br>&nbsp;&nbsp;📄 main.py<br>📁 Documentos/<br>&nbsp;&nbsp;📄 utilidades.py</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 27: Proyecto Integrador -->
+        <div class="slide">
+            <h2>Ejemplo: Proyecto Multi-Archivo 💻</h2>
+            <p>Vamos a construir un sistema para un cajero automático muy simple.</p>
+            <p>Tendrá dos archivos en la misma carpeta:</p>
+            <ul>
+                <li><span class="highlight">matematicas_banco.py</span>: Tendrá las funciones con cálculos (las reglas de negocio).</li>
+                <li><span class="highlight">main.py</span>: El archivo principal que interactúa con el usuario y usa las otras funciones.</li>
+            </ul>
+        </div>
+
+        <!-- SLIDE 28: Proyecto Integrador - Archivo 1 -->
+        <div class="slide">
+            <h2>Archivo 1: <code>matematicas_banco.py</code></h2>
+<pre>
+<span class="com"># ESTE ARCHIVO SOLO TIENE FUNCIONES (Módulo)</span>
+
+<span class="com"># Función 1: Sin params, con return</span>
+<span class="kw">def</span> <span class="func">obtener_interes_diario</span>():
+    <span class="kw">return</span> <span class="num">1.05</span> <span class="com"># Te devuelve 5% de interés</span>
+
+<span class="com"># Función 2: Con params, con return</span>
+<span class="kw">def</span> <span class="func">calcular_nuevo_saldo</span>(saldo_actual, monto_retiro):
+    nuevo_saldo = saldo_actual - monto_retiro
+    <span class="kw">return</span> nuevo_saldo
+</pre>
+            <p style="font-size: 0.8em; color: var(--accent-color); font-weight: 800;">Si ejecuto este archivo directamente, no hace nada visible porque solo definió herramientas, no las usó.</p>
+        </div>
+
+        <!-- SLIDE 29: Proyecto Integrador - Archivo 2 -->
+        <div class="slide">
+            <h2>Archivo 2: <code>main.py</code></h2>
+<pre>
+<span class="com"># 1. Importo la librería estándar</span>
+<span class="kw">import</span> datetime <span class="kw">as</span> dt
+<span class="com"># 2. Importo MI PROPIO MÓDULO (mis funciones)</span>
+<span class="kw">from</span> matematicas_banco <span class="kw">import</span> obtener_interes_diario, calcular_nuevo_saldo
+
+saldo = <span class="num">10000</span>
+<span class="func">print</span>(<span class="str">"--- BIENVENIDO AL BANCO DUOC ---"</span>)
+<span class="func">print</span>(<span class="str">"Fecha:"</span>, dt.datetime.<span class="func">now</span>().<span class="func">strftime</span>(<span class="str">"%d/%m"</span>))
+
+<span class="com"># Uso la función de mi otro archivo</span>
+interes = <span class="func">obtener_interes_diario</span>()
+<span class="func">print</span>(<span class="str">"El interés de hoy es:"</span>, interes)
+
+retiro = <span class="func">int</span>(<span class="func">input</span>(<span class="str">"¿Cuánto desea retirar? "</span>))
+<span class="com"># Uso mi otra función para el cálculo matemático</span>
+saldo = <span class="func">calcular_nuevo_saldo</span>(saldo, retiro)
+
+<span class="func">print</span>(<span class="str">"Su nuevo saldo es:"</span>, saldo)
+</pre>
+        </div>
+
+        <!-- SLIDE 30: Check de Comprensión 3 -->
+        <div class="slide">
+            <h2>🧠 Check de Comprensión</h2>
+            <p>En el código del banco recién visto, el programador dividió el proyecto en <span class="inline-code">matematicas_banco.py</span> y <span class="inline-code">main.py</span>.</p>
+            <p>¿Qué ganamos haciendo esto en lugar de poner los dos `def` directo en el `main.py`?</p>
+            
+            <div class="reveal-box" onclick="toggleReveal(this)">
+                👉 Clic aquí para revelar respuestas posibles
+                <div class="reveal-content" style="font-size: 0.9em;">
+                    1. <strong>Orden:</strong> El main.py se mantiene limpio, enfocado solo en leer inputs y mostrar prints.<br><br>
+                    2. <strong>Reutilización:</strong> Si mañana creamos una app web para el banco en app.py, podemos hacer `from matematicas_banco import...` y usar la misma lógica matemática sin copiar y pegar código.
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 31: Resumen -->
+        <div class="slide">
+            <h2>Resumen Visual de la Clase</h2>
+            <div style="background-color: rgba(255,0,127,0.05); border: 4px solid var(--accent-color); padding: 30px; border-radius: 15px; width: 100%; max-width: 1000px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>📦 <strong>Módulo:</strong> Un archivo .py con código (herramientas).</li>
+                    <li>🧰 <strong>Librería Estándar:</strong> Módulos gratis que ya vienen en Python (`math`, `random`, `datetime`).</li>
+                    <li>🚚 <strong>import:</strong> La acción de traer herramientas de un módulo a mi archivo.</li>
+                    <li>⚙️ <strong>Funciones propias:</strong> Bloques `def` que creamos nosotros. Pueden recibir (parámetros) y escupir (return).</li>
+                    <li>🏗️ <strong>Proyectos Multi-archivo:</strong> Crear varios archivos .py en una misma carpeta e importarlos entre sí para ordenar proyectos gigantes.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SLIDE 32: Actividad Práctica -->
+        <div class="slide">
+            <h2>¡Tu Turno! 🚀 (Actividad en clases)</h2>
+            <p>Abre tu editor de código y realiza lo siguiente:</p>
+            <ol style="max-width: 900px; text-align: left; line-height: 1.6; font-size: 0.9em;">
+                <li>Crea una carpeta nueva llamada <span class="inline-code">Clase_Modulos</span>.</li>
+                <li>Adentro crea el archivo <span class="inline-code">dados.py</span>. En él, importa `randint` de `random`, y crea una función `tirar_dado()` que <strong>devuelva (return)</strong> un número del 1 al 6.</li>
+                <li>En la misma carpeta crea <span class="inline-code">juego.py</span>. Importa tu función `tirar_dado`. Llama a la función dos veces para simular dos dados y muestra la suma total de ambos en pantalla con un print.</li>
+            </ol>
+            <p style="margin-top: 30px; color: var(--accent-color); font-weight: bold;">¡El profesor pasará por los puestos revisando!</p>
+        </div>
+
+        <!-- SLIDE 33: Cierre -->
+        <div class="slide">
+            <h1>¡Excelente trabajo! 🎉</h1>
+            <h2>Ya eres capaz de crear arquitecturas de software multi-archivo.</h2>
+            <p style="margin-top: 50px;">Fin de la presentación.</p>
+        </div>
+
+        <!-- Progress and Controls -->
+        <div id="controls">
+            <button class="btn" id="prevBtn" onclick="changeSlide(-1)">◀ Anterior</button>
+            <div id="counter">1 / 33</div>
+            <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente ▶</button>
+        </div>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const counter = document.getElementById('counter');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateUI() {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            // Show current slide
+            slides[currentSlide].classList.add('active');
+
+            // Update counter
+            counter.innerText = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Update progress bar
+            const progress = ((currentSlide) / (totalSlides - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // Update buttons
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            
+            // Reset reveals on slide change
+            const reveals = slides[currentSlide].querySelectorAll('.reveal-content');
+            reveals.forEach(r => r.classList.remove('show'));
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+            updateUI();
+        }
+
+        function toggleReveal(element) {
+            const content = element.querySelector('.reveal-content');
+            content.classList.toggle('show');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Fullscreen logic
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // Handle fullscreen change to update button text
+        document.addEventListener('fullscreenchange', (event) => {
+            const btn = document.getElementById('fullscreen-btn');
+            if (document.fullscreenElement) {
+                btn.innerText = '❌ Salir Pantalla Completa';
+                btn.style.opacity = '0.3'; // Make it less intrusive
+                btn.onmouseenter = () => btn.style.opacity = '1';
+                btn.onmouseleave = () => btn.style.opacity = '0.3';
+            } else {
+                btn.innerText = '📺 Pantalla Completa';
+                btn.style.opacity = '1';
+                btn.onmouseenter = null;
+                btn.onmouseleave = null;
+            }
+        });
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+</html>
