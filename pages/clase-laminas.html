@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>📖 Colección de Láminas — Álbum Mundial</title>
+  <meta name="description" content="Material de práctica para el Examen Final Transversal. Sistema de Gestión de Colección de Láminas." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+
+    /* Concept card styling */
+    .concept-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    
+    /* Exercise card */
+    .exercise-card {
+      background: var(--t-surface); border-radius: 12px;
+      box-shadow: 0 4px 6px var(--t-shadow); padding: 1.5rem;
+      border: 2px solid var(--t-glass-border);
+      transition: transform 0.3s, border-color 0.3s;
+      margin-bottom: 1.5rem; color: var(--t-text);
+    }
+    .exercise-card:hover {
+      transform: translateY(-3px); box-shadow: 0 8px 12px var(--t-shadow);
+      border-color: var(--t-accent);
+    }
+
+    /* Exercise header */
+    .ex-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+    }
+    .ex-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-glass-bg); border: 2px solid var(--t-accent);
+      color: var(--t-accent); font-weight: 800;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%; font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .ex-title { font-size: 1.1rem; font-weight: 700; color: var(--t-text); }
+
+    .callout-exam {
+      background: rgba(52, 211, 153, 0.08); border-left: 4px solid var(--t-correct, #10b981);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-exam strong { color: var(--t-correct, #10b981); }
+
+    .concept-ref {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 1rem;
+      font-size: 0.7rem; font-weight: 700; margin-left: 0.3rem;
+      background: var(--t-accent-bg, rgba(139,92,246,0.1));
+      color: var(--t-accent); border: 1px solid var(--t-accent);
+    }
+
+    /* Checklist */
+    .checklist-item {
+      display:flex; align-items:flex-start; gap:0.6rem; padding:0.5rem 0;
+      font-size:0.88rem; color:var(--t-text);
+    }
+    .checklist-item .check-box {
+      width:1.3rem; height:1.3rem; border:2px solid var(--t-accent); border-radius:4px;
+      flex-shrink:0; margin-top:0.1rem; cursor:pointer; transition:all 0.2s;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--t-surface); font-size:0.7rem;
+    }
+    .checklist-item .check-box.checked {
+      background:var(--t-accent); border-color:var(--t-accent); color:#fff;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">⬅️ Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">📖 Material de práctica — Examen Final</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          Sistema de Gestión de Colección de Láminas — Álbum del Mundial.<br>
+          <em>Listas, diccionarios anidados, funciones y manejo de errores</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: sec === 'enunciado' }" @click="sec='enunciado'">📝 Enunciado</button>
+        <button class="section-pill" :class="{ active: sec === 'tips' }" @click="sec='tips'">💡 Tips</button>
+        <button class="section-pill" :class="{ active: sec === 'patrones' }" @click="sec='patrones'">🧱 Patrones de Referencia</button>
+        <button class="section-pill" :class="{ active: sec === 'evaluacion' }" @click="sec='evaluacion'">✅ Autoevaluación</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: ENUNCIADO -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'enunciado'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <div class="doc-section">
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 mb-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">🎯 Modalidad de trabajo</p>
+          <p class="text-sm">
+            <strong>Cómo usar este material:</strong> simula la dificultad y extensión esperada del examen final transversal. Incluye el enunciado, tabla de campos, reglas de negocio, tips de implementación, patrones de código parciales (no la solución armada) y una guía de autoevaluación. Inténtalo solo, sin mirar una solución completa.
+            <br><em>Duración sugerida: 200 a 220 minutos | Individual</em>
+          </p>
+        </div>
+
+        <h2>Enunciado General 🎯</h2>
+        <p>
+          Desarrolla un programa en Python que implemente un sistema de gestión de colecciones de láminas del álbum del Mundial, donde todo el comportamiento se organice mediante funciones bien definidas. El programa debe incluir un menú interactivo, validaciones de entrada (incluyendo manejo de errores con try/except), operaciones lógicas (decisiones y comparaciones) y uso de funciones separadas.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>1. Datos que debe manejar el sistema 📦</h2>
+        <p>
+          El sistema trabaja con una colección de coleccionistas. Esta colección debe existir desde que el programa inicia y estar disponible durante toda la ejecución. Cada vez que se registra un coleccionista, se incorpora a esa colección como un nuevo elemento.
+        </p>
+        <p class="mt-2">
+          Cada coleccionista se representa como un diccionario con varios campos. Dos de esos campos —las láminas que pegó y las láminas repetidas que tiene para intercambiar— no son valores simples, sino listas. Esto agrega un nivel de profundidad respecto a lo trabajado anteriormente: una lista general (coleccionistas) que contiene diccionarios (cada coleccionista), donde cada uno de esos diccionarios contiene a su vez dos listas propias.
+        </p>
+        <p class="mt-2 text-sm text-kawaii-text/80">
+          El álbum completo tiene un total fijo de <strong>20 láminas por sección</strong>, repartidas en <strong>3 secciones</strong>: <code>"Equipos"</code>, <code>"Estadios"</code> y <code>"Figuras"</code> (60 láminas en total). Cada lámina se identifica con un código único, por ejemplo <code>"EQ-01"</code>, <code>"ES-14"</code>, <code>"FI-07"</code>.
+        </p>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Estructura de un coleccionista:</h3>
+        <table class="compare-table" style="width:100%; margin-top:1rem; margin-bottom:1rem;">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Qué representa</th>
+              <th>Restricciones de validación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"nombre"</code></td>
+              <td>Nombre del coleccionista</td>
+              <td>No vacío ni solo espacios en blanco</td>
+            </tr>
+            <tr>
+              <td><code>"laminas_pegadas"</code></td>
+              <td>Lista de códigos de láminas que ya pegó en su álbum</td>
+              <td>Se crea como lista vacía al registrar. Cada código debe tener un formato válido (ver función de validación de código) y no puede repetirse dentro de la misma lista</td>
+            </tr>
+            <tr>
+              <td><code>"laminas_repetidas"</code></td>
+              <td>Lista de códigos de láminas que tiene de más, disponibles para intercambiar</td>
+              <td>Se crea como lista vacía al registrar. Un código no puede estar simultáneamente en pegadas y en repetidas para el mismo coleccionista</td>
+            </tr>
+            <tr>
+              <td><code>"porcentaje_avance"</code></td>
+              <td>Porcentaje del álbum completo que lleva pegado</td>
+              <td><strong>No se solicita al usuario.</strong> El sistema lo calcula automáticamente cada vez que se actualiza el álbum, a partir de <code>laminas_pegadas</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="text-sm text-kawaii-text/80">
+          Cada diccionario de coleccionista se guarda dentro de una lista general llamada, por ejemplo, <code>coleccionistas</code>. El programa comienza con la lista vacía y la va llenando a medida que se registran coleccionistas.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>2. Lo que debe hacer el sistema ⚙️</h2>
+        <p>
+          El sistema se controla desde un menú que aparece en pantalla cada vez que el usuario termina una acción. El usuario elige una opción numérica, el programa ejecuta la tarea correspondiente y vuelve a mostrar el menú. Esto se repite hasta que el usuario elige salir.
+        </p>
+        <p class="mt-2">El menú tiene siete opciones:</p>
+        <pre><code class="language-python">========== MENÚ ÁLBUM MUNDIAL ==========
+1. Registrar coleccionista
+2. Pegar lámina
+3. Marcar lámina repetida
+4. Buscar coleccionista
+5. Ver láminas faltantes por sección
+6. Buscar intercambio entre dos coleccionistas
+7. Salir
+==========================================</code></pre>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 my-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">💡 Regla de Arquitectura</p>
+          <p class="text-sm">
+            Debes definir dos funciones separadas para el menú: una que muestre las opciones en pantalla (sin recibir nada ni retornar nada) y otra que lea y retorne la opción elegida, validando con <code>try/except</code> que el usuario haya ingresado un número entero. Ambas funciones deben invocarse en cada vuelta del ciclo.
+          </p>
+        </div>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Detalle de las Opciones del Menú:</h3>
+        
+        <div class="space-y-4">
+          <!-- Opcion 1 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">1</span><span class="ex-title">Registrar coleccionista</span></div>
+            <p class="text-sm">
+              El sistema solicita el nombre del coleccionista. Verifica que no esté vacío ni sea solo espacios en blanco. Si el dato no cumple la condición, informa al usuario y no registra. Solo cuando el dato es válido se crea el diccionario —con ambas listas de láminas vacías y porcentaje_avance en 0— y se agrega a la lista general.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define una función que reciba la lista de coleccionistas como parámetro y llame a una función de validación distinta para el nombre. Los mensajes de error se muestran en esta función, no dentro de la validación.
+            </div>
+          </div>
+
+          <!-- Opcion 2 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">2</span><span class="ex-title">Pegar lámina</span></div>
+            <p class="text-sm">
+              El sistema solicita el nombre del coleccionista, lo busca, y si existe solicita el código de la lámina a pegar (por ejemplo <code>"EQ-05"</code>). Antes de agregarla verifica:
+            </p>
+            <ul class="text-sm mt-2 list-disc pl-5 space-y-1 mb-2">
+              <li>El código tiene un formato válido: dos letras, un guion, dos números (<code>EQ-05</code>, <code>ES-14</code>, <code>FI-20</code>), y la sección (las dos letras) corresponde a una de las tres válidas (<code>EQ</code>, <code>ES</code>, <code>FI</code>).</li>
+              <li>La lámina no está ya en <code>laminas_pegadas</code> de ese coleccionista (no se puede pegar dos veces la misma).</li>
+            </ul>
+            <p class="text-sm">
+              Si el código no es válido, o ya estaba pegado, el sistema informa al usuario y no realiza el cambio. Si todo es correcto, agrega el código a <code>laminas_pegadas</code> y <strong>recalcula automáticamente</strong> el <code>porcentaje_avance</code> del coleccionista.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define una función que reciba el diccionario del coleccionista y el código de la lámina, valide el formato con una función aparte, y —si corresponde— actualice la lista y vuelva a calcular el porcentaje.
+            </div>
+          </div>
+
+          <!-- Opcion 3 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">3</span><span class="ex-title">Marcar lámina repetida</span></div>
+            <p class="text-sm">
+              El sistema solicita el nombre del coleccionista y el código de una lámina que tiene repetida (de más, no pegada en su álbum). Valida el mismo formato de código que en la opción anterior. 
+            </p>
+            <div class="callout-exam mt-2">
+              <strong>Regla de negocio nueva:</strong> una lámina no puede estar simultáneamente en <code>laminas_pegadas</code> y en <code>laminas_repetidas</code> del mismo coleccionista — si el código ya está pegado, el sistema rechaza la operación e informa al usuario, porque no tiene sentido tener de más algo que aún no completó.
+            </div>
+          </div>
+
+          <!-- Opcion 4 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">4</span><span class="ex-title">Buscar coleccionista</span></div>
+            <p class="text-sm">
+              El sistema solicita un nombre y recorre la lista de coleccionistas buscando una coincidencia exacta. 
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define una función que reciba la lista y el nombre como parámetros. La función recorre la lista y retorna la posición del registro encontrado, o <code>-1</code> si no existe. Es el programa principal quien decide qué hacer con este valor.
+            </div>
+          </div>
+
+          <!-- Opcion 5 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">5</span><span class="ex-title">Ver láminas faltantes por sección</span></div>
+            <p class="text-sm">
+              El sistema solicita el nombre de un coleccionista y, si existe, recorre <strong>las 20 láminas posibles de cada una de las 3 secciones</strong> comparando contra <code>laminas_pegadas</code>, para determinar cuáles le faltan. Muestra el resultado agrupado por sección, junto con el porcentaje de avance total.
+            </p>
+            <pre class="mt-2"><code class="language-python">=== AVANCE DE Camila Rojas ===
+Avance total: 35.0%
+
+Sección Equipos — faltan 13 de 20:
+  EQ-01, EQ-03, EQ-04, EQ-06, EQ-07, EQ-09, EQ-10, EQ-12, EQ-15, EQ-16, EQ-17, EQ-19, EQ-20
+
+Sección Estadios — faltan 18 de 20:
+  ES-01, ES-02, ES-03, ES-04, ES-05, ES-06, ES-07, ES-08, ES-09, ES-10, ES-11, ES-12, ES-13, ES-15, ES-16, ES-17, ES-18, ES-19
+
+Sección Figuras — completa
+*********************************************</code></pre>
+            <p class="text-sm mt-2">
+              Si una sección está completa (no falta ninguna), se muestra el texto <code>Sección Figuras — completa</code> en vez de intentar imprimir una lista vacía.
+            </p>
+          </div>
+
+          <!-- Opcion 6 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">6</span><span class="ex-title">Buscar intercambio entre dos coleccionistas</span></div>
+            <p class="text-sm">
+              El sistema solicita los nombres de dos coleccionistas distintos, los busca, y si ambos existen, determina si pueden intercambiar láminas entre sí. Dos coleccionistas pueden intercambiar si existe al menos una lámina que el primero tiene repetida y al segundo le falta (no está en su <code>laminas_pegadas</code>), <strong>o viceversa</strong>.
+            </p>
+            <p class="text-sm mt-2">
+              El sistema muestra qué láminas podría darle cada uno al otro. Si no existe ningún intercambio posible en ningún sentido, informa al usuario:
+            </p>
+            <pre class="mt-2"><code class="language-python">No hay intercambios posibles entre 'nombre1' y 'nombre2'.</code></pre>
+            <div class="callout-exam mt-2">
+              <strong>Atención:</strong> Esta es la regla de negocio más exigente. Requiere comparar la lista de repetidas de uno contra la lista de pegadas del otro, en ambos sentidos, sin asumir que el intercambio es simétrico.
+            </div>
+          </div>
+
+          <!-- Opcion 7 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">7</span><span class="ex-title">Salir</span></div>
+            <p class="text-sm">
+              El sistema termina la ejecución de forma limpia, sin errores. El ciclo del menú se detiene y el programa finaliza con un mensaje de despedida:
+            </p>
+            <pre><code class="language-python">"¡Gracias por coleccionar con nosotros! Hasta la próxima."</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: TIPS -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'tips'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Tips de Implementación 💡</h2>
+        <p>Asegúrate de considerar estas recomendaciones antes de escribir tu código.</p>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Sobre la estructura de datos anidada</h3>
+        <ul class="text-sm mt-2 list-disc pl-5 space-y-2">
+          <li>Esta vez el anidamiento no es "lista dentro de diccionario dentro de lista", sino <strong>dos listas independientes dentro de un mismo diccionario</strong>: <code>laminas_pegadas</code> y <code>laminas_repetidas</code>.</li>
+          <li>El "álbum completo" (las 60 láminas posibles) no necesita guardarse como una lista gigante escrita a mano. Puedes generarlo con código.</li>
+          <li>Para calcular qué falta, la comparación entre dos listas se puede hacer con operadores de pertenencia (<code>in</code>).</li>
+        </ul>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Sobre el manejo de errores con try/except</h3>
+        <p class="text-sm">
+          Aquí el error de conversión más típico no es numérico sino de <strong>formato de texto</strong>: el código de lámina puede venir mal escrito (<code>"eq5"</code>, <code>"EQ_05"</code>, <code>"XX-05"</code>). Para esto no necesitas try/except (no hay conversión de tipo que falle), necesitas validación con condicionales y manipulación de strings.
+        </p>
+        <div class="callout-exam mt-2">
+          <strong>Diferencia clave:</strong> try/except protege contra errores de <em>conversión</em>. La validación con <code>if</code> protege contra datos que sí tienen el tipo correcto pero no cumplen el formato o la regla de negocio.
+        </div>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Sobre la reutilización de funciones</h3>
+        <ul class="text-sm mt-2 list-disc pl-5 space-y-2">
+          <li>La función de búsqueda por nombre (opción 4) se reutiliza en las opciones 2, 3, 5 y 6. Escribe una sola función <code>buscar_coleccionista(lista, nombre)</code>.</li>
+          <li>La función que calcula el porcentaje de avance debería ser la misma que usa la opción 2 (después de pegar) y la opción 5 (al mostrar el detalle).</li>
+          <li>La validación de formato de código de lámina se usa igual en la opción 2 y 3.</li>
+        </ul>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Errores frecuentes a evitar</h3>
+        <div class="exercise-card mt-2 border-red-200 bg-red-50">
+          <ul class="text-sm list-disc pl-5 space-y-2 text-red-900">
+            <li><strong>No generar el álbum dinámicamente</strong> y escribir 60 códigos a mano.</li>
+            <li><strong>Permitir códigos con sección inventada</strong> (por ejemplo <code>"XX-05"</code>) porque solo se validó que sea letras-guion-números.</li>
+            <li><strong>Olvidar la exclusión mutua</strong> dejando que una lámina aparezca en pegadas y repetidas a la vez.</li>
+            <li><strong>Calcular el intercambio en un solo sentido</strong>, asumiendo que si A le da a B, B no le puede dar a A.</li>
+            <li><strong>No actualizar el porcentaje</strong> justo después de pegar una lámina.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: PATRONES -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'patrones'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Patrones de código de referencia 🧱</h2>
+        <p class="mb-4">
+          <em>Estos fragmentos muestran el patrón general, pero están incompletos a propósito (marcados con <code># COMPLETAR</code>). El objetivo es que practiques resolviendo la lógica faltante.</em>
+        </p>
+
+        <!-- 1 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Constantes y generación del álbum completo</span></div>
+          <pre><code class="language-python">SECCIONES = ["EQ", "ES", "FI"]
+LAMINAS_POR_SECCION = 20
+TOTAL_LAMINAS = len(SECCIONES) * LAMINAS_POR_SECCION  # 60
+
+def generar_album_completo():
+    album = {}
+    for seccion in SECCIONES:
+        codigos = []
+        for numero in range(1, LAMINAS_POR_SECCION + 1):
+            codigo = f"{seccion}-{numero:02d}"
+            codigos.append(codigo)
+        album[seccion] = codigos
+    return album
+    # album queda algo así:
+    # {"EQ": ["EQ-01", "EQ-02", ..., "EQ-20"], "ES": [...], "FI": [...]}</code></pre>
+        </div>
+
+        <!-- 2 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Validación de formato de código de lámina</span></div>
+          <pre><code class="language-python">def es_codigo_valido(codigo):
+    if len(codigo) != 5:
+        return False
+    seccion = codigo[0:2]
+    guion = codigo[2]
+    numero = codigo[3:5]
+    if seccion not in SECCIONES:
+        return False
+    if guion != "-":
+        return False
+    # COMPLETAR: validar que 'numero' sean dos dígitos numéricos
+    #            entre "01" y "20" (pista: numero.isdigit() y luego
+    #            convertir a entero y comprobar el rango)
+    return True</code></pre>
+        </div>
+
+        <!-- 3 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Función de búsqueda reutilizable</span></div>
+          <pre><code class="language-python">def buscar_coleccionista(coleccionistas, nombre):
+    for i in range(len(coleccionistas)):
+        if coleccionistas[i]["nombre"] == nombre:
+            return i
+    return -1</code></pre>
+        </div>
+
+        <!-- 4 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Pegar lámina (con recálculo automático)</span></div>
+          <pre><code class="language-python">def calcular_porcentaje(coleccionista):
+    cantidad = len(coleccionista["laminas_pegadas"])
+    return round((cantidad / TOTAL_LAMINAS) * 100, 1)
+
+def pegar_lamina(coleccionista, codigo):
+    if not es_codigo_valido(codigo):
+        print("Código de lámina inválido.")
+        return
+
+    if codigo in coleccionista["laminas_pegadas"]:
+        print("Esta lámina ya estaba pegada.")
+        return
+
+    # COMPLETAR: si el código está en laminas_repetidas, ¿qué debería
+    #            pasar? (pista: pensar si tiene sentido pegar algo
+    #            que también está marcado como repetido)
+
+    coleccionista["laminas_pegadas"].append(codigo)
+    coleccionista["porcentaje_avance"] = calcular_porcentaje(coleccionista)
+    print(f"Lámina {codigo} pegada. Avance: {coleccionista['porcentaje_avance']}%")</code></pre>
+        </div>
+
+        <!-- 5 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Láminas faltantes por sección</span></div>
+          <pre><code class="language-python">def laminas_faltantes(coleccionista):
+    album = generar_album_completo()
+    faltantes = {}
+    for seccion in SECCIONES:
+        faltantes_seccion = []
+        for codigo in album[seccion]:
+            # COMPLETAR: si 'codigo' no está en
+            #            coleccionista["laminas_pegadas"], agregarlo
+            #            a faltantes_seccion
+            pass
+        faltantes[seccion] = faltantes_seccion
+    return faltantes
+
+# Desde el programa principal:
+# faltantes = laminas_faltantes(coleccionistas[posicion])
+# for seccion in SECCIONES:
+#     cantidad_faltante = len(faltantes[seccion])
+#     if cantidad_faltante == 0:
+#         print(f"Sección {seccion} — completa")
+#     else:
+#         print(f"Sección {seccion} — faltan {cantidad_faltante} de {LAMINAS_POR_SECCION}:")
+#         print(", ".join(faltantes[seccion]))</code></pre>
+        </div>
+
+        <!-- 6 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Buscar intercambio entre dos coleccionistas</span></div>
+          <pre><code class="language-python">def que_le_falta_a(receptor, ofertante):
+    """Retorna qué láminas repetidas de 'ofertante' le sirven a 'receptor'."""
+    posibles = []
+    for codigo in ofertante["laminas_repetidas"]:
+        if codigo not in receptor["laminas_pegadas"]:
+            posibles.append(codigo)
+    return posibles
+
+# Desde el programa principal, dentro de la opción 6:
+# de_a_a_b = que_le_falta_a(coleccionista_b, coleccionista_a)
+# de_b_a_a = que_le_falta_a(coleccionista_a, coleccionista_b)
+#
+# COMPLETAR: si de_a_a_b y de_b_a_a están ambas vacías, mostrar el
+#            mensaje de "no hay intercambios posibles"; si no,
+#            mostrar lo que cada uno le puede ofrecer al otro</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: AUTOEVALUACIÓN -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'evaluacion'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Guía de Autoevaluación ✅</h2>
+        <p class="mb-4">
+          Antes de considerar tu ejercicio terminado, revisa cada punto. Si respondes "no" a alguno, vuelve atrás y corrígelo.
+        </p>
+
+        <div class="exercise-card" style="border-color:var(--t-accent);">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Estructura de datos</h3>
+          <div v-for="(item, idx) in checklist.datos" :key="'datos-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Funciones</h3>
+          <div v-for="(item, idx) in checklist.funciones" :key="'func-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Manejo de errores</h3>
+          <div v-for="(item, idx) in checklist.errores" :key="'error-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Reglas de negocio</h3>
+          <div v-for="(item, idx) in checklist.reglas" :key="'reglas-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Formato de salida</h3>
+          <div v-for="(item, idx) in checklist.salida" :key="'salida-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+        </div>
+
+        <div class="callout-exam">
+          <strong>Antes de entregar:</strong> prueba al menos estos tres casos: (1) un coleccionista que completa una sección entera, (2) un intento de pegar un código con sección inválida o ya pegado, y (3) dos coleccionistas donde el intercambio solo funciona en un sentido (uno puede ayudar al otro, pero no al revés). Si los tres se comportan como esperas, vas bien encaminado.
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="max-width:800px;margin:0 auto;">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <p class="text-sm" style="color: var(--t-text-secondary); opacity: 0.7;">Hecho con 💖 para Academia hachimaki</p>
+      </div>
+    </footer>
+
+  </div><!-- fin #app -->
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          sec: 'enunciado',
+          checklist: {
+            datos: [
+              { text: '¿La lista de coleccionistas existe antes del ciclo del menú y no se reinicia en cada vuelta?', done: false },
+              { text: '¿Cada coleccionista nuevo se crea con ambas listas vacías y porcentaje_avance en 0, sin pedirle ese último dato al usuario?', done: false },
+              { text: '¿Generas el álbum completo (60 códigos) de forma dinámica, sin escribirlo a mano?', done: false }
+            ],
+            funciones: [
+              { text: '¿Tienes una función separada para mostrar el menú y otra para leer la opción?', done: false },
+              { text: '¿Tu función de búsqueda por nombre es una sola, y la reutilizas en al menos tres opciones distintas?', done: false },
+              { text: '¿La función que calcula el porcentaje de avance es una sola, reutilizada donde corresponde?', done: false },
+              { text: '¿Los mensajes de error se muestran en la función que pide el dato, no dentro de las validaciones?', done: false }
+            ],
+            errores: [
+              { text: '¿Usas try/except en la lectura de la opción del menú?', done: false },
+              { text: '¿Tu programa no se cae si el usuario escribe letras donde se esperaba un número?', done: false },
+              { text: '¿Distingues entre validar formato de código (con if) y convertir tipos (con try/except)?', done: false }
+            ],
+            reglas: [
+              { text: '¿Tu sistema rechaza un código de lámina con sección inválida (por ejemplo "XX-05")?', done: false },
+              { text: '¿Tu sistema impide que una misma lámina esté pegada y repetida a la vez para el mismo coleccionista?', done: false },
+              { text: '¿La búsqueda de intercambio revisa ambos sentidos (A hacia B y B hacia A), no solo uno?', done: false },
+              { text: '¿El porcentaje de avance se recalcula automáticamente después de pegar una lámina?', done: false }
+            ],
+            salida: [
+              { text: '¿La opción 5 muestra correctamente una sección completa, sin imprimir una lista vacía como si tuviera elementos?', done: false },
+              { text: '¿El mensaje de despedida aparece exactamente al elegir la opción 7, y el ciclo termina ahí?', done: false }
+            ]
+          }
+        };
+      },
+      mounted() {
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') Prism.highlightAll();
+        });
+      },
+      watch: {
+        sec() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Theme Engine (load FIRST to prevent FOUC) -->
+  <script src="../js/theme-engine.js"></script>
+
+  <!-- Theme System CSS -->
+  <link rel="stylesheet" href="../css/themes.css" />
+  <link rel="stylesheet" href="../css/utilities.css" />
+  <title>📺 Evaluación Práctica — AniStream</title>
+  <meta name="description" content="Evaluación Práctica - Sistema de Administración AniStream con dos diccionarios." />
+
+  <!-- PrismJS para código -->
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <!-- Shared Styles -->
+  <link rel="stylesheet" href="../css/main.css?v=3" />
+
+  <style>
+    .section-nav { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-bottom:2rem; }
+    .section-pill { padding:0.5rem 1.2rem; border-radius:2rem; border:2px solid rgba(255,255,255,0.5); background:var(--t-surface); font-family:var(--t-font-main,'Quicksand'),sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.25s ease; color:var(--t-text); }
+    .section-pill:hover { background:var(--t-surface-hover); }
+    .section-pill.active { background:var(--t-shape-1); border-color:var(--t-accent); color:var(--t-accent); }
+
+    /* Concept card styling */
+    .concept-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+    }
+    
+    /* Exercise card */
+    .exercise-card {
+      background: var(--t-surface); border-radius: 12px;
+      box-shadow: 0 4px 6px var(--t-shadow); padding: 1.5rem;
+      border: 2px solid var(--t-glass-border);
+      transition: transform 0.3s, border-color 0.3s;
+      margin-bottom: 1.5rem; color: var(--t-text);
+    }
+    .exercise-card:hover {
+      transform: translateY(-3px); box-shadow: 0 8px 12px var(--t-shadow);
+      border-color: var(--t-accent);
+    }
+
+    /* Exercise header */
+    .ex-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+    }
+    .ex-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--t-glass-bg); border: 2px solid var(--t-accent);
+      color: var(--t-accent); font-weight: 800;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%; font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .ex-title { font-size: 1.1rem; font-weight: 700; color: var(--t-text); }
+
+    .callout-exam {
+      background: rgba(52, 211, 153, 0.08); border-left: 4px solid var(--t-correct, #10b981);
+      border-radius: 0 8px 8px 0; padding: 0.8rem 1rem; margin-top: 0.75rem;
+      font-size: 0.88rem; color: var(--t-text-secondary);
+    }
+    .callout-exam strong { color: var(--t-correct, #10b981); }
+
+    .concept-ref {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 1rem;
+      font-size: 0.7rem; font-weight: 700; margin-left: 0.3rem;
+      background: var(--t-accent-bg, rgba(139,92,246,0.1));
+      color: var(--t-accent); border: 1px solid var(--t-accent);
+    }
+
+    /* Checklist */
+    .checklist-item {
+      display:flex; align-items:flex-start; gap:0.6rem; padding:0.5rem 0;
+      font-size:0.88rem; color:var(--t-text);
+    }
+    .checklist-item .check-box {
+      width:1.3rem; height:1.3rem; border:2px solid var(--t-accent); border-radius:4px;
+      flex-shrink:0; margin-top:0.1rem; cursor:pointer; transition:all 0.2s;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--t-surface); font-size:0.7rem;
+    }
+    .checklist-item .check-box.checked {
+      background:var(--t-accent); border-color:var(--t-accent); color:#fff;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden">
+
+  <!-- Background floating shapes -->
+  <div class="bg-shape" style="width:300px;height:300px;background:var(--t-shape-1);top:10%;left:-5%;"></div>
+  <div class="bg-shape" style="width:200px;height:200px;background:var(--t-shape-2);top:60%;right:-3%;"></div>
+  <div class="bg-shape" style="width:250px;height:250px;background:var(--t-shape-3);bottom:5%;left:40%;"></div>
+  <div class="bg-shape" style="width:180px;height:180px;background:var(--t-shape-4);top:30%;right:20%;"></div>
+
+  <div id="app" class="relative z-10">
+
+    <!-- Header -->
+    <div class="page-container" style="padding-bottom:0;">
+      <div class="page-header">
+        <a href="../index.html" class="back-btn mb-4">⬅️ Volver al diario</a>
+        <h1 class="text-3xl md:text-4xl font-bold text-kawaii-deep mt-4 mb-2">📺 Evaluación Práctica — AniStream</h1>
+        <p class="text-kawaii-text/70 max-w-2xl text-sm leading-relaxed">
+          Administración de catálogo de series y disponibilidad de episodios.<br>
+          <em>Diccionarios paralelos, validaciones, funciones y try/except. Tiempo sugerido: 4 horas</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- Section Navigation -->
+    <div class="max-w-4xl mx-auto px-4 mt-4">
+      <div class="section-nav">
+        <button class="section-pill" :class="{ active: sec === 'activacion' }" @click="sec='activacion'">🧠 Activación</button>
+        <button class="section-pill" :class="{ active: sec === 'enunciado' }" @click="sec='enunciado'">📝 Enunciado</button>
+        <button class="section-pill" :class="{ active: sec === 'patrones' }" @click="sec='patrones'">🧱 Patrones</button>
+        <button class="section-pill" :class="{ active: sec === 'ejemplo' }" @click="sec='ejemplo'">💻 Ejemplo</button>
+        <button class="section-pill" :class="{ active: sec === 'evaluacion' }" @click="sec='evaluacion'">✅ Autoevaluación</button>
+        <button class="section-pill" :class="{ active: sec === 'pro' }" @click="sec='pro'">🚀 Desafío Pro</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: ACTIVACIÓN -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'activacion'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Activación Mental 🧠</h2>
+        <p class="mb-4">Antes de enfrentarnos al desarrollo completo del sistema AniStream, asegúrate de dominar estos 3 conceptos clave.</p>
+
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-num">1</span><span class="ex-title">Acceso por Posición</span></div>
+          <p class="text-sm">Si tienes <code>catalogo = {'AN001': [9990, 75]}</code>, ¿cómo obtienes el número <code>75</code>?</p>
+          <div class="callout-think mt-2">
+            <strong>Respuesta mental:</strong> Accedes primero a la clave del diccionario y luego al índice de la lista. En código sería: <code>catalogo['AN001'][1]</code>.
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-num">2</span><span class="ex-title">Diccionarios Paralelos</span></div>
+          <p class="text-sm">Si tienes <code>series</code> y <code>catalogo</code> que comparten la misma clave (el código de la serie). ¿Cómo iterarías sobre ambos al mismo tiempo?</p>
+          <div class="callout-think mt-2">
+            <strong>Respuesta mental:</strong> No necesitas un bucle doble. Basta iterar sobre las claves de uno de los diccionarios (ej: <code>for cod in series:</code>) y usar esa misma variable <code>cod</code> para extraer valores del otro diccionario (<code>catalogo[cod]</code>).
+          </div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-num">3</span><span class="ex-title">Try/Except vs If</span></div>
+          <p class="text-sm">¿Cuál es la diferencia entre usar <code>if</code> para validar un género (ej: "Accion") y usar <code>try/except ValueError</code> para validar un precio?</p>
+          <div class="callout-think mt-2">
+            <strong>Respuesta mental:</strong> Usamos <code>if</code> para validar formatos de texto o reglas de negocio (ej: si está dentro de una lista de opciones permitidas). Usamos <code>try/except</code> cuando intentamos <em>convertir</em> un tipo de dato (como un string a entero usando <code>int()</code>) para evitar que el programa colapse si el usuario ingresa letras en lugar de números.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: ENUNCIADO -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'enunciado'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      
+      <div class="doc-section">
+        <h2>Instrucciones 🎯</h2>
+        <p>
+          La plataforma de streaming <strong>AniStream</strong> requiere un programa en Python para administrar su catálogo de series de anime y la disponibilidad de episodios por serie. Todo el comportamiento del sistema debe organizarse en funciones bien definidas. El programa incluye un menú interactivo, validaciones de entrada y una separación clara entre la lógica de cada función y las decisiones del programa principal.
+        </p>
+      </div>
+
+      <div class="doc-section">
+        <h2>1. Datos que debe manejar el sistema 📦</h2>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 mb-4 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">💡 Aclaración Pedagógica sobre el Diseño de Datos</p>
+          <p class="text-sm">
+            En este ejercicio, los valores de los diccionarios son <strong>listas ordenadas por posición</strong> en lugar de diccionarios anidados (por ejemplo, debes acceder a <code>catalogo['AN001'][1]</code> en lugar de <code>catalogo['AN001']['episodios']</code>). <br>
+            Aunque en proyectos reales suele ser más robusto y elegante usar diccionarios o clases para evitar depender de "posiciones mágicas", <strong>este formato estructurado por índices es requerido específicamente por las rúbricas del Examen Transversal</strong>. Es fundamental que practiques la extracción y modificación de datos accediendo directamente por sus posiciones (<code>[0]</code>, <code>[1]</code>, etc.) tal como se describe a continuación.
+          </p>
+        </div>
+
+        <p>
+          El sistema trabaja con <strong>dos diccionarios relacionados</strong>, ambos identificados por el mismo código de serie como clave. Estos diccionarios deben existir desde que el programa inicia y permanecer disponibles durante toda la ejecución.
+        </p>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Diccionario <code>series</code></h3>
+        <p class="text-sm mb-2">Contiene la información descriptiva de cada anime. La <strong>clave</strong> es el código de la serie y el <strong>valor</strong> es una lista con los siguientes campos, en este orden:</p>
+        <table class="compare-table" style="width:100%; margin-top:1rem; margin-bottom:1rem;">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Qué representa</th>
+              <th>Restricciones de validación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"titulo"</code></td>
+              <td>Nombre de la serie</td>
+              <td>No debe contener solo espacios en blanco ni estar vacío</td>
+            </tr>
+            <tr>
+              <td><code>"genero"</code></td>
+              <td>Género de la serie</td>
+              <td>No debe contener solo espacios en blanco ni estar vacío</td>
+            </tr>
+            <tr>
+              <td><code>"estudio"</code></td>
+              <td>Estudio de animación</td>
+              <td>No debe contener solo espacios en blanco ni estar vacío</td>
+            </tr>
+            <tr>
+              <td><code>"clasificacion"</code></td>
+              <td>Clasificación de audiencia</td>
+              <td>Debe ser exactamente <code>'G'</code>, <code>'PG'</code> o <code>'M'</code></td>
+            </tr>
+            <tr>
+              <td><code>"subtitulado"</code></td>
+              <td>Indica si está subtitulada</td>
+              <td>El usuario ingresa <code>'s'</code> o <code>'n'</code>. El sistema lo convierte a <code>True</code> o <code>False</code></td>
+            </tr>
+            <tr>
+              <td><code>"pais_origen"</code></td>
+              <td>País de origen</td>
+              <td>No debe contener solo espacios en blanco ni estar vacío</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre><code class="language-python">series = {
+    'AN001': ['Attack on Titan',    'accion',  'MAPPA',      'M',  False, 'Japon'],
+    'AN002': ['Your Name',          'romance', 'CoMix Wave', 'PG', True,  'Japon'],
+    'AN003': ['One Punch Man',      'comedia', 'J.C.Staff',  'PG', False, 'Japon'],
+    'AN004': ['Kimetsu no Yaiba',   'accion',  'ufotable',   'PG', True,  'Japon'],
+    'AN005': ['No Game No Life',    'isekai',  'Madhouse',   'PG', True,  'Japon'],
+    'AN006': ['Violet Evergarden',  'drama',   'KyoAni',     'G',  True,  'Japon'],
+}</code></pre>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Diccionario <code>catalogo</code></h3>
+        <p class="text-sm mb-2">Contiene la información operativa de cada serie. La <strong>clave</strong> es el mismo código y el <strong>valor</strong> es una lista con los siguientes dos campos:</p>
+        <table class="compare-table" style="width:100%; margin-top:1rem; margin-bottom:1rem;">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th>Qué representa</th>
+              <th>Restricciones de validación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"precio"</code></td>
+              <td>Precio mensual en pesos</td>
+              <td>Número entero mayor que cero</td>
+            </tr>
+            <tr>
+              <td><code>"episodios"</code></td>
+              <td>Cantidad de episodios disponibles</td>
+              <td>Número entero mayor o igual a cero</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <pre><code class="language-python">catalogo = {
+    'AN001': [9990,  75],
+    'AN002': [4990,   0],
+    'AN003': [7990,  12],
+    'AN004': [8990,  26],
+    'AN005': [5990,  13],
+    'AN006': [6990,  13],
+}</code></pre>
+      </div>
+
+      <div class="doc-section">
+        <h2>2. Lo que debe hacer el sistema ⚙️</h2>
+        <p>
+          El sistema se controla desde un menú interactivo. Si el usuario ingresa un valor inválido, el sistema muestra <em>"Debe seleccionar una opción válida"</em> y vuelve a mostrar el menú.
+        </p>
+        <pre><code class="language-python">========== MENÚ PRINCIPAL ==========
+1. Episodios por género
+2. Búsqueda de series por rango de precio
+3. Actualizar precio de serie
+4. Agregar serie
+5. Eliminar serie
+6. Salir
+=====================================</code></pre>
+        
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Detalle de las Opciones del Menú:</h3>
+        
+        <div class="space-y-4">
+          <!-- Opcion 1 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">1</span><span class="ex-title">Episodios por género</span></div>
+            <p class="text-sm mb-2">
+              El sistema solicita el nombre de un género. La búsqueda <strong>no distingue entre mayúsculas y minúsculas</strong>. El sistema recorre <code>series</code> identificando todas las series de ese género, y luego extrae la cantidad de episodios de <code>catalogo</code> para acumularla en un total.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define <code>episodios_genero(genero)</code>. Recibe el género, <strong>no retorna ningún valor</strong> y muestra el resultado directamente en pantalla.
+            </div>
+          </div>
+
+          <!-- Opcion 2 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">2</span><span class="ex-title">Búsqueda de series por rango de precio</span></div>
+            <p class="text-sm mb-2">
+              Solicita un precio mínimo y máximo. Recorre <code>catalogo</code> y construye una lista con las series que cumplan ambas condiciones: (a) precio dentro del rango, y (b) tengan episodios &gt; 0. El formato es <code>"Titulo--Codigo"</code> y se muestran ordenados <strong>alfabéticamente por título</strong>. Si no hay, muestra un mensaje de error.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> En el programa principal, exige <code>try/except</code> para validar que sean números enteros. Luego llama a <code>busqueda_precio(p_min, p_max)</code> que no retorna nada e imprime los resultados.
+            </div>
+          </div>
+
+          <!-- Opcion 3 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">3</span><span class="ex-title">Actualizar precio de serie</span></div>
+            <p class="text-sm mb-2">
+              Solicita el código y el nuevo precio. Si existe en <code>catalogo</code>, actualiza su precio. Permite repetir el proceso preguntando: <em>"¿Desea actualizar otro precio (s/n)?"</em>.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define <code>actualizar_precio(codigo, nuevo_precio)</code>. Retorna <strong>True</strong> o <strong>False</strong>. El programa principal decide qué mostrar. La validación del código no debe distinguir mayúsculas/minúsculas.
+            </div>
+          </div>
+
+          <!-- Opcion 4 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">4</span><span class="ex-title">Agregar serie</span></div>
+            <p class="text-sm mb-2">
+              Solicita todos los datos y los valida individualmente. Si todo es válido y el código no existe previamente, agrega el registro en ambos diccionarios.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define una función de validación independiente para cada campo (que retornan True o False, sin prints). Llama a <code>agregar_serie(codigo, titulo, genero, estudio, clasificacion, subtitulado, pais_origen, precio, episodios)</code> si todo es válido, la cual retorna True/False.
+            </div>
+          </div>
+
+          <!-- Opcion 5 -->
+          <div class="exercise-card">
+            <div class="ex-header"><span class="ex-num">5</span><span class="ex-title">Eliminar serie</span></div>
+            <p class="text-sm mb-2">
+              Solicita el código. Si existe, lo elimina de <strong>ambos diccionarios</strong>.
+            </p>
+            <div class="callout-exam">
+              <strong>Implementación:</strong> Define <code>eliminar_serie(codigo)</code>. Retorna True o False, el programa principal imprime los mensajes. Case-insensitive.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: PATRONES -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'patrones'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Patrones de código de referencia 🧱</h2>
+        <p class="mb-4">
+          <em>Estos fragmentos muestran lógicas comunes que necesitarás. Están incompletos a propósito (marcados con <code># COMPLETAR</code>) para que practiques.</em>
+        </p>
+
+        <!-- Patrón 1 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Búsqueda Case-Insensitive en Diccionarios</span></div>
+          <pre><code class="language-python">def episodios_genero(genero_buscado):
+    total = 0
+    # Estandarizamos lo que buscamos a minúsculas
+    buscado = genero_buscado.strip().lower()
+    
+    for cod in series:
+        # Extraemos el género (que es el elemento en la posición 1 de 'series')
+        genero_actual = series[cod][1]
+        
+        # COMPLETAR: Comparar 'genero_actual' estandarizado en minúsculas
+        # con 'buscado'. Si son iguales, obtener los episodios desde
+        # catalogo[cod][1] y sumarlos a 'total'.
+        pass
+
+    print(f"El total de episodios disponibles es: {total}")</code></pre>
+        </div>
+
+        <!-- Patrón 2 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Validación Estricta de Enteros con Try/Except</span></div>
+          <pre><code class="language-python"># En el bloque principal del menú (Opción 2)
+while True:
+    p_min_str = input("Ingrese precio mínimo: ")
+    try:
+        p_min = int(p_min_str)
+        # COMPLETAR: Hacer lo mismo para p_max y luego validar que
+        # p_min sea mayor o igual a cero, y p_min <= p_max.
+        # Si todo es correcto, salir del bucle con 'break'.
+        break
+    except ValueError:
+        print("Debe ingresar valores enteros")</code></pre>
+        </div>
+
+        <!-- Patrón 3 -->
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-title">Añadir registros a diccionarios paralelos</span></div>
+          <pre><code class="language-python">def agregar_serie(cod, tit, gen, est, clas, sub, pais, precio, eps):
+    # Verificamos si el código ya existe en ALGUNO de los diccionarios
+    if cod in series or cod in catalogo:
+        return False
+        
+    # COMPLETAR: 
+    # 1. Agregar a 'series' el código como clave y la lista
+    #    [tit, gen, est, clas, sub, pais] como valor.
+    # 2. Agregar a 'catalogo' el código como clave y la lista
+    #    [precio, eps] como valor.
+    
+    return True</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: EJEMPLO -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'ejemplo'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Ejemplo de Ejecución 💻</h2>
+        <p class="mb-4">
+          Los datos en <strong>negrita</strong> representan los valores ingresados por el usuario.
+        </p>
+
+        <pre><code class="language-python">========== MENÚ PRINCIPAL ==========
+1. Episodios por género
+2. Búsqueda de series por rango de precio
+3. Actualizar precio de serie
+4. Agregar serie
+5. Eliminar serie
+6. Salir
+=====================================
+Ingrese opción: 1
+Ingrese género a consultar: ACCION
+El total de episodios disponibles es: 101
+
+Ingrese opción: 2
+Ingrese precio mínimo: hola
+Debe ingresar valores enteros
+Ingrese precio mínimo: 5000
+Ingrese precio máximo: 9000
+Las series encontradas son: ['Kimetsu no Yaiba--AN004', 'No Game No Life--AN005', 'One Punch Man--AN003', 'Violet Evergarden--AN006']
+
+Ingrese opción: 3
+Ingrese código de la serie: S999
+Ingrese nuevo precio: 8990
+El código no existe
+¿Desea actualizar otro precio (s/n)?: n
+
+Ingrese opción: 4
+Ingrese código de la serie: AN010
+Ingrese título: Fullmetal Alchemist
+Ingrese género: accion
+Ingrese estudio: Bones
+Ingrese clasificación (G/PG/M): PG
+¿Está subtitulada al español? (s/n): s
+Ingrese país de origen: Japon
+Ingrese precio: 8490
+Ingrese episodios disponibles: 64
+Serie agregada
+
+Ingrese opción: 6
+Programa finalizado.</code></pre>
+
+        <h3 class="font-bold mt-4 mb-2 text-lg text-kawaii-deep">Notas de verificación:</h3>
+        <ul class="text-sm list-disc pl-5 space-y-2">
+          <li><strong>Opción 1</strong> con <code>"ACCION"</code>: Attack on Titan (75 ep) + Kimetsu no Yaiba (26 ep) = <strong>101</strong> ✓</li>
+          <li><strong>Opción 2</strong> con rango 5000–9000: quedan fuera AN001 (precio 9990) y AN002 (precio 4990 y además 0 episodios). Las 4 series restantes aparecen <strong>ordenadas alfabéticamente</strong> ✓</li>
+          <li><strong>Opción 3</strong> con código <code>S999</code>: no existe en el catálogo ✓</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: AUTOEVALUACIÓN -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'evaluacion'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Guía de Autoevaluación ✅</h2>
+        <p class="mb-4">
+          Antes de considerar tu ejercicio terminado, revisa cada punto. Si respondes "no" a alguno, revisa tu código.
+        </p>
+
+        <div class="exercise-card" style="border-color:var(--t-accent);">
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2">Diccionarios y Búsqueda</h3>
+          <div v-for="(item, idx) in checklist.diccionarios" :key="'dic-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Funciones y Validaciones</h3>
+          <div v-for="(item, idx) in checklist.funciones" :key="'func-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+
+          <h3 class="font-bold text-lg text-kawaii-deep mb-2 mt-4">Try/Except y Manejo de Errores</h3>
+          <div v-for="(item, idx) in checklist.errores" :key="'error-'+idx" class="checklist-item">
+            <div class="check-box" :class="{ checked: item.done }" @click="item.done = !item.done">
+              <span v-if="item.done">✓</span>
+            </div>
+            <span>{{ item.text }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN: DESAFÍO PRO -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div v-show="sec === 'pro'" class="max-w-3xl mx-auto px-4 pb-16 space-y-6 fade-in-up">
+      <div class="doc-section">
+        <h2>Ticket de Salida y Desafío Pro 🚀</h2>
+        
+        <div class="bg-kawaii-mint/20 border-l-4 border-kawaii-mint p-4 mb-6 rounded-r-lg">
+          <p class="font-bold text-green-800 mb-1">🎟️ Ticket de Salida (Reflexión Teórica)</p>
+          <p class="text-sm">
+            Ahora que has completado el desarrollo utilizando diccionarios paralelos y acceso por índices numéricos (<code>[0]</code>, <code>[1]</code>)... <strong>¿Cuáles crees que son los principales problemas de este diseño?</strong> Si tuvieras que presentarle a un cliente real la arquitectura de este sistema, ¿cómo refactorizarías la estructura de datos para que el código sea más legible y menos propenso a errores al acceder a los valores?
+          </p>
+        </div>
+
+        <h3 class="font-bold mb-4 text-lg text-kawaii-deep">Desafíos Ninja (Opcionales)</h3>
+        
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-num">⭐</span><span class="ex-title">Ordenamiento por Precio</span></div>
+          <p class="text-sm">
+            Modifica la opción 2 ("Búsqueda de series por rango de precio"). Actualmente exige que los resultados se muestren ordenados alfabéticamente. Tu desafío es ordenarlos <strong>por precio de mayor a menor</strong>. <br>
+            <em>Pista: Tendrás que investigar sobre el uso del parámetro <code>key</code> y funciones <code>lambda</code> en la función <code>.sort()</code>.</em>
+          </p>
+        </div>
+
+        <div class="exercise-card">
+          <div class="ex-header"><span class="ex-num">⭐⭐</span><span class="ex-title">Reporte Persistente</span></div>
+          <p class="text-sm">
+            Modifica la opción 6 ("Salir"). Antes de detener el programa, el sistema debe crear un archivo de texto llamado <code>reporte.txt</code>. En este archivo debe escribir la cantidad total de series registradas y el precio promedio de todo el catálogo.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="max-width:800px;margin:0 auto;">
+      <div class="flex flex-col items-center justify-center gap-3">
+        <p class="text-sm" style="color: var(--t-text-secondary); opacity: 0.7;">Hecho con 💖 para Academia hachimaki</p>
+      </div>
+    </footer>
+
+  </div><!-- fin #app -->
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          sec: 'activacion',
+          checklist: {
+            diccionarios: [
+              { text: '¿Agregas o eliminas de AMBOS diccionarios (series y catalogo) a la vez para que queden sincronizados?', done: false },
+              { text: '¿Tu búsqueda por código de serie y género es verdaderamente insensible a mayúsculas (con .upper() o .lower())?', done: false }
+            ],
+            funciones: [
+              { text: '¿La opción de agregar tiene una función distinta para cada campo y SOLO retornan True/False sin prints?', done: false },
+              { text: '¿Las funciones de acción (agregar, eliminar, actualizar) retornan un booleano para que el programa principal decida qué imprimir?', done: false }
+            ],
+            errores: [
+              { text: '¿En la búsqueda por rango (opción 2), usas try/except en un bucle while para obligar al usuario a meter enteros?', done: false },
+              { text: '¿Tu código de validación del menú maneja letras y no se cae?', done: false }
+            ]
+          }
+        };
+      },
+      mounted() {
+        this.$nextTick(() => {
+          if (typeof Prism !== 'undefined') Prism.highlightAll();
+        });
+      },
+      watch: {
+        sec() {
+          this.$nextTick(() => {
+            if (typeof Prism !== 'undefined') Prism.highlightAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      }
+    });
+    app.mount('#app');
+  </script>
+
+</body>
+</html>
