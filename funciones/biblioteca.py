@@ -28,7 +28,7 @@ def validar_ejemplares():
         except ValueError:
             print("Erorr. Ingrese un numero entero valido")
 
-#ingregar libros
+#agregar libros
 def agregar_libros(libros):
     titulo_valido = validar_titulo
     autor_valido = validar_autor
@@ -45,6 +45,8 @@ def agregar_libros(libros):
     
 #buscar libro
 
+def buscar_libro(libros, titulo):
+    for indice, libro in enumerate
 
         
         
