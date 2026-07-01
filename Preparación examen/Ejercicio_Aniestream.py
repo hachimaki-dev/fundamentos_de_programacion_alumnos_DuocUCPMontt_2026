@@ -55,8 +55,18 @@ def main():
 
         if opcion_elegida == '6':
             break
-        elif opcion_elegida == '1':
-            episodios = episodiosGenero('acción')
-            print(episodios)
 
+        elif opcion_elegida == '1':
+            episodios = episodiosGenero('accion')
+            print(episodios)
+        
+        elif opcion_elegida == '2':
+            pass
+        elif opcion_elegida == '3':
+            pass
+        elif opcion_elegida == '4':
+            pass
+        elif opcion_elegida == '5':
+            pass
+      
 main()
