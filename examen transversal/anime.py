@@ -34,5 +34,5 @@ def episodios_genero(genero):
     return acumaldor_de_cantidad
 resultado_cantidad = episodios_genero("drama")
 print(resultado_cantidad)
-                    
+
         
