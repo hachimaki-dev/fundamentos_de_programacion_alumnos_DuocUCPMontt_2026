@@ -15,33 +15,42 @@ catalogo = {
     'AN006': [6990,  13],
 }
 
-print("========== MENÚ PRINCIPAL ==========")
+print("\n========== MENÚ PRINCIPAL ==========")
 print("1. Episodios por género")
 print("2. Búsqueda de series por rango de precio")
 print("3. Actualizar precio de serie")
 print("4. Agregar serie")
 print("5. Eliminar serie")
 print("6. Salir")
-print("=====================================")
+print("=====================================\n")
 
-while True:
-    opcion_usuario=input("Por favor ingrese una opcion")
-    if opcion_usuario==1:
-        genero=input("Por favor ingrese el nombre de un genero")
-    elif opcion_usuario==2:
-        rango_de_precio=int(input("Por favor ingrese un rango de precio"))
-    elif opcion_usuario==3:
-    elif opcion_usuario==4:
-    elif opcion_usuario==5:
-    elif opcion_usuario==6:
-        print("\nSaliendo...\n")
-        break
-    else:
-        print("\nOpcion invalida, porfavor eliga una de las opciones.\n")
+#while True:
+#    opcion_usuario=input("Por favor ingrese una opcion")
+#    if opcion_usuario==1:
+#        genero=input("Por favor ingrese el nombre de un genero")
+#    elif opcion_usuario==2:
+#        rango_de_precio=int(input("Por favor ingrese un rango de precio"))
+#   elif opcion_usuario==3:
+#    elif opcion_usuario==4:
+#    elif opcion_usuario==5:
+#   elif opcion_usuario==6:
+#        print("\nSaliendo...\n")
+#        break
+#    else:
+#        print("\nOpcion invalida, porfavor eliga una de las opciones.\n")
 
-def cant_ep_genero(parametro_genero):
-    for cada_anime in series.items():
-        if cada_anime[1][1]==parametro_genero:
-            cod_anime=cada_anime[0]
+def cant_ep_genero(genero_a_consultar):
+    for cada_serie in series.items():
+        if cada_serie[1][1]==genero_a_consultar:
+            for cada_serie_en_el_catalogo in catalogo.items():
+                if cada_serie_en_el_catalogo[0]==cada_serie[0]:
+                    print(cada_serie_en_el_catalogo[1][1])
+cant_ep_genero("accion")
 
-cant_ep_genero("mandarina")
+def series_por_precio(precio_min, precio_max):
+    for cada_serie in series.items():
+        if cada_serie[1][0]>=precio_min and cada_serie[1][0]<=precio_max:
+            for cada_serie_en_el_catalogo in catalogo.items():
+                if cada_serie_en_el_catalogo[0]==cada_serie[0]:
+                    print(cada_serie_en_el_catalogo[1][1])
+series_por_precio(5000, 8000)
