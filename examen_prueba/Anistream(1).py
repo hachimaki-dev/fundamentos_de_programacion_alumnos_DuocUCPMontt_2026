@@ -18,6 +18,8 @@ catalogo = {
   'AN006': [6990, 13]
 }
 
+
+
 def cantidad_de_episodios_por_genero(genero_a_consultar):
     cantidad_episodios = 0
     for cada_serie in series.items():
