@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Matías Valdivia — Portafolio</title>
+<meta name="description" content="Matías Valdivia — Estudiante de Informática en DUOC UC. Ala-pívot, arquero y desarrollador en formación." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23FF7A29'/><text x='50' y='67' font-size='44' text-anchor='middle' fill='%230F1117' font-family='Arial' font-weight='bold'>18</text></svg>">
+
+<!-- Fuentes -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS (Play CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome (íconos de deportes / hobbies) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- AOS (animaciones al hacer scroll) -->
+<link href="https://unpkg.com/aos@next/dist/aos.css" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#0F1117',
+          surface: '#181B24',
+          surfacealt: '#1F2430',
+          accent: '#FF7A29',
+          accent2: '#36D399',
+          cream: '#F5F3EE',
+          muted: '#8C93A6',
+        },
+        fontFamily: {
+          display: ['Anton', 'sans-serif'],
+          body: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        boxShadow: {
+          card: '0 20px 50px -20px rgba(0,0,0,0.6)',
+        },
+      },
+    },
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { background-color: #0F1117; }
+  ::selection { background: #FF7A29; color: #0F1117; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #0F1117; }
+  ::-webkit-scrollbar-thumb { background: #2A3140; border-radius: 999px; }
+  [v-cloak] { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+
+<body class="bg-bg text-cream font-body antialiased">
+<div id="app" v-cloak>
+
+  <!-- ===================== BARRA DE PROGRESO (reloj de juego) ===================== -->
+  <div class="fixed top-0 left-0 h-[3px] bg-accent z-[60] transition-[width] duration-150" :style="{ width: scrollProgress + '%' }"></div>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header
+    class="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+    :class="scrolled ? 'bg-bg/90 backdrop-blur-md border-b border-white/5 py-3' : 'bg-transparent py-5'"
+  >
+    <nav class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <a href="#inicio" class="flex items-center gap-2 font-display text-xl tracking-wide">
+        <span class="w-9 h-9 rounded-full bg-accent text-bg flex items-center justify-center font-mono text-sm font-bold">18</span>
+        <span>MV<span class="text-accent">.</span></span>
+      </a>
+
+      <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
+        <li v-for="link in navLinks" :key="link.href">
+          <a :href="link.href" class="hover:text-cream transition-colors duration-200">{{ link.label }}</a>
+        </li>
+      </ul>
+
+      <a href="#contacto" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-bg text-sm font-semibold hover:bg-accent2 transition-colors duration-200">
+        Pedir pase
+      </a>
+
+      <button @click="mobileOpen = !mobileOpen" class="md:hidden text-cream" aria-label="Abrir menú">
+        <i data-lucide="menu" v-if="!mobileOpen" class="w-6 h-6"></i>
+        <i data-lucide="x" v-else class="w-6 h-6"></i>
+      </button>
+    </nav>
+
+    <!-- Menú móvil -->
+    <div v-if="mobileOpen" class="md:hidden mt-4 px-6 pb-4 flex flex-col gap-4 text-muted bg-bg/95">
+      <a v-for="link in navLinks" :key="link.href" :href="link.href" @click="mobileOpen = false" class="hover:text-cream transition-colors">{{ link.label }}</a>
+      <a href="#contacto" @click="mobileOpen = false" class="text-accent font-semibold">Pedir pase →</a>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="inicio" class="relative min-h-screen flex items-center pt-28 pb-16 px-6 overflow-hidden">
+    <!-- líneas de cancha decorativas -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.06]">
+      <div class="absolute left-1/2 top-0 bottom-0 w-px bg-cream"></div>
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border-2 border-cream"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative">
+
+      <!-- Texto -->
+      <div class="order-2 md:order-1" data-aos="fade-up">
+        <p class="font-mono text-accent2 text-sm tracking-widest mb-4">// SCOUTING REPORT · TEMPORADA 2026</p>
+        <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-[0.95] mb-4">
+          MATÍAS<br/>VALDIVIA
+        </h1>
+        <p class="font-mono text-lg sm:text-xl text-cream/90 h-8 mb-6">
+          <span ref="typedTarget"></span><span class="text-accent">|</span>
+        </p>
+        <p class="text-muted max-w-md mb-8 leading-relaxed">
+          Estudiante de Informática de primer año en DUOC UC. También administra una pequeña operación de
+          transmisiones deportivas de básquetbol — así que entiende el juego desde la cancha y desde la cabina.
+        </p>
+
+        <div class="flex flex-wrap gap-4 mb-8">
+          <a href="#proyectos" class="px-6 py-3 rounded-lg bg-accent text-bg font-semibold hover:scale-105 hover:shadow-card transition-all duration-200">Ver proyectos</a>
+          <a href="#contacto" class="px-6 py-3 rounded-lg border border-white/15 text-cream font-semibold hover:border-accent hover:text-accent transition-all duration-200">Contáctame</a>
+        </div>
+
+        <div class="flex items-center gap-5">
+          <a v-for="social in socials" :key="social.label" :href="social.href" :aria-label="social.label"
+             class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-muted hover:text-accent hover:border-accent transition-all duration-200">
+            <i :class="social.icon"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tarjeta de jugador -->
+      <div class="order-1 md:order-2 relative" data-aos="fade-down" data-aos-delay="100">
+        <div class="relative max-w-sm mx-auto bg-surface rounded-2xl p-6 shadow-card border border-white/5">
+
+          <!-- esquinas de scoreboard -->
+          <span class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-accent rounded-tl-lg"></span>
+          <span class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-accent rounded-tr-lg"></span>
+          <span class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-accent rounded-bl-lg"></span>
+          <span class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-accent rounded-br-lg"></span>
+
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-mono text-xs text-muted">JUGADOR/DEV</span>
+            <span class="flex items-center gap-1.5 font-mono text-xs text-accent2">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent2 animate-pulse"></span>
+              EN VIVO
+            </span>
+          </div>
+
+          <!-- Avatar placeholder (reemplazar por foto real) -->
+          <div class="aspect-square rounded-xl bg-surfacealt overflow-hidden mb-4 flex items-center justify-center">
+            <svg viewBox="0 0 200 200" class="w-2/3 h-2/3 text-muted/40">
+              <circle cx="100" cy="75" r="38" fill="currentColor"/>
+              <path d="M30 190 C30 130 170 130 170 190 Z" fill="currentColor"/>
+            </svg>
+          </div>
+
+          <div class="text-center mb-4">
+            <p class="font-display text-2xl">MATÍAS VALDIVIA</p>
+            <p class="font-mono text-xs text-muted">ALA-PÍVOT · ARQUERO · DEV</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-surfacealt rounded-lg py-2">
+              <p class="font-mono text-lg text-accent font-bold">18</p>
+              <p class="text-[10px] text-muted">EDAD</p>
+            </div>
+            <div class="bg-surfacealt rounded-lg py-2">
+              <p class="font-mono text-lg text-accent font-bold">1°</p>
+              <p class="text-[10px] text-muted">AÑO</p>
+            </div>
+            <div class="bg-surfacealt rounded-lg py-2">
+              <p class="font-mono text-lg text-accent font-bold">CL</p>
+              <p class="text-[10px] text-muted">CHILE</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <a href="#sobre-mi" class="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-1 text-muted hover:text-accent transition-colors">
+      <span class="text-xs font-mono">scroll</span>
+      <i data-lucide="chevron-down" class="w-4 h-4 animate-bounce"></i>
+    </a>
+  </section>
+
+  <!-- ===================== SOBRE MÍ ===================== -->
+  <section id="sobre-mi" class="py-24 px-6 max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-[1fr_1.2fr] gap-12">
+
+      <div data-aos="fade-right">
+        <p class="font-mono text-accent text-sm tracking-widest mb-2">01 · SCOUTING REPORT</p>
+        <h2 class="font-display text-4xl mb-6">SOBRE MÍ</h2>
+        <p class="text-muted leading-relaxed mb-4">
+          Curso primer año de Informática en DUOC UC. Lo que aprendo en clases lo pruebo en proyectos propios:
+          desde sistemas de gestión en Python hasta sitios web con Vue y Tailwind.
+        </p>
+        <p class="text-muted leading-relaxed">
+          Fuera del computador juego básquetbol como ala-pívot y fútbol en el arco — dos posiciones que exigen
+          leer el juego antes de que pase. Esa misma lógica la aplico al depurar código.
+        </p>
+      </div>
+
+      <div data-aos="fade-left" class="grid grid-cols-2 gap-4 content-start">
+        <div v-for="fact in quickFacts" :key="fact.label" class="bg-surface rounded-xl p-5 border border-white/5 hover:border-accent/40 transition-colors duration-200">
+          <i :data-lucide="fact.icon" class="w-5 h-5 text-accent2 mb-3"></i>
+          <p class="font-mono text-[11px] text-muted tracking-widest mb-1">{{ fact.label }}</p>
+          <p class="font-display text-lg leading-tight">{{ fact.value }}</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== ATRIBUTOS / SKILLS ===================== -->
+  <section id="atributos" class="py-24 px-6 max-w-6xl mx-auto">
+    <p class="font-mono text-accent text-sm tracking-widest mb-2" data-aos="fade-up">02 · ATRIBUTOS</p>
+    <h2 class="font-display text-4xl mb-2" data-aos="fade-up">HABILIDADES TÉCNICAS</h2>
+    <p class="text-muted mb-12 max-w-lg" data-aos="fade-up">
+      Calificadas como en una tarjeta de videojuego deportivo: nada es 99 todavía, todo sigue en entrenamiento.
+    </p>
+
+    <div class="grid sm:grid-cols-2 gap-5">
+      <skill-card v-for="(skill, i) in skills" :key="skill.name" :skill="skill" :delay="i * 80"></skill-card>
+    </div>
+  </section>
+
+  <!-- ===================== ALINEACIÓN / HOBBIES ===================== -->
+  <section id="alineacion" class="py-24 px-6 max-w-6xl mx-auto">
+    <p class="font-mono text-accent text-sm tracking-widest mb-2" data-aos="fade-up">03 · ALINEACIÓN TITULAR</p>
+    <h2 class="font-display text-4xl mb-12" data-aos="fade-up">INTERESES Y PASATIEMPOS</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <hobby-card v-for="(hobby, i) in hobbies" :key="hobby.title" :hobby="hobby" :delay="i * 80"></hobby-card>
+    </div>
+  </section>
+
+  <!-- ===================== PROYECTOS ===================== -->
+  <section id="proyectos" class="py-24 px-6 max-w-6xl mx-auto">
+    <p class="font-mono text-accent text-sm tracking-widest mb-2" data-aos="fade-up">04 · HIGHLIGHTS</p>
+    <h2 class="font-display text-4xl mb-2" data-aos="fade-up">PROYECTOS</h2>
+    <p class="text-muted mb-12 max-w-lg" data-aos="fade-up">
+      Una selección de jugadas guardadas. Edita el arreglo <code class="font-mono text-accent2">projects</code> en el script para agregar las tuyas.
+    </p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <project-card v-for="(project, i) in projects" :key="project.title" :project="project" :delay="i * 80"></project-card>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACTO ===================== -->
+  <section id="contacto" class="py-24 px-6 max-w-4xl mx-auto">
+    <div class="bg-surface rounded-2xl p-8 sm:p-12 border border-white/5 relative overflow-hidden" data-aos="zoom-in">
+      <span class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-accent/10"></span>
+
+      <p class="font-mono text-accent text-sm tracking-widest mb-2">05 · TIEMPO FINAL</p>
+      <h2 class="font-display text-4xl mb-4">PÍDEME UN PASE</h2>
+      <p class="text-muted mb-8 max-w-md">
+        ¿Proyecto, práctica o transmisión que coordinar? Escríbeme directo, sin formularios eternos.
+      </p>
+
+      <form @submit.prevent="sendMail" class="grid sm:grid-cols-2 gap-4 mb-8">
+        <input v-model="contactForm.name" type="text" placeholder="Tu nombre" required
+               class="bg-surfacealt rounded-lg px-4 py-3 text-sm placeholder:text-muted/60 outline-none focus:ring-2 focus:ring-accent transition-shadow" />
+        <input v-model="contactForm.email" type="email" placeholder="Tu correo" required
+               class="bg-surfacealt rounded-lg px-4 py-3 text-sm placeholder:text-muted/60 outline-none focus:ring-2 focus:ring-accent transition-shadow" />
+        <textarea v-model="contactForm.message" placeholder="Cuéntame de qué se trata" required rows="3"
+                  class="sm:col-span-2 bg-surfacealt rounded-lg px-4 py-3 text-sm placeholder:text-muted/60 outline-none focus:ring-2 focus:ring-accent transition-shadow resize-none"></textarea>
+        <button type="submit" class="sm:col-span-2 bg-accent text-bg font-semibold rounded-lg py-3 hover:bg-accent2 hover:scale-[1.01] transition-all duration-200">
+          Enviar por correo
+        </button>
+      </form>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a :href="whatsappLink" target="_blank" class="inline-flex items-center gap-2 text-sm font-semibold text-accent2 hover:text-cream transition-colors">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Escríbeme por WhatsApp
+        </a>
+        <span class="text-white/10 hidden sm:inline">|</span>
+        <div class="flex items-center gap-4">
+          <a v-for="social in socials" :key="'foot-'+social.label" :href="social.href" :aria-label="social.label" class="text-muted hover:text-accent transition-colors">
+            <i :class="social.icon"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="border-t border-white/5 py-8 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted">
+      <p class="font-mono">© {{ year }} Matías Valdivia · Todos los derechos reservados</p>
+      <p class="font-mono text-xs flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent2 animate-pulse"></span>
+        Hecho con Vue 3 + Tailwind CSS · 100% CDN, sin build
+      </p>
+    </div>
+  </footer>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+
+<script>
+const { createApp } = Vue;
+
+/* ---------- Componente: SkillCard ---------- */
+const SkillCard = {
+  props: ['skill', 'delay'],
+  data() {
+    return { animatedValue: 0, started: false };
+  },
+  mounted() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !this.started) {
+          this.started = true;
+          this.animate();
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    obs.observe(this.$el);
+  },
+  methods: {
+    animate() {
+      const target = this.skill.value;
+      const duration = 900;
+      const start = performance.now();
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        this.animatedValue = Math.round(progress * target);
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    },
+  },
+  template: `
+    <div class="bg-surface rounded-xl p-5 border border-white/5 hover:border-accent/40 transition-colors duration-200" data-aos="fade-up">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <i :data-lucide="skill.icon" class="w-5 h-5 text-accent"></i>
+          <span class="font-semibold">{{ skill.name }}</span>
+        </div>
+        <span class="font-mono text-accent2 text-sm">{{ animatedValue }}</span>
+      </div>
+      <div class="h-2 rounded-full bg-surfacealt overflow-hidden">
+        <div class="h-full rounded-full bg-gradient-to-r from-accent to-accent2 transition-[width] duration-300" :style="{ width: animatedValue + '%' }"></div>
+      </div>
+    </div>
+  `,
+};
+
+/* ---------- Componente: HobbyCard ---------- */
+const HobbyCard = {
+  props: ['hobby', 'delay'],
+  template: `
+    <div class="group bg-surface rounded-xl p-5 border border-white/5 hover:border-accent/40 hover:-translate-y-1 transition-all duration-200" data-aos="fade-up">
+      <div class="flex items-center justify-between mb-4">
+        <span class="font-mono text-xs text-muted">N.º {{ hobby.number }}</span>
+        <i :class="hobby.icon" class="text-accent text-xl group-hover:scale-110 transition-transform duration-200"></i>
+      </div>
+      <p class="font-display text-lg mb-1">{{ hobby.title }}</p>
+      <p class="font-mono text-[11px] text-accent2 mb-3">{{ hobby.subtitle }}</p>
+      <p class="text-sm text-muted leading-relaxed">{{ hobby.description }}</p>
+    </div>
+  `,
+};
+
+/* ---------- Componente: ProjectCard ---------- */
+const ProjectCard = {
+  props: ['project', 'delay'],
+  template: `
+    <div class="bg-surface rounded-xl p-6 border border-white/5 hover:border-accent/40 hover:shadow-card transition-all duration-200 flex flex-col" data-aos="fade-up">
+      <div class="flex items-center justify-between mb-3">
+        <i data-lucide="folder-git-2" class="w-5 h-5 text-accent2"></i>
+        <span class="font-mono text-[10px] text-muted">{{ project.status }}</span>
+      </div>
+      <p class="font-display text-xl mb-2">{{ project.title }}</p>
+      <p class="text-sm text-muted leading-relaxed mb-4 flex-1">{{ project.description }}</p>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <span v-for="tag in project.tags" :key="tag" class="font-mono text-[10px] px-2 py-1 rounded-full bg-surfacealt text-accent2">{{ tag }}</span>
+      </div>
+      <a :href="project.githubUrl" target="_blank" class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent2 transition-colors">
+        <i data-lucide="github" class="w-4 h-4"></i> Ver código
+      </a>
+    </div>
+  `,
+};
+
+createApp({
+  components: { SkillCard, HobbyCard, ProjectCard },
+  data() {
+    return {
+      year: new Date().getFullYear(),
+      scrolled: false,
+      mobileOpen: false,
+      scrollProgress: 0,
+
+      navLinks: [
+        { href: '#sobre-mi', label: 'Sobre mí' },
+        { href: '#atributos', label: 'Atributos' },
+        { href: '#alineacion', label: 'Alineación' },
+        { href: '#proyectos', label: 'Proyectos' },
+        { href: '#contacto', label: 'Contacto' },
+      ],
+
+      // TODO: reemplaza estos links por tus redes reales
+      socials: [
+        { label: 'GitHub', icon: 'fa-brands fa-github', href: 'https://github.com/tu-usuario' },
+        { label: 'LinkedIn', icon: 'fa-brands fa-linkedin', href: 'https://linkedin.com/in/tu-usuario' },
+        { label: 'Instagram', icon: 'fa-brands fa-instagram', href: 'https://instagram.com/tu-usuario' },
+        { label: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/56900000000' },
+      ],
+
+      quickFacts: [
+        { icon: 'cake', label: 'EDAD', value: '18 años' },
+        { icon: 'map-pin', label: 'CIUDAD', value: 'Tu ciudad' }, // TODO: completa tu ciudad
+        { icon: 'graduation-cap', label: 'UNIVERSIDAD', value: 'DUOC UC' },
+        { icon: 'book-open', label: 'CARRERA', value: 'Informática · 1er año' },
+      ],
+
+      // TODO: ajusta los valores (0-100) según tu nivel real
+      skills: [
+        { name: 'Python', icon: 'code-2', value: 75 },
+        { name: 'Excel', icon: 'file-spreadsheet', value: 60 },
+        { name: 'Linux', icon: 'terminal', value: 55 },
+        { name: 'Git', icon: 'git-branch', value: 65 },
+        { name: 'GitHub', icon: 'github', value: 70 },
+      ],
+
+      hobbies: [
+        { number: '04', icon: 'fa-solid fa-basketball', title: 'Básquetbol', subtitle: 'ALA-PÍVOT', description: 'Lee la cancha, busca el rebote y no le rehúye al contacto bajo el aro.' },
+        { number: '01', icon: 'fa-solid fa-futbol', title: 'Fútbol', subtitle: 'ARQUERO', description: 'Última línea de defensa. Decide en una fracción de segundo.' },
+        { number: 'CT', icon: 'fa-solid fa-crosshairs', title: 'Counter-Strike', subtitle: 'ESTRATEGA', description: 'Lectura de mapa, gestión de economía y mira fría bajo presión.' },
+        { number: 'IV', icon: 'fa-solid fa-guitar', title: 'Bajo eléctrico', subtitle: 'GROOVE', description: 'El instrumento que sostiene a la banda sin pedir aplausos.' },
+      ],
+
+      // TODO: reemplaza por tus repositorios reales (título, descripción, tags, link de GitHub)
+      projects: [
+        {
+          title: 'Cazabichos',
+          description: 'Sistema de seguimiento de bugs por consola: registro, búsqueda y eliminación con validación de datos.',
+          tags: ['Python', 'CLI', 'Validación'],
+          status: 'COMPLETO',
+          githubUrl: 'https://github.com/tu-usuario/cazabichos',
+        },
+        {
+          title: 'Biblioteca',
+          description: 'Gestión de préstamos y catálogo de libros mediante un menú interactivo en consola.',
+          tags: ['Python', 'CLI'],
+          status: 'COMPLETO',
+          githubUrl: 'https://github.com/tu-usuario/biblioteca',
+        },
+        {
+          title: 'Landing — Transmisiones',
+          description: 'Sitio de una página para el negocio de transmisiones de básquetbol: servicios, tarifas y contacto.',
+          tags: ['Vue 3', 'Tailwind'],
+          status: 'EN VIVO',
+          githubUrl: 'https://github.com/tu-usuario/landing-transmisiones',
+        },
+        {
+          title: 'Este portafolio',
+          description: 'El sitio que estás viendo: una sola página, sin build, con Vue 3 y Tailwind vía CDN.',
+          tags: ['Vue 3', 'Tailwind', 'AOS'],
+          status: 'EN VIVO',
+          githubUrl: 'https://github.com/tu-usuario/portafolio',
+        },
+      ],
+
+      contactForm: { name: '', email: '', message: '' },
+    };
+  },
+
+  computed: {
+    whatsappLink() {
+      // TODO: reemplaza por tu número real (formato internacional, sin +)
+      return 'https://wa.me/56900000000';
+    },
+  },
+
+  methods: {
+    onScroll() {
+      this.scrolled = window.scrollY > 20;
+      const max = document.body.scrollHeight - window.innerHeight;
+      this.scrollProgress = max > 0 ? (window.scrollY / max) * 100 : 0;
+    },
+    sendMail() {
+      // TODO: reemplaza por tu correo real
+      const to = 'tu-correo@ejemplo.com';
+      const subject = encodeURIComponent('Contacto desde el portafolio — ' + this.contactForm.name);
+      const body = encodeURIComponent(this.contactForm.message + '\n\nResponder a: ' + this.contactForm.email);
+      window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+    },
+    refreshIcons() {
+      this.$nextTick(() => {
+        if (window.lucide) window.lucide.createIcons();
+      });
+    },
+  },
+
+  mounted() {
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.refreshIcons();
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    AOS.init({
+      duration: 600,
+      once: true,
+      disable: reducedMotion,
+    });
+
+    if (!reducedMotion && window.Typed && this.$refs.typedTarget) {
+      new Typed(this.$refs.typedTarget, {
+        strings: ['Ala-pívot.', 'Arquero.', 'Desarrollador en formación.', 'Sociable por naturaleza.'],
+        typeSpeed: 45,
+        backSpeed: 25,
+        backDelay: 1400,
+        loop: true,
+        showCursor: false,
+      });
+    } else if (this.$refs.typedTarget) {
+      this.$refs.typedTarget.textContent = 'Ala-pívot. Arquero. Desarrollador en formación.';
+    }
+  },
+
+  updated() {
+    this.refreshIcons();
+  },
+}).mount('#app');
+</script>
+</body>
+</html>
