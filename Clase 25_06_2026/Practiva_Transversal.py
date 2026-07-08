@@ -18,6 +18,23 @@ catalogo={
   'AN006': [6990, 13]
 }
 
+def menu_principal():
+    print("\n===== MENU PRINCIPAL =====")
+    print("1. Buscar anime por genero.")
+    print("2. Buscar anime por precio.")
+    print("3. Eliminar registro.")
+    print("4. Mostrar registros.") 
+    print("5. Salir.")
+    print("==========================\n")
+
+def leer_opcion_elegida():
+    opcion_elegida = input("Elije una opcion: ")
+    if opcion_elegida in ["1", "2", "3", "4", "5"]:
+        return opcion_elegida
+    else:
+        print("Opción no válida.")
+        return None
+
 def cantidad_de_episodios_por_genero(genero_a_consultar):
     cantidad_episodios=0
     for cada_serie in series.items():
@@ -37,10 +54,7 @@ def encontrar_serie_por_rango_de_precio(precio_minimo, precio_maximo):
                     lista_de_series_dentro_del_rango.sort()
     return lista_de_series_dentro_del_rango
 
-resultado=encontrar_serie_por_rango_de_precio(5000, 10000)
-print(resultado)
-
-def pepito():
+def actualizar_precio_por_codigo():
     codigo_user=input("\nIngrese un codigo de articulo: ")
     precio_user=int(input("Ingrese un nuevo precio: "))
     for cada_precio in catalogo.items():
@@ -48,4 +62,15 @@ def pepito():
             catalogo[codigo_user][0]=precio_user
             print(catalogo)
 
-pepito()
+def iniciar_programa():
+    while True:
+        menu_principal()
+        opcion = leer_opcion_elegida()
+        if opcion == "1":
+            cantidad_de_episodios_por_genero()
+        elif opcion == "2":
+            encontrar_serie_por_rango_de_precio()
+        elif opcion == "5":
+            break
+
+iniciar_programa()
