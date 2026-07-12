@@ -72,7 +72,7 @@ def validar_clasificacion(clasificacion):
     return clasificacion.upper() in ("G","PG","M")
 
 def validar_si_tiene_subtitulos(respuesta):
-    return respuesta.lower()in ("s","n")
+    return respuesta.lower() in ("s","n")
 
 def validar_precio(precio):
     return isinstance(precio, int) and precio > 0
