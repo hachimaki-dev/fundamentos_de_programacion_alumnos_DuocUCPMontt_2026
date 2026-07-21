@@ -34,7 +34,6 @@ def validar_metrica():
 
         except ValueError:
             print("Error: Ingrese un número decimal válido")
-
 def validar_test_comprension():
     while True:
         compresion = input("¿Logró explicar con sus palabras la interfaz? (si o no): ").strip().lower()
