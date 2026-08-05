@@ -199,15 +199,6 @@ def ejecutar_programa():
                 print("error al eliminar el codigo")
             
            
-                
-                    
-
-
-        
-
-
-
-
 
         elif  opcion_seleccionada == "6":
             print("hasta pronto....")
