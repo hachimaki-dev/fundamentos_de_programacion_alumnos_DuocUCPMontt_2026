@@ -72,4 +72,12 @@ else:
     print("atleta regular")
     atletas_regular +=1
 print(f"cantidad de atletas de elite: {atletas_elite}\n la cantidad de atletas regulatr son: {atletas_regular}")"""
+#ejercicio 4
+biblioteca = 30# cantidad de libros disponible
+def menu():
+    print("opciones: 1) Muestra cuántos libros queda")
+    print("2) Préstamo: pide cuántos libros prestar y los descuenta de los disponibles (no se pueden prestar más de los que hay)")
+    print("3) Devolución: pide cuántos libros devolver y los suma a los disponibles (no puede pasar de 30).")
+    print("4) Muestra un resumen: cuántos libros se prestaron en total menos los devueltos.")
+    print("5) Sale del programa.")
 

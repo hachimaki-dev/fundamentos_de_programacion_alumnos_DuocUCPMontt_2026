@@ -68,7 +68,7 @@ def iniciar_programa():
         opcion_usuario_menu = opcion_usuario_validada()
         if opcion_usuario_menu == "1":
             agregar_datos_animal_a_lista()
-        elif opcion_usuario_validada == "2":
+        elif opcion_usuario_menu == "2":
             pass
         elif opcion_usuario_validada == "3":
             pass

@@ -12,23 +12,20 @@ libros = [
     'ejemplares': 31}
 ]
 def buscar_libro(lista_libros , titulo_busqueda_usuario):
-    for pocicion_libro in range(len(libros)):
+    for pocicion_libro in range(len(lista_libros)):
         if libros[pocicion_libro]["titulo_libro"].lower() == titulo_busqueda_usuario.lower():
             return pocicion_libro
     print("no encontrado")     
     return -1
 
-def eliminar_libro(titulo_busqueda_usuario):
+def eliminar_libro(lista_libros,titulo_busqueda_usuario):
     libro_encontrado = buscar_libro(libro_encontrado)
     libros.pop(libro_encontrado)
     return True
 
-titulo_busqueda_usuario = input("ingresa el titulo que deseas buscar :\n")
-posicion_libro = buscar_libro(libros,titulo_busqueda_usuario)
-indice_libro_encontrado = buscar_libro(libros,posicion_libro)
+titulo_busqueda_usuario = input("ingresa el titulo que deseas buscar :\n").strip()
+indice_libro_encontrado = buscar_libro(libros,titulo_busqueda_usuario)
 if indice_libro_encontrado != -1:
-    libro_encontrado = libros[posicion_libro]
-    
     print(f"libro_encontrado en la posicion {indice_libro_encontrado}")
 
 titulo_ingresado_para_eliminar = input("ingresa el titulo a eliminar : \n").strip()

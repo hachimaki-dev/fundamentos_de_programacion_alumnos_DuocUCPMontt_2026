@@ -60,7 +60,7 @@ def agregar_registro_opcion1():
         "aprobado" : False
     }
     estudiantes.append(datos_estudiantes)
-    print(estudiantes)
+    
 
 def buscar_registro_estudiante_opcion2(lista_estudiantes,nombre_busqueda_estudiantes):
     if not nombre_busqueda_estudiantes : 
